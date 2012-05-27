@@ -5,6 +5,9 @@ using System.Text;
 
 namespace NetDimension.Weibo
 {
+	/// <summary>
+	/// 微博操作类
+	/// </summary>
 	public class Client
 	{
 
@@ -16,12 +19,19 @@ namespace NetDimension.Weibo
 			private set;
 		}
 
+		/// <summary>
+		/// 微博接口
+		/// </summary>
 		public Interface.Interfaces API
 		{
 			get;
 			private set;
 		}
 
+		/// <summary>
+		/// 实例化微博操作类
+		/// </summary>
+		/// <param name="oauth">OAuth实例</param>
 		public Client(OAuth oauth)
 		{
 			this.OAuth = oauth;
