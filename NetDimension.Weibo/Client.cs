@@ -77,8 +77,16 @@ namespace NetDimension.Weibo
 
 		private string Http(string command, RequestMethod method, bool multi, params WeiboParameter[] parameters)
 		{
-			string url = string.Format("{0}{1}.json", BASE_URL, command);
+			string url = string.Empty;
 
+			if (command.StartsWith("http://") || command.StartsWith("https://"))
+			{
+				url = command;
+			}
+			else
+			{
+				url = string.Format("{0}{1}.json", BASE_URL, command);
+			}
 			return OAuth.Request(url, method, multi, parameters);
 		}
 	}
