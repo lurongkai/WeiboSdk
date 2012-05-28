@@ -14,22 +14,38 @@ namespace NetDimension.Weibo.Interface
 		{
 
 		}
-
+		/// <summary>
+		/// 获取短链接的总点击数 
+		/// </summary>
+		/// <param name="url_short">需要取得点击数的短链接</param>
+		/// <returns></returns>
 		public dynamic Clicks(string url_short)
 		{
 			return DynamicJson.Parse(Client.GetCommand("short_url/clicks", new WeiboStringParameter("url_short", url_short)));
 		}
-
+		/// <summary>
+		/// 获取一个短链接点击的referer来源和数量
+		/// </summary>
+		/// <param name="url_short">需要取得点击来源的短链接</param>
+		/// <returns></returns>
 		public dynamic Referers(string url_short)
 		{
 			return DynamicJson.Parse(Client.GetCommand("short_url/referers", new WeiboStringParameter("url_short", url_short)));
 		}
-
+		/// <summary>
+		/// 获取一个短链接点击的地区来源和数量 
+		/// </summary>
+		/// <param name="url_short">需要取得点击地区的短链接</param>
+		/// <returns></returns>
 		public dynamic Locations(string url_short)
 		{
 			return DynamicJson.Parse(Client.GetCommand("short_url/locations", new WeiboStringParameter("url_short", url_short)));
 		}
-
+		/// <summary>
+		/// 批量获取短链接的富内容信息
+		/// </summary>
+		/// <param name="url_short">需要获取富内容信息的短链接</param>
+		/// <returns></returns>
 		public dynamic Info(params string[] url_short)
 		{
 			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
@@ -89,9 +105,9 @@ namespace NetDimension.Weibo.Interface
 		/// <summary>
 		/// 取得包含指定单个短链接的最新微博内容 
 		/// </summary>
-		/// <param name="url_short">需要取得关联微博内容的短链接</param>
-		/// <param name="since_id">若指定此参数，则返回ID比since_id大的微博（即比since_id时间晚的微博），默认为0 </param>
-		/// <param name="max_id">指定此参数，则返回ID小于或等于max_id的微博，默认为0 </param>
+		/// <param name="urlShort">需要取得关联微博内容的短链接</param>
+		/// <param name="sinceID">若指定此参数，则返回ID比since_id大的微博（即比since_id时间晚的微博），默认为0 </param>
+		/// <param name="maxID">指定此参数，则返回ID小于或等于max_id的微博，默认为0 </param>
 		/// <param name="count">可选参数，返回结果的页序号，有分页限制</param>
 		/// <param name="page">可选参数，每次返回的最大记录数（即页面大小），不大于200 </param>
 		/// <returns></returns>
@@ -124,9 +140,9 @@ namespace NetDimension.Weibo.Interface
 		/// <summary>
 		/// 取得包含指定单个短链接的最新微博评论内容 
 		/// </summary>
-		/// <param name="url_short">需要取得关联微博评论内容的短链接</param>
-		/// <param name="since_id">若指定此参数，则返回ID比since_id大的评论（即比since_id时间晚的评论），默认为0 </param>
-		/// <param name="max_id">若指定此参数，则返回ID小于或等于max_id的评论，默认为0 </param>
+		/// <param name="urlShort">需要取得关联微博评论内容的短链接</param>
+		/// <param name="sinceID">若指定此参数，则返回ID比since_id大的评论（即比since_id时间晚的评论），默认为0 </param>
+		/// <param name="maxID">若指定此参数，则返回ID小于或等于max_id的评论，默认为0 </param>
 		/// <param name="count">可选参数，每次返回的最大记录数（即页面大小），不大于200 </param>
 		/// <param name="page">可选参数，返回结果的页序号，有分页限制</param>
 		/// <returns></returns>

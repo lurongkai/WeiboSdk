@@ -14,7 +14,13 @@ namespace NetDimension.Weibo.Interface
 		{
 
 		}
-
+		/// <summary>
+		/// 获取某人话题 
+		/// </summary>
+		/// <param name="uid"></param>
+		/// <param name="count"></param>
+		/// <param name="page"></param>
+		/// <returns></returns>
 		public dynamic Trends(string uid, int count = 10, int page = 1)
 		{
 			return DynamicJson.Parse(Client.GetCommand("trends",
@@ -22,11 +28,15 @@ namespace NetDimension.Weibo.Interface
 				new WeiboStringParameter("count", count),
 				new WeiboStringParameter("page", page)));
 		}
-
+		/// <summary>
+		/// 是否关注某话题 
+		/// </summary>
+		/// <param name="trendName"></param>
+		/// <returns></returns>
 		public dynamic IsFollow(string trendName)
 		{
 			return DynamicJson.Parse(Client.GetCommand("trends/is_follow",
-				new WeiboStringParameter("trend_name ", trendName)));
+				new WeiboStringParameter("trend_name", trendName)));
 		}
 
 		/// <summary>
@@ -37,7 +47,7 @@ namespace NetDimension.Weibo.Interface
 		public dynamic Hourly(bool baseApp = false)
 		{
 			return DynamicJson.Parse(Client.GetCommand("trends/hourly",
-				new WeiboStringParameter("base_app ", baseApp)));
+				new WeiboStringParameter("base_app", baseApp)));
 		}
 
 		/// <summary>
@@ -48,7 +58,7 @@ namespace NetDimension.Weibo.Interface
 		public dynamic Daily(bool baseApp = false)
 		{
 			return DynamicJson.Parse(Client.GetCommand("trends/daily",
-				new WeiboStringParameter("base_app ", baseApp)));
+				new WeiboStringParameter("base_app", baseApp)));
 		}
 
 		/// <summary>
@@ -58,20 +68,28 @@ namespace NetDimension.Weibo.Interface
 		/// <returns></returns>
 		public dynamic Weekly(bool baseApp = false)
 		{
-			return DynamicJson.Parse(Client.GetCommand("trends/weekly ",
-				new WeiboStringParameter("base_app ", baseApp)));
+			return DynamicJson.Parse(Client.GetCommand("trends/weekly",
+				new WeiboStringParameter("base_app", baseApp)));
 		}
-
+		/// <summary>
+		/// 关注某话题 
+		/// </summary>
+		/// <param name="trendName"></param>
+		/// <returns></returns>
 		public dynamic Follow(string trendName)
 		{
 			return DynamicJson.Parse(Client.PostCommand("trends/follow",
 				new WeiboStringParameter("trend_name", trendName)));
 		}
-
+		/// <summary>
+		/// 取消关注的某一个话题 
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
 		public dynamic Destroy(string id)
 		{
 			return DynamicJson.Parse(Client.PostCommand("trends/destroy",
-				  new WeiboStringParameter("trend_id ", id)));
+				  new WeiboStringParameter("trend_id", id)));
 
 		}
 
