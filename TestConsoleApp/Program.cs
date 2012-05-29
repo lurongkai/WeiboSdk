@@ -15,6 +15,9 @@ namespace TestConsoleApp
 		{
 			//初始化oAuth，准备认证
 			var oauth = new NetDimension.Weibo.OAuth("1028898141", "78be07c9bcfa30b7871788d3778ce131");
+
+			//注意，我的这个AppKey已经悲剧了，达到使用人数上限，请各位自行更换自己的AppKey进行测试，记得去新浪后台绑定回调地址，不然没法运行。
+			//建议绑定到https://api.weibo.com/oauth2/default.html
 			
 			/*
 			 * 正常的流程或Web流程：
@@ -39,9 +42,10 @@ namespace TestConsoleApp
 
 			//当然，SDK中还有更牛逼的获取access token的方法。这就是ClientLogin，这个方法模拟上述整个流程，并最终获取access token。登录并授权成则返回true。一步搞定，无需GetAuthorizeURL、GetCode、GetAccessTokenByAuthorizationCode三个步骤。居家旅行，杀人越货必备之良物啊！把上面的过程注释掉，用下面的方法来看看呗～
 			//这就是第二种方法，只需一步。而且这绝对不是官方的GetAccessToken时使用的password方式。下面的这个方法，不论你的AppKey的权限有多小都不受影响。非常适用于Winform
-			//var result = oauth.ClientLogin("<你的微博账号>", "<你的微博密码>", "https://api.weibo.com/oauth2/default.html");
+			//var result = oauth.ClientLogin("362987303@qq.com", "fengfeng35", "https://api.weibo.com/oauth2/default.html");
 			
-			if (!string.IsNullOrEmpty(accessToken))	//if (result)	//如果用ClientLogin，请换一下这个地方
+			if (!string.IsNullOrEmpty(accessToken))
+			//if (result)	//如果用ClientLogin，请换一下这个地方
 			{
 				NetDimension.Weibo.Client Sina = new NetDimension.Weibo.Client(oauth);
 				try
