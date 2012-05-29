@@ -19,6 +19,7 @@ namespace WeiboSDKWinformDemo
 		{
 			oAuth = oauth;
 			InitializeComponent();
+
 		}
 
 		private void frmLogin_Load(object sender, EventArgs e)
