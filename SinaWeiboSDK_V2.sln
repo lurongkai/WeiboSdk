@@ -1,36 +1,67 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2010
+# Visual Studio 11
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApp", "TestConsoleApp\TestConsoleApp.csproj", "{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetDimension.Weibo", "NetDimension.Weibo\NetDimension.Weibo.csproj", "{7B795714-40D6-4B2E-A277-CBE13C33E1ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeiboSDKWinformDemo", "WeiboSDKWinformDemo\WeiboSDKWinformDemo.csproj", "{510CC983-2CBB-478F-AA9F-6815157248B4}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs25
 		SccLocalPath0 = .
-		SccProjectUniqueName1 = NetDimension.Weibo\\NetDimension.Weibo.csproj
-		SccProjectName1 = NetDimension.Weibo
 		SccLocalPath1 = NetDimension.Weibo
-		SccProjectUniqueName2 = TestConsoleApp\\TestConsoleApp.csproj
-		SccProjectName2 = TestConsoleApp
 		SccLocalPath2 = TestConsoleApp
+		SccLocalPath3 = WeiboSDKWinformDemo
+		SccNumberOfProjects = 4
+		SccProjectName1 = NetDimension.Weibo
+		SccProjectName2 = TestConsoleApp
+		SccProjectName3 = WeiboSDKWinformDemo
+		SccProjectUniqueName1 = NetDimension.Weibo\\NetDimension.Weibo.csproj
+		SccProjectUniqueName2 = TestConsoleApp\\TestConsoleApp.csproj
+		SccProjectUniqueName3 = WeiboSDKWinformDemo\\WeiboSDKWinformDemo.csproj
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs25
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{510CC983-2CBB-478F-AA9F-6815157248B4}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{510CC983-2CBB-478F-AA9F-6815157248B4}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{510CC983-2CBB-478F-AA9F-6815157248B4}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{510CC983-2CBB-478F-AA9F-6815157248B4}.Debug|x86.ActiveCfg = Debug|x86
+		{510CC983-2CBB-478F-AA9F-6815157248B4}.Debug|x86.Build.0 = Debug|x86
+		{510CC983-2CBB-478F-AA9F-6815157248B4}.Release|Any CPU.ActiveCfg = Release|x86
+		{510CC983-2CBB-478F-AA9F-6815157248B4}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{510CC983-2CBB-478F-AA9F-6815157248B4}.Release|Mixed Platforms.Build.0 = Release|x86
+		{510CC983-2CBB-478F-AA9F-6815157248B4}.Release|x86.ActiveCfg = Release|x86
+		{510CC983-2CBB-478F-AA9F-6815157248B4}.Release|x86.Build.0 = Release|x86
 		{7B795714-40D6-4B2E-A277-CBE13C33E1ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7B795714-40D6-4B2E-A277-CBE13C33E1ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B795714-40D6-4B2E-A277-CBE13C33E1ED}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7B795714-40D6-4B2E-A277-CBE13C33E1ED}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7B795714-40D6-4B2E-A277-CBE13C33E1ED}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{7B795714-40D6-4B2E-A277-CBE13C33E1ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B795714-40D6-4B2E-A277-CBE13C33E1ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B795714-40D6-4B2E-A277-CBE13C33E1ED}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7B795714-40D6-4B2E-A277-CBE13C33E1ED}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7B795714-40D6-4B2E-A277-CBE13C33E1ED}.Release|x86.ActiveCfg = Release|Any CPU
+		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

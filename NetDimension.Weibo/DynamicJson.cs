@@ -80,7 +80,11 @@ namespace Codeplex.Data
                 case JsonType.boolean:
                     return (bool)element;
                 case JsonType.number:
-                    return (double)element;
+					var pattern = string.Format("{0}", element);
+					if (pattern.IndexOf(".") > 0)
+						return (double)element;
+					else
+						return (string)element;
                 case JsonType.@string:
                     return (string)element;
                 case JsonType.@object:

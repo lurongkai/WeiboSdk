@@ -202,14 +202,15 @@ namespace NetDimension.Weibo
 			return HttpUtility.UrlEncode(Convert.ToBase64String(Guid.NewGuid().ToByteArray()));
 		}
 
-		public static byte[] BuildPostData(params WeiboParameter[] parameters)
+		public static byte[] BuildPostData(string boundary, params WeiboParameter[] parameters)
 		{
 			List<WeiboParameter> pairs = parameters.OrderBy(p => p.Name).ToList();
 
 			string division = GetBoundary();
 
-			string header = string.Format("--{0}", division);
-			string footer = string.Format("--{0}--", division);
+			string header = string.Format("--{0}", boundary);
+			string footer = string.Format("--{0}--", boundary);
+			string encoding = "iso-8859-1";//iso-8859-1
 
 			StringBuilder contentBuilder = new StringBuilder();
 
@@ -220,25 +221,28 @@ namespace NetDimension.Weibo
 					WeiboStringParameter param = p as WeiboStringParameter;
 					contentBuilder.AppendLine(header);
 					contentBuilder.AppendLine(string.Format("content-disposition: form-data; name=\"{0}\"", param.Name));
+					//contentBuilder.AppendLine("Content-Type: text/plain; charset=US-ASCII");// utf-8
+					//contentBuilder.AppendLine("Content-Transfer-Encoding: 8bit");
 					contentBuilder.AppendLine();
 					//contentBuilder.AppendLine(HttpUtility.UrlEncode(param.Value).Replace("+", "%20"));
-					contentBuilder.AppendLine(param.Value);
+					contentBuilder.AppendLine(HttpUtility.UrlEncode(param.Value).Replace("+", "%20"));
 				}
 				else
 				{
 					WeiboBinaryParameter param = p as WeiboBinaryParameter;
 					contentBuilder.AppendLine(header);
-					contentBuilder.AppendLine(string.Format("Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"", param.Name, string.Format("upload{0}", BitConverter.ToInt64(Guid.NewGuid().ToByteArray(), 0))));
+					contentBuilder.AppendLine(string.Format("content-disposition: form-data; name=\"{0}\"; filename=\"{1}\"", param.Name, string.Format("upload{0}", BitConverter.ToInt64(Guid.NewGuid().ToByteArray(), 0))));
 					contentBuilder.AppendLine("Content-Type: image/unknown");
+					contentBuilder.AppendLine("Content-Transfer-Encoding: binary");
 					contentBuilder.AppendLine();
-					contentBuilder.AppendLine(Encoding.Default.GetString(param.Value));
+					contentBuilder.AppendLine(Encoding.GetEncoding(encoding).GetString(param.Value));
 
 				}
 			}
 
 			contentBuilder.Append(footer);
 
-			return Encoding.Default.GetBytes(contentBuilder.ToString());
+			return Encoding.GetEncoding(encoding).GetBytes(contentBuilder.ToString());
 
 		}
 

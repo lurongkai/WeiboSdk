@@ -100,13 +100,14 @@ namespace NetDimension.Weibo
 
 						if (multi)
 						{
-							http.ContentType = "multipart/form-data";
+							string boundary = Utility.GetBoundary();
+							http.ContentType = string.Format("multipart/form-data; boundary={0}",boundary);
 							http.AllowWriteStreamBuffering = true;
 							using (Stream request = http.GetRequestStream())
 							{
 								try
 								{
-									var raw = Utility.BuildPostData(parameters);
+									var raw = Utility.BuildPostData(boundary,parameters);
 									request.Write(raw, 0, raw.Length);
 								}
 								finally

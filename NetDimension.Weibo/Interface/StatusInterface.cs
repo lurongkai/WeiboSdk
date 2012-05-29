@@ -409,7 +409,7 @@ namespace NetDimension.Weibo.Interface
 		/// <returns></returns>
 		public dynamic Upload(string status, byte[] pic, float lat = 0.0f, float log = 0.0f, string annotations = "")
 		{
-			return DynamicJson.Parse(Client.PostCommand("https://upload.api.weibo.com/2/statuses/upload",true,
+			return DynamicJson.Parse(Client.PostCommand("statuses/upload",true,
 						new WeiboStringParameter("status", status),
 						new WeiboBinaryParameter("pic",pic),
 						new WeiboStringParameter("lat", lat),
