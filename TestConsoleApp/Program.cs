@@ -39,7 +39,7 @@ namespace TestConsoleApp
 
 			//当然，SDK中还有更牛逼的获取access token的方法。这就是ClientLogin，这个方法模拟上述整个流程，并最终获取access token。登录并授权成则返回true。一步搞定，无需GetAuthorizeURL、GetCode、GetAccessTokenByAuthorizationCode三个步骤。居家旅行，杀人越货必备之良物啊！把上面的过程注释掉，用下面的方法来看看呗～
 			//这就是第二种方法，只需一步。而且这绝对不是官方的GetAccessToken时使用的password方式。下面的这个方法，不论你的AppKey的权限有多小都不受影响。非常适用于Winform
-			//var result = oauth.ClientLogin("<你的微博账号>", "<你的微博地址>", "https://api.weibo.com/oauth2/default.html");
+			//var result = oauth.ClientLogin("<你的微博账号>", "<你的微博密码>", "https://api.weibo.com/oauth2/default.html");
 			
 			if (!string.IsNullOrEmpty(accessToken))	//if (result)	//如果用ClientLogin，请换一下这个地方
 			{
