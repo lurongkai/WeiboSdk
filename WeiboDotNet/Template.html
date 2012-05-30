@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="css/stylesheet.css" />
+	<script type="text/javascript" src="scripts/jquery-1.7.2.js"></script>
+</head>
+<body>
+	<div id="header">
+		<div id="header_wrap" class="row">
+			<p id="logo">
+				<a href="#">Weibo<span>DotNet</span></a>
+			</p>
+			<ul id="page-links">
+				<li><a href="#" class="selected">主页</a></li>
+				<li><a href="#">联系</a></li>
+				<li><a href="#">评论</a></li>
+			</ul>
+			<div id="search-box" class="row">
+				<input type="text" id="search-box-text" />
+				<span id="search-box-button"><a href="#" class="magnify"></a></span><span id="search-box-tips">搜索微博内容</span>
+				<script type="text/javascript">
+					var searchTips = $("#search-box-tips");
+					var searchText = $("#search-box-text");
+					searchText.focus(function () {
+						searchTips.hide();
+						$(this).addClass("focus");
+					}).blur(function () {
+						if ($(this).val().length == 0) {
+							$(this).val("");
+							searchTips.show();
+						}
+						$(this).removeClass("focus");
+					});
+					searchTips.click(function () {
+						searchTips.hide();
+						searchText.trigger("focus");
+					});
+				</script>
+			</div>
+		</div>
+	</div>
+	<div id="content_wrap" class="row">
+		<div id="content_left_wrap">
+			<div class="panel">
+				<div class="box">
+					<a href="#" class="user-self">
+						<img src="http://tp3.sinaimg.cn/1732351714/50/5610733890/1" alt="" />
+						<span class="name">林选臣</span><span class="intro">Introduction</span>查看我的个人资料页面 </a>
+				</div>
+				<div class="status-box row">
+					<a href="#"><span>1</span>
+						<br />
+						微博 </a><a href="#" class="middle"><span>1</span>
+							<br />
+							正在关注 </a><a href="#"><span>1</span>
+								<br />
+								粉丝 </a>
+				</div>
+				<div id="status-box" class="box">
+					<textarea rows="0" cols="0" id="status-box-editor"></textarea>
+					<div id="status-box-tools" class="row">
+						<a href="#" title="添加图片" id="status-box-picture"><span></span></a>
+						<input type="button" value="发送微博" id="status-box-submit" />
+					</div>
+					<script type="text/javascript">
+						var editor = $("#status-box-editor");
+						editor.focus(function () {
+							$(this).addClass("focus");
+						}).blur(function () {
+							$(this).removeClass("focus");
+						});
+					</script>
+				</div>
+			</div>
+			<div class="panel">
+				<h2 class="title">推荐关注</h2>
+				<div class="box">
+					某些功能，大家自己来实现吧。。。
+				</div>
+			</div>
+			<div class="panel">
+				<h2 class="title">关于新浪微博SDK for .Net 4.0</h2>
+				<div class="box">
+					<ul>
+						<li>发布地址：<a href="http://www.cnblogs.com/linxuanchen/archive/2012/05/28/2521272.html">cnblogs</a></li>
+						<li>项目地址：<a href="http://weibosdk.codeplex.com">http://weibosdk.codeplex.com</a></li>
+						<li>开发者：林选臣</li>
+						<li>公司：<a href="http://qcyn.sina.com.cn">新浪网云南频道</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id="content_right_wrap">
+			<h2 class="title">
+				//最新微博/ Code for fun!
+			</h2>
+			<div class="status">
+				<img src="http://tp4.sinaimg.cn/1987012015/50/5607856668/1" alt="人名字" class="face" />
+				<p class="status-cotent"><span class="name">这是说的内容</span>：甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了。甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 </p>
+				<img src="http://ww2.sinaimg.cn/thumbnail/766f65afjw1dtf50slhz4j.jpg" alt="图片" class="inner-pic" />
+			</div>
+			<div class="status">
+				<img src="http://tp4.sinaimg.cn/1987012015/50/5607856668/1" alt="人名字" class="face" />
+				<p class="status-cotent">这是说的内容：甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了。甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 </p>
+				<div class="repost">
+					<p class="repost-cotent"><span class="name">@这是说的内容</span>：甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了。甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 </p>
+					<img src="http://ww2.sinaimg.cn/thumbnail/766f65afjw1dtf50slhz4j.jpg" alt="图片" class="inner-pic" />
+				</div>
+			</div>
+			<div class="status">
+				<img src="http://tp4.sinaimg.cn/1987012015/50/5607856668/1" alt="人名字" class="face" />
+				<p class="status-cotent"><span class="name">这是说的内容</span>：甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了。甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 </p>
+				<img src="http://ww2.sinaimg.cn/thumbnail/766f65afjw1dtf50slhz4j.jpg" alt="图片" class="inner-pic" />
+			</div>
+			<div class="status">
+				<img src="http://tp4.sinaimg.cn/1987012015/50/5607856668/1" alt="人名字" class="face" />
+				<p class="status-cotent">这是说的内容：甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了。甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 </p>
+				<div class="repost">
+					<p class="repost-cotent"><span class="name">@这是说的内容</span>：甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了。甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 </p>
+					<img src="http://ww2.sinaimg.cn/thumbnail/766f65afjw1dtf50slhz4j.jpg" alt="图片" class="inner-pic" />
+				</div>
+			</div>
+						<div class="status">
+				<img src="http://tp4.sinaimg.cn/1987012015/50/5607856668/1" alt="人名字" class="face" />
+				<p class="status-cotent"><span class="name">这是说的内容</span>：甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了。甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 </p>
+				<img src="http://ww2.sinaimg.cn/thumbnail/766f65afjw1dtf50slhz4j.jpg" alt="图片" class="inner-pic" />
+			</div>
+			<div class="status">
+				<img src="http://tp4.sinaimg.cn/1987012015/50/5607856668/1" alt="人名字" class="face" />
+				<p class="status-cotent">这是说的内容：甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了。甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 </p>
+				<div class="repost">
+					<p class="repost-cotent"><span class="name">@这是说的内容</span>：甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了。甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 淘单鞋的亲赶紧收了甜美范单鞋、凉鞋、小高跟鞋~这几家款式全 </p>
+					<img src="http://ww2.sinaimg.cn/thumbnail/766f65afjw1dtf50slhz4j.jpg" alt="图片" class="inner-pic" />
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

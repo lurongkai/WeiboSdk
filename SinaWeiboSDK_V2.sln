@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetDimension.Weibo", "NetDi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeiboSDKWinformDemo", "WeiboSDKWinformDemo\WeiboSDKWinformDemo.csproj", "{510CC983-2CBB-478F-AA9F-6815157248B4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeiboDotNet", "WeiboDotNet\WeiboDotNet.csproj", "{A1BE1E1F-EA8B-48FC-AC8A-30C824ED494F}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
@@ -14,13 +16,16 @@ Global
 		SccLocalPath1 = NetDimension.Weibo
 		SccLocalPath2 = TestConsoleApp
 		SccLocalPath3 = WeiboSDKWinformDemo
-		SccNumberOfProjects = 4
+		SccLocalPath4 = WeiboDotNet
+		SccNumberOfProjects = 5
 		SccProjectName1 = NetDimension.Weibo
 		SccProjectName2 = TestConsoleApp
 		SccProjectName3 = WeiboSDKWinformDemo
+		SccProjectName4 = WeiboDotNet
 		SccProjectUniqueName1 = NetDimension.Weibo\\NetDimension.Weibo.csproj
 		SccProjectUniqueName2 = TestConsoleApp\\TestConsoleApp.csproj
 		SccProjectUniqueName3 = WeiboSDKWinformDemo\\WeiboSDKWinformDemo.csproj
+		SccProjectUniqueName4 = WeiboDotNet\\WeiboDotNet.csproj
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs25
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +57,16 @@ Global
 		{7B795714-40D6-4B2E-A277-CBE13C33E1ED}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{7B795714-40D6-4B2E-A277-CBE13C33E1ED}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7B795714-40D6-4B2E-A277-CBE13C33E1ED}.Release|x86.ActiveCfg = Release|Any CPU
+		{A1BE1E1F-EA8B-48FC-AC8A-30C824ED494F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1BE1E1F-EA8B-48FC-AC8A-30C824ED494F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1BE1E1F-EA8B-48FC-AC8A-30C824ED494F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A1BE1E1F-EA8B-48FC-AC8A-30C824ED494F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A1BE1E1F-EA8B-48FC-AC8A-30C824ED494F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A1BE1E1F-EA8B-48FC-AC8A-30C824ED494F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1BE1E1F-EA8B-48FC-AC8A-30C824ED494F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1BE1E1F-EA8B-48FC-AC8A-30C824ED494F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A1BE1E1F-EA8B-48FC-AC8A-30C824ED494F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A1BE1E1F-EA8B-48FC-AC8A-30C824ED494F}.Release|x86.ActiveCfg = Release|Any CPU
 		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBB9E21E-F14F-4EF1-825E-34B8B99653E1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

@@ -34,11 +34,23 @@ namespace NetDimension.Weibo
 			internal set;
 		}
 
+		//public string UserID
+		//{
+		//	get;
+		//	internal set;
+		//}
+
 		public string RefreshToken
 		{
 			get;
 			internal set;
 		}
+
+		//public string ExpiresIn
+		//{
+		//	get;
+		//	internal set;
+		//}
 
 		/// <summary>
 		/// 
@@ -369,6 +381,8 @@ namespace NetDimension.Weibo
 			{
 				dynamic json = DynamicJson.Parse(response);
 				AccessToken = json.access_token;
+				//UserID = json.uid;
+				//ExpiresIn = json.expires_in;
 				return json.access_token;
 			}
 			else
