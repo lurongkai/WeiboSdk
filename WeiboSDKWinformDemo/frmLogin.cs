@@ -44,7 +44,7 @@ namespace WeiboSDKWinformDemo
 			btnLogin.Text = "登录中...";
 			btnLogin.Enabled = false;
 
-			var loginResult = oAuth.ClientLogin(txtPassport.Text, txtPassword.Text, "https://api.weibo.com/oauth2/default.html");
+			var loginResult = oAuth.ClientLogin(txtPassport.Text, txtPassword.Text, WeiboSDKWinformDemo.Properties.Settings.Default.CallbackUrl);
 
 			if (!loginResult)
 			{
