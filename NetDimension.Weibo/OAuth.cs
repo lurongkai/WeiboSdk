@@ -289,12 +289,19 @@ namespace NetDimension.Weibo
 		public bool ClientLogin(string passport, string password, string callbackUrl)
 		{
 			bool result = false;
-
+			ServicePointManager.ServerCertificateValidationCallback = (sender, certificate,chain,sslPolicyErrors) =>
+			{
+				return true;
+			};
+			CookieContainer MyCookieContainer = new CookieContainer();
 			HttpWebRequest http = WebRequest.Create(AUTHORIZE_URL) as HttpWebRequest;
 			http.Referer = GetAuthorizeURL(callbackUrl);
 			http.Method = "POST";
 			http.ContentType = "application/x-www-form-urlencoded";
-			string postBody = string.Format("action=submit&withOfficalFlag=0&ticket=&isLoginSina=&response_type=code&regCallback=&redirect_uri={0}&client_id={1}&state=&from=&userId={2}&passwd={3}", HttpUtility.UrlEncode(callbackUrl), HttpUtility.UrlEncode(ClientID) , HttpUtility.UrlEncode(passport), HttpUtility.UrlEncode(password));
+			http.AllowAutoRedirect = true;
+			http.KeepAlive = true;
+			http.CookieContainer = MyCookieContainer;
+			string postBody = string.Format("action=submit&withOfficalFlag=0&ticket=&isLoginSina=&response_type=code&regCallback=&redirect_uri={0}&client_id={1}&state=&from=&userId={2}&passwd={3}&display=js", HttpUtility.UrlEncode(callbackUrl), HttpUtility.UrlEncode(ClientID) , HttpUtility.UrlEncode(passport), HttpUtility.UrlEncode(password));
 			byte[] postData = Encoding.Default.GetBytes(postBody);
 			http.ContentLength = postData.Length;
 
@@ -313,28 +320,70 @@ namespace NetDimension.Weibo
 					request.Close();
 				}
 			}
-
-			using (HttpWebResponse response = http.GetResponse() as HttpWebResponse)
+			string code = string.Empty;
+			try
 			{
-				if (response != null && response.ResponseUri != null)
+				using (HttpWebResponse response = http.GetResponse() as HttpWebResponse)
 				{
-					var queryStrs = HttpUtility.ParseQueryString(response.ResponseUri.Query);
-					if (!string.IsNullOrEmpty(queryStrs["code"]))
+					if (response != null && response.ResponseUri != null)
 					{
-						string code = queryStrs["code"];
-						try
+						var queryStrs = HttpUtility.ParseQueryString(response.ResponseUri.Query);
+						if (!string.IsNullOrEmpty(queryStrs["code"]))
 						{
-							string accessToken = GetAccessTokenByAuthorizationCode(code, callbackUrl);
-							if (!string.IsNullOrEmpty(accessToken))
-							{ 
-								result = true;
+							code = queryStrs["code"];
+						}
+						else
+						{
+							using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+							{
+								try
+								{
+									var html = reader.ReadToEnd();
+									if (!string.IsNullOrEmpty(html))
+									{
+										html = html.Replace(@"<script type=""text/javascript"">if(opener != null) {opener.Authorize(", "").Replace(");}</script>", "");
+										dynamic json = DynamicJson.Parse(html);
+										if (json.IsDefined("code"))
+										{
+											code = json.code;
+										}
+									}
+								}
+								catch (Exception readEx)
+								{
+									throw readEx;
+								}
+								finally
+								{
+									reader.Close();
+								}
 							}
 						}
-						catch
-						{ 
-							
-						}
 					}
+
+					
+
+					response.Close();
+				}
+			}
+			catch (System.Net.WebException wex)
+			{
+				throw wex;
+			}
+
+			if (!string.IsNullOrEmpty(code))
+			{
+				try
+				{
+					string accessToken = GetAccessTokenByAuthorizationCode(code, callbackUrl);
+					if (!string.IsNullOrEmpty(accessToken))
+					{
+						result = true;
+					}
+				}
+				catch (System.Net.WebException wex)
+				{
+					throw wex;
 				}
 			}
 
