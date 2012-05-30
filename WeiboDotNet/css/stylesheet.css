@@ -265,7 +265,7 @@ div.status-box {
 			color: #0084B4;
 		}
 
-#status-box-editor {
+.status-box-editor {
 	width: 290px;
 	height: 95px;
 	overflow: hidden;
@@ -275,11 +275,11 @@ div.status-box {
 	cursor: text;
 }
 
-	#status-box-editor:hover {
+	.status-box-editor:hover {
 		border: 1px solid #999;
 	}
 
-	#status-box-editor.focus {
+	.status-box-editor.focus {
 		outline: 0;
 		color: #333;
 		border-color: #56b4ef;
@@ -354,6 +354,8 @@ div.status {
 	position: relative;
 	background: #fafafa;
 	border-bottom: 1px solid #dedfe2;
+	min-height:80px;
+	_height:80px;
 }
 
 	div.status p {

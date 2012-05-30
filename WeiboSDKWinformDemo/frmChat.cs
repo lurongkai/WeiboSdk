@@ -199,7 +199,7 @@ namespace WeiboSDKWinformDemo
 				else
 				{
 					dynamic result = Sina.API.Statuses.Upload(status, imgBytes);
-					LoadFriendTimeline();
+					
 					MessageBox.Show(this, "小心自己的艳照被发到网上哟～去主页上看看吧～", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
 					
 					imgBytes = null;
@@ -209,7 +209,7 @@ namespace WeiboSDKWinformDemo
 
 
 				txtStatusBody.Text = string.Empty;
-
+				LoadFriendTimeline();
 			}
 			catch (WeiboException ex)
 			{

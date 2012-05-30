@@ -60,7 +60,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Callback.aspx" />
     <Content Include="css\reset.css" />
     <Content Include="css\stylesheet.css" />
     <Content Include="Default.aspx" />
@@ -75,13 +74,6 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Callback.aspx.cs">
-      <DependentUpon>Callback.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Callback.aspx.designer.cs">
-      <DependentUpon>Callback.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Cookie.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

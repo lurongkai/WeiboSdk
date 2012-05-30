@@ -50,9 +50,9 @@
 					<asp:TextBox runat="server" ID="txtPassword" TextMode="Password"></asp:TextBox>
 				</td>
 			</tr>
-
 		</table>
-		<asp:Label runat="server" ID="lblResult"></asp:Label>
+		<p><asp:Label runat="server" ID="lblResult"></asp:Label></p>
+		<p>如果已经授权成功，请先<asp:LinkButton ID="lbLogout" runat="server" onclick="lbLogout_Click">注销登录</asp:LinkButton></p>
 	</form>
 </body>
 </html>

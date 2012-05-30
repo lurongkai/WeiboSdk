@@ -77,20 +77,42 @@
 								粉丝 </a>
 				</div>
 				<div id="status-box" class="box">
-					<textarea rows="0" cols="0" id="status-box-editor"></textarea>
-					<div id="status-box-tools" class="row">
-						<a href="#" title="添加图片" id="status-box-picture"><span></span></a>
-						
-						<asp:Button runat="server" ClientIDMode="Static" id="btnSend" CssClass="status-box-submit" Text="发送微博" />
-					</div>
+					<asp:TextBox runat="server" ID="txtStatusBody" CssClass="status-box-editor" TextMode="MultiLine"></asp:TextBox>
 					<script type="text/javascript">
-						var editor = $("#status-box-editor");
-						editor.focus(function () {
+						var editor = $("#<%=txtStatusBody.ClientID %>");
+						editor.focus(function ()
+						{
 							$(this).addClass("focus");
-						}).blur(function () {
+						}).blur(function ()
+						{
 							$(this).removeClass("focus");
 						});
 					</script>
+					<div id="status-box-tools" class="row">
+						<a href="#" title="添加图片" id="status-box-picture"><span></span></a>
+						<asp:FileUpload runat="server" ID="fileUpload1"></asp:FileUpload>
+						<script type="text/javascript">
+							var upload = document.getElementById("<%=fileUpload1.ClientID%>");
+
+//							upload.change(function ()
+//							{
+//								var fileName = $(this).val();
+//								var fileExt = fileName.substr(fileName.lastIndexOf("."));
+//								if (!fileExt.match(/\.jpg|\.png|\.gif/i))//验证一下是不是图片
+//								{
+//									alert("只能上传jpg,png,gif图片。");
+//								}
+
+//							})
+
+							$("#status-box-picture").click(function ()
+							{
+								upload.click();
+							});
+						</script>
+						<asp:Button runat="server" ClientIDMode="Static" id="btnSend" CssClass="status-box-submit" Text="发送微博" onclick="btnSend_Click" />
+					</div>
+
 				</div>
 			</div>
 			<div class="panel">

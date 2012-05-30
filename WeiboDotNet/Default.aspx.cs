@@ -106,5 +106,30 @@ namespace WeiboDotNet
 			statusesHtml.Text = statusBuilder.ToString();
 		}
 
+		protected void btnSend_Click(object sender, EventArgs e)
+		{
+			string status = string.Empty;
+			if (txtStatusBody.Text.Length == 0)
+			{
+				status = "我很懒，所以我直接点了发布按钮。";
+			}
+			else
+			{
+				status = txtStatusBody.Text;
+			}
+
+
+			if (fileUpload1.HasFile)
+			{
+				dynamic result = Sina.API.Statuses.Upload(status, fileUpload1.FileBytes);
+			}
+			else
+			{
+				dynamic result = Sina.API.Statuses.Update(status);
+			}
+
+			Response.RedirectPermanent("Default.aspx");
+		}
+
 	}
 }
