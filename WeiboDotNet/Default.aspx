@@ -1,10 +1,9 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="WeiboDotNet.Default" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>新浪微博SDK for .Net 4.0 Web Demo</title>
+	<title>新浪微博SDK for .Net 4.0 Web Demo</title>
 	<link rel="stylesheet" type="text/css" href="css/reset.css" />
 	<link rel="stylesheet" type="text/css" href="css/stylesheet.css" />
 	<script type="text/javascript" src="scripts/jquery-1.7.2.js"></script>
@@ -23,8 +22,7 @@
 	</script>
 </head>
 <body>
-	
-    <form id="form1" runat="server">
+	<form id="form1" runat="server">
 	<div id="header">
 		<div id="header_wrap" class="row">
 			<p id="logo">
@@ -89,36 +87,28 @@
 						});
 					</script>
 					<div id="status-box-tools" class="row">
-						<a href="#" title="添加图片" id="status-box-picture"><span></span></a>
-						<asp:FileUpload runat="server" ID="fileUpload1"></asp:FileUpload>
-						<script type="text/javascript">
-							var upload = document.getElementById("<%=fileUpload1.ClientID%>");
-
-//							upload.change(function ()
-//							{
-//								var fileName = $(this).val();
-//								var fileExt = fileName.substr(fileName.lastIndexOf("."));
-//								if (!fileExt.match(/\.jpg|\.png|\.gif/i))//验证一下是不是图片
-//								{
-//									alert("只能上传jpg,png,gif图片。");
-//								}
-
-//							})
-
-							$("#status-box-picture").click(function ()
-							{
-								upload.click();
-							});
-						</script>
-						<asp:Button runat="server" ClientIDMode="Static" id="btnSend" CssClass="status-box-submit" Text="发送微博" onclick="btnSend_Click" />
+						<label title="添加图片" id="status-box-picture">
+							<span></span>
+							<asp:FileUpload runat="server" ID="fileUpload1" CssClass="status-box-input"></asp:FileUpload>
+						</label>
+						<asp:Button runat="server" ClientIDMode="Static" ID="btnSend" CssClass="status-box-submit" Text="发送微博" OnClick="btnSend_Click" />
 					</div>
-
 				</div>
 			</div>
 			<div class="panel">
 				<h2 class="title">推荐关注</h2>
 				<div class="box">
-					某些功能，大家自己来实现吧。。。
+					<asp:Repeater ID="rtpFamous" runat="server">
+						<ItemTemplate>
+							<a href="#" class="user-self">
+								<img id="user-face" src="<%#Eval("pic") %>" alt="" />
+								<span class="name" id="user-name"><%#Eval("name") %></span>
+								<span class="intro" id="user-intro"><%#Eval("desc") %></span>
+								加关注
+							</a>
+							<br />
+						</ItemTemplate>
+					</asp:Repeater>
 				</div>
 			</div>
 			<div class="panel">
@@ -134,12 +124,10 @@
 			</div>
 		</div>
 		<div id="content_right_wrap">
-			<h2 class="title">
-				//最新微博/ Code for fun!
-			</h2>
+			<h2 class="title">//最新微博/ Code for fun! </h2>
 			<asp:Literal runat="server" ID="statusesHtml"></asp:Literal>
 		</div>
 	</div>
-    </form>
+	</form>
 </body>
 </html>

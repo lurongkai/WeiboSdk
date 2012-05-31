@@ -33,7 +33,7 @@ namespace WeiboDotNet
 			UserID = string.Format("{0}",result.uid);
 
 			LoadFriendTimeline(); //生成微博列表，当然，你要搞个数据绑定什么也是可以的
-
+			BindList();	//ASP.Net最牛B的东西，数据绑定
 		}
 
 		/// <summary>
@@ -44,6 +44,34 @@ namespace WeiboDotNet
 		{
 			var user = Sina.API.Users.Show(UserID);
 			return string.Format("{0}",user);
+		}
+
+		/// <summary>
+		/// 再来个数据绑定的例子
+		/// </summary>
+		public void BindList()
+		{
+			
+			var json = Sina.API.Suggestions.HotUsers();
+			List<object> datasource = new List<object>();
+			int i = 0;
+			foreach (var user in json)
+			{
+				var ds = new { 
+					name = user.screen_name,
+					desc = user.description.Length>=20?string.Format("{0}",user.description).Substring(0,20) :user.description,
+					pic = user.profile_image_url
+				};
+
+				datasource.Add(ds);
+
+				if (++i > 1)	//官方的HotUsers接口居然不能设定返回数量？？悲剧了嘛
+					break;
+			}
+
+			rtpFamous.DataSource = datasource;
+			rtpFamous.DataBind();
+
 		}
 
 		/// <summary>

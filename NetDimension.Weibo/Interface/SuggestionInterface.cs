@@ -20,7 +20,7 @@ namespace NetDimension.Weibo.Interface
 		/// </summary>
 		/// <param name="category"></param>
 		/// <returns></returns>
-		public dynamic HotUsers(HotUserCatagory category)
+		public dynamic HotUsers(HotUserCatagory category = HotUserCatagory.@default)
 		{
 			return DynamicJson.Parse(Client.GetCommand("suggestions/users/hot",
 				new WeiboStringParameter("category", category)));

@@ -198,12 +198,25 @@ a.turkey {
 			padding: 10px;
 		}
 
+			#content_left_wrap div.panel div.box ul li {
+				line-height: 1.5;
+			}
+
+				#content_left_wrap div.panel div.box ul li a {
+					color: #0084B4;
+				}
+
+					#content_left_wrap div.panel div.box ul li a:hover {
+						text-decoration: underline;
+					}
+
 a.user-self {
 	display: block;
 	padding-left: 60px;
 	position: relative;
 	color: #999;
 	font: 12px/1.5 微软雅黑,Tahoma,宋体;
+	min-height: 60px;
 }
 
 	a.user-self img {
@@ -296,6 +309,7 @@ div.status-box {
 	width: 28px;
 	height: 28px;
 	position: relative;
+	overflow: hidden;
 }
 
 	#status-box-picture span {
@@ -318,6 +332,22 @@ div.status-box {
 			background-position: 0 -180px;
 		}
 
+.status-box-input {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	border: solid transparent;
+	border-width: 0 0 100px 200px;
+	opacity: 0.0;
+	filter: alpha(opacity=0);
+	-o-transform: translate(250px, -50px) scale(1);
+	-moz-transform: translate(-300px, 0) scale(4);
+	direction: ltr;
+	cursor: pointer;
+}
+
+
 .status-box-submit {
 	outline: none;
 	height: 28px;
@@ -325,8 +355,7 @@ div.status-box {
 	float: right;
 	color: #fff;
 	background-color: #1da1e0;
-	border:0;
-	
+	border: 0;
 }
 
 	.status-box-submit:hover {
@@ -350,12 +379,12 @@ div.status-box {
 
 
 div.status {
-	padding:10px 10px 10px 70px;
+	padding: 10px 10px 10px 70px;
 	position: relative;
 	background: #fafafa;
 	border-bottom: 1px solid #dedfe2;
-	min-height:80px;
-	_height:80px;
+	min-height: 80px;
+	_height: 80px;
 }
 
 	div.status p {
