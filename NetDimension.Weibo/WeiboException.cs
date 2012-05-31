@@ -65,6 +65,17 @@ namespace NetDimension.Weibo
 
 		}
 
+		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
+		{
+			base.GetObjectData(serializationInfo, streamingContext);
+
+			if (serializationInfo != null)
+			{
+
+			}
+		}
+
+
 		private static string GetErrorMsg(string errorCode)
 		{
 			//GO http://open.weibo.com/wiki/Error_code

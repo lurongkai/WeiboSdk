@@ -159,9 +159,9 @@ namespace NetDimension.Weibo
 						{
 							result = reader.ReadToEnd();
 						}
-						catch (Exception readEx)
+						catch 
 						{
-							throw readEx;
+							throw;
 						}
 						finally
 						{
@@ -195,9 +195,9 @@ namespace NetDimension.Weibo
 				}
 
 			}
-			catch (Exception ex)
+			catch
 			{
-				throw ex;
+				throw;
 			}
 			return result;
 		}
@@ -311,9 +311,9 @@ namespace NetDimension.Weibo
 				{
 					request.Write(postData, 0, postData.Length);
 				}
-				catch(Exception ex)
+				catch
 				{
-					throw ex;
+					throw;
 				}
 				finally
 				{ 
@@ -349,9 +349,9 @@ namespace NetDimension.Weibo
 										}
 									}
 								}
-								catch (Exception readEx)
+								catch
 								{
-									throw readEx;
+									throw;
 								}
 								finally
 								{
@@ -366,9 +366,9 @@ namespace NetDimension.Weibo
 					response.Close();
 				}
 			}
-			catch (System.Net.WebException wex)
+			catch (System.Net.WebException)
 			{
-				throw wex;
+				throw;
 			}
 
 			if (!string.IsNullOrEmpty(code))
@@ -381,9 +381,9 @@ namespace NetDimension.Weibo
 						result = true;
 					}
 				}
-				catch (System.Net.WebException wex)
+				catch (System.Net.WebException)
 				{
-					throw wex;
+					throw;
 				}
 			}
 

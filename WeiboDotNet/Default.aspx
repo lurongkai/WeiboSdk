@@ -12,7 +12,7 @@
 		var userInfo = <%=LoadUserInfo()%>;
 		//直接调用上面的数据了
 		$(function(){
-			$("#user-face").text(userInfo["profile_image_url"]);
+			$("#user-face").attr("src",userInfo["profile_image_url"]);
 			$("#user-name").text(userInfo["screen_name"]);
 			$("#user-intro").text(userInfo["description"]);
 			$("#user-statuses-count").text(userInfo["statuses_count"]);
