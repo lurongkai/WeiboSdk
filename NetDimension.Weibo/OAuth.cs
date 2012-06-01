@@ -159,7 +159,7 @@ namespace NetDimension.Weibo
 						{
 							result = reader.ReadToEnd();
 						}
-						catch 
+						catch(WeiboException) 
 						{
 							throw;
 						}
@@ -195,7 +195,7 @@ namespace NetDimension.Weibo
 				}
 
 			}
-			catch
+			catch (WeiboException) 
 			{
 				throw;
 			}
