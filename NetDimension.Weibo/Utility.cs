@@ -26,14 +26,14 @@ namespace NetDimension.Weibo
 		ApponWeibo
 	}
 
-	public enum GrantType
+	internal enum GrantType
 	{
 		AuthorizationCode,
 		Password,
 		RefreshToken
 	}
 
-	public enum RequestMethod
+	internal enum RequestMethod
 	{
 		Get,
 		Post

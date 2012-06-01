@@ -195,7 +195,7 @@ namespace NetDimension.Weibo
 				}
 
 			}
-			catch (WeiboException) 
+			catch
 			{
 				throw;
 			}
