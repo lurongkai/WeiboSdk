@@ -7,6 +7,7 @@ using System.Web;
 using System.IO;
 using Codeplex.Data;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace NetDimension.Weibo
 {
@@ -301,7 +302,7 @@ namespace NetDimension.Weibo
 			http.AllowAutoRedirect = true;
 			http.KeepAlive = true;
 			http.CookieContainer = MyCookieContainer;
-			string postBody = string.Format("action=submit&withOfficalFlag=0&ticket=&isLoginSina=&response_type=code&regCallback=&redirect_uri={0}&client_id={1}&state=&from=&userId={2}&passwd={3}&display=js", HttpUtility.UrlEncode(callbackUrl), HttpUtility.UrlEncode(ClientID) , HttpUtility.UrlEncode(passport), HttpUtility.UrlEncode(password));
+			string postBody = string.Format("action=submit&withOfficalFlag=0&ticket=&isLoginSina=&response_type=token&regCallback=&redirect_uri={0}&client_id={1}&state=&from=&userId={2}&passwd={3}&display=js", HttpUtility.UrlEncode(callbackUrl), HttpUtility.UrlEncode(ClientID) , HttpUtility.UrlEncode(passport), HttpUtility.UrlEncode(password));
 			byte[] postData = Encoding.Default.GetBytes(postBody);
 			http.ContentLength = postData.Length;
 
@@ -325,63 +326,33 @@ namespace NetDimension.Weibo
 			{
 				using (HttpWebResponse response = http.GetResponse() as HttpWebResponse)
 				{
-					if (response != null && response.ResponseUri != null)
+					if (response != null)
 					{
-						var queryStrs = HttpUtility.ParseQueryString(response.ResponseUri.Query);
-						if (!string.IsNullOrEmpty(queryStrs["code"]))
+						using (StreamReader reader = new StreamReader(response.GetResponseStream()))
 						{
-							code = queryStrs["code"];
-						}
-						else
-						{
-							using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+							try
 							{
-								try
+								var html = reader.ReadToEnd();
+								if (!string.IsNullOrEmpty(html) && Regex.IsMatch(html, @"\{""access_token"":""(?<token>.{32})"",""remind_in"":""(?<remind>\d+)"",""expires_in"":(?<expires>\d+),""uid"":""(?<uid>\d+)""\}"))
 								{
-									var html = reader.ReadToEnd();
-									if (!string.IsNullOrEmpty(html))
-									{
-										html = html.Replace(@"<script type=""text/javascript"">if(opener != null) {opener.Authorize(", "").Replace(");}</script>", "");
-										dynamic json = DynamicJson.Parse(html);
-										if (json.IsDefined("code"))
-										{
-											code = json.code;
-										}
-									}
+									var group = Regex.Match(html, @"\{""access_token"":""(?<token>.{32})"",""remind_in"":""(?<remind>\d+)"",""expires_in"":(?<expires>\d+),""uid"":""(?<uid>\d+)""\}");
+									AccessToken = group.Groups["token"].Value;
+									result = true;
 								}
-								catch { }
-								finally
-								{
-									reader.Close();
-								}
+							}
+							catch { }
+							finally
+							{
+								reader.Close();
 							}
 						}
 					}
-
-					
-
 					response.Close();
 				}
 			}
 			catch (System.Net.WebException)
 			{
 				throw;
-			}
-
-			if (!string.IsNullOrEmpty(code))
-			{
-				try
-				{
-					string accessToken = GetAccessTokenByAuthorizationCode(code, callbackUrl);
-					if (!string.IsNullOrEmpty(accessToken))
-					{
-						result = true;
-					}
-				}
-				catch (System.Net.WebException)
-				{
-					throw;
-				}
 			}
 
 			return result;
