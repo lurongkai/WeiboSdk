@@ -349,10 +349,6 @@ namespace NetDimension.Weibo
 										}
 									}
 								}
-								catch
-								{
-									throw;
-								}
 								finally
 								{
 									reader.Close();
