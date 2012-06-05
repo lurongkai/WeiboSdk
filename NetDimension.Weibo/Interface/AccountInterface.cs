@@ -35,16 +35,30 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="keyword">学校名称关键字。</param>
 		/// <param name="count">返回的记录条数，默认为10。</param>
 		/// <returns>JSON</returns>
-		public dynamic SchoolList(int province, int city, int area, int type = 1, char capital = 'A', string keyword = "", int count = 10)
+		public dynamic SchoolList(string province = "", string city = "", string area = "", string type = "1", string capital = "", string keyword = "", int count = 10)
 		{
+			var p = new List<WeiboParameter>{
+				string.IsNullOrEmpty(capital)?new WeiboStringParameter("keyword", keyword): new WeiboStringParameter("capital", capital),
+				new WeiboStringParameter("count", count)
+			};
+
+			if (!string.IsNullOrEmpty(province))
+			{
+				p.Add(new WeiboStringParameter("province", province));
+			}
+
+			if (!string.IsNullOrEmpty(city))
+			{
+				p.Add(new WeiboStringParameter("city", city));
+			}
+
+			if (!string.IsNullOrEmpty(area))
+			{
+				p.Add(new WeiboStringParameter("area", area));
+			}
+
 			return DynamicJson.Parse(Client.GetCommand("account/profile/school_list",
-				new WeiboStringParameter("province", province),
-				new WeiboStringParameter("city", city),
-				new WeiboStringParameter("area", area),
-				new WeiboStringParameter("type", type),
-				new WeiboStringParameter("capital", capital),
-				new WeiboStringParameter("keyword", keyword),
-				new WeiboStringParameter("count", count)));
+				p.ToArray()));
 		}
 
 		/// <summary>
