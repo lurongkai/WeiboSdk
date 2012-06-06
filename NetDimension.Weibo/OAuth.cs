@@ -333,7 +333,7 @@ namespace NetDimension.Weibo
 							try
 							{
 								var html = reader.ReadToEnd();
-								if (!string.IsNullOrEmpty(html) && Regex.IsMatch(html, @"\{""access_token"":""(?<token>.{32})"",""remind_in"":""(?<remind>\d+)"",""expires_in"":(?<expires>\d+),""uid"":""(?<uid>\d+)""\}"))
+								if (!string.IsNullOrEmpty(html) && Regex.IsMatch(html, @"\{""access_token"":""(?<token>.{0,32})"",""remind_in"":""(?<remind>\d+)"",""expires_in"":(?<expires>\d+),""uid"":""(?<uid>\d+)""\}"))
 								{
 									var group = Regex.Match(html, @"\{""access_token"":""(?<token>.{32})"",""remind_in"":""(?<remind>\d+)"",""expires_in"":(?<expires>\d+),""uid"":""(?<uid>\d+)""\}");
 									AccessToken = group.Groups["token"].Value;
