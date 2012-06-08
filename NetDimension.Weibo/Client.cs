@@ -22,6 +22,7 @@ namespace NetDimension.Weibo
 			private set;
 		}
 
+#if NET40
 		/// <summary>
 		/// 微博动态类型接口
 		/// </summary>
@@ -29,14 +30,14 @@ namespace NetDimension.Weibo
 		{
 			get;
 			private set;
+		}		
+#else
+		public Interface.EntityInterfaces API
+		{
+			get;
+			private set;
 		}
-		
-		//TODO:如果要编译其他版本的API，请使用这种API
-		//public Interface.EntityInterfaces API
-		//{
-		//	get;
-		//	private set;
-		//}
+#endif
 		
 		/// <summary>
 		/// 实例化微博操作类
@@ -45,10 +46,11 @@ namespace NetDimension.Weibo
 		public Client(OAuth oauth)
 		{
 			this.OAuth = oauth;
-
+#if NET40
 			API = new Interface.InterfaceSelector(this);
-			//TODO:其他版本的请使用下面的实例化方法
-			//API = new Interface.EntityInterfaces(this);
+#else
+			API = new Interface.EntityInterfaces(this);
+#endif
 		}
 
 

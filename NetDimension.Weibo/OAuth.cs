@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Net;
 using System.Web;
 using System.IO;
+#if NET40
 using Codeplex.Data;
+#endif
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
@@ -97,7 +98,7 @@ namespace NetDimension.Weibo
 			http.ServicePoint.Expect100Continue = false;
 			http.UserAgent = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0)";
 
-			if (!string.IsNullOrWhiteSpace(AccessToken))
+			if (!string.IsNullOrEmpty(AccessToken))
 			{
 				http.Headers["Authorization"] = string.Format("OAuth2 {0}", AccessToken);
 			}
