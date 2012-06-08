@@ -9,30 +9,32 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NetDimension.Weibo</RootNamespace>
     <AssemblyName>NetDimension.Weibo</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin\Debug\NET35\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET35</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\NetDimension.Weibo.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\NET35\NetDimension.Weibo.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <OutputPath>bin\Release\NET35\</OutputPath>
+    <DefineConstants>NET35</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\NET35\NetDimension.Weibo.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -41,14 +43,12 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessToken.cs" />
     <Compile Include="Client.cs" />
-    <Compile Include="DynamicJson.cs" />
     <Compile Include="Entities\comment\Collection.cs" />
     <Compile Include="Entities\comment\Entity.cs" />
     <Compile Include="Entities\favorite\Collection.cs" />
@@ -95,19 +95,6 @@
     <Compile Include="Entities\user\IDCollection.cs" />
     <Compile Include="Entities\VerifyNickNameResult.cs" />
     <Compile Include="Error.cs" />
-    <Compile Include="Interface\Dynamic\AccountInterface.cs" />
-    <Compile Include="Interface\Dynamic\CommentInterface.cs" />
-    <Compile Include="Interface\Dynamic\CommonInterface.cs" />
-    <Compile Include="Interface\Dynamic\FavoriteInterface.cs" />
-    <Compile Include="Interface\Dynamic\FriendshipInterface.cs" />
-    <Compile Include="Interface\DynamicInterfaces.cs" />
-    <Compile Include="Interface\Dynamic\SearchInterface.cs" />
-    <Compile Include="Interface\Dynamic\ShortUrlInterface.cs" />
-    <Compile Include="Interface\Dynamic\StatusInterface.cs" />
-    <Compile Include="Interface\Dynamic\SuggestionInterface.cs" />
-    <Compile Include="Interface\Dynamic\TagInterface.cs" />
-    <Compile Include="Interface\Dynamic\TrendInterface.cs" />
-    <Compile Include="Interface\Dynamic\UserInterface.cs" />
     <Compile Include="Interface\Entity\AccountInterface.cs" />
     <Compile Include="Interface\Entity\CommentInterface.cs" />
     <Compile Include="Interface\Entity\CommonInterface.cs" />
