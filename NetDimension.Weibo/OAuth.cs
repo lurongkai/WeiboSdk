@@ -8,6 +8,7 @@ using System.IO;
 using Codeplex.Data;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace NetDimension.Weibo
 {
@@ -185,10 +186,17 @@ namespace NetDimension.Weibo
 #if DEBUG
 						Debug.WriteLine(errorInfo);
 #endif
-						dynamic json = DynamicJson.Parse(errorInfo);
+						//dynamic json = DynamicJson.Parse(errorInfo);
+						//reader.Close();
+
+						//throw new WeiboException(string.Format("{0}",json.error_code), json.error, json.request);
+
+						Error error = JsonConvert.DeserializeObject<Error>(errorInfo);
+
 						reader.Close();
 
-						throw new WeiboException(string.Format("{0}",json.error_code), json.error, json.request);
+						throw new WeiboException(string.Format("{0}", error.Code), error.Message, error.Request);
+
 					}
 				}
 				else
@@ -273,7 +281,7 @@ namespace NetDimension.Weibo
 		/// <param name="code">Code</param>
 		/// <param name="callbackUrl">绑定的回调地址</param>
 		/// <returns></returns>
-		public string GetAccessTokenByAuthorizationCode(string code,string callbackUrl)
+		public AccessToken GetAccessTokenByAuthorizationCode(string code, string callbackUrl)
 		{
 			return GetAccessToken(GrantType.AuthorizationCode, new Dictionary<string, string> { 
 				{"code",code},
@@ -287,7 +295,7 @@ namespace NetDimension.Weibo
 		/// <param name="passport">账号</param>
 		/// <param name="password">密码</param>
 		/// <returns></returns>
-		public string GetAccessTokenByPassword(string passport, string password)
+		public AccessToken GetAccessTokenByPassword(string passport, string password)
 		{
 			return GetAccessToken(GrantType.Password, new Dictionary<string, string> { 
 				{"username",passport},
@@ -300,7 +308,8 @@ namespace NetDimension.Weibo
 		/// </summary>
 		/// <param name="refreshToken">refresh token，目前还不知道从哪里获取这个token，未开放</param>
 		/// <returns></returns>
-		public string GetAccessTokenByRefreshToken(string refreshToken) {
+		public AccessToken GetAccessTokenByRefreshToken(string refreshToken)
+		{
 			return GetAccessToken(GrantType.RefreshToken, new Dictionary<string, string> { 
 				{"refresh_token",refreshToken}
 			});
@@ -385,7 +394,7 @@ namespace NetDimension.Weibo
 
 		}
 
-		internal string GetAccessToken(GrantType type, Dictionary<string,string> parameters)
+		internal AccessToken GetAccessToken(GrantType type, Dictionary<string, string> parameters)
 		{
 
 			List<WeiboStringParameter> config = new List<WeiboStringParameter>()
@@ -422,15 +431,18 @@ namespace NetDimension.Weibo
 
 			if (!string.IsNullOrEmpty(response))
 			{
-				dynamic json = DynamicJson.Parse(response);
-				AccessToken = json.access_token;
+				//dynamic json = DynamicJson.Parse(response);
+				//AccessToken = json.access_token;
 				//UserID = json.uid;
 				//ExpiresIn = json.expires_in;
-				return json.access_token;
+				//return json.access_token;
+				AccessToken token = JsonConvert.DeserializeObject<AccessToken>(response);
+				AccessToken = token.Token;
+				return token;
 			}
 			else
 			{
-				return string.Empty;
+				return null;
 			}
 		}
 

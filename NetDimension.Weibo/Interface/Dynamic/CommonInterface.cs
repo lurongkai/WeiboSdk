@@ -5,7 +5,7 @@ using System.Text;
 using System.Web;
 using Codeplex.Data;
 
-namespace NetDimension.Weibo.Interface
+namespace NetDimension.Weibo.Interface.Dynamic
 {
 	/// <summary>
 	/// Common接口

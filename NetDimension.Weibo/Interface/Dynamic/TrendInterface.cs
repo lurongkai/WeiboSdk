@@ -5,7 +5,7 @@ using System.Text;
 using Codeplex.Data;
 
 
-namespace NetDimension.Weibo.Interface
+namespace NetDimension.Weibo.Interface.Dynamic
 {
 	/// <summary>
 	/// Trend接口

@@ -1,22 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using NetDimension.Weibo.Entities;
 using System.Text;
 using System.Web;
-using Codeplex.Data;
+using Newtonsoft.Json;
 
-namespace NetDimension.Weibo.Interface
+namespace NetDimension.Weibo.Interface.Entity
 {
-	/// <summary>
-	/// ShortUrl接口
-	/// </summary>
 	public class ShortUrlInterface: WeiboInterface
 	{
-
-		/// <summary>
-		/// 构造函数
-		/// </summary>
-		/// <param name="client">操作类</param>
 		public ShortUrlInterface(Client client)
 			: base(client)
 		{
@@ -27,34 +19,34 @@ namespace NetDimension.Weibo.Interface
 		/// </summary>
 		/// <param name="url_short">需要取得点击数的短链接</param>
 		/// <returns></returns>
-		public dynamic Clicks(string url_short)
+		public IEnumerable<Entities.shortUrl.Clicks> Clicks(string url_short)
 		{
-			return DynamicJson.Parse(Client.GetCommand("short_url/clicks", new WeiboStringParameter("url_short", url_short)));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Clicks>>(Client.GetCommand("short_url/clicks", new WeiboStringParameter("url_short", url_short)));
 		}
 		/// <summary>
 		/// 获取一个短链接点击的referer来源和数量
 		/// </summary>
 		/// <param name="url_short">需要取得点击来源的短链接</param>
 		/// <returns></returns>
-		public dynamic Referers(string url_short)
+		public Entities.shortUrl.Referers Referers(string url_short)
 		{
-			return DynamicJson.Parse(Client.GetCommand("short_url/referers", new WeiboStringParameter("url_short", url_short)));
+			return JsonConvert.DeserializeObject<Entities.shortUrl.Referers>(Client.GetCommand("short_url/referers", new WeiboStringParameter("url_short", url_short)));
 		}
 		/// <summary>
 		/// 获取一个短链接点击的地区来源和数量 
 		/// </summary>
 		/// <param name="url_short">需要取得点击地区的短链接</param>
 		/// <returns></returns>
-		public dynamic Locations(string url_short)
+		public Entities.shortUrl.Locations Locations(string url_short)
 		{
-			return DynamicJson.Parse(Client.GetCommand("short_url/locations", new WeiboStringParameter("url_short", url_short)));
+			return JsonConvert.DeserializeObject<Entities.shortUrl.Locations>(Client.GetCommand("short_url/locations", new WeiboStringParameter("url_short", url_short)));
 		}
 		/// <summary>
 		/// 批量获取短链接的富内容信息
 		/// </summary>
 		/// <param name="url_short">需要获取富内容信息的短链接</param>
 		/// <returns></returns>
-		public dynamic Info(params string[] url_short)
+		public IEnumerable<Entities.shortUrl.Info> Info(params string[] url_short)
 		{
 			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
 
@@ -63,7 +55,7 @@ namespace NetDimension.Weibo.Interface
 				parameters.Add(new WeiboStringParameter("url_short", u));
 			}
 
-			return DynamicJson.Parse(Client.GetCommand("short_url/info", parameters.ToArray()));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Info>>(Client.GetCommand("short_url/info", parameters.ToArray()));
 		}
 
 		/// <summary>
@@ -71,7 +63,7 @@ namespace NetDimension.Weibo.Interface
 		/// </summary>
 		/// <param name="url_long">需要转换的长链接，需要URLencoded，最多不超过20个。 </param>
 		/// <returns></returns>
-		public dynamic Shorten(params string[] url_long)
+		public IEnumerable<Entities.shortUrl.Url> Shorten(params string[] url_long)
 		{
 			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
 
@@ -79,7 +71,7 @@ namespace NetDimension.Weibo.Interface
 			{
 				parameters.Add(new WeiboStringParameter("url_long", u));
 			}
-			return DynamicJson.Parse(Client.GetCommand("short_url/shorten", parameters.ToArray()));
+			return JsonConvert.DeserializeObject < IEnumerable < Entities.shortUrl.Url >>( Client.GetCommand("short_url/shorten", parameters.ToArray()));
 		}
 
 		/// <summary>
@@ -87,7 +79,7 @@ namespace NetDimension.Weibo.Interface
 		/// </summary>
 		/// <param name="url_short">需要还原的短链接，需要URLencoded，最多不超过20个 </param>
 		/// <returns></returns>
-		public dynamic Expand(params string[] url_short)
+		public IEnumerable<Entities.shortUrl.Url> Expand(params string[] url_short)
 		{
 			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
 
@@ -95,7 +87,7 @@ namespace NetDimension.Weibo.Interface
 			{
 				parameters.Add(new WeiboStringParameter("url_short", u));
 			}
-			return DynamicJson.Parse(Client.GetCommand("short_url/expand", parameters.ToArray()));
+			return JsonConvert.DeserializeObject < IEnumerable < Entities.shortUrl.Url >>(  Client.GetCommand("short_url/expand", parameters.ToArray()));
 
 		}
 
@@ -105,9 +97,9 @@ namespace NetDimension.Weibo.Interface
 		/// </summary>
 		/// <param name="url_short">需要取得分享数的短链接</param>
 		/// <returns></returns>
-		public dynamic ShareCounts(string url_short)
+		public IEnumerable<Entities.shortUrl.ShareCounts> ShareCounts(string url_short)
 		{
-			return DynamicJson.Parse(Client.GetCommand("short_url/share/counts", new WeiboStringParameter("url_short", url_short)));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.ShareCounts>>(Client.GetCommand("short_url/share/counts", new WeiboStringParameter("url_short", url_short)));
 		}
 
 		/// <summary>
@@ -119,20 +111,20 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="count">可选参数，返回结果的页序号，有分页限制</param>
 		/// <param name="page">可选参数，每次返回的最大记录数（即页面大小），不大于200 </param>
 		/// <returns></returns>
-		public dynamic ShareStatuses(string urlShort, string sinceID = "", string maxID = "", int count = 20, int page = 1)
+		public Entities.shortUrl.ShareStatuses ShareStatuses(string urlShort, string sinceID = "", string maxID = "", int count = 20, int page = 1)
 		{
 			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
 			parameters.Add(new WeiboStringParameter("url_short", urlShort));
 
-			if (!string.IsNullOrWhiteSpace(sinceID))
+			if (!string.IsNullOrEmpty(sinceID))
 				parameters.Add(new WeiboStringParameter("since_id", sinceID));
-			if (!string.IsNullOrWhiteSpace(maxID))
+			if (!string.IsNullOrEmpty(maxID))
 				parameters.Add(new WeiboStringParameter("max_id", maxID));
 
 			parameters.Add(new WeiboStringParameter("count", count));
 			parameters.Add(new WeiboStringParameter("page", page));
 
-			return DynamicJson.Parse(Client.GetCommand("short_url/share/statuses", parameters.ToArray()));
+			return JsonConvert.DeserializeObject<Entities.shortUrl.ShareStatuses>(Client.GetCommand("short_url/share/statuses", parameters.ToArray()));
 		}
 
 		/// <summary>
@@ -140,9 +132,9 @@ namespace NetDimension.Weibo.Interface
 		/// </summary>
 		/// <param name="url_short">需要取得评论数的短链接</param>
 		/// <returns></returns>
-		public dynamic CommentCounts(string url_short)
+		public IEnumerable< Entities.shortUrl.CommentCount> CommentCounts(string url_short)
 		{
-			return DynamicJson.Parse(Client.GetCommand("short_url/comment/counts", new WeiboStringParameter("url_short", url_short)));
+			return JsonConvert.DeserializeObject < IEnumerable < Entities.shortUrl.CommentCount >>( Client.GetCommand("short_url/comment/counts", new WeiboStringParameter("url_short", url_short)));
 		}
 
 		/// <summary>
@@ -154,20 +146,20 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="count">可选参数，每次返回的最大记录数（即页面大小），不大于200 </param>
 		/// <param name="page">可选参数，返回结果的页序号，有分页限制</param>
 		/// <returns></returns>
-		public dynamic CommentComments(string urlShort, string sinceID = "", string maxID = "", int count = 20, int page = 1)
+		public Entities.shortUrl.CommentComments CommentComments(string urlShort, string sinceID = "", string maxID = "", int count = 20, int page = 1)
 		{
 			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
 			parameters.Add(new WeiboStringParameter("url_short", urlShort));
 
-			if (!string.IsNullOrWhiteSpace(sinceID))
+			if (!string.IsNullOrEmpty(sinceID))
 				parameters.Add(new WeiboStringParameter("since_id", sinceID));
-			if (!string.IsNullOrWhiteSpace(maxID))
+			if (!string.IsNullOrEmpty(maxID))
 				parameters.Add(new WeiboStringParameter("max_id", maxID));
 
 			parameters.Add(new WeiboStringParameter("count", count));
 			parameters.Add(new WeiboStringParameter("page", page));
 
-			return DynamicJson.Parse(Client.GetCommand("short_url/comment/comments", parameters.ToArray()));
+			return JsonConvert.DeserializeObject<Entities.shortUrl.CommentComments>(Client.GetCommand("short_url/comment/comments", parameters.ToArray()));
 		}
 
 	}

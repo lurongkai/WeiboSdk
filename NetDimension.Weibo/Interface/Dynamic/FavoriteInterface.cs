@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Codeplex.Data;
 
-namespace NetDimension.Weibo.Interface
+namespace NetDimension.Weibo.Interface.Dynamic
 {
 	/// <summary>
 	/// Favorite接口

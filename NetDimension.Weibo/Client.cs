@@ -25,7 +25,7 @@ namespace NetDimension.Weibo
 		/// <summary>
 		/// 微博接口
 		/// </summary>
-		public Interface.Interfaces API
+		public Interface.DynamicInterfaces API
 		{
 			get;
 			private set;
@@ -39,7 +39,7 @@ namespace NetDimension.Weibo
 		{
 			this.OAuth = oauth;
 
-			API = new Interface.Interfaces(this);
+			API = new Interface.DynamicInterfaces(this);
 		}
 
 

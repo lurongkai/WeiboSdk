@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NetDimension.Weibo.Interface.Dynamic;
 
 namespace NetDimension.Weibo.Interface
 {
 	/// <summary>
-	/// API接口封装
+	/// 动态类型API接口封装
 	/// </summary>
-	public class Interfaces
+	public class DynamicInterfaces
 	{
 		/// <summary>
 		/// 账号接口
@@ -63,7 +64,7 @@ namespace NetDimension.Weibo.Interface
 		/// 构造函数
 		/// </summary>
 		/// <param name="client">操作器</param>
-		public Interfaces(Client client)
+		public DynamicInterfaces(Client client)
 		{
 			Account = new AccountInterface(client);
 			Comments = new CommentInterface(client);

@@ -6,7 +6,7 @@ using System.Web;
 using Codeplex.Data;
 
 
-namespace NetDimension.Weibo.Interface
+namespace NetDimension.Weibo.Interface.Dynamic
 {
 	/// <summary>
 	/// User接口
