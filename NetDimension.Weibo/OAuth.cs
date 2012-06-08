@@ -297,7 +297,6 @@ namespace NetDimension.Weibo
 		/// 使用code方式获取AccessToken
 		/// </summary>
 		/// <param name="code">Code</param>
-		/// <param name="callbackUrl">绑定的回调地址</param>
 		/// <returns></returns>
 		public AccessToken GetAccessTokenByAuthorizationCode(string code)
 		{
@@ -338,7 +337,6 @@ namespace NetDimension.Weibo
 		/// </summary>
 		/// <param name="passport">微博账号</param>
 		/// <param name="password">微博密码</param>
-		/// <param name="callbackUrl">绑定的回调地址</param>
 		/// <returns></returns>
 		public bool ClientLogin(string passport, string password)
 		{
