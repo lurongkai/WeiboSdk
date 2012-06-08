@@ -7,8 +7,15 @@ using Codeplex.Data;
 
 namespace NetDimension.Weibo.Interface
 {
+	/// <summary>
+	/// Trend接口
+	/// </summary>
 	public class TrendInterface: WeiboInterface
 	{
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类</param>
 		public TrendInterface(Client client)
 			: base(client)
 		{
@@ -42,7 +49,7 @@ namespace NetDimension.Weibo.Interface
 		/// <summary>
 		/// 返回最近一小时内的热门话题。 
 		/// </summary>
-		/// <param name="base_app">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
+		/// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
 		/// <returns></returns>
 		public dynamic Hourly(bool baseApp = false)
 		{
@@ -53,7 +60,7 @@ namespace NetDimension.Weibo.Interface
 		/// <summary>
 		/// 返回最近一天内的热门话题。 
 		/// </summary>
-		/// <param name="base_app">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
+		/// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
 		/// <returns></returns>
 		public dynamic Daily(bool baseApp = false)
 		{
@@ -64,7 +71,7 @@ namespace NetDimension.Weibo.Interface
 		/// <summary>
 		/// 返回最近一周内的热门话题。 
 		/// </summary>
-		/// <param name="base_app">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
+		/// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
 		/// <returns></returns>
 		public dynamic Weekly(bool baseApp = false)
 		{

@@ -8,21 +8,53 @@ using System.Web;
 
 namespace NetDimension.Weibo
 {
-
+	/// <summary>
+	/// 授权认证返回类型
+	/// </summary>
 	public enum ResponseType
 	{
+		/// <summary>
+		/// Code
+		/// </summary>
 		Code,
+		/// <summary>
+		/// Access Token
+		/// </summary>
 		Token
 	}
 
+	/// <summary>
+	/// 回调返回类型
+	/// </summary>
 	public enum DisplayType
 	{
+		/// <summary>
+		/// 默认
+		/// </summary>
 		Default,
+		/// <summary>
+		/// 移动界面
+		/// </summary>
 		Mobile,
+		/// <summary>
+		/// 弹出窗
+		/// </summary>
 		Popup,
+		/// <summary>
+		/// Wap12
+		/// </summary>
 		Wap12,
+		/// <summary>
+		/// Wap20
+		/// </summary>
 		Wap20,
+		/// <summary>
+		/// Javascript
+		/// </summary>
 		JS,
+		/// <summary>
+		/// 刷新框架
+		/// </summary>
 		ApponWeibo
 	}
 
@@ -38,7 +70,9 @@ namespace NetDimension.Weibo
 		Get,
 		Post
 	}
-
+	/// <summary>
+	/// 重置微博技术类型
+	/// </summary>
 	public enum ResetCountType
 	{
 		/// <summary>
@@ -67,21 +101,50 @@ namespace NetDimension.Weibo
 		mention_cmt
 	}
 
+	/// <summary>
+	/// 转发评论类型
+	/// </summary>
 	public enum RepostCommentType
 	{
+		/// <summary>
+		/// 无评论
+		/// </summary>
 		NoComment,
+		/// <summary>
+		/// 当前
+		/// </summary>
 		Current,
+		/// <summary>
+		/// 原文转发
+		/// </summary>
 		Orign,
+		/// <summary>
+		/// 都有
+		/// </summary>
 		Both
 	}
 
+	/// <summary>
+	/// 性别类型
+	/// </summary>
 	public enum GenderType
 	{
+		/// <summary>
+		/// 男
+		/// </summary>
 		Male,
+		/// <summary>
+		/// 女
+		/// </summary>
 		Female,
+		/// <summary>
+		/// 不男不女
+		/// </summary>
 		Unknown
 	}
-
+	/// <summary>
+	/// 热门微博类型
+	/// </summary>
 	public enum HotUserCatagory
 	{
 		/// <summary>
@@ -137,7 +200,9 @@ namespace NetDimension.Weibo
 		/// </summary>
 		stockplayer
 	}
-
+	/// <summary>
+	/// 表情类型
+	/// </summary>
 	public enum EmotionType
 	{
 		/// <summary>
@@ -153,7 +218,9 @@ namespace NetDimension.Weibo
 		/// </summary>
 		cartoon
 	}
-
+	/// <summary>
+	/// 语言类型
+	/// </summary>
 	public enum LanguageType
 	{ 
 		/// <summary>
@@ -165,7 +232,32 @@ namespace NetDimension.Weibo
 		/// </summary>
 		twname
 	}
-
+	/// <summary>
+	/// Token验证返回值
+	/// </summary>
+	public enum TokenResult
+	{ 
+		/// <summary>
+		/// 正常
+		/// </summary>
+		Success,
+		/// <summary>
+		/// Token已过期
+		/// </summary>
+		TokenExpired,
+		/// <summary>
+		/// Token已被占用
+		/// </summary>
+		TokenUsed,
+		/// <summary>
+		/// Token已被回收
+		/// </summary>
+		TokenRevoked,
+		/// <summary>
+		/// Token被拒绝
+		/// </summary>
+		TokenRejected
+	}
 
 
 

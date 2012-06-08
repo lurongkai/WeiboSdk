@@ -13,6 +13,9 @@ namespace NetDimension.Weibo
 
 		const string BASE_URL = "https://api.weibo.com/2/";
 
+		/// <summary>
+		/// OAuth实例
+		/// </summary>
 		public OAuth OAuth
 		{
 			get;

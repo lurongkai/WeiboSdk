@@ -7,8 +7,15 @@ using Codeplex.Data;
 
 namespace NetDimension.Weibo.Interface
 {
+	/// <summary>
+	/// Status接口
+	/// </summary>
 	public class StatusInterface : WeiboInterface
 	{
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类</param>
 		public StatusInterface(Client client)
 			: base(client)
 		{
@@ -18,7 +25,6 @@ namespace NetDimension.Weibo.Interface
 		/// <summary>
 		/// 返回最新的公共微博 
 		/// </summary>
-		/// <see cref=""/>
 		/// <param name="count">单页返回的记录条数，默认为50。 </param>
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。 </param>
@@ -127,7 +133,6 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="page">返回结果的页码，默认为1。</param>
 		/// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。</param>
 		/// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。 </param>
-		/// <param name="feature"></param>
 		/// <returns></returns>
 		public dynamic UserTimelineIDs(string uid = "", string screenName = "", long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
 		{

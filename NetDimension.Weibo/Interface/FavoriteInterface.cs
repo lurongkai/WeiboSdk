@@ -6,8 +6,16 @@ using Codeplex.Data;
 
 namespace NetDimension.Weibo.Interface
 {
+	/// <summary>
+	/// Favorite接口
+	/// </summary>
 	public class FavoriteInterface: WeiboInterface
 	{
+
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类</param>
 		public FavoriteInterface(Client client)
 			: base(client)
 		{

@@ -7,8 +7,16 @@ using Codeplex.Data;
 
 namespace NetDimension.Weibo.Interface
 {
+	/// <summary>
+	/// ShortUrl接口
+	/// </summary>
 	public class ShortUrlInterface: WeiboInterface
 	{
+
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类</param>
 		public ShortUrlInterface(Client client)
 			: base(client)
 		{

@@ -7,47 +7,74 @@ using System.IO;
 
 namespace NetDimension.Weibo
 {
+	/// <summary>
+	/// 微博异常
+	/// </summary>
 	[Serializable]
 	public class WeiboException : System.Net.WebException
 	{
+		/// <summary>
+		/// 请求来源
+		/// </summary>
 		public string Request
 		{
 			get;
 			private set;
 		}
-
+		/// <summary>
+		/// 错误代码
+		/// </summary>
 		public string ErrorCode
 		{
 			get;
 			private set;
 		}
-
+		/// <summary>
+		/// 错误信息
+		/// </summary>
 		public string ErrorMessage
 		{
 			get;
 			private set;
 		}
-
+		/// <summary>
+		/// 错误状态
+		/// </summary>
 		public string ErrorStatus
 		{
 			get;
 			private set;
 		}
-
+		/// <summary>
+		/// 构造函数
+		/// </summary>
 		public WeiboException()
 		{
 		}
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="message"></param>
 		public WeiboException(string message)
 			: base(message)
 		{
 		}
-
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="inner"></param>
 		public WeiboException(string message, System.Net.WebException inner)
 			: base(message, inner)
 		{
 
 		}
-
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="code"></param>
+		/// <param name="status"></param>
+		/// <param name="request"></param>
 		public WeiboException(string code, string status, string request) :
 			base(GetErrorMsg(code))
 		{ 
@@ -56,7 +83,11 @@ namespace NetDimension.Weibo
 			Request =request;
 			ErrorMessage = GetErrorMsg(code);
 		}
-
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="info"></param>
+		/// <param name="context"></param>
 		protected WeiboException(
 		  System.Runtime.Serialization.SerializationInfo info,
 		  System.Runtime.Serialization.StreamingContext context)
@@ -64,7 +95,11 @@ namespace NetDimension.Weibo
 		{
 
 		}
-
+		/// <summary>
+		/// GetObjectData
+		/// </summary>
+		/// <param name="serializationInfo"></param>
+		/// <param name="streamingContext"></param>
 		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
 		{
 			base.GetObjectData(serializationInfo, streamingContext);

@@ -6,8 +6,15 @@ using Codeplex.Data;
 
 namespace NetDimension.Weibo.Interface
 {
+	/// <summary>
+	/// Comment接口
+	/// </summary>
 	public class CommentInterface : WeiboInterface
 	{
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类</param>
 		public CommentInterface(Client client)
 			: base(client)
 		{

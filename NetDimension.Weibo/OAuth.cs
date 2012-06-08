@@ -11,50 +11,51 @@ using System.Text.RegularExpressions;
 
 namespace NetDimension.Weibo
 {
+	/// <summary>
+	/// OAuth2.0授权类
+	/// </summary>
 	public class OAuth
 	{
 		private const string AUTHORIZE_URL = "https://api.weibo.com/oauth2/authorize";
 		private const string ACCESS_TOKEN_URL = "https://api.weibo.com/oauth2/access_token";
 
-
+		/// <summary>
+		/// App Key
+		/// </summary>
 		public string ClientID
 		{
 			get;
 			internal set;
 		}
-
+		/// <summary>
+		/// App Secret
+		/// </summary>
 		public string ClientSecret
 		{
 			get;
 			internal set;
 		}
 
+		/// <summary>
+		/// Access Token
+		/// </summary>
 		public string AccessToken
 		{
 			get;
 			internal set;
 		}
 
-		//public string UserID
-		//{
-		//	get;
-		//	internal set;
-		//}
-
+		/// <summary>
+		/// Refresh Token 似乎目前没用
+		/// </summary>
 		public string RefreshToken
 		{
 			get;
 			internal set;
 		}
 
-		//public string ExpiresIn
-		//{
-		//	get;
-		//	internal set;
-		//}
-
 		/// <summary>
-		/// 
+		/// 实例化OAuth类
 		/// </summary>
 		/// <param name="clientID">AppKey</param>
 		/// <param name="clientSecret">AppSecret</param>
@@ -235,10 +236,35 @@ namespace NetDimension.Weibo
 			return builder.ToString();
 		}
 
-
-		public bool VerifierAccessToken(string accessToken)
+		/// <summary>
+		/// 判断AccessToken有效性
+		/// </summary>
+		/// <returns></returns>
+		public TokenResult VerifierAccessToken()
 		{
-			return false;
+			try
+			{
+				var json = Request("https://api.weibo.com/2/account/get_uid.json", RequestMethod.Get);
+
+			}
+			catch (WeiboException ex)
+			{
+				switch (ex.ErrorCode)
+				{ 
+					case "21314":
+						return TokenResult.TokenUsed;
+					case "21315":
+						return TokenResult.TokenExpired;
+					case "21316":
+						return TokenResult.TokenRevoked;
+					case "21317":
+						return TokenResult.TokenRejected;
+					default:
+						throw;
+				}
+			}
+
+			return TokenResult.Success;
 		}
 
 		/// <summary>

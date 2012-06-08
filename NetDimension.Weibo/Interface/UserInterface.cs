@@ -8,8 +8,15 @@ using Codeplex.Data;
 
 namespace NetDimension.Weibo.Interface
 {
+	/// <summary>
+	/// User接口
+	/// </summary>
 	public class UserInterface: WeiboInterface
 	{
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类实例</param>
 		public UserInterface(Client client)
 			: base(client)
 		{

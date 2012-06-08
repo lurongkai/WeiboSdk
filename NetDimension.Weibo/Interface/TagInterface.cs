@@ -7,8 +7,15 @@ using Codeplex.Data;
 
 namespace NetDimension.Weibo.Interface
 {
+	/// <summary>
+	/// Tag接口
+	/// </summary>
 	public class TagInterface: WeiboInterface
 	{
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类</param>
 		public TagInterface(Client client)
 			: base(client)
 		{

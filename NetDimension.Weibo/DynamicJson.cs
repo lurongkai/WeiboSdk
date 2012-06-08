@@ -22,6 +22,9 @@ using System.Xml.Linq;
 
 namespace Codeplex.Data
 {
+	/// <summary>
+	/// DynamicJson
+	/// </summary>
     public class DynamicJson : DynamicObject
     {
         private enum JsonType
@@ -198,9 +201,13 @@ namespace Codeplex.Data
             xml = element;
             jsonType = type;
         }
-
+		/// <summary>
+		/// 
+		/// </summary>
         public bool IsObject { get { return jsonType == JsonType.@object; } }
-
+		/// <summary>
+		/// 
+		/// </summary>
         public bool IsArray { get { return jsonType == JsonType.array; } }
 
         /// <summary>has property or not</summary>
@@ -302,6 +309,13 @@ namespace Codeplex.Data
         }
 
         // Delete
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="binder"></param>
+		/// <param name="args"></param>
+		/// <param name="result"></param>
+		/// <returns></returns>
         public override bool TryInvoke(InvokeBinder binder, object[] args, out object result)
         {
             result = (IsArray)
@@ -311,6 +325,13 @@ namespace Codeplex.Data
         }
 
         // IsDefined, if has args then TryGetMember
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="binder"></param>
+		/// <param name="args"></param>
+		/// <param name="result"></param>
+		/// <returns></returns>
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
             if (args.Length > 0)
@@ -324,6 +345,12 @@ namespace Codeplex.Data
         }
 
         // Deserialize or foreach(IEnumerable)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="binder"></param>
+		/// <param name="result"></param>
+		/// <returns></returns>
         public override bool TryConvert(ConvertBinder binder, out object result)
         {
             if (binder.Type == typeof(IEnumerable) || binder.Type == typeof(object[]))
@@ -351,14 +378,25 @@ namespace Codeplex.Data
             result = ToValue(element);
             return true;
         }
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="binder"></param>
+		/// <param name="indexes"></param>
+		/// <param name="result"></param>
+		/// <returns></returns>
         public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
         {
             return (IsArray)
                 ? TryGet(xml.Elements().ElementAtOrDefault((int)indexes[0]), out result)
                 : TryGet(xml.Element((string)indexes[0]), out result);
         }
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="binder"></param>
+		/// <param name="result"></param>
+		/// <returns></returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             return (IsArray)
@@ -399,21 +437,35 @@ namespace Codeplex.Data
 
             return true;
         }
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="binder"></param>
+		/// <param name="indexes"></param>
+		/// <param name="value"></param>
+		/// <returns></returns>
         public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
         {
             return (IsArray)
                 ? TrySet((int)indexes[0], value)
                 : TrySet((string)indexes[0], value);
         }
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="binder"></param>
+		/// <param name="value"></param>
+		/// <returns></returns>
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
             return (IsArray)
                 ? TrySet(int.Parse(binder.Name), value)
                 : TrySet(binder.Name, value);
         }
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
         public override IEnumerable<string> GetDynamicMemberNames()
         {
             return (IsArray)
