@@ -5,6 +5,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace NetDimension.Weibo
 {
@@ -259,11 +261,51 @@ namespace NetDimension.Weibo
 		TokenRejected
 	}
 
+	internal class WeiboParameterComparer : IComparer<WeiboParameter>
+	{
+
+		public int Compare(WeiboParameter x, WeiboParameter y)
+		{
+			return StringComparer.CurrentCulture.Compare(x.Name, y.Name);
+		}
+	}
 
 
 
 	internal static class Utility
 	{
+		public static Dictionary<string, string> GetDictionaryFromJSON(string json)
+		{
+			var result = JsonConvert.DeserializeObject<IEnumerable<JObject>>(json);
+
+			Dictionary<string, string> dict = new Dictionary<string, string>();
+			foreach (var loc in result)
+			{
+				foreach (var x in loc.Properties())
+				{
+					dict.Add(x.Name, x.Value.ToString());
+				}
+
+			}
+			return dict;
+		}
+
+		public static IEnumerable<string> GetStringListFromJSON(string json)
+		{
+			var result = JsonConvert.DeserializeObject<IEnumerable<JObject>>(json);
+			List<string> list = new List<string>();
+			foreach (var loc in result)
+			{
+				foreach (var x in loc.Properties())
+				{
+					list.Add(x.Value.ToString());
+				}
+
+			}
+			return list;
+		}
+
+
 		public static string BuildQueryString(Dictionary<string, string> parameters)
 		{
 			List<string> pairs = new List<string>();
@@ -296,8 +338,8 @@ namespace NetDimension.Weibo
 
 		public static byte[] BuildPostData(string boundary, params WeiboParameter[] parameters)
 		{
-			List<WeiboParameter> pairs = parameters.OrderBy(p => p.Name).ToList();
-
+			List<WeiboParameter> pairs = new List<WeiboParameter>(parameters);
+			pairs.Sort(new WeiboParameterComparer());
 			string division = GetBoundary();
 
 			string header = string.Format("--{0}", boundary);

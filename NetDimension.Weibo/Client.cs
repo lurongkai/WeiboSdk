@@ -23,14 +23,21 @@ namespace NetDimension.Weibo
 		}
 
 		/// <summary>
-		/// 微博接口
+		/// 微博动态类型接口
 		/// </summary>
-		public Interface.DynamicInterfaces API
+		public Interface.InterfaceSelector API
 		{
 			get;
 			private set;
 		}
-
+		
+		//TODO:如果要编译其他版本的API，请使用这种API
+		//public Interface.EntityInterfaces API
+		//{
+		//	get;
+		//	private set;
+		//}
+		
 		/// <summary>
 		/// 实例化微博操作类
 		/// </summary>
@@ -39,7 +46,9 @@ namespace NetDimension.Weibo
 		{
 			this.OAuth = oauth;
 
-			API = new Interface.DynamicInterfaces(this);
+			API = new Interface.InterfaceSelector(this);
+			//TODO:其他版本的请使用下面的实例化方法
+			//API = new Interface.EntityInterfaces(this);
 		}
 
 

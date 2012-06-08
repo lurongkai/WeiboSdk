@@ -121,7 +121,6 @@
     <Compile Include="Interface\Entity\TrendInterface.cs" />
     <Compile Include="Interface\Entity\UserInterface.cs" />
     <Compile Include="Interface\EntityInterfaces.cs" />
-    <Compile Include="Interface\InterfaceSelector.cs" />
     <Compile Include="Interface\WeiboInterface.cs" />
     <Compile Include="Newtonsoft.Json\Bson\BsonBinaryType.cs" />
     <Compile Include="Newtonsoft.Json\Bson\BsonBinaryWriter.cs" />

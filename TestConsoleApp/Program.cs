@@ -44,15 +44,15 @@ namespace TestConsoleApp
 			//这就是第二种方法，只需一步。而且这绝对不是官方的GetAccessToken时使用的password方式。下面的这个方法，不论你的AppKey的权限有多小都不受影响。非常适用于Winform
 			//var result = oauth.ClientLogin("<你的微博账号>", "<你的登录密码>", "https://api.weibo.com/oauth2/default.html");
 			
-			if (!string.IsNullOrEmpty(accessToken))
+			if (!string.IsNullOrEmpty(accessToken.Token))
 			//if (result)	//如果用ClientLogin，请换一下这个地方
 			{
 				NetDimension.Weibo.Client Sina = new NetDimension.Weibo.Client(oauth);
 				try
 				{
-					Console.WriteLine(Sina.API.Statuses.FriendsTimeline());	//获得FriendTimeline
-					Console.WriteLine(Sina.API.Statuses.Update("发布一条微博来测试下火力！" + DateTime.Now.ToLongTimeString()));	//发条微博测试下
-					var mentions = Sina.API.Statuses.Mentions();	//来看看提到我的微博
+					Console.WriteLine(Sina.API.Dynamic.Statuses.FriendsTimeline());	//获得FriendTimeline
+					Console.WriteLine(Sina.API.Dynamic.Statuses.Update("发布一条微博来测试下火力！" + DateTime.Now.ToLongTimeString()));	//发条微博测试下
+					var mentions = Sina.API.Dynamic.Statuses.Mentions();	//来看看提到我的微博
 					//到 http://open.weibo.com/wiki/2/statuses/mentions 查一下mentions的数据结构，接下来咱们操作下数据。
 					foreach (var status in mentions.statuses)
 					{

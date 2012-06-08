@@ -23,8 +23,8 @@ namespace WeiboDotNet
 
 				if (!string.IsNullOrEmpty(Request.QueryString["code"]))
 				{
-
-					string accessToken = oauth.GetAccessTokenByAuthorizationCode(Request.QueryString["code"], callbackUrl);
+					var token = oauth.GetAccessTokenByAuthorizationCode(Request.QueryString["code"], callbackUrl);
+					string accessToken = token.Token;
 
 					cookie["AccessToken"] = accessToken;
 

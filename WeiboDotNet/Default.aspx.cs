@@ -29,7 +29,7 @@ namespace WeiboDotNet
 				Sina = new Client(new OAuth(ConfigurationManager.AppSettings["AppKey"], ConfigurationManager.AppSettings["AppSecret"],cookie["AccessToken"])); //用cookie里的accesstoken来实例化OAuth，这样OAuth就有操作权限了
 			}
 
-			dynamic result = Sina.API.Account.GetUID();
+			dynamic result = Sina.API.Dynamic.Account.GetUID();
 			UserID = string.Format("{0}",result.uid);
 
 			LoadFriendTimeline(); //生成微博列表，当然，你要搞个数据绑定什么也是可以的
@@ -42,7 +42,7 @@ namespace WeiboDotNet
 		/// <returns>JSON</returns>
 		public string LoadUserInfo()
 		{
-			var user = Sina.API.Users.Show(UserID);
+			var user = Sina.API.Dynamic.Users.Show(UserID);
 			return string.Format("{0}",user);
 		}
 
@@ -51,8 +51,8 @@ namespace WeiboDotNet
 		/// </summary>
 		public void BindList()
 		{
-			
-			var json = Sina.API.Suggestions.HotUsers();
+
+			var json = Sina.API.Dynamic.Suggestions.HotUsers();
 			List<object> datasource = new List<object>();
 			int i = 0;
 			foreach (var user in json)
@@ -98,7 +98,7 @@ namespace WeiboDotNet
 	</div>
 ";
 
-			var json = Sina.API.Statuses.FriendsTimeline(count: 10);
+			var json = Sina.API.Dynamic.Statuses.FriendsTimeline(count: 10);
 			if (json.IsDefined("statuses"))
 			{
 				foreach (var status in json.statuses)
@@ -149,11 +149,11 @@ namespace WeiboDotNet
 
 			if (fileUpload1.HasFile)
 			{
-				dynamic result = Sina.API.Statuses.Upload(status, fileUpload1.FileBytes);
+				dynamic result = Sina.API.Dynamic.Statuses.Upload(status, fileUpload1.FileBytes);
 			}
 			else
 			{
-				dynamic result = Sina.API.Statuses.Update(status);
+				dynamic result = Sina.API.Dynamic.Statuses.Update(status);
 			}
 
 			Response.RedirectPermanent("Default.aspx");

@@ -139,8 +139,8 @@ namespace WeiboSDKWinformDemo
 		</div>
 	</div>
 ";
-			
-			var json = Sina.API.Statuses.FriendsTimeline(count:10);
+
+			var json = Sina.API.Dynamic.Statuses.FriendsTimeline(count: 10);
 			if (json.IsDefined("statuses"))
 			{
 				foreach (var status in json.statuses)
@@ -193,12 +193,12 @@ namespace WeiboSDKWinformDemo
 			{
 				if (imgBytes == null)
 				{
-					dynamic result = Sina.API.Statuses.Update(status);
+					dynamic result = Sina.API.Dynamic.Statuses.Update(status);
 					MessageBox.Show(this, "你的微博已经发送了哟～", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
 				}
 				else
 				{
-					dynamic result = Sina.API.Statuses.Upload(status, imgBytes);
+					dynamic result = Sina.API.Dynamic.Statuses.Upload(status, imgBytes);
 					
 					MessageBox.Show(this, "小心自己的艳照被发到网上哟～去主页上看看吧～", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
 					
