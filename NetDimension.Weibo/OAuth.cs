@@ -22,29 +22,38 @@ namespace NetDimension.Weibo
 		private const string ACCESS_TOKEN_URL = "https://api.weibo.com/oauth2/access_token";
 
 		/// <summary>
-		/// App Key
+		/// 获取App Key
 		/// </summary>
-		public string ClientID
+		public string AppKey
 		{
 			get;
 			internal set;
 		}
 		/// <summary>
-		/// App Secret
+		/// 获取App Secret
 		/// </summary>
-		public string ClientSecret
+		public string AppSecret
 		{
 			get;
 			internal set;
 		}
 
 		/// <summary>
-		/// Access Token
+		/// 获取Access Token
 		/// </summary>
 		public string AccessToken
 		{
 			get;
 			internal set;
+		}
+
+		/// <summary>
+		/// 获取或设置回调地址
+		/// </summary>
+		public string CallbackUrl
+		{
+			get;
+			set;
 		}
 
 		/// <summary>
@@ -57,18 +66,32 @@ namespace NetDimension.Weibo
 		}
 
 		/// <summary>
-		/// 实例化OAuth类
+		/// 实例化OAuth类（用于授权）
 		/// </summary>
-		/// <param name="clientID">AppKey</param>
-		/// <param name="clientSecret">AppSecret</param>
-		/// <param name="accessToken">可选参数，如果之前申请的AccessToken没有过期，在此处赋值后可直接调用API</param>
+		/// <param name="appKey">AppKey</param>
+		/// <param name="appSecret">AppSecret</param>
+		/// <param name="callbackUrl">指定在新浪开发平台后台中所绑定的回调地址</param>
 		/// <param name="refreshToken">目前还不知道这个参数会不会开放，保留</param>
-		public OAuth(string clientID, string clientSecret, string accessToken = null, string refreshToken = null)
+		public OAuth(string appKey, string appSecret, string callbackUrl = null, string refreshToken = null)
 		{
-			this.ClientID = clientID;
-			this.ClientSecret = clientSecret;
-			this.AccessToken = accessToken ?? string.Empty;
+			this.AppKey = appKey;
+			this.AppSecret = appKey;
+			this.AccessToken = string.Empty;
+			this.CallbackUrl = callbackUrl;
 			this.RefreshToken = refreshToken ?? string.Empty;
+		}
+
+		/// <summary>
+		/// 实例化OAuth类（用于实例化操作类）
+		/// </summary>
+		/// <param name="appKey">AppKey</param>
+		/// <param name="appSecret">AppSecret</param>
+		/// <param name="accessToken">已经获取的AccessToken，若Token没有过期即可通过操作类Client调用接口</param>
+		public OAuth(string appKey, string appSecret, string accessToken)
+		{
+			this.AppKey = appKey;
+			this.AppSecret = appKey;
+			this.AccessToken = accessToken;
 		}
 
 		internal string Request(string url, RequestMethod method = RequestMethod.Get, bool multi = false, params WeiboParameter[] parameters)
@@ -187,11 +210,6 @@ namespace NetDimension.Weibo
 #if DEBUG
 						Debug.WriteLine(errorInfo);
 #endif
-						//dynamic json = DynamicJson.Parse(errorInfo);
-						//reader.Close();
-
-						//throw new WeiboException(string.Format("{0}",json.error_code), json.error, json.request);
-
 						Error error = JsonConvert.DeserializeObject<Error>(errorInfo);
 
 						reader.Close();
@@ -216,7 +234,6 @@ namespace NetDimension.Weibo
 		/// <summary>
 		/// OAuth2的authorize接口
 		/// </summary>
-		/// <param name="callbackUrl">授权回调地址，站外应用需与设置的回调地址一致，站内应用需填写canvas page的地址。 </param>
 		/// <param name="response">返回类型，支持code、token，默认值为code。</param>
 		/// <param name="state">用于保持请求和回调的状态，在回调时，会在Query Parameter中回传该参数。 </param>
 		/// <param name="display">授权页面的终端类型，取值见下面的说明。 
@@ -229,12 +246,12 @@ namespace NetDimension.Weibo
 		/// apponweibo 默认的站内应用授权页，授权后不返回access_token，只刷新站内应用父框架。 
 		/// </param>
 		/// <returns></returns>
-		public string GetAuthorizeURL(string callbackUrl, ResponseType response= ResponseType.Code,string state=null, DisplayType display = DisplayType.Default)
+		public string GetAuthorizeURL(ResponseType response= ResponseType.Code,string state=null, DisplayType display = DisplayType.Default)
 		{
 			Dictionary<string, string> config = new Dictionary<string, string>()
 			{
-				{"client_id",ClientID},
-				{"redirect_uri",callbackUrl},
+				{"client_id",AppKey},
+				{"redirect_uri",CallbackUrl},
 				{"response_type",response.ToString().ToLower()},
 				{"state",state??string.Empty},
 				{"display",display.ToString().ToLower()},
@@ -282,11 +299,11 @@ namespace NetDimension.Weibo
 		/// <param name="code">Code</param>
 		/// <param name="callbackUrl">绑定的回调地址</param>
 		/// <returns></returns>
-		public AccessToken GetAccessTokenByAuthorizationCode(string code, string callbackUrl)
+		public AccessToken GetAccessTokenByAuthorizationCode(string code)
 		{
 			return GetAccessToken(GrantType.AuthorizationCode, new Dictionary<string, string> { 
 				{"code",code},
-				{"redirect_uri", callbackUrl}
+				{"redirect_uri", CallbackUrl}
 			});
 		}
 		
@@ -323,7 +340,7 @@ namespace NetDimension.Weibo
 		/// <param name="password">微博密码</param>
 		/// <param name="callbackUrl">绑定的回调地址</param>
 		/// <returns></returns>
-		public bool ClientLogin(string passport, string password, string callbackUrl)
+		public bool ClientLogin(string passport, string password)
 		{
 			bool result = false;
 			ServicePointManager.ServerCertificateValidationCallback = (sender, certificate,chain,sslPolicyErrors) =>
@@ -332,13 +349,13 @@ namespace NetDimension.Weibo
 			};
 			CookieContainer MyCookieContainer = new CookieContainer();
 			HttpWebRequest http = WebRequest.Create(AUTHORIZE_URL) as HttpWebRequest;
-			http.Referer = GetAuthorizeURL(callbackUrl);
+			http.Referer = GetAuthorizeURL();
 			http.Method = "POST";
 			http.ContentType = "application/x-www-form-urlencoded";
 			http.AllowAutoRedirect = true;
 			http.KeepAlive = true;
 			http.CookieContainer = MyCookieContainer;
-			string postBody = string.Format("action=submit&withOfficalFlag=0&ticket=&isLoginSina=&response_type=token&regCallback=&redirect_uri={0}&client_id={1}&state=&from=&userId={2}&passwd={3}&display=js", HttpUtility.UrlEncode(callbackUrl), HttpUtility.UrlEncode(ClientID) , HttpUtility.UrlEncode(passport), HttpUtility.UrlEncode(password));
+			string postBody = string.Format("action=submit&withOfficalFlag=0&ticket=&isLoginSina=&response_type=token&regCallback=&redirect_uri={0}&client_id={1}&state=&from=&userId={2}&passwd={3}&display=js", HttpUtility.UrlEncode(CallbackUrl), HttpUtility.UrlEncode(AppKey), HttpUtility.UrlEncode(passport), HttpUtility.UrlEncode(password));
 			byte[] postData = Encoding.Default.GetBytes(postBody);
 			http.ContentLength = postData.Length;
 
@@ -400,8 +417,8 @@ namespace NetDimension.Weibo
 
 			List<WeiboStringParameter> config = new List<WeiboStringParameter>()
 			{
-				new WeiboStringParameter(){ Name= "client_id", Value= ClientID},
-				new WeiboStringParameter(){ Name="client_secret", Value=ClientSecret}
+				new WeiboStringParameter(){ Name= "client_id", Value= AppKey},
+				new WeiboStringParameter(){ Name="client_secret", Value=AppSecret}
 			};
 
 			switch (type)
