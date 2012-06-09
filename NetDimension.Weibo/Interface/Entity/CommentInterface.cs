@@ -24,9 +24,9 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="page">返回结果的页码，默认为1。</param>
 		/// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。</param>
 		/// <returns>JSON</returns>
-		public NetDimension.Weibo.Entities.comment.Entity Show(string id, long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0)
+		public NetDimension.Weibo.Entities.comment.Collection Show(string id, long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Entity>(Client.GetCommand("comments/show",
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Collection>(Client.GetCommand("comments/show",
 				new WeiboStringParameter("id", id),
 				new WeiboStringParameter("since_id", sinceID),
 				new WeiboStringParameter("max_id", maxID),
