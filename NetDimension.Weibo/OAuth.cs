@@ -71,14 +71,14 @@ namespace NetDimension.Weibo
 		/// <param name="appKey">AppKey</param>
 		/// <param name="appSecret">AppSecret</param>
 		/// <param name="callbackUrl">指定在新浪开发平台后台中所绑定的回调地址</param>
-		/// <param name="refreshToken">目前还不知道这个参数会不会开放，保留</param>
-		public OAuth(string appKey, string appSecret, string callbackUrl = null, string refreshToken = null)
+		
+		public OAuth(string appKey, string appSecret, string callbackUrl = null)
 		{
 			this.AppKey = appKey;
 			this.AppSecret = appKey;
 			this.AccessToken = string.Empty;
 			this.CallbackUrl = callbackUrl;
-			this.RefreshToken = refreshToken ?? string.Empty;
+			
 		}
 
 		/// <summary>
@@ -87,11 +87,13 @@ namespace NetDimension.Weibo
 		/// <param name="appKey">AppKey</param>
 		/// <param name="appSecret">AppSecret</param>
 		/// <param name="accessToken">已经获取的AccessToken，若Token没有过期即可通过操作类Client调用接口</param>
-		public OAuth(string appKey, string appSecret, string accessToken)
+		/// <param name="refreshToken">目前还不知道这个参数会不会开放，保留</param>
+		public OAuth(string appKey, string appSecret, string accessToken, string refreshToken = null)
 		{
 			this.AppKey = appKey;
 			this.AppSecret = appKey;
 			this.AccessToken = accessToken;
+			this.RefreshToken = refreshToken ?? string.Empty;
 		}
 
 		internal string Request(string url, RequestMethod method = RequestMethod.Get, bool multi = false, params WeiboParameter[] parameters)
