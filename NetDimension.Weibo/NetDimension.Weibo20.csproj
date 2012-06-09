@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessToken.cs" />
-    <Compile Include="CompatibleClient.cs" />
+    <Compile Include="Client.cs" />
     <Compile Include="Entities\comment\Collection.cs" />
     <Compile Include="Entities\comment\Entity.cs" />
     <Compile Include="Entities\favorite\Collection.cs" />
