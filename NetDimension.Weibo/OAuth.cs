@@ -75,7 +75,7 @@ namespace NetDimension.Weibo
 		public OAuth(string appKey, string appSecret, string callbackUrl = null)
 		{
 			this.AppKey = appKey;
-			this.AppSecret = appKey;
+			this.AppSecret = appSecret;
 			this.AccessToken = string.Empty;
 			this.CallbackUrl = callbackUrl;
 			
@@ -91,7 +91,7 @@ namespace NetDimension.Weibo
 		public OAuth(string appKey, string appSecret, string accessToken, string refreshToken = null)
 		{
 			this.AppKey = appKey;
-			this.AppSecret = appKey;
+			this.AppSecret = appSecret;
 			this.AccessToken = accessToken;
 			this.RefreshToken = refreshToken ?? string.Empty;
 		}
