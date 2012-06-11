@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Entities.status
 {
-	public class Emotion
+	public class Emotion : EntityBase
 	{
 		[JsonProperty("category")]
 		public string Category{get;internal set;}

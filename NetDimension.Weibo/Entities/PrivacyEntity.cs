@@ -4,7 +4,7 @@ using System.Text;
 using Newtonsoft.Json;
 namespace NetDimension.Weibo.Entities
 {
-	public class PrivacyEntity
+	public class PrivacyEntity : EntityBase
 	{
 		[JsonProperty("badge")]
 		public int Badge{get;internal set;}

@@ -52,6 +52,7 @@
     <Compile Include="DynamicJson.cs" />
     <Compile Include="Entities\comment\Collection.cs" />
     <Compile Include="Entities\comment\Entity.cs" />
+    <Compile Include="Entities\EntityBase.cs" />
     <Compile Include="Entities\favorite\Collection.cs" />
     <Compile Include="Entities\favorite\Entity.cs" />
     <Compile Include="Entities\favorite\IDCollection.cs" />

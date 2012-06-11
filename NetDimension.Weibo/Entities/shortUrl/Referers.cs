@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Entities.shortUrl
 {
-	public class Referers
+	public class Referers : EntityBase
 	{
 		[JsonProperty("url_short")]
 		public string ShortUrl { get; internal set; }

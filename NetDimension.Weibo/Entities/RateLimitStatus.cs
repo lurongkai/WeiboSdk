@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Entities
 {
-	public class RateLimitStatus
+	public class RateLimitStatus : EntityBase
 	{
 		[JsonProperty("ip_limit")]
 		public int IPLimit;

@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Entities.favorite
 {
-	public class TagEntity
+	public class TagEntity : EntityBase
 	{
 		[JsonProperty("id")]
 		public string ID { get; internal set; }

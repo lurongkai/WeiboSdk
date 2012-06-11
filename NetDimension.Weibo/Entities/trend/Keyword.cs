@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NetDimension.Weibo.Entities.trend
 {
-	public class Keyword
+	public class Keyword : EntityBase
 	{
 		public string Name { get; internal set; }
 		public string Query {get;internal set;}

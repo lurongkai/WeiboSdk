@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Entities.friendship
 {
-	public class Entity
+	public class Entity : EntityBase
 	{
 		[JsonProperty("id")]
 		public string ID { get; internal set; }

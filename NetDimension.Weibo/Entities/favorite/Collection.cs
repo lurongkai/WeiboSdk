@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Entities.favorite
 {
-	public class Collection
+	public class Collection : EntityBase
 	{
 		[JsonProperty("favorites")]
 		public IEnumerable<Entity> Favorites { get; internal set; }

@@ -4,7 +4,7 @@ using System.Text;
 using Newtonsoft.Json;
 namespace NetDimension.Weibo.Entities.status
 {
-	public class IDs
+	public class IDs : EntityBase
 	{
 		[JsonProperty("statuses")]
 		public IEnumerable<string> Statuses { get; internal set; }

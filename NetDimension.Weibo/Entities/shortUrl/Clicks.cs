@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Entities.shortUrl
 {
-	public class Clicks
+	public class Clicks : EntityBase
 	{
 		[JsonProperty("url_short")]
 		public string ShortUrl { get; internal set; }

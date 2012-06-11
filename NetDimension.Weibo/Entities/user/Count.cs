@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Entities.user
 {
-	public class Count
+	public class Count : EntityBase
 	{
 		[JsonProperty("id")]
 		public string ID { get; internal set; }

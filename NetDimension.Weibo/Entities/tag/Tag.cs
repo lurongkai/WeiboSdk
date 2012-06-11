@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Entities.tag
 {
-	public class Tag
+	public class Tag : EntityBase
 	{
 		
 		public string ID { get; internal set; }

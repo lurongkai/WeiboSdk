@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Entities.search
 {
-	public class School
+	public class School : EntityBase
 	{
 		[JsonProperty("school_name")]
 		public string Name { get; internal set; }

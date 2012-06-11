@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Entities.repost
 {
-	public class Collection
+	public class Collection : EntityBase
 	{
 		[JsonProperty(PropertyName = "reposts")]
 		public IEnumerable<status.Entity> Statuses { get; internal set; }

@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Entities.search
 {
-	public class User
+	public class User : EntityBase
 	{
 		[JsonProperty("screen_name")]
 		public string ScreenName { get; internal set; }

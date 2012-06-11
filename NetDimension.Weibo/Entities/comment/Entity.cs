@@ -4,7 +4,7 @@ using System.Text;
 using Newtonsoft.Json;
 namespace NetDimension.Weibo.Entities.comment
 {
-	public class Entity
+	public class Entity : EntityBase
 	{
 		[JsonProperty(PropertyName = "created_at")]
 		public string CreatedAt { get; internal set; }

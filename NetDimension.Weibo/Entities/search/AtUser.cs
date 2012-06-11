@@ -4,7 +4,7 @@ using System.Text;
 using Newtonsoft.Json;
 namespace NetDimension.Weibo.Entities.search
 {
-	public class AtUser
+	public class AtUser : EntityBase
 	{
 		[JsonProperty("nickname")]
 		public string NickName { get; internal set; }

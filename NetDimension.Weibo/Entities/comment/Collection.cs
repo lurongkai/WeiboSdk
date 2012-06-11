@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Entities.comment
 {
-	public class Collection
+	public class Collection : EntityBase
 	{
 		[JsonProperty(PropertyName = "comments")]
 		public IEnumerable<Entity> Comments { get; internal set; }

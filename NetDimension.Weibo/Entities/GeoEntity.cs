@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace NetDimension.Weibo.Entities
+namespace NetDimension.Weibo.Entities 
 {
-	public class GeoEntity
+	public class GeoEntity: EntityBase
 	{
 		[JsonProperty("type")]	
 		public string Type { get; internal set; }
