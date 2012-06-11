@@ -358,7 +358,7 @@ namespace NetDimension.Weibo
 					//contentBuilder.AppendLine("Content-Transfer-Encoding: 8bit");
 					contentBuilder.AppendLine();
 					//contentBuilder.AppendLine(HttpUtility.UrlEncode(param.Value).Replace("+", "%20"));
-					contentBuilder.AppendLine(HttpUtility.UrlEncode(param.Value).Replace("+", "%20"));
+					contentBuilder.AppendLine(HttpUtility.UrlEncode(param.Value==null?"":param.Value).Replace("+", "%20"));
 				}
 				else
 				{
