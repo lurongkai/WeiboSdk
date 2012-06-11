@@ -62,6 +62,7 @@
     <Compile Include="Entities\GeoEntity.cs" />
     <Compile Include="Entities\PrivacyEntity.cs" />
     <Compile Include="Entities\RateLimitStatus.cs" />
+    <Compile Include="Entities\repost\Collection.cs" />
     <Compile Include="Entities\SchoolEntity.cs" />
     <Compile Include="Entities\search\App.cs" />
     <Compile Include="Entities\search\AtUser.cs" />

@@ -102,6 +102,8 @@ namespace NetDimension.Weibo
 			UriBuilder uri = new UriBuilder(url);
 			string result = string.Empty;
 
+
+
 			switch (method)
 			{
 				case RequestMethod.Get:
@@ -118,6 +120,19 @@ namespace NetDimension.Weibo
 					}
 					break;
 			}
+
+			if (string.IsNullOrEmpty(AccessToken))
+			{
+				if (uri.Query.Length == 0)
+				{
+					uri.Query = "?source=" + AppKey;
+				}
+				else
+				{
+					uri.Query += "&source=" + AppKey;
+				}
+			}
+
 
 			HttpWebRequest http = WebRequest.Create(uri.Uri) as HttpWebRequest;
 			http.ServicePoint.Expect100Continue = false;
@@ -386,9 +401,11 @@ namespace NetDimension.Weibo
 							try
 							{
 								var html = reader.ReadToEnd();
-								if (!string.IsNullOrEmpty(html) && Regex.IsMatch(html, @"\{""access_token"":""(?<token>.{0,32})"",""remind_in"":""(?<remind>\d+)"",""expires_in"":(?<expires>\d+),""uid"":""(?<uid>\d+)""\}"))
+								var pattern1=@"\{""access_token"":""(?<token>.{0,32})"",""remind_in"":""(?<remind>\d+)"",""expires_in"":(?<expires>\d+),""uid"":""(?<uid>\d+)""\}";
+								var pattern2=@"\{""access_token"":""(?<token>.{0,32})"",""remind_in"":""(?<remind>\d+)"",""expires_in"":(?<expires>\d+),""refresh_token"":""(?<refreshtoken>.{0,32})"",""uid"":""(?<uid>\d+)""\}";
+								if (!string.IsNullOrEmpty(html) && (Regex.IsMatch(html, pattern1) || Regex.IsMatch(html, pattern2)))
 								{
-									var group = Regex.Match(html, @"\{""access_token"":""(?<token>.{32})"",""remind_in"":""(?<remind>\d+)"",""expires_in"":(?<expires>\d+),""uid"":""(?<uid>\d+)""\}");
+									var group = Regex.IsMatch(html,"refresh_token") ?Regex.Match(html, pattern2) : Regex.Match(html, pattern1);
 									AccessToken = group.Groups["token"].Value;
 									result = true;
 								}
