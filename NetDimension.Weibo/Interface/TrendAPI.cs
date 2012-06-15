@@ -1,27 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+#if !NET20
 using System.Linq;
+#endif
 using System.Text;
-using Codeplex.Data;
 
-
-namespace NetDimension.Weibo.Interface.Dynamic
+namespace NetDimension.Weibo.Interface
 {
-	/// <summary>
-	/// Trend接口
-	/// </summary>
-	public class TrendInterface: WeiboInterface
+	internal class TrendAPI: WeiboAPI
 	{
-		TrendAPI api;
-		/// <summary>
-		/// 构造函数
-		/// </summary>
-		/// <param name="client">操作类</param>
-		public TrendInterface(Client client)
+		public TrendAPI(Client client)
 			: base(client)
 		{
-			api = new TrendAPI(client);
+
 		}
+
 		/// <summary>
 		/// 获取某人话题 
 		/// </summary>
@@ -29,9 +22,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="count"></param>
 		/// <param name="page"></param>
 		/// <returns></returns>
-		public dynamic Trends(string uid, int count = 10, int page = 1)
+		public string Trends(string uid, int count = 10, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("trends",
+			return (Client.GetCommand("trends",
 				new WeiboStringParameter("uid", uid),
 				new WeiboStringParameter("count", count),
 				new WeiboStringParameter("page", page)));
@@ -41,9 +34,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// </summary>
 		/// <param name="trendName"></param>
 		/// <returns></returns>
-		public dynamic IsFollow(string trendName)
+		public string IsFollow(string trendName)
 		{
-			return DynamicJson.Parse(Client.GetCommand("trends/is_follow",
+			return (Client.GetCommand("trends/is_follow",
 				new WeiboStringParameter("trend_name", trendName)));
 		}
 
@@ -52,9 +45,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// </summary>
 		/// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
 		/// <returns></returns>
-		public dynamic Hourly(bool baseApp = false)
+		public string Hourly(bool baseApp = false)
 		{
-			return DynamicJson.Parse(Client.GetCommand("trends/hourly",
+			return (Client.GetCommand("trends/hourly",
 				new WeiboStringParameter("base_app", baseApp)));
 		}
 
@@ -63,9 +56,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// </summary>
 		/// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
 		/// <returns></returns>
-		public dynamic Daily(bool baseApp = false)
+		public string Daily(bool baseApp = false)
 		{
-			return DynamicJson.Parse(Client.GetCommand("trends/daily",
+			return (Client.GetCommand("trends/daily",
 				new WeiboStringParameter("base_app", baseApp)));
 		}
 
@@ -74,9 +67,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// </summary>
 		/// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
 		/// <returns></returns>
-		public dynamic Weekly(bool baseApp = false)
+		public string Weekly(bool baseApp = false)
 		{
-			return DynamicJson.Parse(Client.GetCommand("trends/weekly",
+			return (Client.GetCommand("trends/weekly",
 				new WeiboStringParameter("base_app", baseApp)));
 		}
 		/// <summary>
@@ -84,9 +77,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// </summary>
 		/// <param name="trendName"></param>
 		/// <returns></returns>
-		public dynamic Follow(string trendName)
+		public string Follow(string trendName)
 		{
-			return DynamicJson.Parse(Client.PostCommand("trends/follow",
+			return (Client.PostCommand("trends/follow",
 				new WeiboStringParameter("trend_name", trendName)));
 		}
 		/// <summary>
@@ -94,9 +87,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		public dynamic Destroy(string id)
+		public string Destroy(string id)
 		{
-			return DynamicJson.Parse(Client.PostCommand("trends/destroy",
+			return (Client.PostCommand("trends/destroy",
 				  new WeiboStringParameter("trend_id", id)));
 
 		}

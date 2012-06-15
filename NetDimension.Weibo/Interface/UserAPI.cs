@@ -1,37 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+#if !NET20
 using System.Linq;
+#endif
 using System.Text;
-using System.Web;
-using Codeplex.Data;
 
-
-namespace NetDimension.Weibo.Interface.Dynamic
+namespace NetDimension.Weibo.Interface
 {
-	/// <summary>
-	/// User接口
-	/// </summary>
-	public class UserInterface: WeiboInterface
+	internal class UserAPI: WeiboAPI
 	{
-		UserAPI api;
-		/// <summary>
-		/// 构造函数
-		/// </summary>
-		/// <param name="client">操作类实例</param>
-		public UserInterface(Client client)
+		public UserAPI(Client client)
 			: base(client)
 		{
-			api = new UserAPI(client);
+
 		}
+
 		/// <summary>
 		/// 获取用户信
 		/// </summary>
 		/// <param name="uid">需要查询的用户ID。 </param>
 		/// <param name="screenName">需要查询的用户昵称。 </param>
 		/// <returns></returns>
-		public dynamic Show(string uid = "", string screenName = "")
+		public string Show(string uid = "", string screenName = "")
 		{
-			return DynamicJson.Parse(Client.GetCommand("users/show",
+			return (Client.GetCommand("users/show",
 				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid)));
 		}
 		/// <summary>
@@ -39,18 +31,19 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// </summary>
 		/// <param name="domain">需要查询的个性化域名。 </param>
 		/// <returns></returns>
-		public dynamic ShowByDomain(string domain)
+		public string ShowByDomain(string domain)
 		{
-			return DynamicJson.Parse(Client.GetCommand("users/domain_show", new WeiboStringParameter("domain", domain)));
+			return (Client.GetCommand("users/domain_show", new WeiboStringParameter("domain", domain)));
 		}
 		/// <summary>
 		/// 批量获取用户的粉丝数、关注数、微博数
 		/// </summary>
 		/// <param name="uids"></param>
 		/// <returns></returns>
-		public dynamic Counts(params string[] uids)
+		public string Counts(params string[] uids)
 		{
-			return DynamicJson.Parse(Client.GetCommand("users/counts", new WeiboStringParameter("uids", string.Join(",",uids))));
+			return (Client.GetCommand("users/counts", new WeiboStringParameter("uids", string.Join(",", uids))));
 		}
+
 	}
 }

@@ -1,36 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+#if !NET20
 using System.Linq;
+#endif
 using System.Text;
-using System.Web;
-using Codeplex.Data;
 
-namespace NetDimension.Weibo.Interface.Dynamic
+namespace NetDimension.Weibo.Interface
 {
-	/// <summary>
-	/// Suggestion接口
-	/// </summary>
-	public class SuggestionInterface: WeiboInterface
+	internal class SuggestionAPI: WeiboAPI
 	{
-		SuggestionAPI api;
-		/// <summary>
-		/// 构造函数
-		/// </summary>
-		/// <param name="client">操作类</param>
-		public SuggestionInterface(Client client)
+		public SuggestionAPI(Client client)
 			: base(client)
 		{
-			api = new SuggestionAPI(client);
+
 		}
 
-		/// <summary>
+				/// <summary>
 		/// 获取系统推荐用户 
 		/// </summary>
 		/// <param name="category"></param>
 		/// <returns></returns>
-		public dynamic HotUsers(HotUserCatagory category = HotUserCatagory.@default)
+		public string HotUsers(HotUserCatagory category = HotUserCatagory.@default)
 		{
-			return DynamicJson.Parse(Client.GetCommand("suggestions/users/hot",
+			return (Client.GetCommand("suggestions/users/hot",
 				new WeiboStringParameter("category", category)));
 		}
 		/// <summary>
@@ -39,9 +31,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="count"></param>
 		/// <param name="page"></param>
 		/// <returns></returns>
-		public dynamic MayInterestedUsers(int count = 10, int page = 1)
+		public string MayInterestedUsers(int count = 10, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("suggestions/users/may_interested",
+			return (Client.GetCommand("suggestions/users/may_interested",
 					new WeiboStringParameter("count", count),
 					new WeiboStringParameter("page", page)));
 		}
@@ -51,9 +43,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="content"></param>
 		/// <param name="num"></param>
 		/// <returns></returns>
-		public dynamic UsersByStatus(string content, int num = 10)
+		public string UsersByStatus(string content, int num = 10)
 		{
-			return DynamicJson.Parse(Client.GetCommand("suggestions/users/by_status",
+			return (Client.GetCommand("suggestions/users/by_status",
 					new WeiboStringParameter("content", content),
 					new WeiboStringParameter("num", num)));
 		}
@@ -65,9 +57,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="count">单页返回的记录条数，默认为20。 </param>
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <returns></returns>
-		public dynamic HotStatuses(int type = 1, bool isPic = false, int count = 20, int page = 1)
+		public string HotStatuses(int type = 1, bool isPic = false, int count = 20, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("suggestions/statuses/hot",
+			return (Client.GetCommand("suggestions/statuses/hot",
 					new WeiboStringParameter("type", type),
 					new WeiboStringParameter("isPic", isPic),
 					new WeiboStringParameter("count", count),
@@ -80,9 +72,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="count">单页返回的记录条数，默认为50。</param>
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <returns></returns>
-		public dynamic ReorderStatuses(int section, int count = 50, int page = 1)
+		public string ReorderStatuses(int section, int count = 50, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("suggestions/statuses/reorder",
+			return (Client.GetCommand("suggestions/statuses/reorder",
 					new WeiboStringParameter("section", section),
 					new WeiboStringParameter("count", count),
 					new WeiboStringParameter("page", page)));
@@ -94,9 +86,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="count">单页返回的记录条数，默认为50。</param>
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <returns></returns>
-		public dynamic ReorderStatusIDs(int section, int count = 50, int page = 1)
+		public string ReorderStatusIDs(int section, int count = 50, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("suggestions/statuses/reorder/ids",
+			return (Client.GetCommand("suggestions/statuses/reorder/ids",
 					new WeiboStringParameter("section", section),
 					new WeiboStringParameter("count", count),
 					new WeiboStringParameter("page", page)));
@@ -107,9 +99,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="count"></param>
 		/// <param name="page"></param>
 		/// <returns></returns>
-		public dynamic HotFavorites(int count = 20, int page = 1)
+		public string HotFavorites(int count = 20, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("suggestions/favorites/hot",
+			return (Client.GetCommand("suggestions/favorites/hot",
 						new WeiboStringParameter("count", count),
 						new WeiboStringParameter("page", page)));
 		}
@@ -118,10 +110,11 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// </summary>
 		/// <param name="uid">不感兴趣的用户的UID。 </param>
 		/// <returns></returns>
-		public dynamic NotInterestedUsers(string uid)
+		public string NotInterestedUsers(string uid)
 		{
-			return DynamicJson.Parse(Client.PostCommand("suggestions/users/not_interested",
+			return (Client.PostCommand("suggestions/users/not_interested",
 						new WeiboStringParameter("uid", uid)));
 		}
+
 	}
 }

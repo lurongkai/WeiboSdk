@@ -358,10 +358,19 @@ namespace NetDimension.Weibo
 		public bool ClientLogin(string passport, string password)
 		{
 			bool result = false;
+#if !NET20
 			ServicePointManager.ServerCertificateValidationCallback = (sender, certificate,chain,sslPolicyErrors) =>
 			{
 				return true;
 			};
+
+#else
+
+			ServicePointManager.ServerCertificateValidationCallback = delegate(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate,System.Security.Cryptography.X509Certificates.X509Chain chain,System.Net.Security.SslPolicyErrors sslPolicyErrors)
+			{
+				return true;
+			};
+#endif
 			CookieContainer MyCookieContainer = new CookieContainer();
 			HttpWebRequest http = WebRequest.Create(AUTHORIZE_URL) as HttpWebRequest;
 			http.Referer = GetAuthorizeURL();

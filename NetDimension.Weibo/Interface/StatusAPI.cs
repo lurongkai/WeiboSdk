@@ -1,29 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+#if !NET20
 using System.Linq;
+#endif
 using System.Text;
-using System.Web;
-using Codeplex.Data;
 
-namespace NetDimension.Weibo.Interface.Dynamic
+namespace NetDimension.Weibo.Interface
 {
-	/// <summary>
-	/// Status接口
-	/// </summary>
-	public class StatusInterface : WeiboInterface
+	internal class StatusAPI: WeiboAPI
 	{
-		StatusAPI api;
-		/// <summary>
-		/// 构造函数
-		/// </summary>
-		/// <param name="client">操作类</param>
-		public StatusInterface(Client client)
+		public StatusAPI(Client client)
 			: base(client)
 		{
-			api = new StatusAPI(client);
 
 		}
-
 		/// <summary>
 		/// 返回最新的公共微博 
 		/// </summary>
@@ -31,9 +21,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。 </param>
 		/// <returns>dynamic json</returns>
-		public dynamic PublicTimeline(int count = 50, int page = 1, bool baseApp = false)
+		public string PublicTimeline(int count = 50, int page = 1, bool baseApp = false)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/public_timeline",
+			return (Client.GetCommand("statuses/public_timeline",
 				new WeiboStringParameter("count", count),
 				new WeiboStringParameter("page", page),
 				new WeiboStringParameter("base_app", baseApp)));
@@ -49,9 +39,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="baseApp">否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。</param>
 		/// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。</param>
 		/// <returns>dynamic json</returns>
-		public dynamic FriendsTimeline(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
+		public string FriendsTimeline(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/friends_timeline",
+			return (Client.GetCommand("statuses/friends_timeline",
 				new WeiboStringParameter("since_id", sinceID),
 				new WeiboStringParameter("max_id", maxID),
 				new WeiboStringParameter("count", count),
@@ -69,9 +59,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。</param>
 		/// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。 </param>
 		/// <returns></returns>
-		public dynamic HomeTimeline(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
+		public string HomeTimeline(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/home_timeline",
+			return (Client.GetCommand("statuses/home_timeline",
 				new WeiboStringParameter("since_id", sinceID),
 				new WeiboStringParameter("max_id", maxID),
 				new WeiboStringParameter("count", count),
@@ -89,9 +79,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="baseApp">否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。</param>
 		/// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。</param>
 		/// <returns></returns>
-		public dynamic FriendsTimelineIDs(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
+		public string FriendsTimelineIDs(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/friends_timeline/ids",
+			return (Client.GetCommand("statuses/friends_timeline/ids",
 					new WeiboStringParameter("since_id", sinceID),
 					new WeiboStringParameter("max_id", maxID),
 					new WeiboStringParameter("count", count),
@@ -112,9 +102,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。 </param>
 		/// <param name="trimUser">回值中user信息开关，0：返回完整的user信息、1：user字段仅返回user_id，默认为0。</param>
 		/// <returns></returns>
-		public dynamic UserTimeline(string uid = "", string screenName = "", long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0, bool trimUser = false)
+		public string UserTimeline(string uid = "", string screenName = "", long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0, bool trimUser = false)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/user_timeline",
+			return (Client.GetCommand("statuses/user_timeline",
 				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid),
 				new WeiboStringParameter("since_id", sinceID),
 				new WeiboStringParameter("max_id", maxID),
@@ -136,9 +126,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。</param>
 		/// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。 </param>
 		/// <returns></returns>
-		public dynamic UserTimelineIDs(string uid = "", string screenName = "", long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
+		public string UserTimelineIDs(string uid = "", string screenName = "", long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/user_timeline/ids",
+			return (Client.GetCommand("statuses/user_timeline/ids",
 				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid),
 				new WeiboStringParameter("since_id", sinceID),
 				new WeiboStringParameter("max_id", maxID),
@@ -157,9 +147,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。 </param>
 		/// <returns></returns>
-		public dynamic RepostTimeline(string id, long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0)
+		public string RepostTimeline(string id, long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/repost_timeline",
+			return (Client.GetCommand("statuses/repost_timeline",
 				new WeiboStringParameter("id", id),
 				new WeiboStringParameter("since_id", sinceID),
 				new WeiboStringParameter("max_id", maxID),
@@ -177,9 +167,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。 </param>
 		/// <returns></returns>
-		public dynamic RepostTimelineIDs(string id, long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0)
+		public string RepostTimelineIDs(string id, long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/repost_timeline/ids",
+			return (Client.GetCommand("statuses/repost_timeline/ids",
 					new WeiboStringParameter("id", id),
 					new WeiboStringParameter("since_id", sinceID),
 					new WeiboStringParameter("max_id", maxID),
@@ -195,9 +185,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="count">单页返回的记录条数，默认为50。 </param>
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <returns></returns>
-		public dynamic RepostByMe(long sinceID = 0, long maxID = 0, int count = 50, int page = 1)
+		public string RepostByMe(long sinceID = 0, long maxID = 0, int count = 50, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/repost_by_me",
+			return (Client.GetCommand("statuses/repost_by_me",
 					new WeiboStringParameter("since_id", sinceID),
 					new WeiboStringParameter("max_id", maxID),
 					new WeiboStringParameter("count", count),
@@ -214,9 +204,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="filterBySource">来源筛选类型，0：全部、1：来自微博、2：来自微群，默认为0。 </param>
 		/// <param name="filterByType">原创筛选类型，0：全部微博、1：原创的微博，默认为0。</param>
 		/// <returns></returns>
-		public dynamic Mentions(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0)
+		public string Mentions(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/mentions",
+			return (Client.GetCommand("statuses/mentions",
 					new WeiboStringParameter("since_id", sinceID),
 					new WeiboStringParameter("max_id", maxID),
 					new WeiboStringParameter("count", count),
@@ -236,9 +226,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="filterBySource">来源筛选类型，0：全部、1：来自微博、2：来自微群，默认为0。 </param>
 		/// <param name="filterByType">原创筛选类型，0：全部微博、1：原创的微博，默认为0。</param>
 		/// <returns></returns>
-		public dynamic MentionIDs(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0)
+		public string MentionIDs(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/mentions/ids",
+			return (Client.GetCommand("statuses/mentions/ids",
 					new WeiboStringParameter("since_id", sinceID),
 					new WeiboStringParameter("max_id", maxID),
 					new WeiboStringParameter("count", count),
@@ -257,9 +247,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。 </param>
 		/// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。</param>
 		/// <returns></returns>
-		public dynamic BilateralTimeline(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
+		public string BilateralTimeline(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/bilateral_timeline",
+			return (Client.GetCommand("statuses/bilateral_timeline",
 					new WeiboStringParameter("since_id", sinceID),
 					new WeiboStringParameter("max_id", maxID),
 					new WeiboStringParameter("count", count),
@@ -272,9 +262,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// </summary>
 		/// <param name="id">需要获取的微博ID。</param>
 		/// <returns></returns>
-		public dynamic Show(string id)
+		public string Show(string id)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/show",
+			return (Client.GetCommand("statuses/show",
 					new WeiboStringParameter("id", id)));
 		}
 		/// <summary>
@@ -283,9 +273,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="type">获取类型，1：微博、2：评论、3：私信，默认为1。 </param>
 		/// <param name="ids">需要查询的微博（评论、私信）ID</param>
 		/// <returns></returns>
-		public dynamic QueryMID(int type=1, params string[] ids)
+		public string QueryMID(int type=1, params string[] ids)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/querymid",
+			return (Client.GetCommand("statuses/querymid",
 				new WeiboStringParameter("id", string.Join(",",ids)),
 				new WeiboStringParameter("type", type),
 				new WeiboStringParameter("is_batch", ids.Length==1? 0 : 1)));
@@ -298,9 +288,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="isBase62">MID是否是base62编码，0：否、1：是，默认为0。 </param>
 		/// <param name="mids">需要查询的微博（评论、私信）MID，批量模式下，用半角逗号分隔，最多不超过20个。</param>
 		/// <returns></returns>
-		public dynamic QueryID(int type = 1, bool inbox = false, bool isBase62 = false, params string[] mids)
+		public string QueryID(int type = 1, bool inbox = false, bool isBase62 = false, params string[] mids)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/queryid",
+			return (Client.GetCommand("statuses/queryid",
 				new WeiboStringParameter("mid", string.Join(",", mids)),
 				new WeiboStringParameter("type", type),
 				new WeiboStringParameter("is_batch", mids.Length == 1 ? 0 : 1),
@@ -313,9 +303,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="count"></param>
 		/// <param name="baseApp"></param>
 		/// <returns></returns>
-		public dynamic HotRepostDaily(int count = 20, bool baseApp = false)
+		public string HotRepostDaily(int count = 20, bool baseApp = false)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/hot/repost_daily",
+			return (Client.GetCommand("statuses/hot/repost_daily",
 					new WeiboStringParameter("count", count),
 					new WeiboStringParameter("base_app", baseApp)));
 		}
@@ -325,9 +315,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="count"></param>
 		/// <param name="baseApp"></param>
 		/// <returns></returns>
-		public dynamic HotRepostWeekly(int count = 20, bool baseApp = false)
+		public string HotRepostWeekly(int count = 20, bool baseApp = false)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/hot/repost_weekly",
+			return (Client.GetCommand("statuses/hot/repost_weekly",
 					new WeiboStringParameter("count", count),
 					new WeiboStringParameter("base_app", baseApp)));
 		}
@@ -337,9 +327,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="count"></param>
 		/// <param name="baseApp"></param>
 		/// <returns></returns>
-		public dynamic HotCommentsDaily(int count = 20, bool baseApp = false)
+		public string HotCommentsDaily(int count = 20, bool baseApp = false)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/hot/comments_daily",
+			return (Client.GetCommand("statuses/hot/comments_daily",
 					new WeiboStringParameter("count", count),
 					new WeiboStringParameter("base_app", baseApp)));
 		}
@@ -349,9 +339,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="count"></param>
 		/// <param name="baseApp"></param>
 		/// <returns></returns>
-		public dynamic HotCommentsWeekly(int count = 20, bool baseApp = false)
+		public string HotCommentsWeekly(int count = 20, bool baseApp = false)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/hot/comments_weekly",
+			return (Client.GetCommand("statuses/hot/comments_weekly",
 					new WeiboStringParameter("count", count),
 					new WeiboStringParameter("base_app", baseApp)));
 		}
@@ -360,9 +350,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// </summary>
 		/// <param name="ids">需要获取数据的微博ID</param>
 		/// <returns></returns>
-		public dynamic Count(params string[] ids)
+		public string Count(params string[] ids)
 		{
-			return DynamicJson.Parse(Client.GetCommand("statuses/count",
+			return (Client.GetCommand("statuses/count",
 				new WeiboStringParameter("ids", string.Join(",", ids))));
 		}
 		/// <summary>
@@ -372,9 +362,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="status">添加的转发文本，内容不超过140个汉字，不填则默认为“转发微博”。 </param>
 		/// <param name="isComment">是否在转发的同时发表评论，0：否、1：评论给当前微博、2：评论给原微博、3：都评论，默认为0 。 </param>
 		/// <returns></returns>
-		public dynamic Repost(string id, string status, int isComment)
+		public string Repost(string id, string status, int isComment)
 		{
-			return DynamicJson.Parse(Client.PostCommand("statuses/repost",
+			return (Client.PostCommand("statuses/repost",
 					new WeiboStringParameter("id", id),
 					new WeiboStringParameter("status", status),
 					new WeiboStringParameter("is_comment", isComment)));
@@ -384,9 +374,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// </summary>
 		/// <param name="id">需要删除的微博ID。 </param>
 		/// <returns></returns>
-		public dynamic Destroy(string id)
+		public string Destroy(string id)
 		{
-			return DynamicJson.Parse(Client.PostCommand("statuses/destroy",
+			return (Client.PostCommand("statuses/destroy",
 					new WeiboStringParameter("id", id)));
 		}
 		/// <summary>
@@ -397,9 +387,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="log">经度，有效范围：-180.0到+180.0，+表示东经，默认为0.0。 </param>
 		/// <param name="annotations">元数据，主要是为了方便第三方应用记录一些适合于自己使用的信息，每条微博可以包含一个或者多个元数据，必须以json字串的形式提交，字串长度不超过512个字符，具体内容可以自定。 </param>
 		/// <returns></returns>
-		public dynamic Update(string status, float lat = 0.0f, float log = 0.0f, string annotations = "")
+		public string Update(string status, float lat = 0.0f, float log = 0.0f, string annotations = "")
 		{
-			return DynamicJson.Parse(Client.PostCommand("statuses/update",
+			return (Client.PostCommand("statuses/update",
 					new WeiboStringParameter("status", status),
 					new WeiboStringParameter("lat", lat),
 					new WeiboStringParameter("long", log),
@@ -414,9 +404,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="log">经度，有效范围：-180.0到+180.0，+表示东经，默认为0.0。 </param>
 		/// <param name="annotations">元数据，主要是为了方便第三方应用记录一些适合于自己使用的信息，每条微博可以包含一个或者多个元数据，必须以json字串的形式提交，字串长度不超过512个字符，具体内容可以自定。 </param>
 		/// <returns></returns>
-		public dynamic Upload(string status, byte[] pic, float lat = 0.0f, float log = 0.0f, string annotations = "")
+		public string Upload(string status, byte[] pic, float lat = 0.0f, float log = 0.0f, string annotations = "")
 		{
-			return DynamicJson.Parse(Client.PostCommand("statuses/upload",true,
+			return (Client.PostCommand("statuses/upload",true,
 						new WeiboStringParameter("status", status),
 						new WeiboBinaryParameter("pic",pic),
 						new WeiboStringParameter("lat", lat),
@@ -432,9 +422,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="log">经度，有效范围：-180.0到+180.0，+表示东经，默认为0.0。 </param>
 		/// <param name="annotations">元数据，主要是为了方便第三方应用记录一些适合于自己使用的信息，每条微博可以包含一个或者多个元数据，必须以json字串的形式提交，字串长度不超过512个字符，具体内容可以自定。 </param>
 		/// <returns></returns>
-		public dynamic UploadUrlText(string status, string url, float lat = 0.0f, float log = 0.0f, string annotations = "")
+		public string UploadUrlText(string status, string url, float lat = 0.0f, float log = 0.0f, string annotations = "")
 		{
-			return DynamicJson.Parse(Client.PostCommand("statuses/upload_url_text",
+			return (Client.PostCommand("statuses/upload_url_text",
 						new WeiboStringParameter("status", status),
 						new WeiboStringParameter("url", url),
 						new WeiboStringParameter("lat", lat),
@@ -447,9 +437,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="type">表情类别，face：普通表情、ani：魔法表情、cartoon：动漫表情，默认为face。 </param>
 		/// <param name="language">语言类别，cnname：简体、twname：繁体，默认为cnname。 </param>
 		/// <returns></returns>
-		public dynamic Emotions(EmotionType type, LanguageType language)
+		public string Emotions(EmotionType type, LanguageType language)
 		{
-			return DynamicJson.Parse(Client.GetCommand("emotions",
+			return (Client.GetCommand("emotions",
 						new WeiboStringParameter("type", type),
 						new WeiboStringParameter("language", language)));
 		}

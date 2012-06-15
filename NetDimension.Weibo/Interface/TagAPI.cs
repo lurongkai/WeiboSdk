@@ -1,27 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+#if !NET20
 using System.Linq;
+#endif
 using System.Text;
-using System.Web;
-using Codeplex.Data;
 
-namespace NetDimension.Weibo.Interface.Dynamic
+namespace NetDimension.Weibo.Interface
 {
-	/// <summary>
-	/// Tag接口
-	/// </summary>
-	public class TagInterface: WeiboInterface
+	internal class TagAPI: WeiboAPI
 	{
-		TagAPI api;
-		/// <summary>
-		/// 构造函数
-		/// </summary>
-		/// <param name="client">操作类</param>
-		public TagInterface(Client client)
+		public TagAPI(Client client)
 			: base(client)
 		{
-			api = new TagAPI(client);
+
 		}
+
 		/// <summary>
 		/// 返回指定用户的标签列表 
 		/// </summary>
@@ -29,9 +22,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="count">单页返回的记录条数，默认为20。</param>
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <returns></returns>
-		public dynamic Tags(string uid, int count = 20, int page = 1)
+		public string Tags(string uid, int count = 20, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("tags",
+			return (Client.GetCommand("tags",
 				new WeiboStringParameter("uid", uid),
 				new WeiboStringParameter("count", count),
 				new WeiboStringParameter("page", page)));
@@ -41,38 +34,38 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// </summary>
 		/// <param name="uids">要获取标签的用户ID。最大20，逗号分隔。 </param>
 		/// <returns></returns>
-		public dynamic TagsBatch(params string[] uids)
+		public string TagsBatch(params string[] uids)
 		{
-			return DynamicJson.Parse(Client.GetCommand("tags/tags_batch",
-				new WeiboStringParameter("uids", string.Join(",",uids))));
+			return (Client.GetCommand("tags/tags_batch",
+				new WeiboStringParameter("uids", string.Join(",", uids))));
 		}
 		/// <summary>
 		/// 获取系统推荐的标签列表 
 		/// </summary>
 		/// <param name="count"></param>
 		/// <returns></returns>
-		public dynamic Suggestions(int count = 10)
-		{ 
-			return DynamicJson.Parse(Client.GetCommand("tags/suggestions",new WeiboStringParameter("count", count)));
+		public string Suggestions(int count = 10)
+		{
+			return (Client.GetCommand("tags/suggestions", new WeiboStringParameter("count", count)));
 		}
 		/// <summary>
 		/// 为当前登录用户添加新的用户标签 
 		/// </summary>
 		/// <param name="tags">要创建的一组标签，每个标签的长度不可超过7个汉字，14个半角字符。 </param>
 		/// <returns></returns>
-		public dynamic Create(params string[] tags)
+		public string Create(params string[] tags)
 		{
-			return DynamicJson.Parse(Client.PostCommand("tags/create",
-				new WeiboStringParameter("tags", string.Join(",",tags))));
+			return (Client.PostCommand("tags/create",
+				new WeiboStringParameter("tags", string.Join(",", tags))));
 		}
 		/// <summary>
 		/// 删除用户标签 
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		public dynamic Destroy(string id)
+		public string Destroy(string id)
 		{
-			return DynamicJson.Parse(Client.PostCommand("tags/destroy",
+			return (Client.PostCommand("tags/destroy",
 				  new WeiboStringParameter("tag_id", id)));
 
 		}
@@ -81,10 +74,11 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// </summary>
 		/// <param name="ids"></param>
 		/// <returns></returns>
-		public dynamic DestroyBatch(params string[] ids)
+		public string DestroyBatch(params string[] ids)
 		{
-			return DynamicJson.Parse(Client.PostCommand("tags/destroy_batch",
+			return (Client.PostCommand("tags/destroy_batch",
 				  new WeiboStringParameter("ids", string.Join(",", ids))));
 		}
+
 	}
 }

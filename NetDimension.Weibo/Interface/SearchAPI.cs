@@ -1,36 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+#if !NET20
 using System.Linq;
+#endif
 using System.Text;
-using System.Web;
-using Codeplex.Data;
 
-namespace NetDimension.Weibo.Interface.Dynamic
+namespace NetDimension.Weibo.Interface
 {
-	/// <summary>
-	/// Search接口
-	/// </summary>
-	public class SearchInterface: WeiboInterface
+	internal class SearchAPI: WeiboAPI
 	{
-		SearchAPI api;
-		/// <summary>
-		/// 构造函数
-		/// </summary>
-		/// <param name="client">操作类</param>
-		public SearchInterface(Client client)
+		public SearchAPI(Client client)
 			: base(client)
 		{
-			api = new SearchAPI(client);
+
 		}
+
 		/// <summary>
 		/// 搜索用户时的联想搜索建议 
 		/// </summary>
 		/// <param name="q">搜索的关键字</param>
 		/// <param name="count">返回的记录条数，默认为10</param>
 		/// <returns></returns>
-		public dynamic Users(string q, int count = 10)
+		public string Users(string q, int count = 10)
 		{
-			return DynamicJson.Parse(Client.GetCommand("search/suggestions/users",
+			return (Client.GetCommand("search/suggestions/users",
 				new WeiboStringParameter("q", q),
 				new WeiboStringParameter("count", count)));
 		}
@@ -40,9 +33,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="q">搜索的关键字</param>
 		/// <param name="count">返回的记录条数，默认为10</param>
 		/// <returns></returns>
-		public dynamic Statuses(string q, int count = 10)
+		public string Statuses(string q, int count = 10)
 		{
-			return DynamicJson.Parse(Client.GetCommand("search/suggestions/statuses",
+			return (Client.GetCommand("search/suggestions/statuses",
 				new WeiboStringParameter("q", q),
 				new WeiboStringParameter("count", count)));
 		}
@@ -53,9 +46,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="count">返回的记录条数，默认为10。 </param>
 		/// <param name="type">学校类型，0：全部、1：大学、2：高中、3：中专技校、4：初中、5：小学，默认为0。 </param>
 		/// <returns></returns>
-		public dynamic Schools(string q, int count = 10,int type=0)
+		public string Schools(string q, int count = 10, int type = 0)
 		{
-			return DynamicJson.Parse(Client.GetCommand("search/suggestions/schools",
+			return (Client.GetCommand("search/suggestions/schools",
 				new WeiboStringParameter("q", q),
 				new WeiboStringParameter("count", count),
 				new WeiboStringParameter("type", type)));
@@ -66,9 +59,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="q">搜索的关键字</param>
 		/// <param name="count">返回的记录条数，默认为10</param>
 		/// <returns></returns>
-		public dynamic Companies(string q, int count = 10)
+		public string Companies(string q, int count = 10)
 		{
-			return DynamicJson.Parse(Client.GetCommand("search/suggestions/companies",
+			return (Client.GetCommand("search/suggestions/companies",
 				new WeiboStringParameter("q", q),
 				new WeiboStringParameter("count", count)));
 		}
@@ -78,9 +71,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="q">搜索的关键字</param>
 		/// <param name="count">返回的记录条数，默认为10</param>
 		/// <returns></returns>
-		public dynamic Apps(string q, int count = 10)
+		public string Apps(string q, int count = 10)
 		{
-			return DynamicJson.Parse(Client.GetCommand("search/suggestions/apps",
+			return (Client.GetCommand("search/suggestions/apps",
 				new WeiboStringParameter("q", q),
 				new WeiboStringParameter("count", count)));
 		}
@@ -92,9 +85,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="type">联想类型，0：关注、1：粉丝。</param>
 		/// <param name="range">联想范围，0：只联想关注人、1：只联想关注人的备注、2：全部，默认为2。</param>
 		/// <returns></returns>
-		public dynamic AtUsers(string q, int count = 10, int type = 0,int range=2)
+		public string AtUsers(string q, int count = 10, int type = 0, int range = 2)
 		{
-			return DynamicJson.Parse(Client.GetCommand("search/suggestions/at_users",
+			return (Client.GetCommand("search/suggestions/at_users",
 				new WeiboStringParameter("q", q),
 				new WeiboStringParameter("count", count),
 				new WeiboStringParameter("type", type),
@@ -107,14 +100,13 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="count">单页返回的记录条数，默认为10，最大为50。 </param>
 		/// <param name="page">返回结果的页码，默认为1。</param>
 		/// <returns></returns>
-		public dynamic Topics(string q, int count = 10,int page=1)
+		public string Topics(string q, int count = 10, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("search/suggestions/topics",
+			return (Client.GetCommand("search/suggestions/topics",
 				new WeiboStringParameter("q", q),
 				new WeiboStringParameter("count", count),
 				new WeiboStringParameter("page", page)));
 		}
-
 
 	}
 }
