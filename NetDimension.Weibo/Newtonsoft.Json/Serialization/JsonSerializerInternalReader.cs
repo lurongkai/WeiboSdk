@@ -282,7 +282,7 @@ namespace Newtonsoft.Json.Serialization
 #if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
         case JsonContractType.Dynamic:
 #endif
-          return @"JSON object (e.g. {""name"":""value""})";
+          return @"JSON object (e.g. {string.Emptynamestring.Empty:string.Emptyvaluestring.Empty})";
         case JsonContractType.Array:
           return @"JSON array (e.g. [1,2,3])";
         case JsonContractType.Primitive:
@@ -390,7 +390,7 @@ namespace Newtonsoft.Json.Serialization
 #endif
       }
 
-      throw JsonSerializationException.Create(reader, @"Cannot deserialize the current JSON object (e.g. {{""name"":""value""}}) into type '{0}' because the type requires a {1} to deserialize correctly.
+      throw JsonSerializationException.Create(reader, @"Cannot deserialize the current JSON object (e.g. {{string.Emptynamestring.Empty:string.Emptyvaluestring.Empty}}) into type '{0}' because the type requires a {1} to deserialize correctly.
 To fix this error either change the JSON to a {1} or change the deserialized type so that it is a normal .NET type (e.g. not a primitive type like integer, not a collection type like an array or List<T>) that can be deserialized from a JSON object. JsonObjectAttribute can also be added to the type to force it to deserialize from a JSON object.
 ".FormatWith(CultureInfo.InvariantCulture, objectType, GetExpectedDescription(contract)));
     }
@@ -722,7 +722,7 @@ To fix this error either change the JSON to a {1} or change the deserialized typ
         return true;
       }
 
-      // test tokentype here because default value might not be convertable to actual type, e.g. default of "" for DateTime
+      // test tokentype here because default value might not be convertable to actual type, e.g. default of string.Empty for DateTime
       if (HasFlag(property.DefaultValueHandling.GetValueOrDefault(Serializer.DefaultValueHandling), DefaultValueHandling.Ignore)
           && JsonReader.IsPrimitiveToken(reader.TokenType)
           && MiscellaneousUtils.ValueEquals(reader.Value, property.DefaultValue))

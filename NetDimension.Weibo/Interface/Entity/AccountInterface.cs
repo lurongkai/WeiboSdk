@@ -9,10 +9,15 @@ namespace NetDimension.Weibo.Interface.Entity
 {
 	public class AccountInterface: WeiboInterface
 	{
+		AccountAPI api;
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类</param>
 		public AccountInterface(Client client)
 			: base(client)
 		{
-
+			api = new AccountAPI(client);
 		}
 
 		/// <summary>
@@ -21,7 +26,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns>JSON</returns>
 		public PrivacyEntity GetPrivacy()
 		{
-			return JsonConvert.DeserializeObject<PrivacyEntity>(Client.GetCommand("account/get_privacy"));
+			return JsonConvert.DeserializeObject<PrivacyEntity>(api.GetPrivacy());
 		}
 
 		/// <summary>
@@ -37,28 +42,8 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns>JSON</returns>
 		public IEnumerable<SchoolEntity> SchoolList(string province = "", string city = "", string area = "", string type = "1", string capital = "", string keyword = "", int count = 10)
 		{
-			var p = new List<WeiboParameter>{
-				string.IsNullOrEmpty(capital)?new WeiboStringParameter("keyword", keyword): new WeiboStringParameter("capital", capital),
-				new WeiboStringParameter("count", count)
-			};
 
-			if(!string.IsNullOrEmpty(province))
-			{
-				p.Add(new WeiboStringParameter("province", province));
-			}
-
-			if(!string.IsNullOrEmpty(city))
-			{
-				p.Add(new WeiboStringParameter("city", city));
-			}
-
-			if(!string.IsNullOrEmpty(area))
-			{
-				p.Add(new WeiboStringParameter("area", area));
-			}
-
-
-			return JsonConvert.DeserializeObject<IEnumerable<SchoolEntity>>(Client.GetCommand("account/profile/school_list", p.ToArray()));
+			return JsonConvert.DeserializeObject<IEnumerable<SchoolEntity>>(api.SchoolList(province, city, area, type, capital, keyword, count));
 		}
 
 		/// <summary>
@@ -67,7 +52,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns>JSON</returns>
 		public RateLimitStatus RateLimitStatus()
 		{
-			return JsonConvert.DeserializeObject<RateLimitStatus>(Client.GetCommand("account/rate_limit_status"));
+			return JsonConvert.DeserializeObject<RateLimitStatus>(api.RateLimitStatus());
 		}
 
 		/// <summary>
@@ -76,7 +61,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns>JSON</returns>
 		public string GetUID()
 		{
-			var result = JObject.Parse(Client.GetCommand("account/get_uid"));
+			var result = JObject.Parse(api.GetUID());
 			if (result["uid"] != null)
 				return result["uid"].ToString();
 			else
@@ -89,7 +74,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns>JSON</returns>
 		public Entities.user.Entity EndSession()
 		{
-			return JsonConvert.DeserializeObject<Entities.user.Entity>(Client.GetCommand("account/end_session"));
+			return JsonConvert.DeserializeObject<Entities.user.Entity>(api.EndSession());
 		}
 
 		/// <summary>
@@ -99,7 +84,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns>JSON</returns>
 		public VerifyNickNameResult VerifyNickname(string nickname)
 		{
-			return JsonConvert.DeserializeObject<VerifyNickNameResult>(Client.GetCommand("register/verify_nickname", new WeiboStringParameter("nickname", nickname)));
+			return JsonConvert.DeserializeObject<VerifyNickNameResult>(api.VerifyNickname(nickname));
 		}
 
 		/// <summary>
@@ -110,9 +95,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public UnreadCountResult UnreadCount(string uid, string callback = "")
 		{
-			return JsonConvert.DeserializeObject<UnreadCountResult>(Client.GetCommand("https://rm.api.weibo.com/2/remind/unread_count.json",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("callback", callback)));
+			return JsonConvert.DeserializeObject<UnreadCountResult>(api.UnreadCount(uid, callback));
 		}
 
 		/// <summary>
@@ -122,7 +105,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns>JSON</returns>
 		public bool SetCount(ResetCountType type)
 		{
-			var result = JObject.Parse(Client.PostCommand("https://rm.api.weibo.com/2/remind/set_count.json", new WeiboStringParameter("type", type)));
+			var result = JObject.Parse(api.SetCount(type));
 			return Convert.ToBoolean(result["result"]);
 		}
 

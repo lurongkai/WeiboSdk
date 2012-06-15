@@ -7,12 +7,20 @@ using Newtonsoft.Json.Linq;
 using NetDimension.Weibo.Entities;
 namespace NetDimension.Weibo.Interface.Entity
 {
+	/// <summary>
+	/// Favorite接口
+	/// </summary>
 	public class FavoriteInterface: WeiboInterface
 	{
+		FavoriteAPI api;
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类</param>
 		public FavoriteInterface(Client client)
 			: base(client)
 		{
-
+			api = new FavoriteAPI(client);
 		}
 		/// <summary>
 		/// 获取当前登录用户的收藏列表
@@ -22,9 +30,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<NetDimension.Weibo.Entities.favorite.Entity> Favorites(int count = 50, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.favorite.Entity>>(Client.GetCommand("favorites",
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.favorite.Entity>>(api.Favorites(count, page));
 		}
 		/// <summary>
 		/// 获取当前用户的收藏列表的ID
@@ -34,9 +40,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<NetDimension.Weibo.Entities.favorite.IDEntity> FavoriteIDs(int count = 50, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.favorite.IDEntity>>(Client.GetCommand("favorites/ids",
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.favorite.IDEntity>>(api.FavoriteIDs(count, page));
 		}
 		/// <summary>
 		/// 根据收藏ID获取指定的收藏信息 
@@ -45,8 +49,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.favorite.Entity Show(string id)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.favorite.Entity>(Client.GetCommand("favorites/show",
-				new WeiboStringParameter("id", id)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.favorite.Entity>(api.Show(id));
 		}
 		/// <summary>
 		/// 根据标签获取当前登录用户该标签下的收藏列表  
@@ -57,10 +60,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<NetDimension.Weibo.Entities.favorite.Entity> ByTags(string tid, int count = 50, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.favorite.Entity>>(Client.GetCommand("favorites/by_tags",
-				new WeiboStringParameter("tid", tid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.favorite.Entity>>(api.ByTags(tid, count, page));
 		}
 		/// <summary>
 		/// 获取当前登录用户的收藏标签列表 
@@ -70,9 +70,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<NetDimension.Weibo.Entities.favorite.TagEntity> Tags(int count = 10, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.favorite.TagEntity>>(Client.GetCommand("favorites/tags",
-					new WeiboStringParameter("count", count),
-					new WeiboStringParameter("page", page)));
+			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.favorite.TagEntity>>(api.Tags(count, page));
 		}
 		/// <summary>
 		/// 获取当前用户某个标签下的收藏列表的ID 
@@ -83,10 +81,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<NetDimension.Weibo.Entities.favorite.IDEntity> ByTagIDs(string tid, int count = 50, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.favorite.IDEntity>>(Client.GetCommand("favorites/by_tags/ids",
-				new WeiboStringParameter("tid", tid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.favorite.IDEntity>>(api.ByTagIDs(tid, count, page));
 		}
 		/// <summary>
 		/// 添加一条微博到收藏里 
@@ -95,8 +90,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.favorite.Entity Create(string id)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.favorite.Entity>(Client.PostCommand("favorites/create",
-				new WeiboStringParameter("id", id)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.favorite.Entity>(api.Create(id));
 		}
 		/// <summary>
 		/// 取消收藏一条微博
@@ -105,8 +99,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.favorite.Entity Destroy(string id)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.favorite.Entity>(Client.PostCommand("favorites/destroy",
-				  new WeiboStringParameter("id", id)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.favorite.Entity>(api.Destroy(id));
 			
 		}
 		/// <summary>
@@ -116,8 +109,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public bool DestroyBatch(params string[] ids)
 		{
-			return Convert.ToBoolean(JObject.Parse(Client.PostCommand("favorites/destroy_batch",
-				  new WeiboStringParameter("ids", string.Join(",", ids))))["result"]);
+			return Convert.ToBoolean(JObject.Parse(api.DestroyBatch(ids))["result"]);
 
 		}
 		/// <summary>
@@ -128,9 +120,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.favorite.Entity UpdateTags(string id, params string[] tags)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.favorite.Entity>(Client.PostCommand("favorites/tags/update",
-				  new WeiboStringParameter("id", id),
-				  new WeiboStringParameter("tags", string.Join(",", tags))));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.favorite.Entity>(api.UpdateTags(id, tags));
 
 		}
 		/// <summary>
@@ -141,9 +131,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.favorite.TagEntity UpdateTagsBatch(string tid, string tag)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.favorite.TagEntity>(Client.PostCommand("favorites/tags/update_batch",
-				  new WeiboStringParameter("tid", tid),
-				  new WeiboStringParameter("tag", tag)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.favorite.TagEntity>(api.UpdateTagsBatch(tid, tag));
 		}
 		/// <summary>
 		/// 删除当前登录用户所有收藏下的指定标签 
@@ -152,8 +140,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public bool DestroyTags(string[] tid)
 		{
-			return Convert.ToBoolean(JObject.Parse(Client.PostCommand("favorites/tags/destroy_batch",
-				  new WeiboStringParameter("tid", string.Join(",", tid)))));
+			return Convert.ToBoolean(JObject.Parse(api.DestroyTags(tid)));
 		}
 	}
 }

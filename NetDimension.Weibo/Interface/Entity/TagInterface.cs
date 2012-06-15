@@ -8,12 +8,20 @@ using Newtonsoft.Json.Linq;
 
 namespace NetDimension.Weibo.Interface.Entity
 {
+	/// <summary>
+	/// Tag接口
+	/// </summary>
 	public class TagInterface: WeiboInterface
 	{
+		TagAPI api;
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类</param>
 		public TagInterface(Client client)
 			: base(client)
 		{
-
+			api = new TagAPI(client);
 		}
 		/// <summary>
 		/// 返回指定用户的标签列表 
@@ -24,10 +32,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.tag.Tag> Tags(string uid, int count = 20, int page = 1)
 		{
-			var json = JArray.Parse(Client.GetCommand("tags",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+			var json = JArray.Parse(api.Tags(uid, count, page));
 			List<Entities.tag.Tag> list = new List<Entities.tag.Tag>();
 			foreach (JObject obj in json)
 			{
@@ -47,7 +52,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public Dictionary<string,IEnumerable<Entities.tag.Tag>> TagsBatch(params string[] uids)
 		{
-			var json = JArray.Parse(Client.GetCommand("tags/tags_batch", new WeiboStringParameter("uids", string.Join(",", uids))));
+			var json = JArray.Parse(api.TagsBatch(uids));
 			var result = new Dictionary<string, IEnumerable<Entities.tag.Tag>>();
 			foreach (var item in json)
 			{
@@ -76,7 +81,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		public Dictionary<string,string> Suggestions(int count = 10)
 		{ 
 			var result = new Dictionary<string,string>();
-			var json = JArray.Parse(Client.GetCommand("tags/suggestions",new WeiboStringParameter("count", count)));
+			var json = JArray.Parse(api.Suggestions(count));
 			foreach(JObject x in json)
 			{
 				result.Add(x["id"].ToString(),x["value"].ToString());
@@ -90,8 +95,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<string> Create(params string[] tags)
 		{
-			var json = JArray.Parse(Client.PostCommand("tags/create",
-				new WeiboStringParameter("tags", string.Join(",", tags))));
+			var json = JArray.Parse(api.Create(tags));
 			List<string> ids = new List<string>();
 			foreach(JObject x in json)
 			{
@@ -106,8 +110,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public string Destroy(string id)
 		{
-			return JObject.Parse(Client.PostCommand("tags/destroy",
-				  new WeiboStringParameter("tag_id", id)))["result"].ToString();
+			return JObject.Parse(api.Destroy(id))["result"].ToString();
 
 		}
 		/// <summary>
@@ -118,8 +121,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		public IEnumerable<string> DestroyBatch(params string[] ids)
 		{
 
-			var json = JArray.Parse(Client.PostCommand("tags/destroy_batch",
-				  new WeiboStringParameter("ids", string.Join(",", ids))));
+			var json = JArray.Parse(api.DestroyBatch(ids));
 			List<string> result = new List<string>();
 			foreach (JObject x in json)
 			{

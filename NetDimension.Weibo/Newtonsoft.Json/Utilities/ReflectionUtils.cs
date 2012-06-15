@@ -175,7 +175,7 @@ namespace Newtonsoft.Json.Utilities
       {
         string assemblyName, typeName;
         binder.BindToName(t, out assemblyName, out typeName);
-        fullyQualifiedTypeName = typeName + (assemblyName == null ? "" : ", " + assemblyName);
+        fullyQualifiedTypeName = typeName + (assemblyName == null ? string.Empty : ", " + assemblyName);
       }
       else
       {

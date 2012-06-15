@@ -9,12 +9,20 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Interface.Entity
 {
+	/// <summary>
+	/// User接口
+	/// </summary>
 	public class UserInterface: WeiboInterface
 	{
+		UserAPI api;
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类实例</param>
 		public UserInterface(Client client)
 			: base(client)
 		{
-
+			api = new UserAPI(client);
 		}
 		/// <summary>
 		/// 获取用户信
@@ -24,8 +32,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public Entities.user.Entity Show(string uid = "", string screenName = "")
 		{
-			return JsonConvert.DeserializeObject<Entities.user.Entity>( Client.GetCommand("users/show",
-				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid)));
+			return JsonConvert.DeserializeObject<Entities.user.Entity>(api.Show(uid, screenName));
 		}
 		/// <summary>
 		/// 通过个性化域名获取用户资料以及用户最新的一条微博 
@@ -34,7 +41,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public Entities.user.Entity ShowByDomain(string domain)
 		{
-			return JsonConvert.DeserializeObject<Entities.user.Entity>(Client.GetCommand("users/domain_show", new WeiboStringParameter("domain", domain)));
+			return JsonConvert.DeserializeObject<Entities.user.Entity>(api.ShowByDomain(domain));
 		}
 		/// <summary>
 		/// 批量获取用户的粉丝数、关注数、微博数
@@ -43,7 +50,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.user.Count> Counts(params string[] uids)
 		{
-			return JsonConvert.DeserializeObject < IEnumerable < Entities.user.Count >>( Client.GetCommand("users/counts", new WeiboStringParameter("uids", string.Join(",", uids))));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.user.Count>>(api.Counts(uids));
 		}
 	}
 }

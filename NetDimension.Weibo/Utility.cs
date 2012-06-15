@@ -260,6 +260,35 @@ namespace NetDimension.Weibo
 		TokenRejected
 	}
 
+	/// <summary>
+	/// 坐标
+	/// </summary>
+	public class Coordinate
+	{
+		/// <summary>
+		/// 维度
+		/// </summary>
+		public float Latitude{get;set;}
+		/// <summary>
+		/// 经度
+		/// </summary>
+		public float Longtitude{get;set;}
+
+		public Coordinate(float lat, float log)
+		{
+			Latitude = lat;
+			Longtitude =log;
+		}
+
+		public override string ToString()
+		{
+ 			return string.Format("{0:#.####},{1:#.####}",Latitude,Longtitude);
+		}
+	}
+
+	/// <summary>
+	/// WeiboParameter实现的IComparer接口
+	/// </summary>
 	internal class WeiboParameterComparer : IComparer<WeiboParameter>
 	{
 
@@ -270,10 +299,25 @@ namespace NetDimension.Weibo
 	}
 
 
-
-	internal static class Utility
+	/// <summary>
+	/// 微博工具类
+	/// </summary>
+	public static class Utility
 	{
-		public static Dictionary<string, string> GetDictionaryFromJSON(string json)
+		/// <summary>
+		/// 将微博时间转换为DateTime
+		/// </summary>
+		/// <param name="dateString">微博时间字符串</param>
+		/// <returns>DateTime</returns>
+		public static DateTime ParseUTCDate(string dateString)
+		{
+			System.Globalization.CultureInfo provider = System.Globalization.CultureInfo.InvariantCulture;
+
+			DateTime dt = DateTime.ParseExact(dateString, "ddd MMM dd HH:mm:ss zzz yyyy", provider);
+
+			return dt;
+		}
+		internal static Dictionary<string, string> GetDictionaryFromJSON(string json)
 		{
 			var result = JsonConvert.DeserializeObject<IEnumerable<JObject>>(json);
 
@@ -289,7 +333,7 @@ namespace NetDimension.Weibo
 			return dict;
 		}
 
-		public static IEnumerable<string> GetStringListFromJSON(string json)
+		internal static IEnumerable<string> GetStringListFromJSON(string json)
 		{
 			var result = JsonConvert.DeserializeObject<IEnumerable<JObject>>(json);
 			List<string> list = new List<string>();
@@ -305,7 +349,7 @@ namespace NetDimension.Weibo
 		}
 
 
-		public static string BuildQueryString(Dictionary<string, string> parameters)
+		internal static string BuildQueryString(Dictionary<string, string> parameters)
 		{
 			List<string> pairs = new List<string>();
 			foreach (KeyValuePair<string, string> item in parameters)
@@ -316,7 +360,7 @@ namespace NetDimension.Weibo
 			return string.Join("&", pairs.ToArray());
 		}
 
-		public static string BuildQueryString(params WeiboParameter[] parameters)
+		internal static string BuildQueryString(params WeiboParameter[] parameters)
 		{
 			List<string> pairs = new List<string>();
 			foreach (var item in parameters)
@@ -330,12 +374,12 @@ namespace NetDimension.Weibo
 			return string.Join("&", pairs.ToArray());
 		}
 
-		public static string GetBoundary()
+		internal static string GetBoundary()
 		{
 			return HttpUtility.UrlEncode(Convert.ToBase64String(Guid.NewGuid().ToByteArray()));
 		}
 
-		public static byte[] BuildPostData(string boundary, params WeiboParameter[] parameters)
+		internal static byte[] BuildPostData(string boundary, params WeiboParameter[] parameters)
 		{
 			List<WeiboParameter> pairs = new List<WeiboParameter>(parameters);
 			pairs.Sort(new WeiboParameterComparer());
@@ -358,7 +402,7 @@ namespace NetDimension.Weibo
 					//contentBuilder.AppendLine("Content-Transfer-Encoding: 8bit");
 					contentBuilder.AppendLine();
 					//contentBuilder.AppendLine(HttpUtility.UrlEncode(param.Value).Replace("+", "%20"));
-					contentBuilder.AppendLine(HttpUtility.UrlEncode(param.Value==null?"":param.Value).Replace("+", "%20"));
+					contentBuilder.AppendLine(HttpUtility.UrlEncode(param.Value==null?string.Empty:param.Value).Replace("+", "%20"));
 				}
 				else
 				{

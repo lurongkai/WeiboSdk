@@ -30,9 +30,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Users(string q, int count = 10)
 		{
-			return DynamicJson.Parse(Client.GetCommand("search/suggestions/users",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count)));
+			return DynamicJson.Parse(api.Users(q,count));
 		}
 		/// <summary>
 		/// 搜索微博时的联想搜索建议 
@@ -42,9 +40,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Statuses(string q, int count = 10)
 		{
-			return DynamicJson.Parse(Client.GetCommand("search/suggestions/statuses",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count)));
+			return DynamicJson.Parse(api.Statuses(q,count));
 		}
 		/// <summary>
 		/// 搜索学校时的联想搜索建议 
@@ -55,10 +51,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Schools(string q, int count = 10,int type=0)
 		{
-			return DynamicJson.Parse(Client.GetCommand("search/suggestions/schools",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("type", type)));
+			return DynamicJson.Parse(api.Schools(q,count,type));
 		}
 		/// <summary>
 		/// 搜索公司时的联想搜索建议 
@@ -68,9 +61,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Companies(string q, int count = 10)
 		{
-			return DynamicJson.Parse(Client.GetCommand("search/suggestions/companies",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count)));
+			return DynamicJson.Parse(api.Companies(q,count));
 		}
 		/// <summary>
 		/// 搜索应用时的联想搜索建议 
@@ -80,9 +71,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Apps(string q, int count = 10)
 		{
-			return DynamicJson.Parse(Client.GetCommand("search/suggestions/apps",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count)));
+			return DynamicJson.Parse(api.Apps(q,count));
 		}
 		/// <summary>
 		/// @用户时的联想建议 
@@ -94,11 +83,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic AtUsers(string q, int count = 10, int type = 0,int range=2)
 		{
-			return DynamicJson.Parse(Client.GetCommand("search/suggestions/at_users",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("type", type),
-				new WeiboStringParameter("range", range)));
+			return DynamicJson.Parse(api.AtUsers(q,count,type,range));
 		}
 		/// <summary>
 		/// 搜索某一话题下的微博 
@@ -109,10 +94,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Topics(string q, int count = 10,int page=1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("search/suggestions/topics",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+			return DynamicJson.Parse(api.Topics(q,count,page));
 		}
 
 

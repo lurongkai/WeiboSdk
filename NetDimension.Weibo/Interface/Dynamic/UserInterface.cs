@@ -31,8 +31,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Show(string uid = "", string screenName = "")
 		{
-			return DynamicJson.Parse(Client.GetCommand("users/show",
-				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid)));
+			return DynamicJson.Parse(api.Show(uid,screenName));
 		}
 		/// <summary>
 		/// 通过个性化域名获取用户资料以及用户最新的一条微博 
@@ -41,7 +40,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic ShowByDomain(string domain)
 		{
-			return DynamicJson.Parse(Client.GetCommand("users/domain_show", new WeiboStringParameter("domain", domain)));
+			return DynamicJson.Parse(api.ShowByDomain(domain));
 		}
 		/// <summary>
 		/// 批量获取用户的粉丝数、关注数、微博数
@@ -50,7 +49,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Counts(params string[] uids)
 		{
-			return DynamicJson.Parse(Client.GetCommand("users/counts", new WeiboStringParameter("uids", string.Join(",",uids))));
+			return DynamicJson.Parse(api.Counts(uids));
 		}
 	}
 }

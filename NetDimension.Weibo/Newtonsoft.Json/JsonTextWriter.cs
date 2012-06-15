@@ -80,7 +80,7 @@ namespace Newtonsoft.Json
       set
       {
         if (value != '"' && value != '\'')
-          throw new ArgumentException(@"Invalid JavaScript string quote character. Valid quote characters are ' and "".");
+          throw new ArgumentException(@"Invalid JavaScript string quote character. Valid quote characters are ' and string.Empty.");
 
         _quoteChar = value;
       }

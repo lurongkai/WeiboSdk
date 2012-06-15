@@ -150,7 +150,7 @@ namespace NetDimension.Weibo.Interface
 		/// </summary>
 		/// <param name="tid">需要删除的标签ID</param>
 		/// <returns></returns>
-		public string DestroyTags(string tid)
+		public string DestroyTags(string[] tid)
 		{
 			return (Client.PostCommand("favorites/tags/destroy_batch",
 				  new WeiboStringParameter("tid", string.Join(",", tid))));

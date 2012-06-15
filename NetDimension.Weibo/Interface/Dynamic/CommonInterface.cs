@@ -12,6 +12,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 	/// </summary>
 	public class CommonInterface: WeiboInterface
 	{
+		CommonAPI api;
 		/// <summary>
 		/// 构造函数
 		/// </summary>
@@ -19,7 +20,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		public CommonInterface(Client client)
 			: base(client)
 		{
-
+			api = new CommonAPI(client);
 		}
 		/// <summary>
 		/// 通过地址编码获取地址名称 
@@ -28,7 +29,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic CodeToLocation(params string[] codes)
 		{
-			return DynamicJson.Parse(Client.GetCommand("common/code_to_location", new WeiboStringParameter("codes", string.Join(",",codes))));
+			return DynamicJson.Parse(api.CodeToLocation(codes));
 		}
 		/// <summary>
 		/// 获取城市列表
@@ -36,11 +37,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="province">省份的省份代码。</param>
 		/// <param name="capital">城市的首字母，a-z，可为空代表返回全部，默认为全部。</param>
 		/// <returns></returns>
-		public dynamic GetCity(string province,string capital="")
+		public dynamic GetCity(string province,string capital= "")
 		{
-			return DynamicJson.Parse(Client.GetCommand("common/get_city", 
-				new WeiboStringParameter("province", province),
-				new WeiboStringParameter("capital", capital)));
+			return DynamicJson.Parse(api.GetCity(province,capital));
 		}
 		/// <summary>
 		/// 获取省份列表 
@@ -50,9 +49,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic GetProvince(string country, string capital = "")
 		{
-			return DynamicJson.Parse(Client.GetCommand("common/get_province",
-				new WeiboStringParameter("country", country),
-				new WeiboStringParameter("capital", capital)));
+			return DynamicJson.Parse(api.GetProvince(country, capital));
 		}
 		/// <summary>
 		/// 获取国家列表 
@@ -61,8 +58,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic GetCountry(string capital = "")
 		{
-			return DynamicJson.Parse(Client.GetCommand("common/get_country",
-				new WeiboStringParameter("capital", capital)));
+			return DynamicJson.Parse(api.GetCountry(capital));
 		}
 		/// <summary>
 		/// 获取时区配置表
@@ -70,7 +66,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic GetTimezone()
 		{
-			return DynamicJson.Parse(Client.GetCommand("common/get_timezone"));
+			return DynamicJson.Parse(api.GetTimezone());
 		}
 
 	}

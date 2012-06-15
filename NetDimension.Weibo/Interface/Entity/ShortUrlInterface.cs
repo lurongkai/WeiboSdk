@@ -7,12 +7,20 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Interface.Entity
 {
+	/// <summary>
+	/// ShortUrl接口
+	/// </summary>
 	public class ShortUrlInterface: WeiboInterface
 	{
+		ShortUrlAPI api;
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类</param>
 		public ShortUrlInterface(Client client)
 			: base(client)
 		{
-
+			api = new ShortUrlAPI(client);
 		}
 		/// <summary>
 		/// 获取短链接的总点击数 
@@ -21,7 +29,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.shortUrl.Clicks> Clicks(string url_short)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Clicks>>(Client.GetCommand("short_url/clicks", new WeiboStringParameter("url_short", url_short)));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Clicks>>(api.Clicks(url_short));
 		}
 		/// <summary>
 		/// 获取一个短链接点击的referer来源和数量
@@ -30,7 +38,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public Entities.shortUrl.Referers Referers(string url_short)
 		{
-			return JsonConvert.DeserializeObject<Entities.shortUrl.Referers>(Client.GetCommand("short_url/referers", new WeiboStringParameter("url_short", url_short)));
+			return JsonConvert.DeserializeObject<Entities.shortUrl.Referers>(api.Referers(url_short));
 		}
 		/// <summary>
 		/// 获取一个短链接点击的地区来源和数量 
@@ -39,7 +47,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public Entities.shortUrl.Locations Locations(string url_short)
 		{
-			return JsonConvert.DeserializeObject<Entities.shortUrl.Locations>(Client.GetCommand("short_url/locations", new WeiboStringParameter("url_short", url_short)));
+			return JsonConvert.DeserializeObject<Entities.shortUrl.Locations>(api.Locations(url_short));
 		}
 		/// <summary>
 		/// 批量获取短链接的富内容信息
@@ -48,14 +56,8 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.shortUrl.Info> Info(params string[] url_short)
 		{
-			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
 
-			foreach (string u in url_short)
-			{
-				parameters.Add(new WeiboStringParameter("url_short", u));
-			}
-
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Info>>(Client.GetCommand("short_url/info", parameters.ToArray()));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Info>>(api.Info(url_short));
 		}
 
 		/// <summary>
@@ -65,13 +67,8 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.shortUrl.Url> Shorten(params string[] url_long)
 		{
-			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
 
-			foreach (string u in url_long)
-			{
-				parameters.Add(new WeiboStringParameter("url_long", u));
-			}
-			return JsonConvert.DeserializeObject < IEnumerable < Entities.shortUrl.Url >>( Client.GetCommand("short_url/shorten", parameters.ToArray()));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Url>>(api.Shorten(url_long));
 		}
 
 		/// <summary>
@@ -81,13 +78,8 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.shortUrl.Url> Expand(params string[] url_short)
 		{
-			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
 
-			foreach (string u in url_short)
-			{
-				parameters.Add(new WeiboStringParameter("url_short", u));
-			}
-			return JsonConvert.DeserializeObject < IEnumerable < Entities.shortUrl.Url >>(  Client.GetCommand("short_url/expand", parameters.ToArray()));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Url>>(api.Expand(url_short));
 
 		}
 
@@ -99,7 +91,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.shortUrl.ShareCounts> ShareCounts(string url_short)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.ShareCounts>>(Client.GetCommand("short_url/share/counts", new WeiboStringParameter("url_short", url_short)));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.ShareCounts>>(api.ShareCounts(url_short));
 		}
 
 		/// <summary>
@@ -113,18 +105,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public Entities.shortUrl.ShareStatuses ShareStatuses(string urlShort, string sinceID = "", string maxID = "", int count = 20, int page = 1)
 		{
-			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
-			parameters.Add(new WeiboStringParameter("url_short", urlShort));
-
-			if (!string.IsNullOrEmpty(sinceID))
-				parameters.Add(new WeiboStringParameter("since_id", sinceID));
-			if (!string.IsNullOrEmpty(maxID))
-				parameters.Add(new WeiboStringParameter("max_id", maxID));
-
-			parameters.Add(new WeiboStringParameter("count", count));
-			parameters.Add(new WeiboStringParameter("page", page));
-
-			return JsonConvert.DeserializeObject<Entities.shortUrl.ShareStatuses>(Client.GetCommand("short_url/share/statuses", parameters.ToArray()));
+			return JsonConvert.DeserializeObject<Entities.shortUrl.ShareStatuses>(api.ShareStatuses(urlShort, sinceID, maxID, count, page));
 		}
 
 		/// <summary>
@@ -134,7 +115,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable< Entities.shortUrl.CommentCount> CommentCounts(string url_short)
 		{
-			return JsonConvert.DeserializeObject < IEnumerable < Entities.shortUrl.CommentCount >>( Client.GetCommand("short_url/comment/counts", new WeiboStringParameter("url_short", url_short)));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.CommentCount>>(api.CommentCounts(url_short));
 		}
 
 		/// <summary>
@@ -148,18 +129,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public Entities.shortUrl.CommentComments CommentComments(string urlShort, string sinceID = "", string maxID = "", int count = 20, int page = 1)
 		{
-			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
-			parameters.Add(new WeiboStringParameter("url_short", urlShort));
-
-			if (!string.IsNullOrEmpty(sinceID))
-				parameters.Add(new WeiboStringParameter("since_id", sinceID));
-			if (!string.IsNullOrEmpty(maxID))
-				parameters.Add(new WeiboStringParameter("max_id", maxID));
-
-			parameters.Add(new WeiboStringParameter("count", count));
-			parameters.Add(new WeiboStringParameter("page", page));
-
-			return JsonConvert.DeserializeObject<Entities.shortUrl.CommentComments>(Client.GetCommand("short_url/comment/comments", parameters.ToArray()));
+			return JsonConvert.DeserializeObject<Entities.shortUrl.CommentComments>(api.CommentComments(urlShort, sinceID, maxID, count, page));
 		}
 
 	}

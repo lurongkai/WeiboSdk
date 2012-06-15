@@ -6,12 +6,20 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Interface.Entity
 {
+	/// <summary>
+	/// Comment接口
+	/// </summary>
 	public class CommentInterface : WeiboInterface
 	{
+		CommentAPI api;
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类</param>
 		public CommentInterface(Client client)
 			: base(client)
 		{
-
+			api = new CommentAPI(client);
 		}
 
 		/// <summary>
@@ -24,15 +32,9 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="page">返回结果的页码，默认为1。</param>
 		/// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。</param>
 		/// <returns>JSON</returns>
-		public NetDimension.Weibo.Entities.comment.Collection Show(string id, long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0)
+		public NetDimension.Weibo.Entities.comment.Collection Show(string id, string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Collection>(Client.GetCommand("comments/show",
-				new WeiboStringParameter("id", id),
-				new WeiboStringParameter("since_id", sinceID),
-				new WeiboStringParameter("max_id", maxID),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page),
-				new WeiboStringParameter("filter_by_author", filterByAuthor)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Collection>(api.Show(id,sinceID,maxID,count,page,filterByAuthor));
 		}
 		/// <summary>
 		/// 获取当前登录用户所发出的评论列表
@@ -43,15 +45,9 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="page">返回结果的页码，默认为1。</param>
 		/// <param name="filterBySource">来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。 </param>
 		/// <returns></returns>
-		public NetDimension.Weibo.Entities.comment.Collection ByMe(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterBySource = 0)
+		public NetDimension.Weibo.Entities.comment.Collection ByMe(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterBySource = 0)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Collection>(Client.GetCommand("comments/by_me",
-				
-				new WeiboStringParameter("since_id", sinceID),
-				new WeiboStringParameter("max_id", maxID),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page),
-				new WeiboStringParameter("filter_by_source", filterBySource)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Collection>(api.ByMe(sinceID,maxID,count,page,filterBySource));
 		}
 		/// <summary>
 		/// 获取当前登录用户所接收到的评论列表
@@ -63,15 +59,9 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。 </param>
 		/// <param name="filterBySource"></param>
 		/// <returns></returns>
-		public NetDimension.Weibo.Entities.comment.Collection ToMe(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0)
+		public NetDimension.Weibo.Entities.comment.Collection ToMe(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Collection>(Client.GetCommand("comments/to_me",
-					new WeiboStringParameter("since_id", sinceID),
-					new WeiboStringParameter("max_id", maxID),
-					new WeiboStringParameter("count", count),
-					new WeiboStringParameter("page", page),
-					new WeiboStringParameter("filter_by_author", filterByAuthor),
-					new WeiboStringParameter("filter_by_source", filterBySource)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Collection>(api.ToMe(sinceID, maxID, count, page, filterByAuthor, filterBySource));
 		}
 		/// <summary>
 		/// 获取当前登录用户的最新评论包括接收到的与发出的
@@ -81,13 +71,9 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="count">单页返回的记录条数，默认为50。 </param>
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <returns>JSON</returns>
-		public NetDimension.Weibo.Entities.comment.Collection Timeline(long sinceID = 0, long maxID = 0, int count = 50, int page = 1)
+		public NetDimension.Weibo.Entities.comment.Collection Timeline(string sinceID = "", string maxID = "", int count = 50, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Collection>(Client.GetCommand("comments/timeline",
-					new WeiboStringParameter("since_id", sinceID),
-					new WeiboStringParameter("max_id", maxID),
-					new WeiboStringParameter("count", count),
-					new WeiboStringParameter("page", page)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Collection>(api.Timeline(sinceID, maxID, count, page));
 		}
 		/// <summary>
 		/// 获取最新的提到当前登录用户的评论，即@我的评论 
@@ -99,15 +85,9 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。 </param>
 		/// <param name="filterBySource">来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。</param>
 		/// <returns></returns>
-		public NetDimension.Weibo.Entities.comment.Collection Mentions(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0)
+		public NetDimension.Weibo.Entities.comment.Collection Mentions(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Collection>(Client.GetCommand("comments/mentions",
-					new WeiboStringParameter("since_id", sinceID),
-					new WeiboStringParameter("max_id", maxID),
-					new WeiboStringParameter("count", count),
-					new WeiboStringParameter("page", page),
-					new WeiboStringParameter("filter_by_author", filterByAuthor),
-					new WeiboStringParameter("filter_by_source", filterBySource)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Collection>(api.Mentions(sinceID, maxID, count, page, filterByAuthor, filterBySource));
 		}
 
 		/// <summary>
@@ -117,8 +97,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<NetDimension.Weibo.Entities.comment.Entity> ShowBatch(params string[] cids)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.comment.Entity>>(Client.GetCommand("comments/show_batch",
-				new WeiboStringParameter("cids", string.Join(",",cids))));
+			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.comment.Entity>>(api.ShowBatch(cids));
 		}
 
 		/// <summary>
@@ -130,10 +109,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.comment.Entity Create(string id, string comment, bool commentOrigin = false)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Entity>(Client.PostCommand("comments/create",
-				new WeiboStringParameter("id", id),
-				new WeiboStringParameter("comment", comment),
-				new WeiboStringParameter("comment_ori", commentOrigin)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Entity>(api.Create(id, comment, commentOrigin));
 		}
 		/// <summary>
 		/// 删除一条评论 
@@ -142,8 +118,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.comment.Entity Destroy(string cid)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Entity>(Client.PostCommand("comments/destroy",
-				new WeiboStringParameter("cid", cid)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Entity>(api.Destroy(cid));
 		}
 
 		/// <summary>
@@ -153,8 +128,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<NetDimension.Weibo.Entities.comment.Entity> DestroyBatch(params string[] ids)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.comment.Entity>>(Client.PostCommand("comments/destroy",
-					new WeiboStringParameter("destroy_batch", string.Join(",",ids))));
+			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.comment.Entity>>(api.DestroyBatch(ids));
 		}
 		/// <summary>
 		/// 回复一条评论 
@@ -167,12 +141,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.comment.Entity Reply(string cid, string id, string comment, bool withoutMention = false, bool commentOrigin = false)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Entity>(Client.PostCommand("comments/reply",
-				new WeiboStringParameter("cid", cid),
-				new WeiboStringParameter("id", id),
-				new WeiboStringParameter("comment", comment),
-				new WeiboStringParameter("without_mention", withoutMention),
-				new WeiboStringParameter("comment_ori", commentOrigin)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.comment.Entity>(api.Reply(cid, id, comment, withoutMention, commentOrigin));
 		}
 	}
 }

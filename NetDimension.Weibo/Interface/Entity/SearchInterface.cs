@@ -8,12 +8,20 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Interface.Entity
 {
+	/// <summary>
+	/// Search接口
+	/// </summary>
 	public class SearchInterface: WeiboInterface
 	{
+		SearchAPI api;
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类</param>
 		public SearchInterface(Client client)
 			: base(client)
 		{
-
+			api = new SearchAPI(client);
 		}
 		/// <summary>
 		/// 搜索用户时的联想搜索建议 
@@ -23,9 +31,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.search.User> Users(string q, int count = 10)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.search.User>>(Client.GetCommand("search/suggestions/users",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count)));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.search.User>>(api.Users(q, count));
 		}
 		/// <summary>
 		/// 搜索微博时的联想搜索建议 
@@ -35,9 +41,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.search.Status> Statuses(string q, int count = 10)
 		{
-			return JsonConvert.DeserializeObject < IEnumerable < Entities.search.Status >>( Client.GetCommand("search/suggestions/statuses",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count)));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.search.Status>>(api.Statuses(q, count));
 		}
 		/// <summary>
 		/// 搜索学校时的联想搜索建议 
@@ -48,10 +52,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.search.School> Schools(string q, int count = 10, int type = 0)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.search.School>>(Client.GetCommand("search/suggestions/schools",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("type", type)));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.search.School>>(api.Schools(q, count, type));
 		}
 		/// <summary>
 		/// 搜索公司时的联想搜索建议 
@@ -61,9 +62,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<string> Companies(string q, int count = 10)
 		{
-			return Utility.GetStringListFromJSON(Client.GetCommand("search/suggestions/companies",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count)));
+			return Utility.GetStringListFromJSON(api.Companies(q, count));
 		}
 		/// <summary>
 		/// 搜索应用时的联想搜索建议 
@@ -73,9 +72,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.search.App> Apps(string q, int count = 10)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.search.App>>(Client.GetCommand("search/suggestions/apps",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count)));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.search.App>>(api.Apps(q, count));
 		}
 		/// <summary>
 		/// @用户时的联想建议 
@@ -87,11 +84,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.search.AtUser> AtUsers(string q, int count = 10, int type = 0,int range=2)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.search.AtUser>>(Client.GetCommand("search/suggestions/at_users",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("type", type),
-				new WeiboStringParameter("range", range)));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.search.AtUser>>(api.AtUsers(q, count, type, range));
 		}
 		/// <summary>
 		/// 搜索某一话题下的微博 
@@ -102,10 +95,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.status.Entity> Topics(string q, int count = 10,int page=1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.status.Entity>>(Client.GetCommand("search/suggestions/topics",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.status.Entity>>(api.Topics(q, count, page));
 		}
 
 

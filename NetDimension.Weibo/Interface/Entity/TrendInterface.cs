@@ -9,12 +9,20 @@ using Newtonsoft.Json.Linq;
 
 namespace NetDimension.Weibo.Interface.Entity
 {
+	/// <summary>
+	/// Trend接口
+	/// </summary>
 	public class TrendInterface: WeiboInterface
 	{
+		TrendAPI api;
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类</param>
 		public TrendInterface(Client client)
 			: base(client)
 		{
-
+			api = new TrendAPI(client);
 		}
 		/// <summary>
 		/// 获取某人话题 
@@ -25,10 +33,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.trend.Trend> Trends(string uid, int count = 10, int page = 1)
 		{
-			return JsonConvert.DeserializeObject < IEnumerable < Entities.trend.Trend > >(Client.GetCommand("trends",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.trend.Trend>>(api.Trends(uid, count, page));
 		}
 		/// <summary>
 		/// 是否关注某话题 
@@ -37,7 +42,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public Entities.trend.IsFollow IsFollow(string trendName)
 		{
-			return JsonConvert.DeserializeObject < Entities.trend.IsFollow > (Client.GetCommand("trends/is_follow", new WeiboStringParameter("trend_name", trendName)));
+			return JsonConvert.DeserializeObject<Entities.trend.IsFollow>(api.IsFollow(trendName));
 		}
 
 		/// <summary>
@@ -47,8 +52,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public Entities.trend.HotTrends Hourly(bool baseApp = false)
 		{
-			var json = JObject.Parse(Client.GetCommand("trends/hourly",
-				new WeiboStringParameter("base_app", baseApp)));
+			var json = JObject.Parse(api.Hourly(baseApp));
 
 			var result = new Entities.trend.HotTrends();
 
@@ -83,8 +87,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public Entities.trend.HotTrends Daily(bool baseApp = false)
 		{
-			var json= JObject.Parse(Client.GetCommand("trends/daily",
-				new WeiboStringParameter("base_app", baseApp)));
+			var json = JObject.Parse(api.Daily(baseApp));
 
 			var result = new Entities.trend.HotTrends();
 
@@ -119,8 +122,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public Entities.trend.HotTrends Weekly(bool baseApp = false)
 		{
-			var json = JObject.Parse(Client.GetCommand("trends/weekly",
-				new WeiboStringParameter("base_app", baseApp)));
+			var json = JObject.Parse(api.Weekly(baseApp));
 
 			var result = new Entities.trend.HotTrends();
 
@@ -155,8 +157,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public string Follow(string trendName)
 		{
-			return JObject.Parse(Client.PostCommand("trends/follow",
-				new WeiboStringParameter("trend_name", trendName)))["topicid"].ToString();
+			return JObject.Parse(api.Follow(trendName))["topicid"].ToString();
 		}
 		/// <summary>
 		/// 取消关注的某一个话题 
@@ -165,8 +166,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public bool Destroy(string id)
 		{
-			return Convert.ToBoolean(JObject.Parse(Client.PostCommand("trends/destroy",
-				  new WeiboStringParameter("trend_id", id)))["result"].ToString());
+			return Convert.ToBoolean(JObject.Parse(api.Destroy(id))["result"].ToString());
 
 		}
 

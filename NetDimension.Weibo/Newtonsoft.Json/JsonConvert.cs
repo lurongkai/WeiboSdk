@@ -186,7 +186,7 @@ namespace Newtonsoft.Json
             break;
         }
 
-        writer.Write(@")\/""");
+        writer.Write(@")\/string.Empty");
       }
       else
       {

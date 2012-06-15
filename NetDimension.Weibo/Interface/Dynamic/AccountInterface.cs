@@ -12,6 +12,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 	/// </summary>
 	public class AccountInterface: WeiboInterface
 	{
+		AccountAPI api;
 		/// <summary>
 		/// 构造函数
 		/// </summary>
@@ -19,7 +20,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		public AccountInterface(Client client)
 			: base(client)
 		{
-
+			api = new AccountAPI(client);
 		}
 
 		/// <summary>
@@ -28,7 +29,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns>JSON</returns>
 		public dynamic GetPrivacy()
 		{
-			return DynamicJson.Parse(Client.GetCommand("account/get_privacy"));
+			return DynamicJson.Parse(api.GetPrivacy());
 		}
 
 		/// <summary>
@@ -44,28 +45,8 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns>JSON</returns>
 		public dynamic SchoolList(string province = "", string city = "", string area = "", string type = "1", string capital = "", string keyword = "", int count = 10)
 		{
-			var p = new List<WeiboParameter>{
-				string.IsNullOrEmpty(capital)?new WeiboStringParameter("keyword", keyword): new WeiboStringParameter("capital", capital),
-				new WeiboStringParameter("count", count)
-			};
 
-			if (!string.IsNullOrEmpty(province))
-			{
-				p.Add(new WeiboStringParameter("province", province));
-			}
-
-			if (!string.IsNullOrEmpty(city))
-			{
-				p.Add(new WeiboStringParameter("city", city));
-			}
-
-			if (!string.IsNullOrEmpty(area))
-			{
-				p.Add(new WeiboStringParameter("area", area));
-			}
-
-			return DynamicJson.Parse(Client.GetCommand("account/profile/school_list",
-				p.ToArray()));
+			return DynamicJson.Parse(api.SchoolList(province,city,area,type,capital,keyword,count));
 		}
 
 		/// <summary>
@@ -74,7 +55,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns>JSON</returns>
 		public dynamic RateLimitStatus()
 		{
-			return DynamicJson.Parse(Client.GetCommand("account/rate_limit_status"));
+			return DynamicJson.Parse(api.RateLimitStatus());
 		}
 
 		/// <summary>
@@ -83,7 +64,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns>JSON</returns>
 		public dynamic GetUID()
 		{
-			return DynamicJson.Parse(Client.GetCommand("account/get_uid"));
+			return DynamicJson.Parse(api.GetUID());
 		}
 
 		/// <summary>
@@ -92,7 +73,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns>JSON</returns>
 		public dynamic EndSession()
 		{
-			return DynamicJson.Parse(Client.GetCommand("account/end_session"));
+			return DynamicJson.Parse(api.EndSession());
 		}
 
 		/// <summary>
@@ -102,7 +83,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns>JSON</returns>
 		public dynamic VerifyNickname(string nickname)
 		{
-			return DynamicJson.Parse(Client.GetCommand("register/verify_nickname", new WeiboStringParameter("nickname", nickname)));
+			return DynamicJson.Parse(api.VerifyNickname(nickname));
 		}
 
 		/// <summary>
@@ -113,9 +94,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic UnreadCount(string uid,string callback="")
 		{
-			return DynamicJson.Parse(Client.GetCommand("https://rm.api.weibo.com/2/remind/unread_count.json", 
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("callback", callback)));
+			return DynamicJson.Parse(api.UnreadCount(uid,callback));
 		}
 
 		/// <summary>
@@ -125,7 +104,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns>JSON</returns>
 		public dynamic SetCount(ResetCountType type)
 		{
-			return DynamicJson.Parse(Client.PostCommand("https://rm.api.weibo.com/2/remind/set_count.json", new WeiboStringParameter("type", type)));
+			return DynamicJson.Parse(api.SetCount(type));
 		}
 
 	}

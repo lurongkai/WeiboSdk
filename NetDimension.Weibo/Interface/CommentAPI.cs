@@ -25,7 +25,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="page">返回结果的页码，默认为1。</param>
 		/// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。</param>
 		/// <returns>JSON</returns>
-		public string Show(string id, long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0)
+		public string Show(string id, string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0)
 		{
 			return (Client.GetCommand("comments/show",
 				new WeiboStringParameter("id", id),
@@ -44,7 +44,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="page">返回结果的页码，默认为1。</param>
 		/// <param name="filterBySource">来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。 </param>
 		/// <returns></returns>
-		public string ByMe(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterBySource = 0)
+		public string ByMe(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterBySource = 0)
 		{
 			return (Client.GetCommand("comments/by_me",
 
@@ -64,7 +64,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。 </param>
 		/// <param name="filterBySource"></param>
 		/// <returns></returns>
-		public string ToMe(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0)
+		public string ToMe(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0)
 		{
 			return (Client.GetCommand("comments/to_me",
 					new WeiboStringParameter("since_id", sinceID),
@@ -82,7 +82,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="count">单页返回的记录条数，默认为50。 </param>
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <returns>JSON</returns>
-		public string Timeline(long sinceID = 0, long maxID = 0, int count = 50, int page = 1)
+		public string Timeline(string sinceID = "", string maxID = "", int count = 50, int page = 1)
 		{
 			return (Client.GetCommand("comments/timeline",
 					new WeiboStringParameter("since_id", sinceID),
@@ -100,7 +100,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。 </param>
 		/// <param name="filterBySource">来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。</param>
 		/// <returns></returns>
-		public string Mentions(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0)
+		public string Mentions(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0)
 		{
 			return (Client.GetCommand("comments/mentions",
 					new WeiboStringParameter("since_id", sinceID),

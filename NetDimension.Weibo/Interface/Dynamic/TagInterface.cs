@@ -31,10 +31,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Tags(string uid, int count = 20, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("tags",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+			return DynamicJson.Parse(api.Tags(uid,count,page));
 		}
 		/// <summary>
 		/// 批量获取用户的标签列表 
@@ -43,8 +40,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic TagsBatch(params string[] uids)
 		{
-			return DynamicJson.Parse(Client.GetCommand("tags/tags_batch",
-				new WeiboStringParameter("uids", string.Join(",",uids))));
+			return DynamicJson.Parse(api.TagsBatch(uids));
 		}
 		/// <summary>
 		/// 获取系统推荐的标签列表 
@@ -53,7 +49,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Suggestions(int count = 10)
 		{ 
-			return DynamicJson.Parse(Client.GetCommand("tags/suggestions",new WeiboStringParameter("count", count)));
+			return DynamicJson.Parse(api.Suggestions(count));
 		}
 		/// <summary>
 		/// 为当前登录用户添加新的用户标签 
@@ -62,8 +58,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Create(params string[] tags)
 		{
-			return DynamicJson.Parse(Client.PostCommand("tags/create",
-				new WeiboStringParameter("tags", string.Join(",",tags))));
+			return DynamicJson.Parse(api.Create(tags));
 		}
 		/// <summary>
 		/// 删除用户标签 
@@ -72,8 +67,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Destroy(string id)
 		{
-			return DynamicJson.Parse(Client.PostCommand("tags/destroy",
-				  new WeiboStringParameter("tag_id", id)));
+			return DynamicJson.Parse(api.Destroy(id));
 
 		}
 		/// <summary>
@@ -83,8 +77,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic DestroyBatch(params string[] ids)
 		{
-			return DynamicJson.Parse(Client.PostCommand("tags/destroy_batch",
-				  new WeiboStringParameter("ids", string.Join(",", ids))));
+			return DynamicJson.Parse(api.DestroyBatch(ids));
 		}
 	}
 }

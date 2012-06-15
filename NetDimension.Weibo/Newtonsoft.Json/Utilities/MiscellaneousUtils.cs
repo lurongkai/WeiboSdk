@@ -129,7 +129,7 @@ namespace Newtonsoft.Json.Utilities
     {
       string hex = BitConverter.ToString(bytes);
       if (removeDashes)
-        hex = hex.Replace("-", "");
+        hex = hex.Replace("-", string.Empty);
 
       return hex;
     }

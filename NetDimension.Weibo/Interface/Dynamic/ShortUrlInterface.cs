@@ -29,7 +29,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Clicks(string url_short)
 		{
-			return DynamicJson.Parse(Client.GetCommand("short_url/clicks", new WeiboStringParameter("url_short", url_short)));
+			return DynamicJson.Parse(api.Clicks(url_short));
 		}
 		/// <summary>
 		/// 获取一个短链接点击的referer来源和数量
@@ -38,7 +38,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Referers(string url_short)
 		{
-			return DynamicJson.Parse(Client.GetCommand("short_url/referers", new WeiboStringParameter("url_short", url_short)));
+			return DynamicJson.Parse(api.Referers(url_short));
 		}
 		/// <summary>
 		/// 获取一个短链接点击的地区来源和数量 
@@ -47,7 +47,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Locations(string url_short)
 		{
-			return DynamicJson.Parse(Client.GetCommand("short_url/locations", new WeiboStringParameter("url_short", url_short)));
+			return DynamicJson.Parse(api.Locations(url_short));
 		}
 		/// <summary>
 		/// 批量获取短链接的富内容信息
@@ -56,14 +56,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Info(params string[] url_short)
 		{
-			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
-
-			foreach (string u in url_short)
-			{
-				parameters.Add(new WeiboStringParameter("url_short", u));
-			}
-
-			return DynamicJson.Parse(Client.GetCommand("short_url/info", parameters.ToArray()));
+			return DynamicJson.Parse(api.Info(url_short));
 		}
 
 		/// <summary>
@@ -73,13 +66,8 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Shorten(params string[] url_long)
 		{
-			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
-
-			foreach (string u in url_long)
-			{
-				parameters.Add(new WeiboStringParameter("url_long", u));
-			}
-			return DynamicJson.Parse(Client.GetCommand("short_url/shorten", parameters.ToArray()));
+		
+			return DynamicJson.Parse(api.Shorten(url_long));
 		}
 
 		/// <summary>
@@ -89,13 +77,8 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Expand(params string[] url_short)
 		{
-			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
-
-			foreach (string u in url_short)
-			{
-				parameters.Add(new WeiboStringParameter("url_short", u));
-			}
-			return DynamicJson.Parse(Client.GetCommand("short_url/expand", parameters.ToArray()));
+			
+			return DynamicJson.Parse(api.Expand(url_short));
 
 		}
 
@@ -107,7 +90,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic ShareCounts(string url_short)
 		{
-			return DynamicJson.Parse(Client.GetCommand("short_url/share/counts", new WeiboStringParameter("url_short", url_short)));
+			return DynamicJson.Parse(api.ShareCounts(url_short));
 		}
 
 		/// <summary>
@@ -121,18 +104,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic ShareStatuses(string urlShort, string sinceID = "", string maxID = "", int count = 20, int page = 1)
 		{
-			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
-			parameters.Add(new WeiboStringParameter("url_short", urlShort));
-
-			if (!string.IsNullOrWhiteSpace(sinceID))
-				parameters.Add(new WeiboStringParameter("since_id", sinceID));
-			if (!string.IsNullOrWhiteSpace(maxID))
-				parameters.Add(new WeiboStringParameter("max_id", maxID));
-
-			parameters.Add(new WeiboStringParameter("count", count));
-			parameters.Add(new WeiboStringParameter("page", page));
-
-			return DynamicJson.Parse(Client.GetCommand("short_url/share/statuses", parameters.ToArray()));
+			return DynamicJson.Parse(api.ShareStatuses(urlShort,sinceID,maxID,count,page));
 		}
 
 		/// <summary>
@@ -142,7 +114,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic CommentCounts(string url_short)
 		{
-			return DynamicJson.Parse(Client.GetCommand("short_url/comment/counts", new WeiboStringParameter("url_short", url_short)));
+			return DynamicJson.Parse(api.CommentCounts(url_short));
 		}
 
 		/// <summary>
@@ -156,18 +128,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic CommentComments(string urlShort, string sinceID = "", string maxID = "", int count = 20, int page = 1)
 		{
-			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
-			parameters.Add(new WeiboStringParameter("url_short", urlShort));
-
-			if (!string.IsNullOrWhiteSpace(sinceID))
-				parameters.Add(new WeiboStringParameter("since_id", sinceID));
-			if (!string.IsNullOrWhiteSpace(maxID))
-				parameters.Add(new WeiboStringParameter("max_id", maxID));
-
-			parameters.Add(new WeiboStringParameter("count", count));
-			parameters.Add(new WeiboStringParameter("page", page));
-
-			return DynamicJson.Parse(Client.GetCommand("short_url/comment/comments", parameters.ToArray()));
+			return DynamicJson.Parse(api.CommentComments(urlShort,sinceID,maxID,count,page));
 		}
 
 	}

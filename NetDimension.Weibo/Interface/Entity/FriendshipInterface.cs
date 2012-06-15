@@ -8,12 +8,20 @@ using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Interface.Entity
 {
+	/// <summary>
+	/// Friendship接口
+	/// </summary>
 	public class FriendshipInterface : WeiboInterface
 	{
+		FriendshipAPI api;
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="client">操作类</param>
 		public FriendshipInterface(Client client)
 			: base(client)
 		{
-
+			api = new FriendshipAPI(client);
 		}
 		/// <summary>
 		/// 获取用户的关注列表 
@@ -26,10 +34,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		public NetDimension.Weibo.Entities.user.Collection Friends(string uid = "", string screenName = "", int count = 50, int cursor = 0)
 		{
 
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.Collection>(Client.GetCommand("friendships/friends",
-				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("cursor", cursor)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.Collection>(api.Friends(uid, screenName, count, cursor));
 		}
 		/// <summary>
 		/// 获取用户关注的用户UID列表
@@ -41,10 +46,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.user.IDCollection FriendIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.IDCollection>(Client.GetCommand("friendships/friends/ids",
-					string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid),
-					new WeiboStringParameter("count", count),
-					new WeiboStringParameter("cursor", cursor)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.IDCollection>(api.FriendIDs(uid, screenName, count, cursor));
 		}
 		/// <summary>
 		/// 获取两个用户之间的共同关注人列表 
@@ -56,11 +58,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<NetDimension.Weibo.Entities.user.Entity> FriendsInCommon(string uid = "", string suid = "", int count = 50, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.user.Entity>>(Client.GetCommand("friendships/friends/in_common",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("suid", suid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.user.Entity>>(api.FriendsInCommon(uid, suid, count, page));
 		}
 		/// <summary>
 		/// 获取用户的双向关注列表，即互粉列表 
@@ -72,11 +70,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<NetDimension.Weibo.Entities.user.Entity> FriendsOnBilateral(string uid, int count = 50, int page = 1, bool sort = false)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.user.Entity>>(Client.GetCommand("friendships/friends/bilateral",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page),
-				new WeiboStringParameter("sort", sort)));
+			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.user.Entity>>(api.FriendsOnBilateral(uid, count, page, sort));
 		}
 		/// <summary>
 		/// 获取用户双向关注的用户ID列表，即互粉UID列表 
@@ -88,11 +82,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.user.IDCollection FriendsOnBilateralIDs(string uid, int count = 50, int page = 1, bool sort = false)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.IDCollection>(Client.GetCommand("friendships/friends/bilateral/ids",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page),
-				new WeiboStringParameter("sort", sort)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.IDCollection>(api.FriendsOnBilateralIDs(uid, count, page, sort));
 		}
 		/// <summary>
 		/// 获取用户的粉丝列表 
@@ -102,12 +92,9 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="count">单页返回的记录条数，默认为50，最大不超过200。</param>
 		/// <param name="cursor">返回结果的游标，下一页用返回值里的next_cursor，上一页用previous_cursor，默认为0。</param>
 		/// <returns></returns>
-		public NetDimension.Weibo.Entities.user.Collection Followers(string uid = "", string screenName = "", int count = 50, int cursor = 0)
+		public NetDimension.Weibo.Entities.user.Collection Followers(string uid = "", string screenName = "", int count = 50, int cursor = 0, bool trimStatus = true)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.Collection>(Client.GetCommand("friendships/followers",
-				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("cursor", cursor)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.Collection>(api.Followers(uid, screenName, count, cursor, trimStatus));
 		}
 		/// <summary>
 		/// 获取用户粉丝的用户UID列表 
@@ -119,10 +106,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.user.IDCollection FollowerIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.IDCollection>(Client.GetCommand("friendships/followers/ids",
-				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("cursor", cursor)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.IDCollection>(api.FollowerIDs(uid, screenName, count, cursor));
 		}
 		/// <summary>
 		/// 获取用户的活跃粉丝列表
@@ -132,9 +116,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<NetDimension.Weibo.Entities.user.Entity> FollowersInActive(string uid, int count = 20)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.user.Entity>>(Client.GetCommand("friendships/followers/active",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count)));
+			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.user.Entity>>(api.FollowersInActive(uid, count));
 
 		}
 		/// <summary>
@@ -146,10 +128,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.user.Collection FriendsChain(string uid, int count = 50, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.Collection>(Client.GetCommand("friendships/friends_chain/followers",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.Collection>(api.FriendsChain(uid, count, page));
 		}
 		/// <summary>
 		/// 获取两个用户之间的详细关注关系情况
@@ -161,9 +140,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.friendship.Result Show(string sourceID = "", string sourceScreenName = "", string targetID = "", string targetScreenName = "")
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.friendship.Result>(Client.GetCommand("friendships/show",
-				string.IsNullOrEmpty(sourceID) ? new WeiboStringParameter("source_screen_name", sourceScreenName) : new WeiboStringParameter("source_id", sourceID),
-				string.IsNullOrEmpty(targetID) ? new WeiboStringParameter("target_screen_name", targetScreenName) : new WeiboStringParameter("uid", targetID)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.friendship.Result>(api.Show(sourceID, sourceScreenName, targetID, targetScreenName));
 		}
 		/// <summary>
 		/// 关注一个用户 
@@ -173,8 +150,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.user.Entity Create(string uid = "", string screenName = "")
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.Entity>(Client.PostCommand("friendships/create",
-				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.Entity>(api.Create(uid, screenName));
 		}
 		/// <summary>
 		/// 取消关注一个用户 
@@ -184,8 +160,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.user.Entity Destroy(string uid = "", string screenName = "")
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.Entity>(Client.PostCommand("friendships/destroy",
-				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.Entity>(api.Destroy(uid, screenName));
 		}
 		/// <summary>
 		/// 更新当前登录用户所关注的某个好友的备注信息 
@@ -195,9 +170,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.user.Entity UpdateRemark(string uid, string remark)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.Entity>(Client.PostCommand("friendships/remark/update",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("remark", remark)));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.Entity>(api.UpdateRemark(uid, remark));
 		}
 	}
 }

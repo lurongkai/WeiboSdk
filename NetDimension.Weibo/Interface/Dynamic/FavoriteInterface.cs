@@ -29,9 +29,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Favorites(int count = 50, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("favorites",
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+			return DynamicJson.Parse(api.Favorites(count,page));
 		}
 		/// <summary>
 		/// 获取当前用户的收藏列表的ID
@@ -41,9 +39,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic FavoriteIDs(int count = 50, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("favorites/ids",
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+			return DynamicJson.Parse(api.FavoriteIDs(count,page));
 		}
 		/// <summary>
 		/// 根据收藏ID获取指定的收藏信息 
@@ -52,8 +48,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Show(string id)
 		{
-			return DynamicJson.Parse(Client.GetCommand("favorites/show",
-				new WeiboStringParameter("id", id)));
+			return DynamicJson.Parse(api.Show(id));
 		}
 		/// <summary>
 		/// 根据标签获取当前登录用户该标签下的收藏列表  
@@ -64,10 +59,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic ByTags(string tid,int count = 50, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("favorites/by_tags",
-				new WeiboStringParameter("tid", tid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+			return DynamicJson.Parse(api.ByTags(tid,count,page));
 		}
 		/// <summary>
 		/// 获取当前登录用户的收藏标签列表 
@@ -77,9 +69,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Tags(int count = 10, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("favorites/tags",
-					new WeiboStringParameter("count", count),
-					new WeiboStringParameter("page", page)));
+			return DynamicJson.Parse(api.Tags(count,page));
 		}
 		/// <summary>
 		/// 获取当前用户某个标签下的收藏列表的ID 
@@ -90,10 +80,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic ByTagIDs(string tid, int count = 50, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("favorites/by_tags/ids",
-				new WeiboStringParameter("tid", tid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+			return DynamicJson.Parse(api.ByTagIDs(tid,count,page));
 		}
 		/// <summary>
 		/// 添加一条微博到收藏里 
@@ -102,8 +89,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Create(string id)
 		{
-			return DynamicJson.Parse(Client.PostCommand("favorites/create",
-				new WeiboStringParameter("id", id)));
+			return DynamicJson.Parse(api.Create(id));
 		}
 		/// <summary>
 		/// 取消收藏一条微博
@@ -112,8 +98,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Destroy(string id)
 		{
-			return DynamicJson.Parse(Client.PostCommand("favorites/destroy",
-				  new WeiboStringParameter("id", id)));
+			return DynamicJson.Parse(api.Destroy(id));
 			
 		}
 		/// <summary>
@@ -123,8 +108,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic DestroyBatch(params string[] ids)
 		{
-			return DynamicJson.Parse(Client.PostCommand("favorites/destroy_batch",
-				  new WeiboStringParameter("ids", string.Join(",",ids))));
+			return DynamicJson.Parse(api.DestroyBatch(ids));
 
 		}
 		/// <summary>
@@ -135,9 +119,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic UpdateTags(string id, params string[] tags)
 		{
-			return DynamicJson.Parse(Client.PostCommand("favorites/tags/update",
-				  new WeiboStringParameter("id", id),
-				  new WeiboStringParameter("tags", string.Join(",", tags))));
+			return DynamicJson.Parse(api.UpdateTags(id,tags));
 
 		}
 		/// <summary>
@@ -148,19 +130,16 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic UpdateTagsBatch(string tid, string tag)
 		{
-			return DynamicJson.Parse(Client.PostCommand("favorites/tags/update_batch",
-				  new WeiboStringParameter("tid", tid),
-				  new WeiboStringParameter("tag", tag)));
+			return DynamicJson.Parse(api.UpdateTagsBatch(tid,tag));
 		}
 		/// <summary>
 		/// 删除当前登录用户所有收藏下的指定标签 
 		/// </summary>
 		/// <param name="tid">需要删除的标签ID</param>
 		/// <returns></returns>
-		public dynamic DestroyTags(string tid)
+		public dynamic DestroyTags(string[] tid)
 		{
-			return DynamicJson.Parse(Client.PostCommand("favorites/tags/destroy_batch",
-				  new WeiboStringParameter("tid", string.Join(",", tid))));
+			return DynamicJson.Parse(api.DestroyTags(tid));
 		}
 	}
 }

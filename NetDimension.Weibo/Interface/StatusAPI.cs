@@ -39,7 +39,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="baseApp">否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。</param>
 		/// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。</param>
 		/// <returns>dynamic json</returns>
-		public string FriendsTimeline(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
+		public string FriendsTimeline(string sinceID = "", string maxID = "", int count = 50, int page = 1, bool baseApp = false, int feature = 0)
 		{
 			return (Client.GetCommand("statuses/friends_timeline",
 				new WeiboStringParameter("since_id", sinceID),
@@ -59,7 +59,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。</param>
 		/// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。 </param>
 		/// <returns></returns>
-		public string HomeTimeline(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
+		public string HomeTimeline(string sinceID = "", string maxID = "", int count = 50, int page = 1, bool baseApp = false, int feature = 0)
 		{
 			return (Client.GetCommand("statuses/home_timeline",
 				new WeiboStringParameter("since_id", sinceID),
@@ -79,7 +79,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="baseApp">否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。</param>
 		/// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。</param>
 		/// <returns></returns>
-		public string FriendsTimelineIDs(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
+		public string FriendsTimelineIDs(string sinceID = "", string maxID = "", int count = 50, int page = 1, bool baseApp = false, int feature = 0)
 		{
 			return (Client.GetCommand("statuses/friends_timeline/ids",
 					new WeiboStringParameter("since_id", sinceID),
@@ -102,7 +102,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。 </param>
 		/// <param name="trimUser">回值中user信息开关，0：返回完整的user信息、1：user字段仅返回user_id，默认为0。</param>
 		/// <returns></returns>
-		public string UserTimeline(string uid = "", string screenName = "", long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0, bool trimUser = false)
+		public string UserTimeline(string uid = "", string screenName = "", string sinceID = "", string maxID = "", int count = 50, int page = 1, bool baseApp = false, int feature = 0, bool trimUser = false)
 		{
 			return (Client.GetCommand("statuses/user_timeline",
 				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid),
@@ -126,7 +126,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。</param>
 		/// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。 </param>
 		/// <returns></returns>
-		public string UserTimelineIDs(string uid = "", string screenName = "", long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
+		public string UserTimelineIDs(string uid = "", string screenName = "", string sinceID = "", string maxID = "", int count = 50, int page = 1, bool baseApp = false, int feature = 0)
 		{
 			return (Client.GetCommand("statuses/user_timeline/ids",
 				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid),
@@ -147,7 +147,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。 </param>
 		/// <returns></returns>
-		public string RepostTimeline(string id, long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0)
+		public string RepostTimeline(string id, string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0)
 		{
 			return (Client.GetCommand("statuses/repost_timeline",
 				new WeiboStringParameter("id", id),
@@ -167,7 +167,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。 </param>
 		/// <returns></returns>
-		public string RepostTimelineIDs(string id, long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0)
+		public string RepostTimelineIDs(string id, string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0)
 		{
 			return (Client.GetCommand("statuses/repost_timeline/ids",
 					new WeiboStringParameter("id", id),
@@ -185,7 +185,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="count">单页返回的记录条数，默认为50。 </param>
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <returns></returns>
-		public string RepostByMe(long sinceID = 0, long maxID = 0, int count = 50, int page = 1)
+		public string RepostByMe(string sinceID = "", string maxID = "", int count = 50, int page = 1)
 		{
 			return (Client.GetCommand("statuses/repost_by_me",
 					new WeiboStringParameter("since_id", sinceID),
@@ -204,7 +204,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="filterBySource">来源筛选类型，0：全部、1：来自微博、2：来自微群，默认为0。 </param>
 		/// <param name="filterByType">原创筛选类型，0：全部微博、1：原创的微博，默认为0。</param>
 		/// <returns></returns>
-		public string Mentions(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0)
+		public string Mentions(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0)
 		{
 			return (Client.GetCommand("statuses/mentions",
 					new WeiboStringParameter("since_id", sinceID),
@@ -226,7 +226,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="filterBySource">来源筛选类型，0：全部、1：来自微博、2：来自微群，默认为0。 </param>
 		/// <param name="filterByType">原创筛选类型，0：全部微博、1：原创的微博，默认为0。</param>
 		/// <returns></returns>
-		public string MentionIDs(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0)
+		public string MentionIDs(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0)
 		{
 			return (Client.GetCommand("statuses/mentions/ids",
 					new WeiboStringParameter("since_id", sinceID),
@@ -247,7 +247,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。 </param>
 		/// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。</param>
 		/// <returns></returns>
-		public string BilateralTimeline(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, bool baseApp = false, int feature = 0)
+		public string BilateralTimeline(string sinceID = "", string maxID = "", int count = 50, int page = 1, bool baseApp = false, int feature = 0)
 		{
 			return (Client.GetCommand("statuses/bilateral_timeline",
 					new WeiboStringParameter("since_id", sinceID),
@@ -392,7 +392,7 @@ namespace NetDimension.Weibo.Interface
 			return (Client.PostCommand("statuses/update",
 					new WeiboStringParameter("status", status),
 					new WeiboStringParameter("lat", lat),
-					new WeiboStringParameter("long", log),
+					new WeiboStringParameter("string", log),
 					new WeiboStringParameter("annotations", annotations)));
 		}
 		/// <summary>
@@ -410,7 +410,7 @@ namespace NetDimension.Weibo.Interface
 						new WeiboStringParameter("status", status),
 						new WeiboBinaryParameter("pic",pic),
 						new WeiboStringParameter("lat", lat),
-						new WeiboStringParameter("long", log),
+						new WeiboStringParameter("string", log),
 						new WeiboStringParameter("annotations", annotations)));
 		}
 		/// <summary>
@@ -428,7 +428,7 @@ namespace NetDimension.Weibo.Interface
 						new WeiboStringParameter("status", status),
 						new WeiboStringParameter("url", url),
 						new WeiboStringParameter("lat", lat),
-						new WeiboStringParameter("long", log),
+						new WeiboStringParameter("string", log),
 						new WeiboStringParameter("annotations", annotations)));
 		}
 		/// <summary>

@@ -32,15 +32,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="page">返回结果的页码，默认为1。</param>
 		/// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。</param>
 		/// <returns>JSON</returns>
-		public dynamic Show(string id, long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0)
+		public dynamic Show(string id, string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0)
 		{
-			return DynamicJson.Parse(Client.GetCommand("comments/show",
-				new WeiboStringParameter("id", id),
-				new WeiboStringParameter("since_id", sinceID),
-				new WeiboStringParameter("max_id", maxID),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page),
-				new WeiboStringParameter("filter_by_author", filterByAuthor)));
+			return DynamicJson.Parse(api.Show(id,sinceID,maxID,count,page,filterByAuthor));
 		}
 		/// <summary>
 		/// 获取当前登录用户所发出的评论列表
@@ -51,15 +45,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="page">返回结果的页码，默认为1。</param>
 		/// <param name="filterBySource">来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。 </param>
 		/// <returns></returns>
-		public dynamic ByMe(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterBySource = 0)
+		public dynamic ByMe(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterBySource = 0)
 		{
-			return DynamicJson.Parse(Client.GetCommand("comments/by_me",
-				
-				new WeiboStringParameter("since_id", sinceID),
-				new WeiboStringParameter("max_id", maxID),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page),
-				new WeiboStringParameter("filter_by_source", filterBySource)));
+			return DynamicJson.Parse(api.ByMe(sinceID,maxID,count,page,filterBySource));
 		}
 		/// <summary>
 		/// 获取当前登录用户所接收到的评论列表
@@ -71,15 +59,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。 </param>
 		/// <param name="filterBySource"></param>
 		/// <returns></returns>
-		public dynamic ToMe(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0)
+		public dynamic ToMe(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0)
 		{
-			return DynamicJson.Parse(Client.GetCommand("comments/to_me",
-					new WeiboStringParameter("since_id", sinceID),
-					new WeiboStringParameter("max_id", maxID),
-					new WeiboStringParameter("count", count),
-					new WeiboStringParameter("page", page),
-					new WeiboStringParameter("filter_by_author", filterByAuthor),
-					new WeiboStringParameter("filter_by_source", filterBySource)));
+			return DynamicJson.Parse(api.ToMe(sinceID, maxID, count, page, filterByAuthor, filterBySource));
 		}
 		/// <summary>
 		/// 获取当前登录用户的最新评论包括接收到的与发出的
@@ -89,13 +71,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="count">单页返回的记录条数，默认为50。 </param>
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <returns>JSON</returns>
-		public dynamic Timeline(long sinceID = 0, long maxID = 0, int count = 50, int page = 1)
+		public dynamic Timeline(string sinceID = "", string maxID = "", int count = 50, int page = 1)
 		{
-			return DynamicJson.Parse(Client.GetCommand("comments/timeline",
-					new WeiboStringParameter("since_id", sinceID),
-					new WeiboStringParameter("max_id", maxID),
-					new WeiboStringParameter("count", count),
-					new WeiboStringParameter("page", page)));
+			return DynamicJson.Parse(api.Timeline(sinceID,maxID,count,page));
 		}
 		/// <summary>
 		/// 获取最新的提到当前登录用户的评论，即@我的评论 
@@ -107,15 +85,9 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。 </param>
 		/// <param name="filterBySource">来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。</param>
 		/// <returns></returns>
-		public dynamic Mentions(long sinceID = 0, long maxID = 0, int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0)
+		public dynamic Mentions(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0)
 		{
-			return DynamicJson.Parse(Client.GetCommand("comments/mentions",
-					new WeiboStringParameter("since_id", sinceID),
-					new WeiboStringParameter("max_id", maxID),
-					new WeiboStringParameter("count", count),
-					new WeiboStringParameter("page", page),
-					new WeiboStringParameter("filter_by_author", filterByAuthor),
-					new WeiboStringParameter("filter_by_source", filterBySource)));
+			return DynamicJson.Parse(api.Mentions(sinceID, maxID, count, page, filterByAuthor, filterBySource));
 		}
 
 		/// <summary>
@@ -125,8 +97,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic ShowBatch(params string[] cids)
 		{ 
-			return DynamicJson.Parse(Client.GetCommand("comments/show_batch",
-				new WeiboStringParameter("cids", string.Join(",",cids))));
+			return DynamicJson.Parse(api.ShowBatch(cids));
 		}
 
 		/// <summary>
@@ -138,10 +109,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Create(string id, string comment, bool commentOrigin = false)
 		{
-			return DynamicJson.Parse(Client.PostCommand("comments/create",
-				new WeiboStringParameter("id", id),	
-				new WeiboStringParameter("comment", comment),
-				new WeiboStringParameter("comment_ori", commentOrigin)));
+			return DynamicJson.Parse(api.Create(id,comment,commentOrigin));
 		}
 		/// <summary>
 		/// 删除一条评论 
@@ -150,8 +118,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Destroy(string cid)
 		{
-			return DynamicJson.Parse(Client.PostCommand("comments/destroy",
-				new WeiboStringParameter("cid", cid)));
+			return DynamicJson.Parse(api.Destroy(cid));
 		}
 
 		/// <summary>
@@ -161,8 +128,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic DestroyBatch(params string[] ids)
 		{
-			return DynamicJson.Parse(Client.PostCommand("comments/destroy",
-					new WeiboStringParameter("destroy_batch", string.Join(",",ids))));
+			return DynamicJson.Parse(api.DestroyBatch(ids));
 		}
 		/// <summary>
 		/// 回复一条评论 
@@ -175,12 +141,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic Reply(string cid, string id, string comment, bool withoutMention = false, bool commentOrigin = false)
 		{
-			return DynamicJson.Parse(Client.PostCommand("comments/reply",
-				new WeiboStringParameter("cid", cid),
-				new WeiboStringParameter("id", id),
-				new WeiboStringParameter("comment", comment),
-				new WeiboStringParameter("without_mention", withoutMention),
-				new WeiboStringParameter("comment_ori", commentOrigin)));
+			return DynamicJson.Parse(api.Reply(cid,id,comment,withoutMention, commentOrigin));
 		}
 	}
 }
