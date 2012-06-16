@@ -22,12 +22,13 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="count">单页返回的记录条数，默认为50，最大不超过200。</param>
 		/// <param name="cursor">返回结果的游标，下一页用返回值里的next_cursor，上一页用previous_cursor，默认为0。</param>
 		/// <returns></returns>
-		public string Friends(string uid = "", string screenName = "", int count = 50, int cursor = 0)
+		public string Friends(string uid = "", string screenName = "", int count = 50, int cursor = 0, bool trimStatus=true)
 		{
 			return (Client.GetCommand("friendships/friends",
 				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid),
 				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("cursor", cursor)));
+				new WeiboStringParameter("cursor", cursor),
+				new WeiboStringParameter("trim_status ", trimStatus)));
 		}
 		/// <summary>
 		/// 获取用户关注的用户UID列表

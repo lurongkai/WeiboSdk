@@ -4,6 +4,7 @@ using System.Text;
 using System.Web;
 using NetDimension.Weibo.Entities;
 using NetDimension.Json;
+using NetDimension.Json.Linq;
 
 
 namespace NetDimension.Weibo.Interface.Entity
@@ -30,11 +31,12 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="screenName">需要查询的用户昵称。 </param>
 		/// <param name="count">单页返回的记录条数，默认为50，最大不超过200。</param>
 		/// <param name="cursor">返回结果的游标，下一页用返回值里的next_cursor，上一页用previous_cursor，默认为0。</param>
+		/// /// <param name="trimStatus">返回值中user字段中的status字段开关，0：返回完整status字段、1：status字段仅返回status_id，默认为1。 </param>
 		/// <returns></returns>
-		public NetDimension.Weibo.Entities.user.Collection Friends(string uid = "", string screenName = "", int count = 50, int cursor = 0)
+		public NetDimension.Weibo.Entities.user.Collection Friends(string uid = "", string screenName = "", int count = 50, int cursor = 0, bool trimStatus = true)
 		{
 
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.Collection>(api.Friends(uid, screenName, count, cursor));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.Collection>(api.Friends(uid, screenName, count, cursor, trimStatus));
 		}
 		/// <summary>
 		/// 获取用户关注的用户UID列表
@@ -58,7 +60,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<NetDimension.Weibo.Entities.user.Entity> FriendsInCommon(string uid = "", string suid = "", int count = 50, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.user.Entity>>(api.FriendsInCommon(uid, suid, count, page));
+			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.user.Entity>>(JObject.Parse(api.FriendsInCommon(uid, suid, count, page))["users"].ToString());
 		}
 		/// <summary>
 		/// 获取用户的双向关注列表，即互粉列表 
@@ -70,7 +72,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<NetDimension.Weibo.Entities.user.Entity> FriendsOnBilateral(string uid, int count = 50, int page = 1, bool sort = false)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.user.Entity>>(api.FriendsOnBilateral(uid, count, page, sort));
+			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.user.Entity>>(JObject.Parse(api.FriendsOnBilateral(uid, count, page, sort))["users"].ToString());
 		}
 		/// <summary>
 		/// 获取用户双向关注的用户ID列表，即互粉UID列表 
@@ -82,7 +84,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.user.IDCollection FriendsOnBilateralIDs(string uid, int count = 50, int page = 1, bool sort = false)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.IDCollection>(api.FriendsOnBilateralIDs(uid, count, page, sort));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.IDCollection>(JObject.Parse(api.FriendsOnBilateralIDs(uid, count, page, sort))["users"].ToString());
 		}
 		/// <summary>
 		/// 获取用户的粉丝列表 
@@ -91,6 +93,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="screenName">需要查询的用户昵称。 </param>
 		/// <param name="count">单页返回的记录条数，默认为50，最大不超过200。</param>
 		/// <param name="cursor">返回结果的游标，下一页用返回值里的next_cursor，上一页用previous_cursor，默认为0。</param>
+		/// <param name="trimStatus">返回值中user字段中的status字段开关，0：返回完整status字段、1：status字段仅返回status_id，默认为1。 </param>
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.user.Collection Followers(string uid = "", string screenName = "", int count = 50, int cursor = 0, bool trimStatus = true)
 		{

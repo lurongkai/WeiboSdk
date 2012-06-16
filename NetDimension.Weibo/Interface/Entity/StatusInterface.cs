@@ -107,7 +107,6 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="page">返回结果的页码，默认为1。</param>
 		/// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。</param>
 		/// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。 </param>
-		/// <param name="feature"></param>
 		/// <returns></returns>
 		public Entities.status.IDs UserTimelineIDs(string uid = "", string screenName = "", string sinceID = "", string maxID = "", int count = 50, int page = 1, bool baseApp = false, int feature = 0)
 		{

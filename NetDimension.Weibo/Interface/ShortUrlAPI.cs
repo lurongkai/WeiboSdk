@@ -98,9 +98,16 @@ namespace NetDimension.Weibo.Interface
 		/// </summary>
 		/// <param name="url_short">需要取得分享数的短链接</param>
 		/// <returns></returns>
-		public string ShareCounts(string url_short)
+		public string ShareCounts(string[] url_short)
 		{
-			return (Client.GetCommand("short_url/share/counts", new WeiboStringParameter("url_short", url_short)));
+			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
+
+			foreach (string u in url_short)
+			{
+				parameters.Add(new WeiboStringParameter("url_short", u));
+			}
+
+			return (Client.GetCommand("short_url/share/counts", parameters.ToArray()));
 		}
 
 		/// <summary>
@@ -133,9 +140,15 @@ namespace NetDimension.Weibo.Interface
 		/// </summary>
 		/// <param name="url_short">需要取得评论数的短链接</param>
 		/// <returns></returns>
-		public string CommentCounts(string url_short)
+		public string CommentCounts(string[] url_short)
 		{
-			return (Client.GetCommand("short_url/comment/counts", new WeiboStringParameter("url_short", url_short)));
+			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
+
+			foreach (string u in url_short)
+			{
+				parameters.Add(new WeiboStringParameter("url_short", u));
+			}
+			return (Client.GetCommand("short_url/comment/counts", parameters.ToArray()));
 		}
 
 		/// <summary>

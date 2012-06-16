@@ -410,8 +410,8 @@ namespace NetDimension.Weibo
 							try
 							{
 								var html = reader.ReadToEnd();
-								var pattern1=@"\{string.Emptyaccess_tokenstring.Empty:string.Empty(?<token>.{0,32})string.Empty,string.Emptyremind_instring.Empty:string.Empty(?<remind>\d+)string.Empty,string.Emptyexpires_instring.Empty:(?<expires>\d+),string.Emptyuidstring.Empty:string.Empty(?<uid>\d+)string.Empty\}";
-								var pattern2=@"\{string.Emptyaccess_tokenstring.Empty:string.Empty(?<token>.{0,32})string.Empty,string.Emptyremind_instring.Empty:string.Empty(?<remind>\d+)string.Empty,string.Emptyexpires_instring.Empty:(?<expires>\d+),string.Emptyrefresh_tokenstring.Empty:string.Empty(?<refreshtoken>.{0,32})string.Empty,string.Emptyuidstring.Empty:string.Empty(?<uid>\d+)string.Empty\}";
+								var pattern1=@"\{""access_token"":""(?<token>.{0,32})"",""remind_in"":""(?<remind>\d+)"",""expires_in"":(?<expires>\d+),""uid"":""(?<uid>\d+)""\}";
+								var pattern2=@"\{""access_token"":""(?<token>.{0,32})"",""remind_in"":""(?<remind>\d+)"",""expires_in"":(?<expires>\d+),""refresh_token"":""(?<refreshtoken>.{0,32})"",""uid"":""(?<uid>\d+)""\}";
 								if (!string.IsNullOrEmpty(html) && (Regex.IsMatch(html, pattern1) || Regex.IsMatch(html, pattern2)))
 								{
 									var group = Regex.IsMatch(html,"refresh_token") ?Regex.Match(html, pattern2) : Regex.Match(html, pattern1);

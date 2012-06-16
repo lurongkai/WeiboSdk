@@ -4,6 +4,7 @@ using NetDimension.Weibo.Entities;
 using System.Text;
 using System.Web;
 using NetDimension.Json;
+using NetDimension.Json.Linq;
 
 namespace NetDimension.Weibo.Interface.Entity
 {
@@ -29,7 +30,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.shortUrl.Clicks> Clicks(string url_short)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Clicks>>(api.Clicks(url_short));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Clicks>>(JObject.Parse(api.Clicks(url_short))["urls"].ToString());
 		}
 		/// <summary>
 		/// 获取一个短链接点击的referer来源和数量
@@ -57,7 +58,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		public IEnumerable<Entities.shortUrl.Info> Info(params string[] url_short)
 		{
 
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Info>>(api.Info(url_short));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Info>>(JObject.Parse(api.Info(url_short))["urls"].ToString());
 		}
 
 		/// <summary>
@@ -68,7 +69,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		public IEnumerable<Entities.shortUrl.Url> Shorten(params string[] url_long)
 		{
 
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Url>>(api.Shorten(url_long));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Url>>(JObject.Parse(api.Shorten(url_long))["urls"].ToString());
 		}
 
 		/// <summary>
@@ -79,7 +80,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		public IEnumerable<Entities.shortUrl.Url> Expand(params string[] url_short)
 		{
 
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Url>>(api.Expand(url_short));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.Url>>(JObject.Parse(api.Expand(url_short))["urls"].ToString());
 
 		}
 
@@ -89,9 +90,9 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// </summary>
 		/// <param name="url_short">需要取得分享数的短链接</param>
 		/// <returns></returns>
-		public IEnumerable<Entities.shortUrl.ShareCounts> ShareCounts(string url_short)
+		public IEnumerable<Entities.shortUrl.ShareCounts> ShareCounts(string[] url_short)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.ShareCounts>>(api.ShareCounts(url_short));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.ShareCounts>>(JObject.Parse(api.ShareCounts(url_short))["urls"].ToString());
 		}
 
 		/// <summary>
@@ -113,9 +114,9 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// </summary>
 		/// <param name="url_short">需要取得评论数的短链接</param>
 		/// <returns></returns>
-		public IEnumerable< Entities.shortUrl.CommentCount> CommentCounts(string url_short)
+		public IEnumerable< Entities.shortUrl.CommentCount> CommentCounts(string[] url_short)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.CommentCount>>(api.CommentCounts(url_short));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.shortUrl.CommentCount>>(JObject.Parse(api.CommentCounts(url_short))["urls"].ToString());
 		}
 
 		/// <summary>

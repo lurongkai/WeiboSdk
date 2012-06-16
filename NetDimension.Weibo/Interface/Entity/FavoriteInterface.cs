@@ -28,9 +28,9 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="count">单页返回的记录条数，默认为50。</param>
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <returns></returns>
-		public IEnumerable<NetDimension.Weibo.Entities.favorite.Entity> Favorites(int count = 50, int page = 1)
+		public NetDimension.Weibo.Entities.favorite.Collection Favorites(int count = 50, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.favorite.Entity>>(api.Favorites(count, page));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.favorite.Collection>(api.Favorites(count, page));
 		}
 		/// <summary>
 		/// 获取当前用户的收藏列表的ID
@@ -38,9 +38,9 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="count">单页返回的记录条数，默认为50。 </param>
 		/// <param name="page">返回结果的页码，默认为1。 </param>
 		/// <returns></returns>
-		public IEnumerable<NetDimension.Weibo.Entities.favorite.IDEntity> FavoriteIDs(int count = 50, int page = 1)
+		public NetDimension.Weibo.Entities.favorite.IDCollection FavoriteIDs(int count = 50, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.favorite.IDEntity>>(api.FavoriteIDs(count, page));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.favorite.IDCollection>(api.FavoriteIDs(count, page));
 		}
 		/// <summary>
 		/// 根据收藏ID获取指定的收藏信息 
@@ -58,9 +58,9 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="count">单页返回的记录条数，默认为50。</param>
 		/// <param name="page">返回结果的页码，默认为1。</param>
 		/// <returns></returns>
-		public IEnumerable<NetDimension.Weibo.Entities.favorite.Entity> ByTags(string tid, int count = 50, int page = 1)
+		public NetDimension.Weibo.Entities.favorite.Collection ByTags(string tid, int count = 50, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.favorite.Entity>>(api.ByTags(tid, count, page));
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.favorite.Collection>(api.ByTags(tid, count, page));
 		}
 		/// <summary>
 		/// 获取当前登录用户的收藏标签列表 
@@ -70,7 +70,9 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<NetDimension.Weibo.Entities.favorite.TagEntity> Tags(int count = 10, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.favorite.TagEntity>>(api.Tags(count, page));
+			JObject result = JObject.Parse(api.Tags(count, page));
+
+			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.favorite.TagEntity>>(result["tags"].ToString());
 		}
 		/// <summary>
 		/// 获取当前用户某个标签下的收藏列表的ID 
@@ -81,7 +83,8 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<NetDimension.Weibo.Entities.favorite.IDEntity> ByTagIDs(string tid, int count = 50, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.favorite.IDEntity>>(api.ByTagIDs(tid, count, page));
+			JObject result = JObject.Parse(api.ByTagIDs(tid, count, page));
+			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.favorite.IDEntity>>(result["favorites"].ToString());
 		}
 		/// <summary>
 		/// 添加一条微博到收藏里 
