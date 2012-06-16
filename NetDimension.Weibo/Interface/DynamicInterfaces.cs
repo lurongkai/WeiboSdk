@@ -59,7 +59,10 @@ namespace NetDimension.Weibo.Interface
 		/// 用户接口
 		/// </summary>
 		public UserInterface Users{get;private set;}
-		
+		/// <summary>
+		/// 地理信息接口
+		/// </summary>
+		public LocationInterface Location { get; private set; }
 		/// <summary>
 		/// 构造函数
 		/// </summary>
@@ -78,6 +81,7 @@ namespace NetDimension.Weibo.Interface
 			Tags = new TagInterface(client);
 			Trends = new TrendInterface(client);
 			Users = new UserInterface(client);
+			Location = new LocationInterface(client);
 		}
 	}
 }

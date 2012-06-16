@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 #endif
 using System.Text;
-using Newtonsoft.Json;
+using NetDimension.Json;
 
 namespace NetDimension.Weibo.Entities
 {
@@ -21,7 +21,7 @@ namespace NetDimension.Weibo.Entities
 		{
 			//return base.ToString();
 
-			return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+			return NetDimension.Json.JsonConvert.SerializeObject(this);
 		}
 	}
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NetDimension.Weibo.Entities;
 using System.Text;
 using System.Web;
-using Newtonsoft.Json;
+using NetDimension.Json;
 
 
 

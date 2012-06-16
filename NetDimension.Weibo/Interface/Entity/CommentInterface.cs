@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using NetDimension.Weibo.Entities;
-using Newtonsoft.Json;
+using NetDimension.Json;
 
 namespace NetDimension.Weibo.Interface.Entity
 {

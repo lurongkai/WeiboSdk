@@ -33,13 +33,18 @@ namespace NetDimension.Weibo.Interface
 				new WeiboStringParameter("size", size),
 				new WeiboStringParameter("format", format),
 				new WeiboStringParameter("zoom", zoom),
-				new WeiboStringParameter("scale", scale),
-				new WeiboStringParameter("traffic", traffic));
+				new WeiboStringParameter("scale", scale.ToString().ToLower()),
+				new WeiboStringParameter("traffic", traffic.ToString().ToLower()));
 		}
 
-		public string IPtoGeo(string ip)
+		public string IPtoGeo(string[] ips)
 		{
-			return Client.GetCommand("location/geo/ip_to_geo", new WeiboStringParameter("ip", ip));
+			return Client.GetCommand("location/geo/ip_to_geo", new WeiboStringParameter("ip", string.Join(",",ips)));
+		}
+
+		public string AddressToGeo(string address)
+		{
+			return Client.GetCommand("location/geo/address_to_geo", new WeiboStringParameter("address", address));
 		}
 
 		public string GeoToAddress(string coordinate)
@@ -52,9 +57,9 @@ namespace NetDimension.Weibo.Interface
 			return Client.GetCommand("location/geo/gps_to_offset", new WeiboStringParameter("coordinate", coordinate));
 		}
 
-		public string IsDomestic(string coordinate)
+		public string IsDomestic(string coordinates)
 		{
-			return Client.GetCommand("location/geo/is_domestic", new WeiboStringParameter("coordinate", coordinate));
+			return Client.GetCommand("location/geo/is_domestic", new WeiboStringParameter("coordinate", coordinates));
 		}
 
 		public string ShowPOIs(string[] srcids)
@@ -106,8 +111,8 @@ namespace NetDimension.Weibo.Interface
 				new WeiboStringParameter("category", category),
 				new WeiboStringParameter("longitude", longitude),
 				new WeiboStringParameter("latitude", latitude),
-				new WeiboStringParameter("phone", phone),
-				new WeiboStringParameter("picUrl", picUrl),
+				new WeiboStringParameter("telephone", phone),
+				new WeiboStringParameter("pic_url", picUrl),
 				new WeiboStringParameter("url", url),
 				new WeiboStringParameter("tags", tags),
 				new WeiboStringParameter("description", description),

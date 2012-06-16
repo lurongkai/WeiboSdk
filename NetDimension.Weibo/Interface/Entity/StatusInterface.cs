@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using NetDimension.Weibo.Entities;
 using System.Text;
 using System.Web;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using NetDimension.Json;
+using NetDimension.Json.Linq;
 
 namespace NetDimension.Weibo.Interface.Entity
 {

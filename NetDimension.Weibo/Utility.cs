@@ -4,8 +4,8 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Web;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using NetDimension.Json;
+using NetDimension.Json.Linq;
 
 namespace NetDimension.Weibo
 {
