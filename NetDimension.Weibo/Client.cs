@@ -55,13 +55,23 @@ namespace NetDimension.Weibo
 #endif
 		}
 
-
-		internal string PostCommand(string command, params WeiboParameter[] parameters)
+		/// <summary>
+		/// 用POST方式发送微博指令
+		/// </summary>
+		/// <param name="command">微博命令。命令例如：statuses/public_timeline。详见官方API文档。</param>
+		/// <param name="parameters">参数表</param>
+		/// <returns></returns>
+		public string PostCommand(string command, params WeiboParameter[] parameters)
 		{
 			return PostCommand(command, false, parameters);
 		}
-
-		internal string PostCommand(string command, IEnumerable<KeyValuePair<string, object>> parameters)
+		/// <summary>
+		/// 用POST方式发送微博指令
+		/// </summary>
+		/// <param name="command">微博命令。命令例如：statuses/public_timeline。详见官方API文档。</param>
+		/// <param name="parameters">参数表</param>
+		/// <returns></returns>
+		public string PostCommand(string command, IEnumerable<KeyValuePair<string, object>> parameters)
 		{
 			List<WeiboParameter> list = new List<WeiboParameter>();
 			foreach (var item in parameters)
@@ -70,18 +80,34 @@ namespace NetDimension.Weibo
 			}
 			return PostCommand(command, false, list.ToArray());
 		}
-
-		internal string PostCommand(string command, bool multi = true, params WeiboParameter[] parameters)
+		/// <summary>
+		/// 用POST方式发送微博指令
+		/// </summary>
+		/// <param name="command">微博命令。命令例如：statuses/public_timeline。详见官方API文档。</param>
+		/// <param name="multi">是否使用multipart模式传输数据。一般上传图片什么的才开启这个参数。</param>
+		/// <param name="parameters">参数表</param>
+		/// <returns></returns>
+		public string PostCommand(string command, bool multi = true, params WeiboParameter[] parameters)
 		{
 			return Http(command, RequestMethod.Post, multi, parameters);	
 		}
-
-		internal string GetCommand(string command, params WeiboParameter[] parameters)
+		/// <summary>
+		/// 用GET方式发送微博指令
+		/// </summary>
+		/// <param name="command">微博命令。命令例如：statuses/public_timeline。详见官方API文档。</param>
+		/// <param name="parameters">参数表</param>
+		/// <returns></returns>
+		public string GetCommand(string command, params WeiboParameter[] parameters)
 		{
 			return Http(command, RequestMethod.Get, false, parameters);	
 		}
-
-		internal string GetCommand(string command, IEnumerable<KeyValuePair<string,object>> parameters)
+		/// <summary>
+		/// 用GET方式发送微博指令
+		/// </summary>
+		/// <param name="command">微博命令。命令例如：statuses/public_timeline。详见官方API文档。</param>
+		/// <param name="parameters">参数表</param>
+		/// <returns></returns>
+		public string GetCommand(string command, IEnumerable<KeyValuePair<string, object>> parameters)
 		{
 			List<WeiboParameter> list = new List<WeiboParameter>();
 			foreach (var item in parameters)
