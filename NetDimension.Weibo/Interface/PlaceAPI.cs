@@ -274,7 +274,7 @@ namespace NetDimension.Weibo.Interface
 				new WeiboStringParameter("public", isPublic));
 		}
 
-		public string AddPhoto(string poiID, string status, bool isPublic = true)
+		public string AddTip(string poiID, string status, bool isPublic = true)
 		{
 			return Client.PostCommand("place/pois/add_tip", 
 				new WeiboStringParameter("poiid", poiID),

@@ -124,9 +124,9 @@ namespace NetDimension.Weibo.Interface
 			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
 			parameters.Add(new WeiboStringParameter("url_short", urlShort));
 
-			if (!string.IsNullOrWhiteSpace(sinceID))
+			if (!string.IsNullOrEmpty(sinceID))
 				parameters.Add(new WeiboStringParameter("since_id", sinceID));
-			if (!string.IsNullOrWhiteSpace(maxID))
+			if (!string.IsNullOrEmpty(maxID))
 				parameters.Add(new WeiboStringParameter("max_id", maxID));
 
 			parameters.Add(new WeiboStringParameter("count", count));
@@ -165,9 +165,9 @@ namespace NetDimension.Weibo.Interface
 			List<WeiboStringParameter> parameters = new List<WeiboStringParameter>();
 			parameters.Add(new WeiboStringParameter("url_short", urlShort));
 
-			if (!string.IsNullOrWhiteSpace(sinceID))
+			if (!string.IsNullOrEmpty(sinceID))
 				parameters.Add(new WeiboStringParameter("since_id", sinceID));
-			if (!string.IsNullOrWhiteSpace(maxID))
+			if (!string.IsNullOrEmpty(maxID))
 				parameters.Add(new WeiboStringParameter("max_id", maxID));
 
 			parameters.Add(new WeiboStringParameter("count", count));

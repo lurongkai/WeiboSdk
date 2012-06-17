@@ -88,7 +88,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// </summary>
 		/// <param name="url_short">需要取得分享数的短链接</param>
 		/// <returns></returns>
-		public dynamic ShareCounts(string url_short)
+		public dynamic ShareCounts(string[] url_short)
 		{
 			return DynamicJson.Parse(api.ShareCounts(url_short));
 		}
@@ -112,7 +112,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// </summary>
 		/// <param name="url_short">需要取得评论数的短链接</param>
 		/// <returns></returns>
-		public dynamic CommentCounts(string url_short)
+		public dynamic CommentCounts(string[] url_short)
 		{
 			return DynamicJson.Parse(api.CommentCounts(url_short));
 		}

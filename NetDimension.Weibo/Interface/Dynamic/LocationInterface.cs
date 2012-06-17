@@ -6,6 +6,9 @@ using Codeplex.Data;
 
 namespace NetDimension.Weibo.Interface.Dynamic
 {
+	/// <summary>
+	/// Location接口
+	/// </summary>
 	public class LocationInterface : WeiboInterface
 	{
 		LocationAPI api;
