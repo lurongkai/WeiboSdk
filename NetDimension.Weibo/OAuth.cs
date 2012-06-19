@@ -125,7 +125,7 @@ namespace NetDimension.Weibo
 			{
 				if (uri.Query.Length == 0)
 				{
-					uri.Query = "?source=" + AppKey;
+					uri.Query = "source=" + AppKey;
 				}
 				else
 				{
