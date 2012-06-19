@@ -51,7 +51,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.user.Entity> UsersByStatus(string content, int num = 10)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.user.Entity>>(api.UsersByStatus(content, num));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.user.Entity>>(JObject.Parse(api.UsersByStatus(content, num))["users"].ToString());
 		}
 		/// <summary>
 		/// 获取微博精选推荐
@@ -63,7 +63,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.status.Entity> HotStatuses(int type = 1, bool isPic = false, int count = 20, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.status.Entity>>(api.HotStatuses(type, isPic, count, page));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.status.Entity>>(JObject.Parse(api.HotStatuses(type, isPic, count, page))["statuses"].ToString());
 		}
 		/// <summary>
 		/// 当前登录用户的friends_timeline微博按兴趣推荐排序 
@@ -74,7 +74,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<Entities.status.Entity> ReorderStatuses(int section, int count = 50, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.status.Entity>>(api.ReorderStatuses(section, count, page));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.status.Entity>>(JObject.Parse(api.ReorderStatuses(section, count, page))["statuses"].ToString());
 		}
 		/// <summary>
 		/// 主Feed微博按兴趣推荐排序的微博ID 
