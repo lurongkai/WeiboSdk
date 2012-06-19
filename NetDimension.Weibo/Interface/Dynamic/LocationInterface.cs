@@ -40,7 +40,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <param name="scale">是否显示比例尺，true：是，false：否。 </param>
 		/// <param name="traffic">是否需要叠加实际交通地图，true：是，false：否。 </param>
 		/// <returns></returns>
-		public dynamic GetMapImage(string center, string city, string coordinates = "", string names = null, string offsetX = "", string offsetY = "", string font = "", string lines = "", string polygons = "", string size = "240×240", string format = "png", string zoom = "", bool scale = false, bool traffic = false)
+		public dynamic GetMapImage(string center="", string city="", string coordinates = "", string names = null, string offsetX = "", string offsetY = "", string font = "", string lines = "", string polygons = "", string size = "240×240", string format = "png", string zoom = "", bool scale = false, bool traffic = false)
 		{
 			return DynamicJson.Parse(api.GetMapImage(center, city, coordinates, names, offsetX, offsetY, font, lines, polygons, size, format, zoom, scale, traffic));
 		}

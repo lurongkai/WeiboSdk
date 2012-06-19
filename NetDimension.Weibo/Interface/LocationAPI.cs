@@ -18,15 +18,15 @@ namespace NetDimension.Weibo.Interface
 
 		}
 
-		public string GetMapImage(string center, string city, string coordinates = "", string names = null, string offsetX = "", string offsetY = "", string font = "", string lines = "", string polygons = "", string size = "240×240", string format = "png", string zoom = "", bool scale = false, bool traffic = false)
+		public string GetMapImage(string center="", string city="", string coordinates = "", string names = null, string offsetX = "", string offsetY = "", string font = "", string lines = "", string polygons = "", string size = "240×240", string format = "png", string zoom = "", bool scale = false, bool traffic = false)
 		{
 			return Client.GetCommand("location/base/get_map_image",
-				new WeiboStringParameter("center_coordinate ", center),
-				new WeiboStringParameter("city ", city),
+				new WeiboStringParameter("center_coordinate", center),
+				new WeiboStringParameter("city", city),
 				new WeiboStringParameter("coordinates", coordinates),
-				new WeiboStringParameter("names ", names),
-				new WeiboStringParameter("offset_x ", offsetX),
-				new WeiboStringParameter("offset_x ", offsetY),
+				new WeiboStringParameter("names", names),
+				new WeiboStringParameter("offset_x", offsetX),
+				new WeiboStringParameter("offset_x", offsetY),
 				new WeiboStringParameter("font", font),
 				new WeiboStringParameter("lines", lines),
 				new WeiboStringParameter("polygons", polygons),

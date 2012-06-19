@@ -64,6 +64,10 @@ namespace NetDimension.Weibo.Interface
 		/// </summary>
 		public LocationInterface Location { get; private set; }
 		/// <summary>
+		/// 位置服务接口
+		/// </summary>
+		public PlaceInterface Place { get; private set; }
+		/// <summary>
 		/// 构造函数
 		/// </summary>
 		/// <param name="client">操作器</param>

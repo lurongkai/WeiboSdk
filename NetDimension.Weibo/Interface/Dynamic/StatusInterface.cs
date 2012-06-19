@@ -76,7 +76,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <returns></returns>
 		public dynamic FriendsTimelineIDs(string sinceID = "", string maxID = "", int count = 50, int page = 1, bool baseApp = false, int feature = 0)
 		{
-			return DynamicJson.Parse(api.FriendsTimeline(sinceID,maxID,count,page,baseApp,feature));
+			return DynamicJson.Parse(api.FriendsTimelineIDs(sinceID,maxID,count,page,baseApp,feature));
 		}
 		/// <summary>
 		/// 获取某个用户最新发表的微博列表 

@@ -354,6 +354,9 @@ namespace NetDimension.Weibo
 			List<string> pairs = new List<string>();
 			foreach (KeyValuePair<string, string> item in parameters)
 			{
+				if (string.IsNullOrEmpty(item.Value))
+					continue;
+
 				pairs.Add(string.Format("{0}={1}", HttpUtility.UrlEncode(item.Key), HttpUtility.UrlEncode(item.Value)));
 			}
 
@@ -365,7 +368,7 @@ namespace NetDimension.Weibo
 			List<string> pairs = new List<string>();
 			foreach (var item in parameters)
 			{
-				if (item is WeiboStringParameter)
+				if (item is WeiboStringParameter && !string.IsNullOrEmpty(string.Format("{0}",item.Value)))
 				{
 					pairs.Add(string.Format("{0}={1}", HttpUtility.UrlEncode(item.Name), HttpUtility.UrlEncode(((WeiboStringParameter)item).Value)));
 				}
@@ -395,6 +398,9 @@ namespace NetDimension.Weibo
 			{
 				if (p is WeiboStringParameter)
 				{
+					if (p.Value is string && string.IsNullOrEmpty(string.Format("{0}", p.Value)))
+						continue;
+
 					WeiboStringParameter param = p as WeiboStringParameter;
 					contentBuilder.AppendLine(header);
 					contentBuilder.AppendLine(string.Format("content-disposition: form-data; name=\"{0}\"", param.Name));
