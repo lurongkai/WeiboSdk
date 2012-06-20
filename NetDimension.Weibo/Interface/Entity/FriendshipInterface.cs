@@ -119,7 +119,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public IEnumerable<NetDimension.Weibo.Entities.user.Entity> FollowersInActive(string uid, int count = 20)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.user.Entity>>(api.FollowersInActive(uid, count));
+			return JsonConvert.DeserializeObject<IEnumerable<NetDimension.Weibo.Entities.user.Entity>>(JObject.Parse(api.FollowersInActive(uid, count))["users"].ToString());
 
 		}
 		/// <summary>
