@@ -102,7 +102,7 @@ namespace NetDimension.Weibo.Interface
 		/// <returns></returns>
 		public string Topics(string q, int count = 10, int page = 1)
 		{
-			return (Client.GetCommand("search/suggestions/topics",
+			return (Client.GetCommand("search/topics",
 				new WeiboStringParameter("q", q),
 				new WeiboStringParameter("count", count),
 				new WeiboStringParameter("page", page)));

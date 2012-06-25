@@ -93,9 +93,9 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="count">单页返回的记录条数，默认为10，最大为50。 </param>
 		/// <param name="page">返回结果的页码，默认为1。</param>
 		/// <returns></returns>
-		public IEnumerable<Entities.status.Entity> Topics(string q, int count = 10,int page=1)
+		public Entities.status.Collection Topics(string q, int count = 10, int page = 1)
 		{
-			return JsonConvert.DeserializeObject<IEnumerable<Entities.status.Entity>>(api.Topics(q, count, page));
+			return JsonConvert.DeserializeObject<Entities.status.Collection>(api.Topics(q, count, page));
 		}
 
 
