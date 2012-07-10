@@ -163,7 +163,7 @@ namespace NetDimension.Weibo.Interface
 		{
 			return (Client.GetCommand("friendships/show",
 				string.IsNullOrEmpty(sourceID) ? new WeiboStringParameter("source_screen_name", sourceScreenName) : new WeiboStringParameter("source_id", sourceID),
-				string.IsNullOrEmpty(targetID) ? new WeiboStringParameter("target_screen_name", targetScreenName) : new WeiboStringParameter("uid", targetID)));
+				string.IsNullOrEmpty(targetID) ? new WeiboStringParameter("target_screen_name", targetScreenName) : new WeiboStringParameter("target_id", targetID)));
 		}
 		/// <summary>
 		/// 关注一个用户 
