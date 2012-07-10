@@ -84,7 +84,8 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <returns></returns>
 		public NetDimension.Weibo.Entities.user.IDCollection FriendsOnBilateralIDs(string uid, int count = 50, int page = 1, bool sort = false)
 		{
-			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.IDCollection>(JObject.Parse(api.FriendsOnBilateralIDs(uid, count, page, sort))["users"].ToString());
+			//return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.IDCollection>(JObject.Parse(api.FriendsOnBilateralIDs(uid, count, page, sort))["ids"].ToString());
+			return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.IDCollection>(api.FriendsOnBilateralIDs(uid, count, page, sort));
 		}
 		/// <summary>
 		/// 获取用户的粉丝列表 
