@@ -318,7 +318,7 @@ namespace NetDimension.Weibo
 					case "21317":
 						return TokenResult.TokenRejected;
 					default:
-						throw;
+						return TokenResult.Other;
 				}
 			}
 
@@ -490,11 +490,6 @@ namespace NetDimension.Weibo
 
 			if (!string.IsNullOrEmpty(response))
 			{
-				//dynamic json = DynamicJson.Parse(response);
-				//AccessToken = json.access_token;
-				//UserID = json.uid;
-				//ExpiresIn = json.expires_in;
-				//return json.access_token;
 				AccessToken token = JsonConvert.DeserializeObject<AccessToken>(response);
 				AccessToken = token.Token;
 				return token;

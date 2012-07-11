@@ -257,7 +257,11 @@ namespace NetDimension.Weibo
 		/// <summary>
 		/// Token被拒绝
 		/// </summary>
-		TokenRejected
+		TokenRejected,
+		/// <summary>
+		/// 其他问题
+		/// </summary>
+		Other
 	}
 
 	/// <summary>
