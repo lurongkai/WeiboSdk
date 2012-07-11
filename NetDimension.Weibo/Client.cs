@@ -74,7 +74,6 @@ namespace NetDimension.Weibo
 		/// 用POST方式发送微博指令
 		/// </summary>
 		/// <param name="command">微博命令。命令例如：statuses/public_timeline。详见官方API文档。</param>
-		/// <param name="multi">是否使用multipart模式传输数据。一般上传图片什么的才开启这个参数。</param>
 		/// <param name="parameters">参数表</param>
 		/// <returns></returns>
 		public string PostCommand(string command, params WeiboParameter[] parameters)

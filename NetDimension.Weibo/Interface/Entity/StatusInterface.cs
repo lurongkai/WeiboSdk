@@ -209,7 +209,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// 通过微博（评论、私信）ID获取其MID 
 		/// </summary>
 		/// <param name="type">获取类型，1：微博、2：评论、3：私信，默认为1。 </param>
-		/// <param name="ids">需要查询的微博（评论、私信）ID</param>
+		/// <param name="id">需要查询的微博（评论、私信）ID</param>
 		/// <returns></returns>
 		public string QueryMID(int type = 1, string id="")
 		{

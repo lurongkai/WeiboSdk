@@ -100,6 +100,7 @@ namespace NetDimension.Weibo.Interface
 		/// <param name="screenName">需要查询的用户昵称。 </param>
 		/// <param name="count">单页返回的记录条数，默认为50，最大不超过200。</param>
 		/// <param name="cursor">返回结果的游标，下一页用返回值里的next_cursor，上一页用previous_cursor，默认为0。</param>
+		/// <param name="trimStatus">返回值中user字段中的status字段开关，0：返回完整status字段、1：status字段仅返回status_id，默认为1。 </param>
 		/// <returns></returns>
 		public string Followers(string uid = "", string screenName = "", int count = 50, int cursor = 0,bool trimStatus=true)
 		{

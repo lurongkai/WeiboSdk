@@ -48,7 +48,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <summary>
 		/// 根据IP地址返回地理信息坐标
 		/// </summary>
-		/// <param name="ip">需要获取坐标的IP地址，最多不超过10个。</param>
+		/// <param name="ips">需要获取坐标的IP地址，最多不超过10个。</param>
 		/// <returns></returns>
 		public dynamic IPtoGeo(string[] ips)
 		{
@@ -86,7 +86,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
 		/// <summary>
 		/// 判断地理信息坐标是否是国内坐标 
 		/// </summary>
-		/// <param name="coordinate">需要判断的坐标，格式：经度,纬度,字符标识|经度,纬度,字符标识。其中经度纬度用逗号分隔，字符标识用于返回结果中的返回值标识。“|”分隔多个坐标。一次最多50个坐标。示例：coordinates=120.035847163,23.1014362572,g1|116.035847163,38.1014362572,g2。 </param>
+		/// <param name="coordinates">需要判断的坐标，格式：经度,纬度,字符标识|经度,纬度,字符标识。其中经度纬度用逗号分隔，字符标识用于返回结果中的返回值标识。“|”分隔多个坐标。一次最多50个坐标。示例：coordinates=120.035847163,23.1014362572,g1|116.035847163,38.1014362572,g2。 </param>
 		/// <returns></returns>
 		public dynamic IsDomestic(string coordinates)
 		{

@@ -48,7 +48,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <summary>
 		/// 返回最近一小时内的热门话题。 
 		/// </summary>
-		/// <param name="base_app">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
+		/// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
 		/// <returns></returns>
 		public Entities.trend.HotTrends Hourly(bool baseApp = false)
 		{
@@ -83,7 +83,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <summary>
 		/// 返回最近一天内的热门话题。 
 		/// </summary>
-		/// <param name="base_app">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
+		/// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
 		/// <returns></returns>
 		public Entities.trend.HotTrends Daily(bool baseApp = false)
 		{
@@ -118,7 +118,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <summary>
 		/// 返回最近一周内的热门话题。 
 		/// </summary>
-		/// <param name="base_app">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
+		/// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
 		/// <returns></returns>
 		public Entities.trend.HotTrends Weekly(bool baseApp = false)
 		{
