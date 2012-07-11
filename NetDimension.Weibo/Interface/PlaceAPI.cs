@@ -258,7 +258,7 @@ namespace NetDimension.Weibo.Interface
 
 		public string CheckIn(string poiID, string status, byte[] pic, bool isPublic = true)
 		{
-			return Client.PostCommand("place/pois/create",true,
+			return Client.PostCommand("place/pois/create",
 				new WeiboParameter("poiid", poiID),
 				new WeiboParameter("status", status),
 				new WeiboParameter("pic", pic),
@@ -267,7 +267,7 @@ namespace NetDimension.Weibo.Interface
 
 		public string AddPhoto(string poiID, string status, byte[] pic, bool isPublic = true)
 		{
-			return Client.PostCommand("place/pois/add_photo", true,
+			return Client.PostCommand("place/pois/add_photo",
 				new WeiboParameter("poiid", poiID),
 				new WeiboParameter("status", status),
 				new WeiboParameter("pic", pic),

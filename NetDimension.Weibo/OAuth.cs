@@ -486,7 +486,7 @@ namespace NetDimension.Weibo
 					break;
 			}
 
-			var response = Request(ACCESS_TOKEN_URL, RequestMethod.Post, false, config.ToArray());
+			var response = Request(ACCESS_TOKEN_URL, RequestMethod.Post, config.ToArray());
 
 			if (!string.IsNullOrEmpty(response))
 			{

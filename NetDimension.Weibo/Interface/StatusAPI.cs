@@ -406,7 +406,7 @@ namespace NetDimension.Weibo.Interface
 		/// <returns></returns>
 		public string Upload(string status, byte[] pic, float lat = 0.0f, float log = 0.0f, string annotations = "")
 		{
-			return (Client.PostCommand("statuses/upload",true,
+			return (Client.PostCommand("statuses/upload",
 						new WeiboParameter("status", status),
 						new WeiboParameter("pic",pic),
 						new WeiboParameter("lat", lat),
