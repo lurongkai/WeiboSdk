@@ -22,7 +22,7 @@ namespace NetDimension.Weibo.Interface
 		/// <returns></returns>
 		public string CodeToLocation(params string[] codes)
 		{
-			return (Client.GetCommand("common/code_to_location", new WeiboStringParameter("codes", string.Join(",", codes))));
+			return (Client.GetCommand("common/code_to_location", new WeiboParameter("codes", string.Join(",", codes))));
 		}
 		/// <summary>
 		/// 获取城市列表
@@ -33,8 +33,8 @@ namespace NetDimension.Weibo.Interface
 		public string GetCity(string province, string capital = "")
 		{
 			return (Client.GetCommand("common/get_city",
-				new WeiboStringParameter("province", province),
-				new WeiboStringParameter("capital", capital)));
+				new WeiboParameter("province", province),
+				new WeiboParameter("capital", capital)));
 		}
 		/// <summary>
 		/// 获取省份列表 
@@ -45,8 +45,8 @@ namespace NetDimension.Weibo.Interface
 		public string GetProvince(string country, string capital = "")
 		{
 			return (Client.GetCommand("common/get_province",
-				new WeiboStringParameter("country", country),
-				new WeiboStringParameter("capital", capital)));
+				new WeiboParameter("country", country),
+				new WeiboParameter("capital", capital)));
 		}
 		/// <summary>
 		/// 获取国家列表 
@@ -56,7 +56,7 @@ namespace NetDimension.Weibo.Interface
 		public string GetCountry(string capital = "")
 		{
 			return (Client.GetCommand("common/get_country",
-				new WeiboStringParameter("capital", capital)));
+				new WeiboParameter("capital", capital)));
 		}
 		/// <summary>
 		/// 获取时区配置表

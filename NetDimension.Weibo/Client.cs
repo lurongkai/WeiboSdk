@@ -61,24 +61,14 @@ namespace NetDimension.Weibo
 		/// <param name="command">微博命令。命令例如：statuses/public_timeline。详见官方API文档。</param>
 		/// <param name="parameters">参数表</param>
 		/// <returns></returns>
-		public string PostCommand(string command, params WeiboParameter[] parameters)
-		{
-			return PostCommand(command, false, parameters);
-		}
-		/// <summary>
-		/// 用POST方式发送微博指令
-		/// </summary>
-		/// <param name="command">微博命令。命令例如：statuses/public_timeline。详见官方API文档。</param>
-		/// <param name="parameters">参数表</param>
-		/// <returns></returns>
 		public string PostCommand(string command, IEnumerable<KeyValuePair<string, object>> parameters)
 		{
 			List<WeiboParameter> list = new List<WeiboParameter>();
 			foreach (var item in parameters)
 			{
-				list.Add(new WeiboStringParameter(item.Key, item.Value));
+				list.Add(new WeiboParameter(item.Key, item.Value));
 			}
-			return PostCommand(command, false, list.ToArray());
+			return PostCommand(command, list.ToArray());
 		}
 		/// <summary>
 		/// 用POST方式发送微博指令
@@ -87,9 +77,9 @@ namespace NetDimension.Weibo
 		/// <param name="multi">是否使用multipart模式传输数据。一般上传图片什么的才开启这个参数。</param>
 		/// <param name="parameters">参数表</param>
 		/// <returns></returns>
-		public string PostCommand(string command, bool multi = true, params WeiboParameter[] parameters)
+		public string PostCommand(string command, params WeiboParameter[] parameters)
 		{
-			return Http(command, RequestMethod.Post, multi, parameters);	
+			return Http(command, RequestMethod.Post, parameters);	
 		}
 		/// <summary>
 		/// 用GET方式发送微博指令
@@ -99,7 +89,7 @@ namespace NetDimension.Weibo
 		/// <returns></returns>
 		public string GetCommand(string command, params WeiboParameter[] parameters)
 		{
-			return Http(command, RequestMethod.Get, false, parameters);	
+			return Http(command, RequestMethod.Get, parameters);	
 		}
 		/// <summary>
 		/// 用GET方式发送微博指令
@@ -112,12 +102,12 @@ namespace NetDimension.Weibo
 			List<WeiboParameter> list = new List<WeiboParameter>();
 			foreach (var item in parameters)
 			{ 
-				list.Add(new WeiboStringParameter(item.Key,item.Value));
+				list.Add(new WeiboParameter(item.Key,item.Value));
 			}
-			return Http(command, RequestMethod.Get, false, list.ToArray());
+			return Http(command, RequestMethod.Get, list.ToArray());
 		}
 
-		private string Http(string command, RequestMethod method, bool multi, params WeiboParameter[] parameters)
+		private string Http(string command, RequestMethod method, params WeiboParameter[] parameters)
 		{
 			string url = string.Empty;
 
@@ -129,7 +119,7 @@ namespace NetDimension.Weibo
 			{
 				url = string.Format("{0}{1}.json", BASE_URL, command);
 			}
-			return OAuth.Request(url, method, multi, parameters);
+			return OAuth.Request(url, method, parameters);
 		}
 	}
 }

@@ -24,8 +24,8 @@ namespace NetDimension.Weibo.Interface
 		public string Users(string q, int count = 10)
 		{
 			return (Client.GetCommand("search/suggestions/users",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count)));
+				new WeiboParameter("q", q),
+				new WeiboParameter("count", count)));
 		}
 		/// <summary>
 		/// 搜索微博时的联想搜索建议 
@@ -36,8 +36,8 @@ namespace NetDimension.Weibo.Interface
 		public string Statuses(string q, int count = 10)
 		{
 			return (Client.GetCommand("search/suggestions/statuses",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count)));
+				new WeiboParameter("q", q),
+				new WeiboParameter("count", count)));
 		}
 		/// <summary>
 		/// 搜索学校时的联想搜索建议 
@@ -49,9 +49,9 @@ namespace NetDimension.Weibo.Interface
 		public string Schools(string q, int count = 10, int type = 0)
 		{
 			return (Client.GetCommand("search/suggestions/schools",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("type", type)));
+				new WeiboParameter("q", q),
+				new WeiboParameter("count", count),
+				new WeiboParameter("type", type)));
 		}
 		/// <summary>
 		/// 搜索公司时的联想搜索建议 
@@ -62,8 +62,8 @@ namespace NetDimension.Weibo.Interface
 		public string Companies(string q, int count = 10)
 		{
 			return (Client.GetCommand("search/suggestions/companies",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count)));
+				new WeiboParameter("q", q),
+				new WeiboParameter("count", count)));
 		}
 		/// <summary>
 		/// 搜索应用时的联想搜索建议 
@@ -74,8 +74,8 @@ namespace NetDimension.Weibo.Interface
 		public string Apps(string q, int count = 10)
 		{
 			return (Client.GetCommand("search/suggestions/apps",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count)));
+				new WeiboParameter("q", q),
+				new WeiboParameter("count", count)));
 		}
 		/// <summary>
 		/// @用户时的联想建议 
@@ -88,10 +88,10 @@ namespace NetDimension.Weibo.Interface
 		public string AtUsers(string q, int count = 10, int type = 0, int range = 2)
 		{
 			return (Client.GetCommand("search/suggestions/at_users",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("type", type),
-				new WeiboStringParameter("range", range)));
+				new WeiboParameter("q", q),
+				new WeiboParameter("count", count),
+				new WeiboParameter("type", type),
+				new WeiboParameter("range", range)));
 		}
 		/// <summary>
 		/// 搜索某一话题下的微博 
@@ -103,9 +103,9 @@ namespace NetDimension.Weibo.Interface
 		public string Topics(string q, int count = 10, int page = 1)
 		{
 			return (Client.GetCommand("search/topics",
-				new WeiboStringParameter("q", q),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+				new WeiboParameter("q", q),
+				new WeiboParameter("count", count),
+				new WeiboParameter("page", page)));
 		}
 
 	}

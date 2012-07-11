@@ -25,10 +25,10 @@ namespace NetDimension.Weibo.Interface
 		public string Friends(string uid = "", string screenName = "", int count = 50, int cursor = 0, bool trimStatus=true)
 		{
 			return (Client.GetCommand("friendships/friends",
-				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("cursor", cursor),
-				new WeiboStringParameter("trim_status ", trimStatus)));
+				string.IsNullOrEmpty(uid) ? new WeiboParameter("screen_name", screenName) : new WeiboParameter("uid", uid),
+				new WeiboParameter("count", count),
+				new WeiboParameter("cursor", cursor),
+				new WeiboParameter("trim_status ", trimStatus)));
 		}
 		/// <summary>
 		/// 获取用户关注的用户UID列表
@@ -41,9 +41,9 @@ namespace NetDimension.Weibo.Interface
 		public string FriendIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0)
 		{
 			return (Client.GetCommand("friendships/friends/ids",
-					string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid),
-					new WeiboStringParameter("count", count),
-					new WeiboStringParameter("cursor", cursor)));
+					string.IsNullOrEmpty(uid) ? new WeiboParameter("screen_name", screenName) : new WeiboParameter("uid", uid),
+					new WeiboParameter("count", count),
+					new WeiboParameter("cursor", cursor)));
 		}
 		/// <summary>
 		/// 获取两个用户之间的共同关注人列表 
@@ -56,10 +56,10 @@ namespace NetDimension.Weibo.Interface
 		public string FriendsInCommon(string uid = "", string suid = "", int count = 50, int page = 1)
 		{
 			return (Client.GetCommand("friendships/friends/in_common",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("suid", suid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+				new WeiboParameter("uid", uid),
+				new WeiboParameter("suid", suid),
+				new WeiboParameter("count", count),
+				new WeiboParameter("page", page)));
 		}
 		/// <summary>
 		/// 获取用户的双向关注列表，即互粉列表 
@@ -72,10 +72,10 @@ namespace NetDimension.Weibo.Interface
 		public string FriendsOnBilateral(string uid, int count = 50, int page = 1, bool sort = false)
 		{
 			return (Client.GetCommand("friendships/friends/bilateral",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page),
-				new WeiboStringParameter("sort", sort)));
+				new WeiboParameter("uid", uid),
+				new WeiboParameter("count", count),
+				new WeiboParameter("page", page),
+				new WeiboParameter("sort", sort)));
 		}
 		/// <summary>
 		/// 获取用户双向关注的用户ID列表，即互粉UID列表 
@@ -88,10 +88,10 @@ namespace NetDimension.Weibo.Interface
 		public string FriendsOnBilateralIDs(string uid, int count = 50, int page = 1, bool sort = false)
 		{
 			return (Client.GetCommand("friendships/friends/bilateral/ids",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page),
-				new WeiboStringParameter("sort", sort)));
+				new WeiboParameter("uid", uid),
+				new WeiboParameter("count", count),
+				new WeiboParameter("page", page),
+				new WeiboParameter("sort", sort)));
 		}
 		/// <summary>
 		/// 获取用户的粉丝列表 
@@ -104,10 +104,10 @@ namespace NetDimension.Weibo.Interface
 		public string Followers(string uid = "", string screenName = "", int count = 50, int cursor = 0,bool trimStatus=true)
 		{
 			return (Client.GetCommand("friendships/followers",
-				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("cursor", cursor),
-				new WeiboStringParameter("trim_status ", trimStatus)));
+				string.IsNullOrEmpty(uid) ? new WeiboParameter("screen_name", screenName) : new WeiboParameter("uid", uid),
+				new WeiboParameter("count", count),
+				new WeiboParameter("cursor", cursor),
+				new WeiboParameter("trim_status ", trimStatus)));
 		}
 		/// <summary>
 		/// 获取用户粉丝的用户UID列表 
@@ -120,9 +120,9 @@ namespace NetDimension.Weibo.Interface
 		public string FollowerIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0)
 		{
 			return (Client.GetCommand("friendships/followers/ids",
-				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("cursor", cursor)));
+				string.IsNullOrEmpty(uid) ? new WeiboParameter("screen_name", screenName) : new WeiboParameter("uid", uid),
+				new WeiboParameter("count", count),
+				new WeiboParameter("cursor", cursor)));
 		}
 		/// <summary>
 		/// 获取用户的活跃粉丝列表
@@ -133,8 +133,8 @@ namespace NetDimension.Weibo.Interface
 		public string FollowersInActive(string uid, int count = 20)
 		{
 			return (Client.GetCommand("friendships/followers/active",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count)));
+				new WeiboParameter("uid", uid),
+				new WeiboParameter("count", count)));
 
 		}
 		/// <summary>
@@ -147,9 +147,9 @@ namespace NetDimension.Weibo.Interface
 		public string FriendsChain(string uid, int count = 50, int page = 1)
 		{
 			return (Client.GetCommand("friendships/friends_chain/followers",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+				new WeiboParameter("uid", uid),
+				new WeiboParameter("count", count),
+				new WeiboParameter("page", page)));
 		}
 		/// <summary>
 		/// 获取两个用户之间的详细关注关系情况
@@ -162,8 +162,8 @@ namespace NetDimension.Weibo.Interface
 		public string Show(string sourceID = "", string sourceScreenName = "", string targetID = "", string targetScreenName = "")
 		{
 			return (Client.GetCommand("friendships/show",
-				string.IsNullOrEmpty(sourceID) ? new WeiboStringParameter("source_screen_name", sourceScreenName) : new WeiboStringParameter("source_id", sourceID),
-				string.IsNullOrEmpty(targetID) ? new WeiboStringParameter("target_screen_name", targetScreenName) : new WeiboStringParameter("target_id", targetID)));
+				string.IsNullOrEmpty(sourceID) ? new WeiboParameter("source_screen_name", sourceScreenName) : new WeiboParameter("source_id", sourceID),
+				string.IsNullOrEmpty(targetID) ? new WeiboParameter("target_screen_name", targetScreenName) : new WeiboParameter("target_id", targetID)));
 		}
 		/// <summary>
 		/// 关注一个用户 
@@ -174,7 +174,7 @@ namespace NetDimension.Weibo.Interface
 		public string Create(string uid = "", string screenName = "")
 		{
 			return (Client.PostCommand("friendships/create",
-				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid)));
+				string.IsNullOrEmpty(uid) ? new WeiboParameter("screen_name", screenName) : new WeiboParameter("uid", uid)));
 		}
 		/// <summary>
 		/// 取消关注一个用户 
@@ -185,7 +185,7 @@ namespace NetDimension.Weibo.Interface
 		public string Destroy(string uid = "", string screenName = "")
 		{
 			return (Client.PostCommand("friendships/destroy",
-				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid)));
+				string.IsNullOrEmpty(uid) ? new WeiboParameter("screen_name", screenName) : new WeiboParameter("uid", uid)));
 		}
 		/// <summary>
 		/// 更新当前登录用户所关注的某个好友的备注信息 
@@ -196,8 +196,8 @@ namespace NetDimension.Weibo.Interface
 		public string UpdateRemark(string uid, string remark)
 		{
 			return (Client.PostCommand("friendships/remark/update",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("remark", remark)));
+				new WeiboParameter("uid", uid),
+				new WeiboParameter("remark", remark)));
 		}
 
 

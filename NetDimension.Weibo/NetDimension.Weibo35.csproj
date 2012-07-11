@@ -40,7 +40,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -289,13 +288,11 @@
     <Compile Include="NetDimenison.Json\Utilities\TypeExtensions.cs" />
     <Compile Include="NetDimenison.Json\Utilities\ValidationUtils.cs" />
     <Compile Include="NetDimenison.Json\WriteState.cs" />
-    <Compile Include="WeiboBinaryParameter.cs" />
     <Compile Include="WeiboException.cs" />
     <Compile Include="WeiboParameter.cs" />
     <Compile Include="OAuth.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility.cs" />
-    <Compile Include="WeiboStringParameter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

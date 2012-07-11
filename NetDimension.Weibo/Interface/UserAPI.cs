@@ -24,7 +24,7 @@ namespace NetDimension.Weibo.Interface
 		public string Show(string uid = "", string screenName = "")
 		{
 			return (Client.GetCommand("users/show",
-				string.IsNullOrEmpty(uid) ? new WeiboStringParameter("screen_name", screenName) : new WeiboStringParameter("uid", uid)));
+				string.IsNullOrEmpty(uid) ? new WeiboParameter("screen_name", screenName) : new WeiboParameter("uid", uid)));
 		}
 		/// <summary>
 		/// 通过个性化域名获取用户资料以及用户最新的一条微博 
@@ -33,7 +33,7 @@ namespace NetDimension.Weibo.Interface
 		/// <returns></returns>
 		public string ShowByDomain(string domain)
 		{
-			return (Client.GetCommand("users/domain_show", new WeiboStringParameter("domain", domain)));
+			return (Client.GetCommand("users/domain_show", new WeiboParameter("domain", domain)));
 		}
 		/// <summary>
 		/// 批量获取用户的粉丝数、关注数、微博数
@@ -42,7 +42,7 @@ namespace NetDimension.Weibo.Interface
 		/// <returns></returns>
 		public string Counts(params string[] uids)
 		{
-			return (Client.GetCommand("users/counts", new WeiboStringParameter("uids", string.Join(",", uids))));
+			return (Client.GetCommand("users/counts", new WeiboParameter("uids", string.Join(",", uids))));
 		}
 
 	}

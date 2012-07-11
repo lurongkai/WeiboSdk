@@ -38,23 +38,23 @@ namespace NetDimension.Weibo.Interface
 		public string SchoolList(string province = "", string city = "", string area = "", string type = "1", string capital = "", string keyword = "", int count = 10)
 		{
 			var p = new List<WeiboParameter>{
-				string.IsNullOrEmpty(capital)?new WeiboStringParameter("keyword", keyword): new WeiboStringParameter("capital", capital),
-				new WeiboStringParameter("count", count)
+				string.IsNullOrEmpty(capital)?new WeiboParameter("keyword", keyword): new WeiboParameter("capital", capital),
+				new WeiboParameter("count", count)
 			};
 
 			if (!string.IsNullOrEmpty(province))
 			{
-				p.Add(new WeiboStringParameter("province", province));
+				p.Add(new WeiboParameter("province", province));
 			}
 
 			if (!string.IsNullOrEmpty(city))
 			{
-				p.Add(new WeiboStringParameter("city", city));
+				p.Add(new WeiboParameter("city", city));
 			}
 
 			if (!string.IsNullOrEmpty(area))
 			{
-				p.Add(new WeiboStringParameter("area", area));
+				p.Add(new WeiboParameter("area", area));
 			}
 
 			return (Client.GetCommand("account/profile/school_list",
@@ -95,7 +95,7 @@ namespace NetDimension.Weibo.Interface
 		/// <returns>JSON</returns>
 		public string VerifyNickname(string nickname)
 		{
-			return (Client.GetCommand("register/verify_nickname", new WeiboStringParameter("nickname", nickname)));
+			return (Client.GetCommand("register/verify_nickname", new WeiboParameter("nickname", nickname)));
 		}
 
 		/// <summary>
@@ -107,8 +107,8 @@ namespace NetDimension.Weibo.Interface
 		public string UnreadCount(string uid, string callback = "")
 		{
 			return (Client.GetCommand("https://rm.api.weibo.com/2/remind/unread_count.json",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("callback", callback)));
+				new WeiboParameter("uid", uid),
+				new WeiboParameter("callback", callback)));
 		}
 
 		/// <summary>
@@ -118,7 +118,7 @@ namespace NetDimension.Weibo.Interface
 		/// <returns>JSON</returns>
 		public string SetCount(ResetCountType type)
 		{
-			return (Client.PostCommand("https://rm.api.weibo.com/2/remind/set_count.json", new WeiboStringParameter("type", type)));
+			return (Client.PostCommand("https://rm.api.weibo.com/2/remind/set_count.json", new WeiboParameter("type", type)));
 		}
 	}
 }

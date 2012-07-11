@@ -25,9 +25,9 @@ namespace NetDimension.Weibo.Interface
 		public string Trends(string uid, int count = 10, int page = 1)
 		{
 			return (Client.GetCommand("trends",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+				new WeiboParameter("uid", uid),
+				new WeiboParameter("count", count),
+				new WeiboParameter("page", page)));
 		}
 		/// <summary>
 		/// 是否关注某话题 
@@ -37,7 +37,7 @@ namespace NetDimension.Weibo.Interface
 		public string IsFollow(string trendName)
 		{
 			return (Client.GetCommand("trends/is_follow",
-				new WeiboStringParameter("trend_name", trendName)));
+				new WeiboParameter("trend_name", trendName)));
 		}
 
 		/// <summary>
@@ -48,7 +48,7 @@ namespace NetDimension.Weibo.Interface
 		public string Hourly(bool baseApp = false)
 		{
 			return (Client.GetCommand("trends/hourly",
-				new WeiboStringParameter("base_app", baseApp)));
+				new WeiboParameter("base_app", baseApp)));
 		}
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace NetDimension.Weibo.Interface
 		public string Daily(bool baseApp = false)
 		{
 			return (Client.GetCommand("trends/daily",
-				new WeiboStringParameter("base_app", baseApp)));
+				new WeiboParameter("base_app", baseApp)));
 		}
 
 		/// <summary>
@@ -70,7 +70,7 @@ namespace NetDimension.Weibo.Interface
 		public string Weekly(bool baseApp = false)
 		{
 			return (Client.GetCommand("trends/weekly",
-				new WeiboStringParameter("base_app", baseApp)));
+				new WeiboParameter("base_app", baseApp)));
 		}
 		/// <summary>
 		/// 关注某话题 
@@ -80,7 +80,7 @@ namespace NetDimension.Weibo.Interface
 		public string Follow(string trendName)
 		{
 			return (Client.PostCommand("trends/follow",
-				new WeiboStringParameter("trend_name", trendName)));
+				new WeiboParameter("trend_name", trendName)));
 		}
 		/// <summary>
 		/// 取消关注的某一个话题 
@@ -90,7 +90,7 @@ namespace NetDimension.Weibo.Interface
 		public string Destroy(string id)
 		{
 			return (Client.PostCommand("trends/destroy",
-				  new WeiboStringParameter("trend_id", id)));
+				  new WeiboParameter("trend_id", id)));
 
 		}
 

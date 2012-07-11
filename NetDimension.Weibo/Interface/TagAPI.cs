@@ -25,9 +25,9 @@ namespace NetDimension.Weibo.Interface
 		public string Tags(string uid, int count = 20, int page = 1)
 		{
 			return (Client.GetCommand("tags",
-				new WeiboStringParameter("uid", uid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+				new WeiboParameter("uid", uid),
+				new WeiboParameter("count", count),
+				new WeiboParameter("page", page)));
 		}
 		/// <summary>
 		/// 批量获取用户的标签列表 
@@ -37,7 +37,7 @@ namespace NetDimension.Weibo.Interface
 		public string TagsBatch(params string[] uids)
 		{
 			return (Client.GetCommand("tags/tags_batch",
-				new WeiboStringParameter("uids", string.Join(",", uids))));
+				new WeiboParameter("uids", string.Join(",", uids))));
 		}
 		/// <summary>
 		/// 获取系统推荐的标签列表 
@@ -46,7 +46,7 @@ namespace NetDimension.Weibo.Interface
 		/// <returns></returns>
 		public string Suggestions(int count = 10)
 		{
-			return (Client.GetCommand("tags/suggestions", new WeiboStringParameter("count", count)));
+			return (Client.GetCommand("tags/suggestions", new WeiboParameter("count", count)));
 		}
 		/// <summary>
 		/// 为当前登录用户添加新的用户标签 
@@ -56,7 +56,7 @@ namespace NetDimension.Weibo.Interface
 		public string Create(params string[] tags)
 		{
 			return (Client.PostCommand("tags/create",
-				new WeiboStringParameter("tags", string.Join(",", tags))));
+				new WeiboParameter("tags", string.Join(",", tags))));
 		}
 		/// <summary>
 		/// 删除用户标签 
@@ -66,7 +66,7 @@ namespace NetDimension.Weibo.Interface
 		public string Destroy(string id)
 		{
 			return (Client.PostCommand("tags/destroy",
-				  new WeiboStringParameter("tag_id", id)));
+				  new WeiboParameter("tag_id", id)));
 
 		}
 		/// <summary>
@@ -77,7 +77,7 @@ namespace NetDimension.Weibo.Interface
 		public string DestroyBatch(params string[] ids)
 		{
 			return (Client.PostCommand("tags/destroy_batch",
-				  new WeiboStringParameter("ids", string.Join(",", ids))));
+				  new WeiboParameter("ids", string.Join(",", ids))));
 		}
 
 	}

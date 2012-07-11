@@ -7,6 +7,9 @@ using System.IO;
 #if NET40
 using Codeplex.Data;
 #endif
+#if !NET20
+using System.Linq;
+#endif
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using NetDimension.Json;
@@ -96,13 +99,25 @@ namespace NetDimension.Weibo
 			this.RefreshToken = refreshToken ?? string.Empty;
 		}
 
-		internal string Request(string url, RequestMethod method = RequestMethod.Get, bool multi = false, params WeiboParameter[] parameters)
+		internal string Request(string url, RequestMethod method = RequestMethod.Get, params WeiboParameter[] parameters)
 		{
 			string rawUrl = string.Empty;
 			UriBuilder uri = new UriBuilder(url);
 			string result = string.Empty;
 
-
+			bool multi = false;
+#if !NET20
+			multi = parameters.Count(p => p.IsBinaryData) > 0;
+#else
+			foreach (var item in parameters)
+			{
+				if (item.IsBinaryData)
+				{
+					multi = true;
+					break;
+				}
+			}
+#endif
 
 			switch (method)
 			{
@@ -379,7 +394,7 @@ namespace NetDimension.Weibo
 			http.AllowAutoRedirect = true;
 			http.KeepAlive = true;
 			http.CookieContainer = MyCookieContainer;
-			string postBody = string.Format("action=submit&withOfficalFlag=0&ticket=&isLoginSina=&response_type=token&regCallback=&redirect_uri={0}&client_id={1}&state=&from=&userId={2}&passwd={3}&display=js", HttpUtility.UrlEncode(CallbackUrl), HttpUtility.UrlEncode(AppKey), HttpUtility.UrlEncode(passport), HttpUtility.UrlEncode(password));
+			string postBody = string.Format("action=submit&withOfficalFlag=0&ticket=&isLoginSina=&response_type=token&regCallback=&redirect_uri={0}&client_id={1}&state=&from=&userId={2}&passwd={3}&display=js", Uri.EscapeDataString(CallbackUrl), Uri.EscapeDataString(AppKey), Uri.EscapeDataString(passport), Uri.EscapeDataString(password));
 			byte[] postData = Encoding.Default.GetBytes(postBody);
 			http.ContentLength = postData.Length;
 
@@ -441,32 +456,32 @@ namespace NetDimension.Weibo
 		internal AccessToken GetAccessToken(GrantType type, Dictionary<string, string> parameters)
 		{
 
-			List<WeiboStringParameter> config = new List<WeiboStringParameter>()
+			List<WeiboParameter> config = new List<WeiboParameter>()
 			{
-				new WeiboStringParameter(){ Name= "client_id", Value= AppKey},
-				new WeiboStringParameter(){ Name="client_secret", Value=AppSecret}
+				new WeiboParameter(){ Name= "client_id", Value= AppKey},
+				new WeiboParameter(){ Name="client_secret", Value=AppSecret}
 			};
 
 			switch (type)
 			{
 				case GrantType.AuthorizationCode:
 					{
-						config.Add(new WeiboStringParameter(){ Name="grant_type",  Value= "authorization_code"});
-						config.Add(new WeiboStringParameter(){ Name="code", Value= parameters["code"]});
-						config.Add(new WeiboStringParameter() { Name = "redirect_uri", Value = parameters["redirect_uri"] });
+						config.Add(new WeiboParameter(){ Name="grant_type",  Value= "authorization_code"});
+						config.Add(new WeiboParameter(){ Name="code", Value= parameters["code"]});
+						config.Add(new WeiboParameter() { Name = "redirect_uri", Value = parameters["redirect_uri"] });
 					}
 					break;
 				case GrantType.Password:
 					{
-						config.Add(new WeiboStringParameter() { Name = "grant_type", Value = "password" });
-						config.Add(new WeiboStringParameter(){ Name="username",  Value= parameters["username"]});
-						config.Add(new WeiboStringParameter(){ Name="password", Value=  parameters["password"]});
+						config.Add(new WeiboParameter() { Name = "grant_type", Value = "password" });
+						config.Add(new WeiboParameter(){ Name="username",  Value= parameters["username"]});
+						config.Add(new WeiboParameter(){ Name="password", Value=  parameters["password"]});
 					}
 					break;
 				case GrantType.RefreshToken:
 					{
-						config.Add(new WeiboStringParameter() { Name = "grant_type", Value = "refresh_token" });
-						config.Add(new WeiboStringParameter() { Name = "refresh_token", Value = parameters["refresh_token"] });
+						config.Add(new WeiboParameter() { Name = "grant_type", Value = "refresh_token" });
+						config.Add(new WeiboParameter() { Name = "refresh_token", Value = parameters["refresh_token"] });
 					}
 					break;
 			}

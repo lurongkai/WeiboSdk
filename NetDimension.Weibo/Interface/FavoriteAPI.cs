@@ -23,8 +23,8 @@ namespace NetDimension.Weibo.Interface
 		public string Favorites(int count = 50, int page = 1)
 		{
 			return (Client.GetCommand("favorites",
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+				new WeiboParameter("count", count),
+				new WeiboParameter("page", page)));
 		}
 		/// <summary>
 		/// 获取当前用户的收藏列表的ID
@@ -35,8 +35,8 @@ namespace NetDimension.Weibo.Interface
 		public string FavoriteIDs(int count = 50, int page = 1)
 		{
 			return (Client.GetCommand("favorites/ids",
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+				new WeiboParameter("count", count),
+				new WeiboParameter("page", page)));
 		}
 		/// <summary>
 		/// 根据收藏ID获取指定的收藏信息 
@@ -46,7 +46,7 @@ namespace NetDimension.Weibo.Interface
 		public string Show(string id)
 		{
 			return (Client.GetCommand("favorites/show",
-				new WeiboStringParameter("id", id)));
+				new WeiboParameter("id", id)));
 		}
 		/// <summary>
 		/// 根据标签获取当前登录用户该标签下的收藏列表  
@@ -58,9 +58,9 @@ namespace NetDimension.Weibo.Interface
 		public string ByTags(string tid, int count = 50, int page = 1)
 		{
 			return (Client.GetCommand("favorites/by_tags",
-				new WeiboStringParameter("tid", tid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+				new WeiboParameter("tid", tid),
+				new WeiboParameter("count", count),
+				new WeiboParameter("page", page)));
 		}
 		/// <summary>
 		/// 获取当前登录用户的收藏标签列表 
@@ -71,8 +71,8 @@ namespace NetDimension.Weibo.Interface
 		public string Tags(int count = 10, int page = 1)
 		{
 			return (Client.GetCommand("favorites/tags",
-					new WeiboStringParameter("count", count),
-					new WeiboStringParameter("page", page)));
+					new WeiboParameter("count", count),
+					new WeiboParameter("page", page)));
 		}
 		/// <summary>
 		/// 获取当前用户某个标签下的收藏列表的ID 
@@ -84,9 +84,9 @@ namespace NetDimension.Weibo.Interface
 		public string ByTagIDs(string tid, int count = 50, int page = 1)
 		{
 			return (Client.GetCommand("favorites/by_tags/ids",
-				new WeiboStringParameter("tid", tid),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page)));
+				new WeiboParameter("tid", tid),
+				new WeiboParameter("count", count),
+				new WeiboParameter("page", page)));
 		}
 		/// <summary>
 		/// 添加一条微博到收藏里 
@@ -96,7 +96,7 @@ namespace NetDimension.Weibo.Interface
 		public string Create(string id)
 		{
 			return (Client.PostCommand("favorites/create",
-				new WeiboStringParameter("id", id)));
+				new WeiboParameter("id", id)));
 		}
 		/// <summary>
 		/// 取消收藏一条微博
@@ -106,7 +106,7 @@ namespace NetDimension.Weibo.Interface
 		public string Destroy(string id)
 		{
 			return (Client.PostCommand("favorites/destroy",
-				  new WeiboStringParameter("id", id)));
+				  new WeiboParameter("id", id)));
 
 		}
 		/// <summary>
@@ -117,7 +117,7 @@ namespace NetDimension.Weibo.Interface
 		public string DestroyBatch(params string[] ids)
 		{
 			return (Client.PostCommand("favorites/destroy_batch",
-				  new WeiboStringParameter("ids", string.Join(",", ids))));
+				  new WeiboParameter("ids", string.Join(",", ids))));
 
 		}
 		/// <summary>
@@ -129,8 +129,8 @@ namespace NetDimension.Weibo.Interface
 		public string UpdateTags(string id, params string[] tags)
 		{
 			return (Client.PostCommand("favorites/tags/update",
-				  new WeiboStringParameter("id", id),
-				  new WeiboStringParameter("tags", string.Join(",", tags))));
+				  new WeiboParameter("id", id),
+				  new WeiboParameter("tags", string.Join(",", tags))));
 
 		}
 		/// <summary>
@@ -142,8 +142,8 @@ namespace NetDimension.Weibo.Interface
 		public string UpdateTagsBatch(string tid, string tag)
 		{
 			return (Client.PostCommand("favorites/tags/update_batch",
-				  new WeiboStringParameter("tid", tid),
-				  new WeiboStringParameter("tag", tag)));
+				  new WeiboParameter("tid", tid),
+				  new WeiboParameter("tag", tag)));
 		}
 		/// <summary>
 		/// 删除当前登录用户所有收藏下的指定标签 
@@ -153,7 +153,7 @@ namespace NetDimension.Weibo.Interface
 		public string DestroyTags(string[] tid)
 		{
 			return (Client.PostCommand("favorites/tags/destroy_batch",
-				  new WeiboStringParameter("tid", string.Join(",", tid))));
+				  new WeiboParameter("tid", string.Join(",", tid))));
 		}
 
 

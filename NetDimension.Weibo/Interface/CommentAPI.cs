@@ -28,12 +28,12 @@ namespace NetDimension.Weibo.Interface
 		public string Show(string id, string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0)
 		{
 			return (Client.GetCommand("comments/show",
-				new WeiboStringParameter("id", id),
-				new WeiboStringParameter("since_id", sinceID),
-				new WeiboStringParameter("max_id", maxID),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page),
-				new WeiboStringParameter("filter_by_author", filterByAuthor)));
+				new WeiboParameter("id", id),
+				new WeiboParameter("since_id", sinceID),
+				new WeiboParameter("max_id", maxID),
+				new WeiboParameter("count", count),
+				new WeiboParameter("page", page),
+				new WeiboParameter("filter_by_author", filterByAuthor)));
 		}
 		/// <summary>
 		/// 获取当前登录用户所发出的评论列表
@@ -48,11 +48,11 @@ namespace NetDimension.Weibo.Interface
 		{
 			return (Client.GetCommand("comments/by_me",
 
-				new WeiboStringParameter("since_id", sinceID),
-				new WeiboStringParameter("max_id", maxID),
-				new WeiboStringParameter("count", count),
-				new WeiboStringParameter("page", page),
-				new WeiboStringParameter("filter_by_source", filterBySource)));
+				new WeiboParameter("since_id", sinceID),
+				new WeiboParameter("max_id", maxID),
+				new WeiboParameter("count", count),
+				new WeiboParameter("page", page),
+				new WeiboParameter("filter_by_source", filterBySource)));
 		}
 		/// <summary>
 		/// 获取当前登录用户所接收到的评论列表
@@ -67,12 +67,12 @@ namespace NetDimension.Weibo.Interface
 		public string ToMe(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0)
 		{
 			return (Client.GetCommand("comments/to_me",
-					new WeiboStringParameter("since_id", sinceID),
-					new WeiboStringParameter("max_id", maxID),
-					new WeiboStringParameter("count", count),
-					new WeiboStringParameter("page", page),
-					new WeiboStringParameter("filter_by_author", filterByAuthor),
-					new WeiboStringParameter("filter_by_source", filterBySource)));
+					new WeiboParameter("since_id", sinceID),
+					new WeiboParameter("max_id", maxID),
+					new WeiboParameter("count", count),
+					new WeiboParameter("page", page),
+					new WeiboParameter("filter_by_author", filterByAuthor),
+					new WeiboParameter("filter_by_source", filterBySource)));
 		}
 		/// <summary>
 		/// 获取当前登录用户的最新评论包括接收到的与发出的
@@ -85,10 +85,10 @@ namespace NetDimension.Weibo.Interface
 		public string Timeline(string sinceID = "", string maxID = "", int count = 50, int page = 1)
 		{
 			return (Client.GetCommand("comments/timeline",
-					new WeiboStringParameter("since_id", sinceID),
-					new WeiboStringParameter("max_id", maxID),
-					new WeiboStringParameter("count", count),
-					new WeiboStringParameter("page", page)));
+					new WeiboParameter("since_id", sinceID),
+					new WeiboParameter("max_id", maxID),
+					new WeiboParameter("count", count),
+					new WeiboParameter("page", page)));
 		}
 		/// <summary>
 		/// 获取最新的提到当前登录用户的评论，即@我的评论 
@@ -103,12 +103,12 @@ namespace NetDimension.Weibo.Interface
 		public string Mentions(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0, int filterBySource = 0)
 		{
 			return (Client.GetCommand("comments/mentions",
-					new WeiboStringParameter("since_id", sinceID),
-					new WeiboStringParameter("max_id", maxID),
-					new WeiboStringParameter("count", count),
-					new WeiboStringParameter("page", page),
-					new WeiboStringParameter("filter_by_author", filterByAuthor),
-					new WeiboStringParameter("filter_by_source", filterBySource)));
+					new WeiboParameter("since_id", sinceID),
+					new WeiboParameter("max_id", maxID),
+					new WeiboParameter("count", count),
+					new WeiboParameter("page", page),
+					new WeiboParameter("filter_by_author", filterByAuthor),
+					new WeiboParameter("filter_by_source", filterBySource)));
 		}
 
 		/// <summary>
@@ -119,7 +119,7 @@ namespace NetDimension.Weibo.Interface
 		public string ShowBatch(params string[] cids)
 		{
 			return (Client.GetCommand("comments/show_batch",
-				new WeiboStringParameter("cids", string.Join(",", cids))));
+				new WeiboParameter("cids", string.Join(",", cids))));
 		}
 
 		/// <summary>
@@ -132,9 +132,9 @@ namespace NetDimension.Weibo.Interface
 		public string Create(string id, string comment, bool commentOrigin = false)
 		{
 			return (Client.PostCommand("comments/create",
-				new WeiboStringParameter("id", id),
-				new WeiboStringParameter("comment", comment),
-				new WeiboStringParameter("comment_ori", commentOrigin)));
+				new WeiboParameter("id", id),
+				new WeiboParameter("comment", comment),
+				new WeiboParameter("comment_ori", commentOrigin)));
 		}
 		/// <summary>
 		/// 删除一条评论 
@@ -144,7 +144,7 @@ namespace NetDimension.Weibo.Interface
 		public string Destroy(string cid)
 		{
 			return (Client.PostCommand("comments/destroy",
-				new WeiboStringParameter("cid", cid)));
+				new WeiboParameter("cid", cid)));
 		}
 
 		/// <summary>
@@ -155,7 +155,7 @@ namespace NetDimension.Weibo.Interface
 		public string DestroyBatch(params string[] ids)
 		{
 			return (Client.PostCommand("comments/destroy",
-					new WeiboStringParameter("destroy_batch", string.Join(",", ids))));
+					new WeiboParameter("destroy_batch", string.Join(",", ids))));
 		}
 		/// <summary>
 		/// 回复一条评论 
@@ -169,11 +169,11 @@ namespace NetDimension.Weibo.Interface
 		public string Reply(string cid, string id, string comment, bool withoutMention = false, bool commentOrigin = false)
 		{
 			return (Client.PostCommand("comments/reply",
-				new WeiboStringParameter("cid", cid),
-				new WeiboStringParameter("id", id),
-				new WeiboStringParameter("comment", comment),
-				new WeiboStringParameter("without_mention", withoutMention),
-				new WeiboStringParameter("comment_ori", commentOrigin)));
+				new WeiboParameter("cid", cid),
+				new WeiboParameter("id", id),
+				new WeiboParameter("comment", comment),
+				new WeiboParameter("without_mention", withoutMention),
+				new WeiboParameter("comment_ori", commentOrigin)));
 		}
 
 	}

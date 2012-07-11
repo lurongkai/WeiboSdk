@@ -357,7 +357,7 @@ namespace NetDimension.Weibo
 				if (string.IsNullOrEmpty(item.Value))
 					continue;
 
-				pairs.Add(string.Format("{0}={1}", HttpUtility.UrlEncode(item.Key), HttpUtility.UrlEncode(item.Value)));
+				pairs.Add(string.Format("{0}={1}", Uri.EscapeDataString(item.Key), Uri.EscapeDataString(item.Value)));
 			}
 
 			return string.Join("&", pairs.ToArray());
@@ -368,9 +368,13 @@ namespace NetDimension.Weibo
 			List<string> pairs = new List<string>();
 			foreach (var item in parameters)
 			{
-				if (item is WeiboStringParameter && !string.IsNullOrEmpty(string.Format("{0}",item.Value)))
+				if (item.IsBinaryData)
+					continue;
+
+				var value = string.Format("{0}", item.Value);
+				if (!string.IsNullOrEmpty(value))
 				{
-					pairs.Add(string.Format("{0}={1}", HttpUtility.UrlEncode(item.Name), HttpUtility.UrlEncode(((WeiboStringParameter)item).Value)));
+					pairs.Add(string.Format("{0}={1}", Uri.EscapeDataString(item.Name), Uri.EscapeDataString(value)));
 				}
 			}
 
@@ -379,53 +383,66 @@ namespace NetDimension.Weibo
 
 		internal static string GetBoundary()
 		{
-			return HttpUtility.UrlEncode(Convert.ToBase64String(Guid.NewGuid().ToByteArray()));
+			string pattern = "abcdefghijklmnopqrstuvwxyz0123456789";
+			StringBuilder boundaryBuilder = new StringBuilder();
+			Random rnd = new Random();
+			for (int i = 0; i < 10; i++)
+			{
+				var index = rnd.Next(pattern.Length);
+				boundaryBuilder.Append(pattern[index]);
+			}
+			return boundaryBuilder.ToString();
 		}
 
 		internal static byte[] BuildPostData(string boundary, params WeiboParameter[] parameters)
 		{
 			List<WeiboParameter> pairs = new List<WeiboParameter>(parameters);
 			pairs.Sort(new WeiboParameterComparer());
-			string division = GetBoundary();
+			MemoryStream buff = new MemoryStream();
 
-			string header = string.Format("--{0}", boundary);
-			string footer = string.Format("--{0}--", boundary);
-			string encoding = "iso-8859-1";//iso-8859-1
+			byte[] headerBuff = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}\r\n", boundary));
+			byte[] footerBuff = Encoding.ASCII.GetBytes(string.Format("\r\n--{0}--", boundary));
+
 
 			StringBuilder contentBuilder = new StringBuilder();
 
 			foreach (WeiboParameter p in pairs)
 			{
-				if (p is WeiboStringParameter)
+				if (!p.IsBinaryData)
 				{
-					if (p.Value is string && string.IsNullOrEmpty(string.Format("{0}", p.Value)))
+					var value = string.Format("{0}", p.Value);
+					if (string.IsNullOrEmpty(value))
+					{
 						continue;
+					}
 
-					WeiboStringParameter param = p as WeiboStringParameter;
-					contentBuilder.AppendLine(header);
-					contentBuilder.AppendLine(string.Format("content-disposition: form-data; name=\"{0}\"", param.Name));
-					//contentBuilder.AppendLine("Content-Type: text/plain; charset=US-ASCII");// utf-8
-					//contentBuilder.AppendLine("Content-Transfer-Encoding: 8bit");
-					contentBuilder.AppendLine();
-					//contentBuilder.AppendLine(HttpUtility.UrlEncode(param.Value).Replace("+", "%20"));
-					contentBuilder.AppendLine(HttpUtility.UrlEncode(param.Value==null?string.Empty:param.Value).Replace("+", "%20"));
+
+					buff.Write(headerBuff, 0, headerBuff.Length);
+					byte[] dispositonBuff = Encoding.UTF8.GetBytes(string.Format("content-disposition: form-data; name=\"{0}\"\r\n\r\n{1}", p.Name, p.Value.ToString()));
+					buff.Write(dispositonBuff, 0, dispositonBuff.Length);
+
 				}
 				else
 				{
-					WeiboBinaryParameter param = p as WeiboBinaryParameter;
-					contentBuilder.AppendLine(header);
-					contentBuilder.AppendLine(string.Format("content-disposition: form-data; name=\"{0}\"; filename=\"{1}\"", param.Name, string.Format("upload{0}", BitConverter.ToInt64(Guid.NewGuid().ToByteArray(), 0))));
-					contentBuilder.AppendLine("Content-Type: image/unknown");
-					contentBuilder.AppendLine("Content-Transfer-Encoding: binary");
-					contentBuilder.AppendLine();
-					contentBuilder.AppendLine(Encoding.GetEncoding(encoding).GetString(param.Value));
+					buff.Write(headerBuff, 0, headerBuff.Length);
+					string headerTemplate = "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\nContent-Type: \"image/unknow\"\r\nContent-Transfer-Encoding: binary\r\n\r\n";
+					byte[] fileBuff = System.Text.Encoding.UTF8.GetBytes(string.Format(headerTemplate, p.Name, string.Format("upload{0}", BitConverter.ToInt64(Guid.NewGuid().ToByteArray(), 0))));
+					buff.Write(fileBuff, 0, fileBuff.Length);
+					byte[] file = (byte[])p.Value;
+					buff.Write(file, 0, file.Length);
 
 				}
 			}
 
-			contentBuilder.Append(footer);
+			buff.Write(footerBuff, 0, footerBuff.Length);
+			buff.Position = 0;
 
-			return Encoding.GetEncoding(encoding).GetBytes(contentBuilder.ToString());
+			byte[] contentBuff = new byte[buff.Length];
+			buff.Read(contentBuff, 0, contentBuff.Length);
+			buff.Close();
+			buff.Dispose();
+			return contentBuff;
+			
 
 		}
 
