@@ -234,7 +234,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="isBase62">MID是否是base62编码，0：否、1：是，默认为0。 </param>
 		/// <param name="mids">需要查询的微博（评论、私信）MID，批量模式下，用半角逗号分隔，最多不超过20个。</param>
 		/// <returns></returns>
-		public string QueryID(int type = 1, bool inbox = false, bool isBase62 = false, string mids="")
+		public string QueryID(int type = 1, bool inbox = false, bool isBase62 = true, string mids="")
 		{
 			return string.Format("{0}", JObject.Parse(api.QueryID(type, inbox, isBase62, mids))["id"]);
 		}
@@ -247,7 +247,7 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// <param name="isBase62">MID是否是base62编码，0：否、1：是，默认为0。 </param>
 		/// <param name="mids">需要查询的微博（评论、私信）MID，批量模式下，用半角逗号分隔，最多不超过20个。</param>
 		/// <returns></returns>
-		public IEnumerable<string> QueryID(int type = 1, bool inbox = false, bool isBase62 = false, params string[] mids)
+		public IEnumerable<string> QueryID(int type = 1, bool inbox = false, bool isBase62 = true, params string[] mids)
 		{
 			return Utility.GetStringListFromJSON(api.QueryID(type, inbox, isBase62, mids));
 		}

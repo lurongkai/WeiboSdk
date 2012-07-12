@@ -10,7 +10,7 @@ namespace NetDimension.Weibo.Entities.shortUrl
 		public string ShortUrl { get; internal set; }
 		[JsonProperty("url_long")]
 		public string LongUrl { get; internal set; }
-		[JsonProperty("location")]
+		[JsonProperty("locations")]
 		public IEnumerable<Location> Referers { get; internal set; }
 
 	}

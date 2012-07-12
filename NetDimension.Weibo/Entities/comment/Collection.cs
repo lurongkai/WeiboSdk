@@ -7,8 +7,14 @@ namespace NetDimension.Weibo.Entities.comment
 {
 	public class Collection : EntityBase
 	{
+		/// <summary>
+		/// 评论集合
+		/// </summary>
 		[JsonProperty(PropertyName = "comments")]
 		public IEnumerable<Entity> Comments { get; internal set; }
+		/// <summary>
+		/// 
+		/// </summary>
 		[JsonProperty(PropertyName = "previous_cursor")]
 		public string ProviousCursor { get; internal set; }
 		[JsonProperty(PropertyName = "next_cursor")]

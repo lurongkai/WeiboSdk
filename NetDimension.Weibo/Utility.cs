@@ -397,7 +397,12 @@ namespace NetDimension.Weibo
 			}
 			return boundaryBuilder.ToString();
 		}
-
+		/// <summary>
+		/// 创建Post Body
+		/// </summary>
+		/// <param name="boundary"></param>
+		/// <param name="parameters">参数</param>
+		/// <returns></returns>
 		internal static byte[] BuildPostData(string boundary, params WeiboParameter[] parameters)
 		{
 			List<WeiboParameter> pairs = new List<WeiboParameter>(parameters);
