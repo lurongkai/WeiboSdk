@@ -364,14 +364,19 @@ namespace NetDimension.Weibo
 				{"refresh_token",refreshToken}
 			});
 		}
-
+		/// <summary>
+		/// 站内应用使用SignedRequest获取AccessToken
+		/// </summary>
+		/// <param name="signedRequest">SignedRequest</param>
+		/// <returns></returns>
 		public AccessToken GetAccessTokenBySignedRequest(string signedRequest)
 		{
 			string[] parameters = signedRequest.Split('.');
 			if (parameters.Length < 2)
 				throw new Exception("SignedRequest格式错误。");
-			var encodedSig = parameters[0].Length % 4 == 0?parameters[0] : parameters[0].PadRight(parameters[0].Length + (4 - parameters[0].Length % 4), '=');
-			var payload = parameters[1].Length % 4 == 0 ? parameters[1] : parameters[1].PadRight(parameters[1].Length + (4 - parameters[1].Length % 4), '=');
+			var encodedSig = parameters[0].Length % 4 == 0 ? parameters[0] : parameters[0].PadRight(parameters[0].Length + (4 - parameters[0].Length % 4), '=').Replace("-", "+").Replace("_", "/");
+			var payload = parameters[1].Length % 4 == 0 ? parameters[1] : parameters[1].PadRight(parameters[1].Length + (4 - parameters[1].Length % 4), '=').Replace("-", "+").Replace("_", "/");
+
 			var sha256 = new System.Security.Cryptography.HMACSHA256(Encoding.UTF8.GetBytes(AppSecret));
 			var expectedSig = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(payload)));
 			sha256.Clear();
