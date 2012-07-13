@@ -13,6 +13,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using NetDimension.Json;
+using NetDimension.Json.Linq;
 
 namespace NetDimension.Weibo
 {
@@ -324,7 +325,7 @@ namespace NetDimension.Weibo
 
 			return TokenResult.Success;
 		}
-
+		#region AccessToken获取的方法集合
 		/// <summary>
 		/// 使用code方式获取AccessToken
 		/// </summary>
@@ -363,6 +364,77 @@ namespace NetDimension.Weibo
 				{"refresh_token",refreshToken}
 			});
 		}
+
+		public AccessToken GetAccessTokenBySignedRequest(string signedRequest)
+		{
+			string[] parameters = signedRequest.Split('.');
+			if (parameters.Length < 2)
+				throw new Exception("SignedRequest格式错误。");
+			var encodedSig = parameters[0].Length % 4 == 0?parameters[0] : parameters[0].PadRight(parameters[0].Length + (4 - parameters[0].Length % 4), '=');
+			var payload = parameters[1].Length % 4 == 0 ? parameters[1] : parameters[1].PadRight(parameters[1].Length + (4 - parameters[1].Length % 4), '=');
+			var sha256 = new System.Security.Cryptography.HMACSHA256(Encoding.UTF8.GetBytes(AppSecret));
+			var expectedSig = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(payload)));
+			sha256.Clear();
+			sha256.Dispose();
+			
+			if(encodedSig != expectedSig)
+				throw new Exception("SignedRequest签名验证失败。");
+			var result = JObject.Parse(Encoding.UTF8.GetString(Convert.FromBase64String(payload)));
+			AccessToken token = new AccessToken();
+			AccessToken = token.Token = result["oauth_token"].ToString();
+			token.UID = result["user_id"].ToString();
+			token.ExpiresIn = Convert.ToInt32(result["expires"].ToString());
+			return token;
+		}
+
+		internal AccessToken GetAccessToken(GrantType type, Dictionary<string, string> parameters)
+		{
+
+			List<WeiboParameter> config = new List<WeiboParameter>()
+			{
+				new WeiboParameter(){ Name= "client_id", Value= AppKey},
+				new WeiboParameter(){ Name="client_secret", Value=AppSecret}
+			};
+
+			switch (type)
+			{
+				case GrantType.AuthorizationCode:
+					{
+						config.Add(new WeiboParameter() { Name = "grant_type", Value = "authorization_code" });
+						config.Add(new WeiboParameter() { Name = "code", Value = parameters["code"] });
+						config.Add(new WeiboParameter() { Name = "redirect_uri", Value = parameters["redirect_uri"] });
+					}
+					break;
+				case GrantType.Password:
+					{
+						config.Add(new WeiboParameter() { Name = "grant_type", Value = "password" });
+						config.Add(new WeiboParameter() { Name = "username", Value = parameters["username"] });
+						config.Add(new WeiboParameter() { Name = "password", Value = parameters["password"] });
+					}
+					break;
+				case GrantType.RefreshToken:
+					{
+						config.Add(new WeiboParameter() { Name = "grant_type", Value = "refresh_token" });
+						config.Add(new WeiboParameter() { Name = "refresh_token", Value = parameters["refresh_token"] });
+					}
+					break;
+			}
+
+			var response = Request(ACCESS_TOKEN_URL, RequestMethod.Post, config.ToArray());
+
+			if (!string.IsNullOrEmpty(response))
+			{
+				AccessToken token = JsonConvert.DeserializeObject<AccessToken>(response);
+				AccessToken = token.Token;
+				return token;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		#endregion
 
 		/// <summary>
 		/// 使用模拟方式进行登录并获得AccessToken
@@ -453,52 +525,6 @@ namespace NetDimension.Weibo
 
 		}
 
-		internal AccessToken GetAccessToken(GrantType type, Dictionary<string, string> parameters)
-		{
-
-			List<WeiboParameter> config = new List<WeiboParameter>()
-			{
-				new WeiboParameter(){ Name= "client_id", Value= AppKey},
-				new WeiboParameter(){ Name="client_secret", Value=AppSecret}
-			};
-
-			switch (type)
-			{
-				case GrantType.AuthorizationCode:
-					{
-						config.Add(new WeiboParameter(){ Name="grant_type",  Value= "authorization_code"});
-						config.Add(new WeiboParameter(){ Name="code", Value= parameters["code"]});
-						config.Add(new WeiboParameter() { Name = "redirect_uri", Value = parameters["redirect_uri"] });
-					}
-					break;
-				case GrantType.Password:
-					{
-						config.Add(new WeiboParameter() { Name = "grant_type", Value = "password" });
-						config.Add(new WeiboParameter(){ Name="username",  Value= parameters["username"]});
-						config.Add(new WeiboParameter(){ Name="password", Value=  parameters["password"]});
-					}
-					break;
-				case GrantType.RefreshToken:
-					{
-						config.Add(new WeiboParameter() { Name = "grant_type", Value = "refresh_token" });
-						config.Add(new WeiboParameter() { Name = "refresh_token", Value = parameters["refresh_token"] });
-					}
-					break;
-			}
-
-			var response = Request(ACCESS_TOKEN_URL, RequestMethod.Post, config.ToArray());
-
-			if (!string.IsNullOrEmpty(response))
-			{
-				AccessToken token = JsonConvert.DeserializeObject<AccessToken>(response);
-				AccessToken = token.Token;
-				return token;
-			}
-			else
-			{
-				return null;
-			}
-		}
 
 
 	}
