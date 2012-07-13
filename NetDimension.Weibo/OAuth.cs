@@ -375,7 +375,6 @@ namespace NetDimension.Weibo
 			var sha256 = new System.Security.Cryptography.HMACSHA256(Encoding.UTF8.GetBytes(AppSecret));
 			var expectedSig = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(payload)));
 			sha256.Clear();
-			sha256.Dispose();
 			
 			if(encodedSig != expectedSig)
 				throw new Exception("SignedRequest签名验证失败。");
