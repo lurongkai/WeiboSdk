@@ -410,7 +410,7 @@ namespace NetDimension.Weibo.Interface
 						new WeiboParameter("status", status),
 						new WeiboParameter("pic",pic),
 						new WeiboParameter("lat", lat),
-						new WeiboParameter("string", log),
+						new WeiboParameter("long", log),
 						new WeiboParameter("annotations", annotations)));
 		}
 		/// <summary>
