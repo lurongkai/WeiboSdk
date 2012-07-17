@@ -374,18 +374,29 @@ namespace NetDimension.Weibo
 			string[] parameters = signedRequest.Split('.');
 			if (parameters.Length < 2)
 				throw new Exception("SignedRequest格式错误。");
-			var encodedSig = parameters[0].Length % 4 == 0 ? parameters[0] : parameters[0].PadRight(parameters[0].Length + (4 - parameters[0].Length % 4), '=').Replace("-", "+").Replace("_", "/");
-			var payload = parameters[1].Length % 4 == 0 ? parameters[1] : parameters[1].PadRight(parameters[1].Length + (4 - parameters[1].Length % 4), '=').Replace("-", "+").Replace("_", "/");
-
+			var encodedSig = parameters[0];
+			var payload = parameters[1];
 			var sha256 = new System.Security.Cryptography.HMACSHA256(Encoding.UTF8.GetBytes(AppSecret));
 			var expectedSig = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(payload)));
 			sha256.Clear();
+
+			encodedSig = parameters[0].Length % 4 == 0 ? parameters[0] : parameters[0].PadRight(parameters[0].Length + (4 - parameters[0].Length % 4), '=').Replace("-", "+").Replace("_", "/");
+			payload = parameters[1].Length % 4 == 0 ? parameters[1] : parameters[1].PadRight(parameters[1].Length + (4 - parameters[1].Length % 4), '=').Replace("-", "+").Replace("_", "/");
+
+			
 			
 			if(encodedSig != expectedSig)
-				throw new Exception("SignedRequest签名验证失败。");
+				throw new WeiboException("SignedRequest签名验证失败。");
 			var result = JObject.Parse(Encoding.UTF8.GetString(Convert.FromBase64String(payload)));
+
+			if (result["oauth_token"] == null)
+				throw new WeiboException("没有获取到授权信息，请先进行授权。");
+
 			AccessToken token = new AccessToken();
 			AccessToken = token.Token = result["oauth_token"].ToString();
+
+			
+
 			token.UID = result["user_id"].ToString();
 			token.ExpiresIn = Convert.ToInt32(result["expires"].ToString());
 			return token;
