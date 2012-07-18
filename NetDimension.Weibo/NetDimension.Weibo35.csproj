@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessToken.cs" />
+    <Compile Include="AsyncCallback.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Entities\comment\Collection.cs" />
     <Compile Include="Entities\comment\Entity.cs" />

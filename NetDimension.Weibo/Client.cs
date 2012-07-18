@@ -53,7 +53,7 @@ namespace NetDimension.Weibo
 			private set;
 		}
 #endif
-		
+
 		/// <summary>
 		/// 实例化微博操作类
 		/// </summary>
@@ -91,7 +91,7 @@ namespace NetDimension.Weibo
 		/// <returns></returns>
 		public string PostCommand(string command, params WeiboParameter[] parameters)
 		{
-			return Http(command, RequestMethod.Post, parameters);	
+			return Http(command, RequestMethod.Post, parameters);
 		}
 		/// <summary>
 		/// 用GET方式发送微博指令
@@ -101,7 +101,7 @@ namespace NetDimension.Weibo
 		/// <returns></returns>
 		public string GetCommand(string command, params WeiboParameter[] parameters)
 		{
-			return Http(command, RequestMethod.Get, parameters);	
+			return Http(command, RequestMethod.Get, parameters);
 		}
 		/// <summary>
 		/// 用GET方式发送微博指令
@@ -113,8 +113,8 @@ namespace NetDimension.Weibo
 		{
 			List<WeiboParameter> list = new List<WeiboParameter>();
 			foreach (var item in parameters)
-			{ 
-				list.Add(new WeiboParameter(item.Key,item.Value));
+			{
+				list.Add(new WeiboParameter(item.Key, item.Value));
 			}
 			return Http(command, RequestMethod.Get, list.ToArray());
 		}
@@ -140,10 +140,10 @@ namespace NetDimension.Weibo
 		/// <typeparam name="T">返回类型</typeparam>
 		/// <param name="invoker">调用代理</param>
 		/// <param name="callback">回调代理</param>
-		public void AsyncInvoke<T>(AsyncInvokeDelegate<T> invoker,AsyncCallbackDelegate<T> callback)
+		public void AsyncInvoke<T>(AsyncInvokeDelegate<T> invoker, AsyncCallbackDelegate<T> callback)
 		{
-			
-			ThreadPool.QueueUserWorkItem(new WaitCallback(delegate(object state) {
+			ThreadPool.QueueUserWorkItem(new WaitCallback(delegate(object state)
+			{
 				AsyncCallback<T> result;
 				try
 				{
@@ -152,12 +152,12 @@ namespace NetDimension.Weibo
 					callback(result);
 
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
-					result = new AsyncCallback<T>(ex,false);
+					result = new AsyncCallback<T>(ex, false);
 					callback(result);
 				}
-				
+
 			}));
 
 		}
