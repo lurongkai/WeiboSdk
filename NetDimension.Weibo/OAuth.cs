@@ -390,7 +390,7 @@ namespace NetDimension.Weibo
 			var result = JObject.Parse(Encoding.UTF8.GetString(Convert.FromBase64String(payload)));
 
 			if (result["oauth_token"] == null)
-				throw new WeiboException("没有获取到授权信息，请先进行授权。");
+				return null;//throw new WeiboException("没有获取到授权信息，请先进行授权。");
 
 			AccessToken token = new AccessToken();
 			AccessToken = token.Token = result["oauth_token"].ToString();
