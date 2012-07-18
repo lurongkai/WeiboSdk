@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if !NET20
 using System.Linq;
+#endif
 using System.Text;
 
 namespace NetDimension.Weibo
