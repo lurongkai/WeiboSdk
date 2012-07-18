@@ -4,9 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 #endif
 using System.Text;
+using System.Threading;
 
 namespace NetDimension.Weibo
 {
+	/// <summary>
+	/// 异步调用中的函数调用代理
+	/// </summary>
+	/// <typeparam name="T">API返回的类型</typeparam>
+	/// <returns>T</returns>
+	public delegate T AsyncInvokeDelegate<T>();
+	/// <summary>
+	/// 异步调用中的回调代理
+	/// </summary>
+	/// <typeparam name="T">函数调用中的返回类型</typeparam>
+	/// <param name="result">AsyncCallback对象</param>
+	public delegate void AsyncCallbackDelegate<T>(AsyncCallback<T> result);
 	/// <summary>
 	/// 微博操作类
 	/// </summary>
@@ -119,6 +132,34 @@ namespace NetDimension.Weibo
 				url = string.Format("{0}{1}.json", BASE_URL, command);
 			}
 			return OAuth.Request(url, method, parameters);
+		}
+
+		/// <summary>
+		/// API接口异步调用
+		/// </summary>
+		/// <typeparam name="T">返回类型</typeparam>
+		/// <param name="invoker">调用代理</param>
+		/// <param name="callback">回调代理</param>
+		public void AsyncInvoke<T>(AsyncInvokeDelegate<T> invoker,AsyncCallbackDelegate<T> callback)
+		{
+			
+			ThreadPool.QueueUserWorkItem(new WaitCallback(delegate(object state) {
+				AsyncCallback<T> result;
+				try
+				{
+					T invoke = invoker();
+					result = new AsyncCallback<T>(invoke);
+					callback(result);
+
+				}
+				catch(Exception ex)
+				{
+					result = new AsyncCallback<T>(ex,false);
+					callback(result);
+				}
+				
+			}));
+
 		}
 	}
 }

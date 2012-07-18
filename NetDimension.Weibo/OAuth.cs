@@ -540,7 +540,5 @@ namespace NetDimension.Weibo
 
 		}
 
-
-
 	}
 }
