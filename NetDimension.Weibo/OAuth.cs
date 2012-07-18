@@ -481,7 +481,7 @@ namespace NetDimension.Weibo
 			http.AllowAutoRedirect = true;
 			http.KeepAlive = true;
 			http.CookieContainer = MyCookieContainer;
-			string postBody = string.Format("action=submit&withOfficalFlag=0&ticket=&isLoginSina=&response_type=token&regCallback=&redirect_uri={0}&client_id={1}&state=&from=&userId={2}&passwd={3}&display=js", Uri.EscapeDataString(CallbackUrl), Uri.EscapeDataString(AppKey), Uri.EscapeDataString(passport), Uri.EscapeDataString(password));
+			string postBody = string.Format("action=submit&withOfficalFlag=0&ticket=&isLoginSina=&response_type=token&regCallback=&redirect_uri={0}&client_id={1}&state=&from=&userId={2}&passwd={3}&display=js", Uri.EscapeDataString(string.IsNullOrEmpty(CallbackUrl)? "": CallbackUrl), Uri.EscapeDataString(AppKey), Uri.EscapeDataString(passport), Uri.EscapeDataString(password));
 			byte[] postData = Encoding.Default.GetBytes(postBody);
 			http.ContentLength = postData.Length;
 
