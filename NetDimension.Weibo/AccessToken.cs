@@ -13,5 +13,8 @@ namespace NetDimension.Weibo
 		public int ExpiresIn{get;internal set;}
 		[JsonProperty(PropertyName = "uid")]
 		public string UID{get;internal set;}
+		[JsonProperty(PropertyName = "refresh_token")]
+		public string RefreshToken { get; internal set; }
+
 	}
 }

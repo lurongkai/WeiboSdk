@@ -451,13 +451,18 @@ namespace NetDimension.Weibo
 
 		#endregion
 
+		public bool ClientLogin(string passport, string password)
+		{
+			return ClientLogin(passport, password, null);
+		}
+
 		/// <summary>
 		/// 使用模拟方式进行登录并获得AccessToken
 		/// </summary>
 		/// <param name="passport">微博账号</param>
 		/// <param name="password">微博密码</param>
 		/// <returns></returns>
-		public bool ClientLogin(string passport, string password)
+		public bool ClientLogin(string passport, string password, AccessToken token)
 		{
 			bool result = false;
 #if !NET20
@@ -517,7 +522,14 @@ namespace NetDimension.Weibo
 								if (!string.IsNullOrEmpty(html) && (Regex.IsMatch(html, pattern1) || Regex.IsMatch(html, pattern2)))
 								{
 									var group = Regex.IsMatch(html,"refresh_token") ?Regex.Match(html, pattern2) : Regex.Match(html, pattern1);
+
 									AccessToken = group.Groups["token"].Value;
+									if (token != null)
+									{
+										token.ExpiresIn = Convert.ToInt32(group.Groups["expires"].Value);
+										token.Token = group.Groups["token"].Value;
+										token.UID = group.Groups["uid"].Value;
+									}
 									result = true;
 								}
 							}
