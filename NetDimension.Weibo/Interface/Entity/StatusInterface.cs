@@ -296,9 +296,9 @@ namespace NetDimension.Weibo.Interface.Entity
 		/// </summary>
 		/// <param name="ids">需要获取数据的微博ID</param>
 		/// <returns></returns>
-		public Entities.status.Count Count(params string[] ids)
+		public IEnumerable<Entities.status.Count> Count(params string[] ids)
 		{
-			return JsonConvert.DeserializeObject<Entities.status.Count>(api.Count(ids));
+			return JsonConvert.DeserializeObject<IEnumerable<Entities.status.Count>>(api.Count(ids));
 		}
 		/// <summary>
 		/// 转发一条微博 
