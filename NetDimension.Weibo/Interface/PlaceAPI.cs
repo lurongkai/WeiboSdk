@@ -146,7 +146,7 @@ namespace NetDimension.Weibo.Interface
 
 		public string POITips(string poiID, int count = 20, int page = 1, bool sort = false, bool baseApp = false)
 		{
-			return Client.GetCommand("place/pois/tipss",
+			return Client.GetCommand("place/pois/tips",
 				new WeiboParameter("poiID", poiID),
 				new WeiboParameter("count", count),
 				new WeiboParameter("page", page),
@@ -225,7 +225,7 @@ namespace NetDimension.Weibo.Interface
 
 		public string NearByUserList(float lat, float log, int count = 20, int page = 1, int range = 2000, bool sort = false, int filter=0,int gender = 0, int level=0, int startAge=0,int endAge =0, bool offset = false)
 		{
-			return Client.GetCommand("place/nearby/users",
+            return Client.GetCommand("place/nearby_users/list",
 				new WeiboParameter("lat", lat),
 				new WeiboParameter("long", log),
 				new WeiboParameter("range", range),
@@ -258,7 +258,7 @@ namespace NetDimension.Weibo.Interface
 
 		public string CheckIn(string poiID, string status, byte[] pic, bool isPublic = true)
 		{
-			return Client.PostCommand("place/pois/create",
+            return Client.PostCommand("place/pois/add_checkin",
 				new WeiboParameter("poiid", poiID),
 				new WeiboParameter("status", status),
 				new WeiboParameter("pic", pic),

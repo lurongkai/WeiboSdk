@@ -7,8 +7,11 @@ namespace NetDimension.Weibo.Entities.status
 {
 	public class Collection : EntityBase
 	{
-		[JsonProperty(PropertyName = "reposts")]
+		
+        [JsonProperty(PropertyName = "statuses")]
 		public IEnumerable<Entity> Statuses { get; internal set; }
+        [JsonProperty(PropertyName = "reposts")]
+        public IEnumerable<Entity> Reposts { get; internal set; }
 		[JsonProperty(PropertyName = "previous_cursor")]
 		public string ProviousCursor { get; internal set; }
 		[JsonProperty(PropertyName = "next_cursor")]
