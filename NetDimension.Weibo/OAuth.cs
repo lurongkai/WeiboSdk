@@ -166,6 +166,12 @@ namespace NetDimension.Weibo
 			http.UserAgent = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0)";
             if (Proxy != null)
             {
+                
+                if (Proxy.Credentials != null)
+                {
+                    http.UseDefaultCredentials = true;
+                }
+
                 http.Proxy = Proxy;
             }
 			if (!string.IsNullOrEmpty(AccessToken))
