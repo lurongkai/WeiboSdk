@@ -69,6 +69,15 @@ namespace NetDimension.Weibo
 			internal set;
 		}
 
+        /// <summary>
+        /// 代理设置
+        /// </summary>
+        public WebProxy Proxy
+        {
+            get;
+            set;
+        }
+
 		/// <summary>
 		/// 实例化OAuth类（用于授权）
 		/// </summary>
@@ -105,6 +114,8 @@ namespace NetDimension.Weibo
 			string rawUrl = string.Empty;
 			UriBuilder uri = new UriBuilder(url);
 			string result = string.Empty;
+
+
 
 			bool multi = false;
 #if !NET20
@@ -153,7 +164,10 @@ namespace NetDimension.Weibo
 			HttpWebRequest http = WebRequest.Create(uri.Uri) as HttpWebRequest;
 			http.ServicePoint.Expect100Continue = false;
 			http.UserAgent = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0)";
-
+            if (Proxy != null)
+            {
+                http.Proxy = Proxy;
+            }
 			if (!string.IsNullOrEmpty(AccessToken))
 			{
 				http.Headers["Authorization"] = string.Format("OAuth2 {0}", AccessToken);
