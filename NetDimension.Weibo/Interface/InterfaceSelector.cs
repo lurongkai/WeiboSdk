@@ -24,7 +24,7 @@ namespace NetDimension.Weibo.Interface
 		public EntityInterfaces Entity
 		{
 			get;
-			internal set;
+			internal set; 
 		}
 
 		internal InterfaceSelector(Client client)
