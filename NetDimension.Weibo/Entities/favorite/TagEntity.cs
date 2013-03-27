@@ -1,4 +1,5 @@
-﻿using NetDimension.Json;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Entities.favorite
 {

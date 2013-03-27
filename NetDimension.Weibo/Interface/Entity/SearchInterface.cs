@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NetDimension.Json;
+using Newtonsoft.Json;
 using NetDimension.Weibo.Entities.search;
 using NetDimension.Weibo.Entities.status;
 

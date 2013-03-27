@@ -7,8 +7,8 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using NetDimension.Json;
-using NetDimension.Json.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace NetDimension.Weibo
 {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NetDimension.Json.Linq;
+using Newtonsoft.Json.Linq;
 using NetDimension.Weibo.Entities.tag;
 
 namespace NetDimension.Weibo.Interface.Entity
