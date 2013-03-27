@@ -64,7 +64,7 @@ namespace NetDimension.Weibo.Interface
 
 		public string ShowPOIs(string[] srcids)
 		{
-			return Client.GetCommand("location/pois/show_batch", new WeiboParameter("srcids ", string.Join(",",srcids)));
+			return Client.GetCommand("location/pois/show_batch", new WeiboParameter("srcids", string.Join(",",srcids)));
 		}
 
 		public string SearchPOIsByLocation(string q = "", string category = "", string city = "", int page = 1, int count = 20)

@@ -86,6 +86,7 @@ namespace NetDimension.Weibo.Interface
 			Trends = new TrendInterface(client);
 			Users = new UserInterface(client);
 			Location = new LocationInterface(client);
+            Place = new PlaceInterface(client);
 		}
 	}
 }

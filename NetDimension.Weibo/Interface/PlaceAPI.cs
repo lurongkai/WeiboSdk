@@ -64,7 +64,7 @@ namespace NetDimension.Weibo.Interface
 		public string NearByTimeline(float lat, float log, int range = 2000, int startTime = 0, int endTime = 0, bool sort = false, int count = 20, int page = 1, bool baseApp = false, bool offset = false)
 		{
 			return Client.GetCommand("place/nearby_timeline",
-				new WeiboParameter("lat ", lat),
+				new WeiboParameter("lat", lat),
 				new WeiboParameter("long", log),
 				new WeiboParameter("starttime", startTime),
 				new WeiboParameter("endtime", endTime),

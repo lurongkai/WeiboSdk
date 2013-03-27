@@ -28,7 +28,7 @@ namespace NetDimension.Weibo.Interface
 				string.IsNullOrEmpty(uid) ? new WeiboParameter("screen_name", screenName) : new WeiboParameter("uid", uid),
 				new WeiboParameter("count", count),
 				new WeiboParameter("cursor", cursor),
-				new WeiboParameter("trim_status ", trimStatus)));
+				new WeiboParameter("trim_status", trimStatus)));
 		}
 		/// <summary>
 		/// 获取用户关注的用户UID列表
@@ -108,7 +108,7 @@ namespace NetDimension.Weibo.Interface
 				string.IsNullOrEmpty(uid) ? new WeiboParameter("screen_name", screenName) : new WeiboParameter("uid", uid),
 				new WeiboParameter("count", count),
 				new WeiboParameter("cursor", cursor),
-				new WeiboParameter("trim_status ", trimStatus)));
+				new WeiboParameter("trim_status", trimStatus)));
 		}
 		/// <summary>
 		/// 获取用户粉丝的用户UID列表 
