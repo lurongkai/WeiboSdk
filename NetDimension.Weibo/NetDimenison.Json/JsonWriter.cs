@@ -43,21 +43,6 @@ namespace NetDimension.Json
     /// </summary>
     public abstract class JsonWriter : IDisposable
     {
-        internal enum State
-        {
-            Start,
-            Property,
-            ObjectStart,
-            Object,
-            ArrayStart,
-            Array,
-            ConstructorStart,
-            Constructor,
-            Bytes,
-            Closed,
-            Error
-        }
-
         // array that gives a new state based on the current state an the token being written
         private static readonly State[][] StateArray;
 
@@ -119,42 +104,26 @@ namespace NetDimension.Json
                     }
             };
 
-        internal static State[][] BuildStateArray() {
-            var allStates = StateArrayTempate.ToList();
-            var errorStates = StateArrayTempate[0];
-            var valueStates = StateArrayTempate[7];
-
-            foreach (JsonToken valueToken in EnumUtils.GetValues(typeof (JsonToken))) {
-                if (allStates.Count <= (int) valueToken) {
-                    switch (valueToken) {
-                        case JsonToken.Integer:
-                        case JsonToken.Float:
-                        case JsonToken.String:
-                        case JsonToken.Boolean:
-                        case JsonToken.Null:
-                        case JsonToken.Undefined:
-                        case JsonToken.Date:
-                        case JsonToken.Bytes:
-                            allStates.Add(valueStates);
-                            break;
-                        default:
-                            allStates.Add(errorStates);
-                            break;
-                    }
-                }
-            }
-
-            return allStates.ToArray();
-        }
+        private readonly List<JsonPosition> _stack;
+        private JsonPosition _currentPosition;
+        private State _currentState;
+        private Formatting _formatting;
 
         static JsonWriter() {
             StateArray = BuildStateArray();
         }
 
-        private readonly List<JsonPosition> _stack;
-        private JsonPosition _currentPosition;
-        private State _currentState;
-        private Formatting _formatting;
+        /// <summary>
+        ///     Creates an instance of the <c>JsonWriter</c> class.
+        /// </summary>
+        protected JsonWriter() {
+            _stack = new List<JsonPosition>(4);
+            _currentState = State.Start;
+            _formatting = Formatting.None;
+            DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind;
+
+            CloseOutput = true;
+        }
 
         /// <summary>
         ///     Gets or sets a value indicating whether the underlying stream or
@@ -255,16 +224,36 @@ namespace NetDimension.Json
         /// </summary>
         public DateTimeZoneHandling DateTimeZoneHandling { get; set; }
 
-        /// <summary>
-        ///     Creates an instance of the <c>JsonWriter</c> class.
-        /// </summary>
-        protected JsonWriter() {
-            _stack = new List<JsonPosition>(4);
-            _currentState = State.Start;
-            _formatting = Formatting.None;
-            DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind;
+        void IDisposable.Dispose() {
+            Dispose(true);
+        }
 
-            CloseOutput = true;
+        internal static State[][] BuildStateArray() {
+            var allStates = StateArrayTempate.ToList();
+            var errorStates = StateArrayTempate[0];
+            var valueStates = StateArrayTempate[7];
+
+            foreach (JsonToken valueToken in EnumUtils.GetValues(typeof (JsonToken))) {
+                if (allStates.Count <= (int) valueToken) {
+                    switch (valueToken) {
+                        case JsonToken.Integer:
+                        case JsonToken.Float:
+                        case JsonToken.String:
+                        case JsonToken.Boolean:
+                        case JsonToken.Null:
+                        case JsonToken.Undefined:
+                        case JsonToken.Date:
+                        case JsonToken.Bytes:
+                            allStates.Add(valueStates);
+                            break;
+                        default:
+                            allStates.Add(errorStates);
+                            break;
+                    }
+                }
+            }
+
+            return allStates.ToArray();
         }
 
         private void UpdateScopeWithFinishedValue() {
@@ -696,6 +685,33 @@ namespace NetDimension.Json
             _currentState = newState;
         }
 
+        /// <summary>
+        ///     Writes out a comment <code>/*...*/</code> containing the specified text.
+        /// </summary>
+        /// <param name="text">Text to place inside the comment.</param>
+        public virtual void WriteComment(string text) {
+            AutoComplete(JsonToken.Comment);
+        }
+
+        /// <summary>
+        ///     Writes out the given white space.
+        /// </summary>
+        /// <param name="ws">The string of white space characters.</param>
+        public virtual void WriteWhitespace(string ws) {
+            if (ws != null) {
+                if (!StringUtils.IsWhiteSpace(ws)) {
+                    throw JsonWriterException.Create(this, "Only white space characters should be used.", null);
+                }
+            }
+        }
+
+
+        private void Dispose(bool disposing) {
+            if (_currentState != State.Closed) {
+                Close();
+            }
+        }
+
         #region WriteValue methods
 
         /// <summary>
@@ -883,7 +899,6 @@ namespace NetDimension.Json
             AutoComplete(JsonToken.Date);
         }
 
-#if !PocketPC
         /// <summary>
         ///     Writes a <see cref="DateTimeOffset" /> value.
         /// </summary>
@@ -893,7 +908,6 @@ namespace NetDimension.Json
         public virtual void WriteValue(DateTimeOffset value) {
             AutoComplete(JsonToken.Date);
         }
-#endif
 
         /// <summary>
         ///     Writes a <see cref="Guid" /> value.
@@ -1115,7 +1129,6 @@ namespace NetDimension.Json
             }
         }
 
-#if !PocketPC
         /// <summary>
         ///     Writes a <see cref="Nullable{DateTimeOffset}" /> value.
         /// </summary>
@@ -1129,7 +1142,6 @@ namespace NetDimension.Json
                 WriteValue(value.Value);
             }
         }
-#endif
 
         /// <summary>
         ///     Writes a <see cref="Nullable{Guid}" /> value.
@@ -1253,14 +1265,10 @@ namespace NetDimension.Json
                         return;
 #endif
                 }
-            }
-#if !PocketPC
-            else if (value is DateTimeOffset) {
+            } else if (value is DateTimeOffset) {
                 WriteValue((DateTimeOffset) value);
                 return;
-            }
-#endif
-            else if (value is byte[]) {
+            } else if (value is byte[]) {
                 WriteValue((byte[]) value);
                 return;
             } else if (value is Guid) {
@@ -1281,35 +1289,19 @@ namespace NetDimension.Json
 
         #endregion
 
-        /// <summary>
-        ///     Writes out a comment <code>/*...*/</code> containing the specified text.
-        /// </summary>
-        /// <param name="text">Text to place inside the comment.</param>
-        public virtual void WriteComment(string text) {
-            AutoComplete(JsonToken.Comment);
-        }
-
-        /// <summary>
-        ///     Writes out the given white space.
-        /// </summary>
-        /// <param name="ws">The string of white space characters.</param>
-        public virtual void WriteWhitespace(string ws) {
-            if (ws != null) {
-                if (!StringUtils.IsWhiteSpace(ws)) {
-                    throw JsonWriterException.Create(this, "Only white space characters should be used.", null);
-                }
-            }
-        }
-
-
-        void IDisposable.Dispose() {
-            Dispose(true);
-        }
-
-        private void Dispose(bool disposing) {
-            if (_currentState != State.Closed) {
-                Close();
-            }
+        internal enum State
+        {
+            Start,
+            Property,
+            ObjectStart,
+            Object,
+            ArrayStart,
+            Array,
+            ConstructorStart,
+            Constructor,
+            Bytes,
+            Closed,
+            Error
         }
     }
 }

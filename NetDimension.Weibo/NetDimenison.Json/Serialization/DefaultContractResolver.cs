@@ -264,10 +264,7 @@ namespace NetDimension.Json.Serialization
             var serializableMembers = new List<MemberInfo>();
 
             if (memberSerialization != MemberSerialization.Fields) {
-#if !PocketPC
                 var dataContractAttribute = JsonTypeReflector.GetDataContractAttribute(objectType);
-#endif
-
                 var defaultMembers = ReflectionUtils.GetFieldsAndProperties(objectType, DefaultMembersSearchFlags)
                                                     .Where(m => !ReflectionUtils.IsIndexedProperty(m)).ToList();
 
@@ -285,23 +282,19 @@ namespace NetDimension.Json.Serialization
                                 JsonTypeReflector.GetAttribute<JsonPropertyAttribute>(
                                     member.GetCustomAttributeProvider()) != null) {
                                 serializableMembers.Add(member);
-                            }
-#if !PocketPC
-                            else if (dataContractAttribute != null &&
-                                     JsonTypeReflector.GetAttribute<DataMemberAttribute>(
-                                         member.GetCustomAttributeProvider()) != null) {
+                            } else if (dataContractAttribute != null &&
+                                       JsonTypeReflector.GetAttribute<DataMemberAttribute>(
+                                           member.GetCustomAttributeProvider()) != null) {
                                 serializableMembers.Add(member);
-                            }
-#endif
-                            else if (memberSerialization == MemberSerialization.Fields &&
-                                     member.MemberType() == MemberTypes.Field) {
+                            } else if (memberSerialization == MemberSerialization.Fields &&
+                                       member.MemberType() == MemberTypes.Field) {
                                 serializableMembers.Add(member);
                             }
                         }
                     }
                 }
 
-#if !PocketPC && !SILVERLIGHT
+#if !SILVERLIGHT
                 Type match;
                 // don't include EntityKey on entities objects... this is a bit hacky
                 if (objectType.AssignableToTypeName("System.Data.Objects.DataClasses.EntityObject", out match)) {
@@ -320,7 +313,7 @@ namespace NetDimension.Json.Serialization
             return serializableMembers;
         }
 
-#if !PocketPC && !SILVERLIGHT
+#if !SILVERLIGHT
         private bool ShouldSerializeEntityMember(MemberInfo memberInfo) {
             var propertyInfo = memberInfo as PropertyInfo;
             if (propertyInfo != null) {
@@ -499,17 +492,13 @@ namespace NetDimension.Json.Serialization
             return JsonTypeReflector.ReflectionDelegateFactory.CreateDefaultConstructor<object>(createdType);
         }
 
-#if !PocketPC
         [SuppressMessage("Microsoft.Portability", "CA1903:UseOnlyApiFromTargetedFramework",
             MessageId = "System.Runtime.Serialization.DataContractAttribute.#get_IsReference()")]
-#endif
         private void InitializeContract(JsonContract contract) {
             var containerAttribute = JsonTypeReflector.GetJsonContainerAttribute(contract.NonNullableUnderlyingType);
             if (containerAttribute != null) {
                 contract.IsReference = containerAttribute._isReference;
-            }
-#if !PocketPC
-            else {
+            } else {
                 var dataContractAttribute =
                     JsonTypeReflector.GetDataContractAttribute(contract.NonNullableUnderlyingType);
                 // doesn't have a null value
@@ -517,7 +506,6 @@ namespace NetDimension.Json.Serialization
                     contract.IsReference = true;
                 }
             }
-#endif
 
             contract.Converter = ResolveContractConverter(contract.NonNullableUnderlyingType);
 
@@ -822,7 +810,7 @@ namespace NetDimension.Json.Serialization
                 return true;
             }
 
-#if SILVERLIGHT || PocketPC
+#if SILVERLIGHT
       if (type == typeof(Guid) || type == typeof(Uri) || type == typeof(TimeSpan))
         return true;
 #endif
@@ -986,7 +974,6 @@ namespace NetDimension.Json.Serialization
                                                        out bool allowNonPublicAccess, out bool hasExplicitAttribute) {
             hasExplicitAttribute = false;
 
-#if !PocketPC
             var dataContractAttribute = JsonTypeReflector.GetDataContractAttribute(declaringType);
 
             MemberInfo memberInfo = null;
@@ -1002,7 +989,6 @@ namespace NetDimension.Json.Serialization
             } else {
                 dataMemberAttribute = null;
             }
-#endif
 
             var propertyAttribute = JsonTypeReflector.GetAttribute<JsonPropertyAttribute>(attributeProvider);
             if (propertyAttribute != null) {
@@ -1012,13 +998,9 @@ namespace NetDimension.Json.Serialization
             string mappedName;
             if (propertyAttribute != null && propertyAttribute.PropertyName != null) {
                 mappedName = propertyAttribute.PropertyName;
-            }
-#if !PocketPC
-            else if (dataMemberAttribute != null && dataMemberAttribute.Name != null) {
+            } else if (dataMemberAttribute != null && dataMemberAttribute.Name != null) {
                 mappedName = dataMemberAttribute.Name;
-            }
-#endif
-            else {
+            } else {
                 mappedName = name;
             }
 
@@ -1030,18 +1012,15 @@ namespace NetDimension.Json.Serialization
                 property._required = propertyAttribute._required;
                 property.Order = propertyAttribute._order;
                 hasMemberAttribute = true;
-            }
-#if !PocketPC
-            else if (dataMemberAttribute != null) {
+            } else if (dataMemberAttribute != null) {
                 property._required = (dataMemberAttribute.IsRequired) ? Required.AllowNull : Required.Default;
                 property.Order = (dataMemberAttribute.Order != -1) ? (int?) dataMemberAttribute.Order : null;
                 hasMemberAttribute = true;
             }
-#endif
 
             var hasJsonIgnoreAttribute =
                 JsonTypeReflector.GetAttribute<JsonIgnoreAttribute>(attributeProvider) != null
-#if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
+#if !(SILVERLIGHT || NETFX_CORE)
                 || JsonTypeReflector.GetAttribute<NonSerializedAttribute>(attributeProvider) != null
 #endif
                 ;
@@ -1098,13 +1077,10 @@ namespace NetDimension.Json.Serialization
             if (memberSerialization == MemberSerialization.Fields) {
                 allowNonPublicAccess = true;
             }
-
-#if !PocketPC
             if (dataMemberAttribute != null) {
                 allowNonPublicAccess = true;
                 hasExplicitAttribute = true;
             }
-#endif
         }
 
         private Predicate<object> CreateShouldSerializeTest(MemberInfo member) {

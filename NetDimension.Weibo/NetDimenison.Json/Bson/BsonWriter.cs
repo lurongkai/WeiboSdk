@@ -39,21 +39,9 @@ namespace NetDimension.Json.Bson
     {
         private readonly BsonBinaryWriter _writer;
 
-        private BsonToken _root;
         private BsonToken _parent;
         private string _propertyName;
-
-        /// <summary>
-        ///     Gets or sets the <see cref="DateTimeKind" /> used when writing <see cref="DateTime" /> values to BSON.
-        ///     When set to <see cref="DateTimeKind.Unspecified" /> no conversion will occur.
-        /// </summary>
-        /// <value>
-        ///     The <see cref="DateTimeKind" /> used when writing <see cref="DateTime" /> values to BSON.
-        /// </value>
-        public DateTimeKind DateTimeKindHandling {
-            get { return _writer.DateTimeKindHandling; }
-            set { _writer.DateTimeKindHandling = value; }
-        }
+        private BsonToken _root;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BsonWriter" /> class.
@@ -71,6 +59,18 @@ namespace NetDimension.Json.Bson
         public BsonWriter(BinaryWriter writer) {
             ValidationUtils.ArgumentNotNull(writer, "writer");
             _writer = new BsonBinaryWriter(writer);
+        }
+
+        /// <summary>
+        ///     Gets or sets the <see cref="DateTimeKind" /> used when writing <see cref="DateTime" /> values to BSON.
+        ///     When set to <see cref="DateTimeKind.Unspecified" /> no conversion will occur.
+        /// </summary>
+        /// <value>
+        ///     The <see cref="DateTimeKind" /> used when writing <see cref="DateTime" /> values to BSON.
+        /// </value>
+        public DateTimeKind DateTimeKindHandling {
+            get { return _writer.DateTimeKindHandling; }
+            set { _writer.DateTimeKindHandling = value; }
         }
 
         /// <summary>
@@ -195,6 +195,35 @@ namespace NetDimension.Json.Bson
                 _parent = token;
                 _root = token;
             }
+        }
+
+        /// <summary>
+        ///     Writes a <see cref="T:Byte[]" /> value that represents a BSON object id.
+        /// </summary>
+        /// <param name="value"></param>
+        public void WriteObjectId(byte[] value) {
+            ValidationUtils.ArgumentNotNull(value, "value");
+
+            if (value.Length != 12) {
+                throw JsonWriterException.Create(this, "An object id must be 12 bytes", null);
+            }
+
+            // hack to update the writer state
+            AutoComplete(JsonToken.Undefined);
+            AddValue(value, BsonType.Oid);
+        }
+
+        /// <summary>
+        ///     Writes a BSON regex.
+        /// </summary>
+        /// <param name="pattern">The regex pattern.</param>
+        /// <param name="options">The regex options.</param>
+        public void WriteRegex(string pattern, string options) {
+            ValidationUtils.ArgumentNotNull(pattern, "pattern");
+
+            // hack to update the writer state
+            AutoComplete(JsonToken.Undefined);
+            AddToken(new BsonRegex(pattern, options));
         }
 
         #region WriteValue methods
@@ -407,7 +436,6 @@ namespace NetDimension.Json.Bson
             AddValue(value, BsonType.Date);
         }
 
-#if !PocketPC
         /// <summary>
         ///     Writes a <see cref="DateTimeOffset" /> value.
         /// </summary>
@@ -418,7 +446,6 @@ namespace NetDimension.Json.Bson
             base.WriteValue(value);
             AddValue(value, BsonType.Date);
         }
-#endif
 
         /// <summary>
         ///     Writes a <see cref="T:Byte[]" /> value.
@@ -465,34 +492,5 @@ namespace NetDimension.Json.Bson
         }
 
         #endregion
-
-        /// <summary>
-        ///     Writes a <see cref="T:Byte[]" /> value that represents a BSON object id.
-        /// </summary>
-        /// <param name="value"></param>
-        public void WriteObjectId(byte[] value) {
-            ValidationUtils.ArgumentNotNull(value, "value");
-
-            if (value.Length != 12) {
-                throw JsonWriterException.Create(this, "An object id must be 12 bytes", null);
-            }
-
-            // hack to update the writer state
-            AutoComplete(JsonToken.Undefined);
-            AddValue(value, BsonType.Oid);
-        }
-
-        /// <summary>
-        ///     Writes a BSON regex.
-        /// </summary>
-        /// <param name="pattern">The regex pattern.</param>
-        /// <param name="options">The regex options.</param>
-        public void WriteRegex(string pattern, string options) {
-            ValidationUtils.ArgumentNotNull(pattern, "pattern");
-
-            // hack to update the writer state
-            AutoComplete(JsonToken.Undefined);
-            AddToken(new BsonRegex(pattern, options));
-        }
     }
 }

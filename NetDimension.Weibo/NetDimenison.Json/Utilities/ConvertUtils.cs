@@ -315,11 +315,9 @@ namespace NetDimension.Json.Utilities
                         CultureInfo.InvariantCulture, targetType), "targetType");
             }
 
-#if !PocketPC
             if (initialValue is DateTime && targetType == typeof (DateTimeOffset)) {
                 return new DateTimeOffset((DateTime) initialValue);
             }
-#endif
 
             if (initialValue is string) {
                 if (targetType == typeof (Guid)) {

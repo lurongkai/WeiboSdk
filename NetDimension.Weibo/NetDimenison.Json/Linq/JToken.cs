@@ -436,7 +436,6 @@ namespace NetDimension.Json.Linq
             return Convert.ToBoolean(v.Value, CultureInfo.InvariantCulture);
         }
 
-#if !PocketPC
         /// <summary>
         ///     Performs an explicit conversion from <see cref="NetDimension.Json.Linq.JToken" /> to
         ///     <see
@@ -454,7 +453,6 @@ namespace NetDimension.Json.Linq
 
             return (DateTimeOffset) v.Value;
         }
-#endif
 
         /// <summary>
         ///     Performs an explicit conversion from <see cref="NetDimension.Json.Linq.JToken" /> to <see cref="Nullable{Boolean}" />.
@@ -509,7 +507,6 @@ namespace NetDimension.Json.Linq
             return (v.Value != null) ? (DateTime?) Convert.ToDateTime(v.Value, CultureInfo.InvariantCulture) : null;
         }
 
-#if !PocketPC
         /// <summary>
         ///     Performs an explicit conversion from <see cref="NetDimension.Json.Linq.JToken" /> to
         ///     <see
@@ -531,7 +528,6 @@ namespace NetDimension.Json.Linq
 
             return (DateTimeOffset?) v.Value;
         }
-#endif
 
         /// <summary>
         ///     Performs an explicit conversion from <see cref="NetDimension.Json.Linq.JToken" /> to <see cref="Nullable{Decimal}" />.
@@ -896,7 +892,6 @@ namespace NetDimension.Json.Linq
             return new JValue(value);
         }
 
-#if !PocketPC
         /// <summary>
         ///     Performs an implicit conversion from <see cref="DateTimeOffset" /> to <see cref="JToken" />.
         /// </summary>
@@ -909,7 +904,6 @@ namespace NetDimension.Json.Linq
         public static implicit operator JToken(DateTimeOffset value) {
             return new JValue(value);
         }
-#endif
 
         /// <summary>
         ///     Performs an implicit conversion from <see cref="Nullable{Boolean}" /> to <see cref="JToken" />.
@@ -950,7 +944,6 @@ namespace NetDimension.Json.Linq
             return new JValue(value);
         }
 
-#if !PocketPC
         /// <summary>
         ///     Performs an implicit conversion from <see cref="Nullable{DateTimeOffset}" /> to <see cref="JToken" />.
         /// </summary>
@@ -963,7 +956,6 @@ namespace NetDimension.Json.Linq
         public static implicit operator JToken(DateTimeOffset? value) {
             return new JValue(value);
         }
-#endif
 
         /// <summary>
         ///     Performs an implicit conversion from <see cref="Nullable{Decimal}" /> to <see cref="JToken" />.

@@ -426,13 +426,9 @@ namespace NetDimension.Json.Linq
                 return JTokenType.Float;
             } else if (value is DateTime) {
                 return JTokenType.Date;
-            }
-#if !PocketPC
-            else if (value is DateTimeOffset) {
+            } else if (value is DateTimeOffset) {
                 return JTokenType.Date;
-            }
-#endif
-            else if (value is byte[]) {
+            } else if (value is byte[]) {
                 return JTokenType.Bytes;
             } else if (value is bool) {
                 return JTokenType.Boolean;
@@ -536,11 +532,9 @@ namespace NetDimension.Json.Linq
                     writer.WriteValue(Convert.ToBoolean(_value, CultureInfo.InvariantCulture));
                     return;
                 case JTokenType.Date:
-#if !PocketPC
                     if (_value is DateTimeOffset) {
                         writer.WriteValue((DateTimeOffset) _value);
                     } else {
-#endif
                         writer.WriteValue(Convert.ToDateTime(_value, CultureInfo.InvariantCulture));
                     }
                     return;

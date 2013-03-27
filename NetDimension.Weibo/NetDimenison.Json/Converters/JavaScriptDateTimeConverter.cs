@@ -51,15 +51,11 @@ namespace NetDimension.Json.Converters
                 var dateTime = (DateTime) value;
                 var utcDateTime = dateTime.ToUniversalTime();
                 ticks = JsonConvert.ConvertDateTimeToJavaScriptTicks(utcDateTime);
-            }
-#if !PocketPC
-            else if (value is DateTimeOffset) {
+            } else if (value is DateTimeOffset) {
                 var dateTimeOffset = (DateTimeOffset) value;
                 var utcDateTimeOffset = dateTimeOffset.ToUniversalTime();
                 ticks = JsonConvert.ConvertDateTimeToJavaScriptTicks(utcDateTimeOffset.UtcDateTime);
-            }
-#endif
-            else {
+            } else {
                 throw new JsonSerializationException("Expected date object value.");
             }
 
@@ -122,11 +118,9 @@ namespace NetDimension.Json.Converters
                                                             .FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
             }
 
-#if !PocketPC
             if (t == typeof (DateTimeOffset)) {
                 return new DateTimeOffset(d);
             }
-#endif
 
             return d;
         }

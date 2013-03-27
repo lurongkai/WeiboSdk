@@ -39,7 +39,7 @@ using ICustomAttributeProvider = NetDimension.Json.Utilities.CustomAttributeProv
 
 namespace NetDimension.Json.Serialization
 {
-#if !SILVERLIGHT && !PocketPC && !NETFX_CORE
+#if !SILVERLIGHT && !NETFX_CORE
     internal interface IMetadataTypeAttribute
     {
         Type MetadataClassType { get; }
@@ -109,7 +109,6 @@ namespace NetDimension.Json.Serialization
         }
 #endif
 
-#if !PocketPC
         public static DataContractAttribute GetDataContractAttribute(Type type) {
             // DataContractAttribute does not have inheritance
             var currentType = type;
@@ -159,7 +158,6 @@ namespace NetDimension.Json.Serialization
 
             return result;
         }
-#endif
 
         public static MemberSerialization GetObjectMemberSerialization(Type objectType, bool ignoreSerializableAttribute) {
             var objectAttribute = GetJsonObjectAttribute(objectType);
@@ -167,12 +165,10 @@ namespace NetDimension.Json.Serialization
                 return objectAttribute.MemberSerialization;
             }
 
-#if !PocketPC
             var dataContractAttribute = GetDataContractAttribute(objectType);
             if (dataContractAttribute != null) {
                 return MemberSerialization.OptIn;
             }
-#endif
 
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
             if (!ignoreSerializableAttribute) {
@@ -219,7 +215,6 @@ namespace NetDimension.Json.Serialization
         }
 
 #if !(NETFX_CORE || PORTABLE)
-#if !PocketPC
         public static TypeConverter GetTypeConverter(Type type) {
 #if !SILVERLIGHT
             return TypeDescriptor.GetConverter(type);
@@ -230,7 +225,6 @@ namespace NetDimension.Json.Serialization
         return (TypeConverter)ReflectionUtils.CreateInstance(converterType);
 
       return null;
-#endif
 #endif
         }
 #endif

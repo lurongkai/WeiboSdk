@@ -89,9 +89,7 @@ namespace NetDimension.Json.Converters
                 }
 
                 text = dateTime.ToString(_dateTimeFormat ?? DefaultDateTimeFormat, Culture);
-            }
-#if !PocketPC
-            else if (value is DateTimeOffset) {
+            } else if (value is DateTimeOffset) {
                 var dateTimeOffset = (DateTimeOffset) value;
                 if ((_dateTimeStyles & DateTimeStyles.AdjustToUniversal) == DateTimeStyles.AdjustToUniversal
                     || (_dateTimeStyles & DateTimeStyles.AssumeUniversal) == DateTimeStyles.AssumeUniversal) {
@@ -99,9 +97,7 @@ namespace NetDimension.Json.Converters
                 }
 
                 text = dateTimeOffset.ToString(_dateTimeFormat ?? DefaultDateTimeFormat, Culture);
-            }
-#endif
-            else {
+            } else {
                 throw new JsonSerializationException(
                     "Unexpected value when converting date. Expected DateTime or DateTimeOffset, got {0}.".FormatWith(
                         CultureInfo.InvariantCulture, ReflectionUtils.GetObjectType(value)));
@@ -138,11 +134,9 @@ namespace NetDimension.Json.Converters
             }
 
             if (reader.TokenType == JsonToken.Date) {
-#if !PocketPC
                 if (t == typeof (DateTimeOffset)) {
                     return new DateTimeOffset((DateTime) reader.Value);
                 }
-#endif
 
                 return reader.Value;
             }
@@ -159,21 +153,17 @@ namespace NetDimension.Json.Converters
                 return null;
             }
 
-#if !PocketPC
             if (t == typeof (DateTimeOffset)) {
                 if (!string.IsNullOrEmpty(_dateTimeFormat)) {
                     return DateTimeOffset.ParseExact(dateText, _dateTimeFormat, Culture, _dateTimeStyles);
-                } else {
-                    return DateTimeOffset.Parse(dateText, Culture, _dateTimeStyles);
                 }
+                return DateTimeOffset.Parse(dateText, Culture, _dateTimeStyles);
             }
-#endif
 
             if (!string.IsNullOrEmpty(_dateTimeFormat)) {
                 return DateTime.ParseExact(dateText, _dateTimeFormat, Culture, _dateTimeStyles);
-            } else {
-                return DateTime.Parse(dateText, Culture, _dateTimeStyles);
             }
+            return DateTime.Parse(dateText, Culture, _dateTimeStyles);
         }
     }
 }

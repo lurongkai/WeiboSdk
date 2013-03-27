@@ -25,7 +25,7 @@
 
 #endregion
 
-#if !SILVERLIGHT && !PocketPC && !NETFX_CORE
+#if !SILVERLIGHT && !NETFX_CORE
 using System;
 using System.Reflection;
 using NetDimension.Json.Utilities;

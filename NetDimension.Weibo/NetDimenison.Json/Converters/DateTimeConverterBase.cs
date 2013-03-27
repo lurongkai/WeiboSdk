@@ -45,11 +45,9 @@ namespace NetDimension.Json.Converters
             if (objectType == typeof (DateTime) || objectType == typeof (DateTime?)) {
                 return true;
             }
-#if !PocketPC
             if (objectType == typeof (DateTimeOffset) || objectType == typeof (DateTimeOffset?)) {
                 return true;
             }
-#endif
 
             return false;
         }

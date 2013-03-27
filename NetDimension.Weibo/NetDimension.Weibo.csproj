@@ -268,7 +268,6 @@
     <Compile Include="NetDimenison.Json\Serialization\ObjectConstructor.cs" />
     <Compile Include="NetDimenison.Json\Serialization\OnErrorAttribute.cs" />
     <Compile Include="NetDimenison.Json\Serialization\ReflectionValueProvider.cs" />
-    <Compile Include="NetDimenison.Json\StreamingContext.cs" />
     <Compile Include="NetDimenison.Json\TypeNameHandling.cs" />
     <Compile Include="NetDimenison.Json\Utilities\Base64Encoder.cs" />
     <Compile Include="NetDimenison.Json\Utilities\BidirectionalDictionary.cs" />

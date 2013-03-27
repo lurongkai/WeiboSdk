@@ -36,24 +36,10 @@ namespace NetDimension.Json.Linq
     /// </summary>
     public class JTokenWriter : JsonWriter
     {
-        private JContainer _token;
         private JContainer _parent;
+        private JContainer _token;
         // used when writer is writing single value and the value has no containing parent
         private JValue _value;
-
-        /// <summary>
-        ///     Gets the token being writen.
-        /// </summary>
-        /// <value>The token being writen.</value>
-        public JToken Token {
-            get {
-                if (_token != null) {
-                    return _token;
-                }
-
-                return _value;
-            }
-        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="JTokenWriter" /> class writing to the given <see cref="JContainer" />.
@@ -70,6 +56,20 @@ namespace NetDimension.Json.Linq
         ///     Initializes a new instance of the <see cref="JTokenWriter" /> class.
         /// </summary>
         public JTokenWriter() {
+        }
+
+        /// <summary>
+        ///     Gets the token being writen.
+        /// </summary>
+        /// <value>The token being writen.</value>
+        public JToken Token {
+            get {
+                if (_token != null) {
+                    return _token;
+                }
+
+                return _value;
+            }
         }
 
         /// <summary>
@@ -377,7 +377,6 @@ namespace NetDimension.Json.Linq
             AddValue(value, JsonToken.Date);
         }
 
-#if !PocketPC
         /// <summary>
         ///     Writes a <see cref="DateTimeOffset" /> value.
         /// </summary>
@@ -388,7 +387,6 @@ namespace NetDimension.Json.Linq
             base.WriteValue(value);
             AddValue(value, JsonToken.Date);
         }
-#endif
 
         /// <summary>
         ///     Writes a <see cref="T:Byte[]" /> value.

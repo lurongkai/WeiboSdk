@@ -53,7 +53,7 @@ namespace NetDimension.Json.Bson
         }
 
         public void Close() {
-#if !(NETFX_CORE || PORTABLE)
+#if !(NETFX_CORE)
             _writer.Close();
 #else
       _writer.Dispose();
@@ -133,14 +133,11 @@ namespace NetDimension.Json.Bson
                         }
 
                         ticks = JsonConvert.ConvertDateTimeToJavaScriptTicks(dateTime, false);
-                    }
-#if !PocketPC
-                    else {
+                    } else {
                         var dateTimeOffset = (DateTimeOffset) value.Value;
                         ticks = JsonConvert.ConvertDateTimeToJavaScriptTicks(dateTimeOffset.UtcDateTime,
                                                                              dateTimeOffset.Offset);
                     }
-#endif
 
                     _writer.Write(ticks);
                 }

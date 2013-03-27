@@ -43,6 +43,24 @@ namespace NetDimension.Json
         private char _quoteChar;
         private bool _quoteName;
 
+        /// <summary>
+        ///     Creates an instance of the <c>JsonWriter</c> class using the specified <see cref="TextWriter" />.
+        /// </summary>
+        /// <param name="textWriter">
+        ///     The <c>TextWriter</c> to write to.
+        /// </param>
+        public JsonTextWriter(TextWriter textWriter) {
+            if (textWriter == null) {
+                throw new ArgumentNullException("textWriter");
+            }
+
+            _writer = textWriter;
+            _quoteChar = '"';
+            _quoteName = true;
+            _indentChar = ' ';
+            _indentation = 2;
+        }
+
         private Base64Encoder Base64Encoder {
             get {
                 if (_base64Encoder == null) {
@@ -96,24 +114,6 @@ namespace NetDimension.Json
         public bool QuoteName {
             get { return _quoteName; }
             set { _quoteName = value; }
-        }
-
-        /// <summary>
-        ///     Creates an instance of the <c>JsonWriter</c> class using the specified <see cref="TextWriter" />.
-        /// </summary>
-        /// <param name="textWriter">
-        ///     The <c>TextWriter</c> to write to.
-        /// </param>
-        public JsonTextWriter(TextWriter textWriter) {
-            if (textWriter == null) {
-                throw new ArgumentNullException("textWriter");
-            }
-
-            _writer = textWriter;
-            _quoteChar = '"';
-            _quoteName = true;
-            _indentChar = ' ';
-            _indentation = 2;
         }
 
         /// <summary>
@@ -235,6 +235,28 @@ namespace NetDimension.Json
 
         private void WriteValueInternal(string value, JsonToken token) {
             _writer.Write(value);
+        }
+
+        /// <summary>
+        ///     Writes out a comment <code>/*...*/</code> containing the specified text.
+        /// </summary>
+        /// <param name="text">Text to place inside the comment.</param>
+        public override void WriteComment(string text) {
+            base.WriteComment(text);
+
+            _writer.Write("/*");
+            _writer.Write(text);
+            _writer.Write("*/");
+        }
+
+        /// <summary>
+        ///     Writes out the given white space.
+        /// </summary>
+        /// <param name="ws">The string of white space characters.</param>
+        public override void WriteWhitespace(string ws) {
+            base.WriteWhitespace(ws);
+
+            _writer.Write(ws);
         }
 
         #region WriteValue methods
@@ -456,7 +478,6 @@ namespace NetDimension.Json
             }
         }
 
-#if !PocketPC
         /// <summary>
         ///     Writes a <see cref="DateTimeOffset" /> value.
         /// </summary>
@@ -467,7 +488,6 @@ namespace NetDimension.Json
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value, DateFormatHandling), JsonToken.Date);
         }
-#endif
 
         /// <summary>
         ///     Writes a <see cref="Guid" /> value.
@@ -503,27 +523,5 @@ namespace NetDimension.Json
         }
 
         #endregion
-
-        /// <summary>
-        ///     Writes out a comment <code>/*...*/</code> containing the specified text.
-        /// </summary>
-        /// <param name="text">Text to place inside the comment.</param>
-        public override void WriteComment(string text) {
-            base.WriteComment(text);
-
-            _writer.Write("/*");
-            _writer.Write(text);
-            _writer.Write("*/");
-        }
-
-        /// <summary>
-        ///     Writes out the given white space.
-        /// </summary>
-        /// <param name="ws">The string of white space characters.</param>
-        public override void WriteWhitespace(string ws) {
-            base.WriteWhitespace(ws);
-
-            _writer.Write(ws);
-        }
     }
 }

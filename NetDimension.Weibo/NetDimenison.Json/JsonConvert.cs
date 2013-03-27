@@ -138,7 +138,6 @@ namespace NetDimension.Json
             return value;
         }
 
-#if !PocketPC
         /// <summary>
         ///     Converts the <see cref="DateTimeOffset" /> to its JSON string representation.
         /// </summary>
@@ -169,7 +168,6 @@ namespace NetDimension.Json
                 return writer.ToString();
             }
         }
-#endif
 
         internal static void WriteDateTimeString(TextWriter writer, DateTime value, DateFormatHandling format) {
             WriteDateTimeString(writer, value, value.GetUtcOffset(), value.Kind, format);
@@ -610,13 +608,9 @@ namespace NetDimension.Json
                         return Null;
 #endif
                 }
-            }
-#if !PocketPC
-            else if (value is DateTimeOffset) {
+            } else if (value is DateTimeOffset) {
                 return ToString((DateTimeOffset) value);
-            }
-#endif
-            else if (value is Guid) {
+            } else if (value is Guid) {
                 return ToString((Guid) value);
             } else if (value is Uri) {
                 return ToString((Uri) value);
@@ -659,12 +653,9 @@ namespace NetDimension.Json
             if (ReflectionUtils.IsNullableType(type)) {
                 type = Nullable.GetUnderlyingType(type);
             }
-
-#if !PocketPC
             if (type == typeof (DateTimeOffset)) {
                 return true;
             }
-#endif
             if (type == typeof (byte[])) {
                 return true;
             }

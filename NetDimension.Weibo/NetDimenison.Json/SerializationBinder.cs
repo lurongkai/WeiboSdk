@@ -1,5 +1,5 @@
 ﻿
-#if SILVERLIGHT || PocketPC || NETFX_CORE || PORTABLE
+#if SILVERLIGHT || NETFX_CORE || PORTABLE
 using System;
 using System.Reflection;
 
