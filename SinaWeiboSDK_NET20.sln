@@ -4,16 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetDimension.Weibo20", "NetDimension.Weibo\NetDimension.Weibo20.csproj", "{7B795714-40D6-4B2E-A277-CBE13C33E1ED}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccAuxPath0 = https://tfs.codeplex.com/tfs/tfs25
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccLocalPath0 = NetDimension.Weibo
-		SccNumberOfProjects = 1
-		SccProjectName0 = NetDimension.Weibo
-		SccProjectUniqueName0 = NetDimension.Weibo\\NetDimension.Weibo20.csproj
-		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs25
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
