@@ -49,7 +49,7 @@ namespace NetDimension.Json.Linq
     , INotifyCollectionChanged
 #endif
                                        , IList
-#if !(SILVERLIGHT || NET35 || NETFX_CORE || PORTABLE)
+#if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
                                        , INotifyCollectionChanged
 #endif
     {
@@ -64,7 +64,7 @@ namespace NetDimension.Json.Linq
         /// </summary>
         public event AddingNewEventHandler AddingNew;
 #endif
-#if SILVERLIGHT || !(NET35 || PORTABLE)
+#if SILVERLIGHT || !PORTABLE
         /// <summary>
         ///     Occurs when the items list of the collection has changed, or the collection is reset.
         /// </summary>
@@ -140,7 +140,7 @@ namespace NetDimension.Json.Linq
             }
         }
 #endif
-#if SILVERLIGHT || !(NET35 || PORTABLE)
+#if SILVERLIGHT || !PORTABLE
         /// <summary>
         ///     Raises the <see cref="CollectionChanged" /> event.
         /// </summary>
@@ -341,7 +341,7 @@ namespace NetDimension.Json.Linq
             if (ListChanged != null)
                 OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
 #endif
-#if SILVERLIGHT || !(NET35 || PORTABLE)
+#if SILVERLIGHT || !PORTABLE
             if (CollectionChanged != null)
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
 #endif
@@ -374,7 +374,7 @@ namespace NetDimension.Json.Linq
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
             OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
 #endif
-#if SILVERLIGHT || !(NET35 || PORTABLE)
+#if SILVERLIGHT || !PORTABLE
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
 #endif
         }
@@ -436,7 +436,7 @@ namespace NetDimension.Json.Linq
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
             OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
 #endif
-#if SILVERLIGHT || !(NET35 || PORTABLE)
+#if SILVERLIGHT || !PORTABLE
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item,
                                                                      existing, index));
 #endif
@@ -458,7 +458,7 @@ namespace NetDimension.Json.Linq
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
             OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
 #endif
-#if SILVERLIGHT || !(NET35 || PORTABLE)
+#if SILVERLIGHT || !PORTABLE
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 #endif
         }

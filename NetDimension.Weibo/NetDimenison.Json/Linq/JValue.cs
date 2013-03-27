@@ -31,7 +31,7 @@ using System.Dynamic;
 using System.Globalization;
 using System.Linq.Expressions;
 using NetDimension.Json.Utilities;
-#if !(NET35 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
 
 #endif
 

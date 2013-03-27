@@ -99,7 +99,7 @@ namespace NetDimension.Json.Serialization
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
                 new EntityKeyMemberConverter(),
 #endif
-#if !(NET35 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
                 new ExpandoObjectConverter(),
 #endif
 #if (!(SILVERLIGHT || PORTABLE) || WINDOWS_PHONE)

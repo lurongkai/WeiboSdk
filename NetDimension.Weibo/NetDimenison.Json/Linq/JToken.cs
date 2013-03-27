@@ -35,7 +35,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using NetDimension.Json.Utilities;
-#if !(NET35 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
 #endif
 
 
@@ -48,7 +48,7 @@ namespace NetDimension.Json.Linq
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
                                    , ICloneable
 #endif
-#if !(NET35 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
                                    , IDynamicMetaObjectProvider
 #endif
     {
@@ -1522,7 +1522,7 @@ namespace NetDimension.Json.Linq
             return p.Evaluate(this, errorWhenNoMatch);
         }
 
-#if !(NET35 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
         /// <summary>
         ///     Returns the <see cref="T:System.Dynamic.DynamicMetaObject" /> responsible for binding operations performed on this object.
         /// </summary>

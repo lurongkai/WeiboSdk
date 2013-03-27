@@ -34,7 +34,7 @@ using System.Xml;
 using System.Xml.Linq;
 using NetDimension.Json.Converters;
 using NetDimension.Json.Utilities;
-#if !(NET35 || SILVERLIGHT || PORTABLE)
+#if !(SILVERLIGHT || PORTABLE)
 #endif
 #if (!SILVERLIGHT || WINDOWS_PHONE) && !PORTABLE
 
@@ -818,7 +818,7 @@ namespace NetDimension.Json
             return sw.ToString();
         }
 
-#if !(NET35 || SILVERLIGHT || PORTABLE)
+#if !(SILVERLIGHT || PORTABLE)
         /// <summary>
         ///     Asynchronously serializes the specified object to a JSON string using a collection of <see cref="JsonConverter" />.
         /// </summary>
@@ -998,7 +998,7 @@ namespace NetDimension.Json
             return jsonSerializer.Deserialize(new JsonTextReader(sr), type);
         }
 
-#if !(NET35 || SILVERLIGHT || PORTABLE)
+#if !(SILVERLIGHT || PORTABLE)
         /// <summary>
         ///     Asynchronously deserializes the JSON to the specified .NET type.
         /// </summary>
@@ -1095,7 +1095,7 @@ namespace NetDimension.Json
             }
         }
 
-#if !(NET35 || SILVERLIGHT || PORTABLE)
+#if !(SILVERLIGHT || PORTABLE)
         /// <summary>
         ///     Asynchronously populates the object with values from the JSON string.
         /// </summary>

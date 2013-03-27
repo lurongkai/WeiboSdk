@@ -34,7 +34,7 @@ namespace NetDimension.Json.Linq
     /// </summary>
     /// <typeparam name="T">The type of token</typeparam>
     public interface IJEnumerable<
-#if !(NET35 || SILVERLIGHT || PORTABLE)
+#if !(SILVERLIGHT || PORTABLE)
         out
 #endif
             T> : IEnumerable<T> where T : JToken

@@ -35,11 +35,6 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using NetDimension.Json.Utilities;
-#if !PORTABLE
-#endif
-#if !(NET35 || WINDOWS_PHONE || PORTABLE)
-#endif
-
 
 namespace NetDimension.Json.Linq
 {
@@ -161,7 +156,7 @@ namespace NetDimension.Json.Linq
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
             OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, IndexOfItem(childProperty)));
 #endif
-#if SILVERLIGHT || !(NET35 || PORTABLE)
+#if SILVERLIGHT || !PORTABLE
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace,
                                                                      childProperty, childProperty,
                                                                      IndexOfItem(childProperty)));
