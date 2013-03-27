@@ -45,12 +45,11 @@ namespace NetDimension.Json.Linq
         ///     Gets the token being writen.
         /// </summary>
         /// <value>The token being writen.</value>
-        public JToken Token
-        {
-            get
-            {
-                if (_token != null)
+        public JToken Token {
+            get {
+                if (_token != null) {
                     return _token;
+                }
 
                 return _value;
             }
@@ -60,8 +59,7 @@ namespace NetDimension.Json.Linq
         ///     Initializes a new instance of the <see cref="JTokenWriter" /> class writing to the given <see cref="JContainer" />.
         /// </summary>
         /// <param name="container">The container being written to.</param>
-        public JTokenWriter(JContainer container)
-        {
+        public JTokenWriter(JContainer container) {
             ValidationUtils.ArgumentNotNull(container, "container");
 
             _token = container;
@@ -71,58 +69,53 @@ namespace NetDimension.Json.Linq
         /// <summary>
         ///     Initializes a new instance of the <see cref="JTokenWriter" /> class.
         /// </summary>
-        public JTokenWriter()
-        {
+        public JTokenWriter() {
         }
 
         /// <summary>
         ///     Flushes whatever is in the buffer to the underlying streams and also flushes the underlying stream.
         /// </summary>
-        public override void Flush()
-        {
+        public override void Flush() {
         }
 
         /// <summary>
         ///     Closes this stream and the underlying stream.
         /// </summary>
-        public override void Close()
-        {
+        public override void Close() {
             base.Close();
         }
 
         /// <summary>
         ///     Writes the beginning of a Json object.
         /// </summary>
-        public override void WriteStartObject()
-        {
+        public override void WriteStartObject() {
             base.WriteStartObject();
 
             AddParent(new JObject());
         }
 
-        private void AddParent(JContainer container)
-        {
-            if (_parent == null)
+        private void AddParent(JContainer container) {
+            if (_parent == null) {
                 _token = container;
-            else
+            } else {
                 _parent.AddAndSkipParentCheck(container);
+            }
 
             _parent = container;
         }
 
-        private void RemoveParent()
-        {
+        private void RemoveParent() {
             _parent = _parent.Parent;
 
-            if (_parent != null && _parent.Type == JTokenType.Property)
+            if (_parent != null && _parent.Type == JTokenType.Property) {
                 _parent = _parent.Parent;
+            }
         }
 
         /// <summary>
         ///     Writes the beginning of a Json array.
         /// </summary>
-        public override void WriteStartArray()
-        {
+        public override void WriteStartArray() {
             base.WriteStartArray();
 
             AddParent(new JArray());
@@ -132,8 +125,7 @@ namespace NetDimension.Json.Linq
         ///     Writes the start of a constructor with the given name.
         /// </summary>
         /// <param name="name">The name of the constructor.</param>
-        public override void WriteStartConstructor(string name)
-        {
+        public override void WriteStartConstructor(string name) {
             base.WriteStartConstructor(name);
 
             AddParent(new JConstructor(name));
@@ -143,8 +135,7 @@ namespace NetDimension.Json.Linq
         ///     Writes the end.
         /// </summary>
         /// <param name="token">The token.</param>
-        protected override void WriteEnd(JsonToken token)
-        {
+        protected override void WriteEnd(JsonToken token) {
             RemoveParent();
         }
 
@@ -152,29 +143,24 @@ namespace NetDimension.Json.Linq
         ///     Writes the property name of a name/value pair on a Json object.
         /// </summary>
         /// <param name="name">The name of the property.</param>
-        public override void WritePropertyName(string name)
-        {
+        public override void WritePropertyName(string name) {
             base.WritePropertyName(name);
 
             AddParent(new JProperty(name));
         }
 
-        private void AddValue(object value, JsonToken token)
-        {
+        private void AddValue(object value, JsonToken token) {
             AddValue(new JValue(value), token);
         }
 
-        internal void AddValue(JValue value, JsonToken token)
-        {
-            if (_parent != null)
-            {
+        internal void AddValue(JValue value, JsonToken token) {
+            if (_parent != null) {
                 _parent.Add(value);
 
-                if (_parent.Type == JTokenType.Property)
+                if (_parent.Type == JTokenType.Property) {
                     _parent = _parent.Parent;
-            }
-            else
-            {
+                }
+            } else {
                 _value = value;
             }
         }
@@ -184,8 +170,7 @@ namespace NetDimension.Json.Linq
         /// <summary>
         ///     Writes a null value.
         /// </summary>
-        public override void WriteNull()
-        {
+        public override void WriteNull() {
             base.WriteNull();
             AddValue(null, JsonToken.Null);
         }
@@ -193,8 +178,7 @@ namespace NetDimension.Json.Linq
         /// <summary>
         ///     Writes an undefined value.
         /// </summary>
-        public override void WriteUndefined()
-        {
+        public override void WriteUndefined() {
             base.WriteUndefined();
             AddValue(null, JsonToken.Undefined);
         }
@@ -203,8 +187,7 @@ namespace NetDimension.Json.Linq
         ///     Writes raw JSON.
         /// </summary>
         /// <param name="json">The raw JSON to write.</param>
-        public override void WriteRaw(string json)
-        {
+        public override void WriteRaw(string json) {
             base.WriteRaw(json);
             AddValue(new JRaw(json), JsonToken.Raw);
         }
@@ -213,8 +196,7 @@ namespace NetDimension.Json.Linq
         ///     Writes out a comment <code>/*...*/</code> containing the specified text.
         /// </summary>
         /// <param name="text">Text to place inside the comment.</param>
-        public override void WriteComment(string text)
-        {
+        public override void WriteComment(string text) {
             base.WriteComment(text);
             AddValue(JValue.CreateComment(text), JsonToken.Comment);
         }
@@ -225,8 +207,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="string" /> value to write.
         /// </param>
-        public override void WriteValue(string value)
-        {
+        public override void WriteValue(string value) {
             base.WriteValue(value);
             AddValue(value ?? string.Empty, JsonToken.String);
         }
@@ -237,8 +218,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="int" /> value to write.
         /// </param>
-        public override void WriteValue(int value)
-        {
+        public override void WriteValue(int value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.Integer);
         }
@@ -250,8 +230,7 @@ namespace NetDimension.Json.Linq
         ///     The <see cref="uint" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public override void WriteValue(uint value)
-        {
+        public override void WriteValue(uint value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.Integer);
         }
@@ -262,8 +241,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="long" /> value to write.
         /// </param>
-        public override void WriteValue(long value)
-        {
+        public override void WriteValue(long value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.Integer);
         }
@@ -275,8 +253,7 @@ namespace NetDimension.Json.Linq
         ///     The <see cref="ulong" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public override void WriteValue(ulong value)
-        {
+        public override void WriteValue(ulong value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.Integer);
         }
@@ -287,8 +264,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="float" /> value to write.
         /// </param>
-        public override void WriteValue(float value)
-        {
+        public override void WriteValue(float value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.Float);
         }
@@ -299,8 +275,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="double" /> value to write.
         /// </param>
-        public override void WriteValue(double value)
-        {
+        public override void WriteValue(double value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.Float);
         }
@@ -311,8 +286,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="bool" /> value to write.
         /// </param>
-        public override void WriteValue(bool value)
-        {
+        public override void WriteValue(bool value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.Boolean);
         }
@@ -323,8 +297,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="short" /> value to write.
         /// </param>
-        public override void WriteValue(short value)
-        {
+        public override void WriteValue(short value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.Integer);
         }
@@ -336,8 +309,7 @@ namespace NetDimension.Json.Linq
         ///     The <see cref="ushort" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public override void WriteValue(ushort value)
-        {
+        public override void WriteValue(ushort value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.Integer);
         }
@@ -348,8 +320,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="char" /> value to write.
         /// </param>
-        public override void WriteValue(char value)
-        {
+        public override void WriteValue(char value) {
             base.WriteValue(value);
             string s = null;
 #if !(NETFX_CORE || PORTABLE)
@@ -366,8 +337,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="byte" /> value to write.
         /// </param>
-        public override void WriteValue(byte value)
-        {
+        public override void WriteValue(byte value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.Integer);
         }
@@ -379,8 +349,7 @@ namespace NetDimension.Json.Linq
         ///     The <see cref="sbyte" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public override void WriteValue(sbyte value)
-        {
+        public override void WriteValue(sbyte value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.Integer);
         }
@@ -391,8 +360,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="decimal" /> value to write.
         /// </param>
-        public override void WriteValue(decimal value)
-        {
+        public override void WriteValue(decimal value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.Float);
         }
@@ -403,8 +371,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="DateTime" /> value to write.
         /// </param>
-        public override void WriteValue(DateTime value)
-        {
+        public override void WriteValue(DateTime value) {
             base.WriteValue(value);
             value = JsonConvert.EnsureDateTime(value, DateTimeZoneHandling);
             AddValue(value, JsonToken.Date);
@@ -417,8 +384,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="DateTimeOffset" /> value to write.
         /// </param>
-        public override void WriteValue(DateTimeOffset value)
-        {
+        public override void WriteValue(DateTimeOffset value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.Date);
         }
@@ -430,8 +396,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="T:Byte[]" /> value to write.
         /// </param>
-        public override void WriteValue(byte[] value)
-        {
+        public override void WriteValue(byte[] value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.Bytes);
         }
@@ -442,8 +407,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="TimeSpan" /> value to write.
         /// </param>
-        public override void WriteValue(TimeSpan value)
-        {
+        public override void WriteValue(TimeSpan value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.String);
         }
@@ -454,8 +418,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="Guid" /> value to write.
         /// </param>
-        public override void WriteValue(Guid value)
-        {
+        public override void WriteValue(Guid value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.String);
         }
@@ -466,8 +429,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">
         ///     The <see cref="Uri" /> value to write.
         /// </param>
-        public override void WriteValue(Uri value)
-        {
+        public override void WriteValue(Uri value) {
             base.WriteValue(value);
             AddValue(value, JsonToken.String);
         }

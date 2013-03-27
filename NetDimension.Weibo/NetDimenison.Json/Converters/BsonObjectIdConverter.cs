@@ -45,17 +45,13 @@ namespace NetDimension.Json.Converters
         /// </param>
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             var objectId = (BsonObjectId) value;
 
             var bsonWriter = writer as BsonWriter;
-            if (bsonWriter != null)
-            {
+            if (bsonWriter != null) {
                 bsonWriter.WriteObjectId(objectId.Value);
-            }
-            else
-            {
+            } else {
                 writer.WriteValue(objectId.Value);
             }
         }
@@ -71,11 +67,11 @@ namespace NetDimension.Json.Converters
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-                                        JsonSerializer serializer)
-        {
-            if (reader.TokenType != JsonToken.Bytes)
+                                        JsonSerializer serializer) {
+            if (reader.TokenType != JsonToken.Bytes) {
                 throw new JsonSerializationException(
                     "Expected Bytes but got {0}.".FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
+            }
 
             var value = (byte[]) reader.Value;
 
@@ -89,8 +85,7 @@ namespace NetDimension.Json.Converters
         /// <returns>
         ///     <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
         /// </returns>
-        public override bool CanConvert(Type objectType)
-        {
+        public override bool CanConvert(Type objectType) {
             return (objectType == typeof (BsonObjectId));
         }
     }

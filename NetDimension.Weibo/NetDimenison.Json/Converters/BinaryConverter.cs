@@ -54,10 +54,8 @@ namespace NetDimension.Json.Converters
         /// </param>
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            if (value == null)
-            {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
+            if (value == null) {
                 writer.WriteNull();
                 return;
             }
@@ -67,16 +65,15 @@ namespace NetDimension.Json.Converters
             writer.WriteValue(data);
         }
 
-        private byte[] GetByteArray(object value)
-        {
-            if (value.GetType().AssignableToTypeName(BinaryTypeName))
-            {
+        private byte[] GetByteArray(object value) {
+            if (value.GetType().AssignableToTypeName(BinaryTypeName)) {
                 var binary = DynamicWrapper.CreateWrapper<IBinary>(value);
                 return binary.ToArray();
             }
 
-            if (value is SqlBinary)
+            if (value is SqlBinary) {
                 return ((SqlBinary) value).Value;
+            }
 
             throw new JsonSerializationException(
                 "Unexpected value type when writing binary: {0}".FormatWith(CultureInfo.InvariantCulture,
@@ -94,61 +91,54 @@ namespace NetDimension.Json.Converters
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-                                        JsonSerializer serializer)
-        {
+                                        JsonSerializer serializer) {
             var t = (ReflectionUtils.IsNullableType(objectType))
                         ? Nullable.GetUnderlyingType(objectType)
                         : objectType;
 
-            if (reader.TokenType == JsonToken.Null)
-            {
-                if (!ReflectionUtils.IsNullable(objectType))
+            if (reader.TokenType == JsonToken.Null) {
+                if (!ReflectionUtils.IsNullable(objectType)) {
                     throw JsonSerializationException.Create(reader,
                                                             "Cannot convert null value to {0}.".FormatWith(
                                                                 CultureInfo.InvariantCulture, objectType));
+                }
 
                 return null;
             }
 
             byte[] data;
 
-            if (reader.TokenType == JsonToken.StartArray)
-            {
+            if (reader.TokenType == JsonToken.StartArray) {
                 data = ReadByteArray(reader);
-            }
-            else if (reader.TokenType == JsonToken.String)
-            {
+            } else if (reader.TokenType == JsonToken.String) {
                 // current token is already at base64 string
                 // unable to call ReadAsBytes so do it the old fashion way
                 var encodedData = reader.Value.ToString();
                 data = Convert.FromBase64String(encodedData);
-            }
-            else
-            {
+            } else {
                 throw JsonSerializationException.Create(reader,
                                                         "Unexpected token parsing binary. Expected String or StartArray, got {0}."
                                                             .FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
             }
 
-            if (t.AssignableToTypeName(BinaryTypeName))
+            if (t.AssignableToTypeName(BinaryTypeName)) {
                 return Activator.CreateInstance(t, data);
+            }
 
-            if (t == typeof (SqlBinary))
+            if (t == typeof (SqlBinary)) {
                 return new SqlBinary(data);
+            }
 
             throw JsonSerializationException.Create(reader,
                                                     "Unexpected object type when writing binary: {0}".FormatWith(
                                                         CultureInfo.InvariantCulture, objectType));
         }
 
-        private byte[] ReadByteArray(JsonReader reader)
-        {
+        private byte[] ReadByteArray(JsonReader reader) {
             var byteList = new List<byte>();
 
-            while (reader.Read())
-            {
-                switch (reader.TokenType)
-                {
+            while (reader.Read()) {
+                switch (reader.TokenType) {
                     case JsonToken.Integer:
                         byteList.Add(Convert.ToByte(reader.Value, CultureInfo.InvariantCulture));
                         break;
@@ -174,13 +164,14 @@ namespace NetDimension.Json.Converters
         /// <returns>
         ///     <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
         /// </returns>
-        public override bool CanConvert(Type objectType)
-        {
-            if (objectType.AssignableToTypeName(BinaryTypeName))
+        public override bool CanConvert(Type objectType) {
+            if (objectType.AssignableToTypeName(BinaryTypeName)) {
                 return true;
+            }
 
-            if (objectType == typeof (SqlBinary) || objectType == typeof (SqlBinary?))
+            if (objectType == typeof (SqlBinary) || objectType == typeof (SqlBinary?)) {
                 return true;
+            }
 
             return false;
         }

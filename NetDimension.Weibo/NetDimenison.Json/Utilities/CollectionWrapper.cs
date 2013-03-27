@@ -45,236 +45,224 @@ namespace NetDimension.Json.Utilities
         private readonly IList _list;
         private object _syncRoot;
 
-        public CollectionWrapper(IList list)
-        {
+        public CollectionWrapper(IList list) {
             ValidationUtils.ArgumentNotNull(list, "list");
 
-            if (list is ICollection<T>)
+            if (list is ICollection<T>) {
                 _genericCollection = (ICollection<T>) list;
-            else
+            } else {
                 _list = list;
+            }
         }
 
-        public CollectionWrapper(ICollection<T> list)
-        {
+        public CollectionWrapper(ICollection<T> list) {
             ValidationUtils.ArgumentNotNull(list, "list");
 
             _genericCollection = list;
         }
 
-        public virtual void Add(T item)
-        {
-            if (_genericCollection != null)
+        public virtual void Add(T item) {
+            if (_genericCollection != null) {
                 _genericCollection.Add(item);
-            else
+            } else {
                 _list.Add(item);
+            }
         }
 
-        public virtual void Clear()
-        {
-            if (_genericCollection != null)
+        public virtual void Clear() {
+            if (_genericCollection != null) {
                 _genericCollection.Clear();
-            else
+            } else {
                 _list.Clear();
+            }
         }
 
-        public virtual bool Contains(T item)
-        {
-            if (_genericCollection != null)
+        public virtual bool Contains(T item) {
+            if (_genericCollection != null) {
                 return _genericCollection.Contains(item);
-            else
+            } else {
                 return _list.Contains(item);
+            }
         }
 
-        public virtual void CopyTo(T[] array, int arrayIndex)
-        {
-            if (_genericCollection != null)
+        public virtual void CopyTo(T[] array, int arrayIndex) {
+            if (_genericCollection != null) {
                 _genericCollection.CopyTo(array, arrayIndex);
-            else
+            } else {
                 _list.CopyTo(array, arrayIndex);
+            }
         }
 
-        public virtual int Count
-        {
-            get
-            {
-                if (_genericCollection != null)
+        public virtual int Count {
+            get {
+                if (_genericCollection != null) {
                     return _genericCollection.Count;
-                else
+                } else {
                     return _list.Count;
+                }
             }
         }
 
-        public virtual bool IsReadOnly
-        {
-            get
-            {
-                if (_genericCollection != null)
+        public virtual bool IsReadOnly {
+            get {
+                if (_genericCollection != null) {
                     return _genericCollection.IsReadOnly;
-                else
+                } else {
                     return _list.IsReadOnly;
+                }
             }
         }
 
-        public virtual bool Remove(T item)
-        {
-            if (_genericCollection != null)
-            {
+        public virtual bool Remove(T item) {
+            if (_genericCollection != null) {
                 return _genericCollection.Remove(item);
-            }
-            else
-            {
+            } else {
                 var contains = _list.Contains(item);
 
-                if (contains)
+                if (contains) {
                     _list.Remove(item);
+                }
 
                 return contains;
             }
         }
 
-        public virtual IEnumerator<T> GetEnumerator()
-        {
-            if (_genericCollection != null)
+        public virtual IEnumerator<T> GetEnumerator() {
+            if (_genericCollection != null) {
                 return _genericCollection.GetEnumerator();
+            }
 
             return _list.Cast<T>().GetEnumerator();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            if (_genericCollection != null)
+        IEnumerator IEnumerable.GetEnumerator() {
+            if (_genericCollection != null) {
                 return _genericCollection.GetEnumerator();
-            else
+            } else {
                 return _list.GetEnumerator();
+            }
         }
 
-        int IList.Add(object value)
-        {
+        int IList.Add(object value) {
             VerifyValueType(value);
             Add((T) value);
 
             return (Count - 1);
         }
 
-        bool IList.Contains(object value)
-        {
-            if (IsCompatibleObject(value))
+        bool IList.Contains(object value) {
+            if (IsCompatibleObject(value)) {
                 return Contains((T) value);
+            }
 
             return false;
         }
 
-        int IList.IndexOf(object value)
-        {
-            if (_genericCollection != null)
+        int IList.IndexOf(object value) {
+            if (_genericCollection != null) {
                 throw new InvalidOperationException("Wrapped ICollection<T> does not support IndexOf.");
+            }
 
-            if (IsCompatibleObject(value))
+            if (IsCompatibleObject(value)) {
                 return _list.IndexOf((T) value);
+            }
 
             return -1;
         }
 
-        void IList.RemoveAt(int index)
-        {
-            if (_genericCollection != null)
+        void IList.RemoveAt(int index) {
+            if (_genericCollection != null) {
                 throw new InvalidOperationException("Wrapped ICollection<T> does not support RemoveAt.");
+            }
 
             _list.RemoveAt(index);
         }
 
-        void IList.Insert(int index, object value)
-        {
-            if (_genericCollection != null)
+        void IList.Insert(int index, object value) {
+            if (_genericCollection != null) {
                 throw new InvalidOperationException("Wrapped ICollection<T> does not support Insert.");
+            }
 
             VerifyValueType(value);
             _list.Insert(index, (T) value);
         }
 
-        bool IList.IsFixedSize
-        {
-            get
-            {
-                if (_genericCollection != null)
+        bool IList.IsFixedSize {
+            get {
+                if (_genericCollection != null) {
                     // ICollection<T> only has IsReadOnly
                     return _genericCollection.IsReadOnly;
-                else
+                } else {
                     return _list.IsFixedSize;
+                }
             }
         }
 
-        void IList.Remove(object value)
-        {
-            if (IsCompatibleObject(value))
+        void IList.Remove(object value) {
+            if (IsCompatibleObject(value)) {
                 Remove((T) value);
+            }
         }
 
-        object IList.this[int index]
-        {
-            get
-            {
-                if (_genericCollection != null)
+        object IList.this[int index] {
+            get {
+                if (_genericCollection != null) {
                     throw new InvalidOperationException("Wrapped ICollection<T> does not support indexer.");
+                }
 
                 return _list[index];
             }
-            set
-            {
-                if (_genericCollection != null)
+            set {
+                if (_genericCollection != null) {
                     throw new InvalidOperationException("Wrapped ICollection<T> does not support indexer.");
+                }
 
                 VerifyValueType(value);
                 _list[index] = (T) value;
             }
         }
 
-        void ICollection.CopyTo(Array array, int arrayIndex)
-        {
+        void ICollection.CopyTo(Array array, int arrayIndex) {
             CopyTo((T[]) array, arrayIndex);
         }
 
-        bool ICollection.IsSynchronized
-        {
+        bool ICollection.IsSynchronized {
             get { return false; }
         }
 
-        object ICollection.SyncRoot
-        {
-            get
-            {
-                if (_syncRoot == null)
+        object ICollection.SyncRoot {
+            get {
+                if (_syncRoot == null) {
                     Interlocked.CompareExchange(ref _syncRoot, new object(), null);
+                }
 
                 return _syncRoot;
             }
         }
 
-        public object UnderlyingCollection
-        {
-            get
-            {
-                if (_genericCollection != null)
+        public object UnderlyingCollection {
+            get {
+                if (_genericCollection != null) {
                     return _genericCollection;
-                else
+                } else {
                     return _list;
+                }
             }
         }
 
-        private static void VerifyValueType(object value)
-        {
-            if (!IsCompatibleObject(value))
+        private static void VerifyValueType(object value) {
+            if (!IsCompatibleObject(value)) {
                 throw new ArgumentException(
                     "The value '{0}' is not of type '{1}' and cannot be used in this generic collection.".FormatWith(
                         CultureInfo.InvariantCulture, value, typeof (T)), "value");
+            }
         }
 
-        private static bool IsCompatibleObject(object value)
-        {
+        private static bool IsCompatibleObject(object value) {
             if (!(value is T) &&
-                (value != null || (typeof (T).IsValueType() && !ReflectionUtils.IsNullableType(typeof (T)))))
+                (value != null || (typeof (T).IsValueType() && !ReflectionUtils.IsNullableType(typeof (T))))) {
                 return false;
+            }
 
             return true;
         }

@@ -17,8 +17,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="client">操作类</param>
         public SearchInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new SearchAPI(client);
         }
 
@@ -28,8 +27,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="q">搜索的关键字</param>
         /// <param name="count">返回的记录条数，默认为10</param>
         /// <returns></returns>
-        public IEnumerable<User> Users(string q, int count = 10)
-        {
+        public IEnumerable<User> Users(string q, int count = 10) {
             return JsonConvert.DeserializeObject<IEnumerable<User>>(api.Users(q, count));
         }
 
@@ -39,8 +37,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="q">搜索的关键字</param>
         /// <param name="count">返回的记录条数，默认为10</param>
         /// <returns></returns>
-        public IEnumerable<Status> Statuses(string q, int count = 10)
-        {
+        public IEnumerable<Status> Statuses(string q, int count = 10) {
             return JsonConvert.DeserializeObject<IEnumerable<Status>>(api.Statuses(q, count));
         }
 
@@ -51,8 +48,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count">返回的记录条数，默认为10。 </param>
         /// <param name="type">学校类型，0：全部、1：大学、2：高中、3：中专技校、4：初中、5：小学，默认为0。 </param>
         /// <returns></returns>
-        public IEnumerable<School> Schools(string q, int count = 10, int type = 0)
-        {
+        public IEnumerable<School> Schools(string q, int count = 10, int type = 0) {
             return JsonConvert.DeserializeObject<IEnumerable<School>>(api.Schools(q, count, type));
         }
 
@@ -62,8 +58,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="q">搜索的关键字</param>
         /// <param name="count">返回的记录条数，默认为10</param>
         /// <returns></returns>
-        public IEnumerable<string> Companies(string q, int count = 10)
-        {
+        public IEnumerable<string> Companies(string q, int count = 10) {
             return Utility.GetStringListFromJSON(api.Companies(q, count));
         }
 
@@ -73,8 +68,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="q">搜索的关键字</param>
         /// <param name="count">返回的记录条数，默认为10</param>
         /// <returns></returns>
-        public IEnumerable<App> Apps(string q, int count = 10)
-        {
+        public IEnumerable<App> Apps(string q, int count = 10) {
             return JsonConvert.DeserializeObject<IEnumerable<App>>(api.Apps(q, count));
         }
 
@@ -86,8 +80,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="type">联想类型，0：关注、1：粉丝。</param>
         /// <param name="range">联想范围，0：只联想关注人、1：只联想关注人的备注、2：全部，默认为2。</param>
         /// <returns></returns>
-        public IEnumerable<AtUser> AtUsers(string q, int count = 10, int type = 0, int range = 2)
-        {
+        public IEnumerable<AtUser> AtUsers(string q, int count = 10, int type = 0, int range = 2) {
             return JsonConvert.DeserializeObject<IEnumerable<AtUser>>(api.AtUsers(q, count, type, range));
         }
 
@@ -98,8 +91,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count">单页返回的记录条数，默认为10，最大为50。 </param>
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <returns></returns>
-        public Collection Topics(string q, int count = 10, int page = 1)
-        {
+        public Collection Topics(string q, int count = 10, int page = 1) {
             return JsonConvert.DeserializeObject<Collection>(api.Topics(q, count, page));
         }
     }

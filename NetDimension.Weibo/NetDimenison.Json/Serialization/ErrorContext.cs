@@ -34,8 +34,7 @@ namespace NetDimension.Json.Serialization
     /// </summary>
     public class ErrorContext
     {
-        internal ErrorContext(object originalObject, object member, string path, Exception error)
-        {
+        internal ErrorContext(object originalObject, object member, string path, Exception error) {
             OriginalObject = originalObject;
             Member = member;
             Error = error;

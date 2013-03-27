@@ -38,8 +38,7 @@ namespace NetDimension.Json.Serialization
         ///     Initializes a new instance of the <see cref="CamelCasePropertyNamesContractResolver" /> class.
         /// </summary>
         public CamelCasePropertyNamesContractResolver()
-            : base(true)
-        {
+            : base(true) {
         }
 
         /// <summary>
@@ -47,8 +46,7 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns>The property name camel cased.</returns>
-        protected internal override string ResolvePropertyName(string propertyName)
-        {
+        protected internal override string ResolvePropertyName(string propertyName) {
             // lower case the first letter of the passed in name
             return StringUtils.ToCamelCase(propertyName);
         }

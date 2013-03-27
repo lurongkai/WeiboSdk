@@ -38,17 +38,15 @@ namespace NetDimension.Json.Serialization
 
         private readonly object _attribute;
 
-        public LateBoundMetadataTypeAttribute(object attribute)
-        {
+        public LateBoundMetadataTypeAttribute(object attribute) {
             _attribute = attribute;
         }
 
-        public Type MetadataClassType
-        {
-            get
-            {
-                if (_metadataClassTypeProperty == null)
+        public Type MetadataClassType {
+            get {
+                if (_metadataClassTypeProperty == null) {
                     _metadataClassTypeProperty = _attribute.GetType().GetProperty("MetadataClassType");
+                }
 
                 return (Type) ReflectionUtils.GetMemberValue(_metadataClassTypeProperty, _attribute);
             }

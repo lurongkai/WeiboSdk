@@ -11,8 +11,7 @@ namespace NetDimension.Weibo.Entities
         ///     返回对象原始Json字符串
         /// </summary>
         /// <returns>json</returns>
-        public override string ToString()
-        {
+        public override string ToString() {
             //return base.ToString();
 
             return JsonConvert.SerializeObject(this);

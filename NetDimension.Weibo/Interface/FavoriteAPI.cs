@@ -3,8 +3,7 @@
     internal class FavoriteAPI : WeiboAPI
     {
         public FavoriteAPI(Client client)
-            : base(client)
-        {
+            : base(client) {
         }
 
         /// <summary>
@@ -13,8 +12,7 @@
         /// <param name="count">单页返回的记录条数，默认为50。</param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public string Favorites(int count = 50, int page = 1)
-        {
+        public string Favorites(int count = 50, int page = 1) {
             return (Client.GetCommand("favorites",
                                       new WeiboParameter("count", count),
                                       new WeiboParameter("page", page)));
@@ -26,8 +24,7 @@
         /// <param name="count">单页返回的记录条数，默认为50。 </param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public string FavoriteIDs(int count = 50, int page = 1)
-        {
+        public string FavoriteIDs(int count = 50, int page = 1) {
             return (Client.GetCommand("favorites/ids",
                                       new WeiboParameter("count", count),
                                       new WeiboParameter("page", page)));
@@ -38,8 +35,7 @@
         /// </summary>
         /// <param name="id">需要查询的收藏ID。 </param>
         /// <returns></returns>
-        public string Show(string id)
-        {
+        public string Show(string id) {
             return (Client.GetCommand("favorites/show",
                                       new WeiboParameter("id", id)));
         }
@@ -51,8 +47,7 @@
         /// <param name="count">单页返回的记录条数，默认为50。</param>
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <returns></returns>
-        public string ByTags(string tid, int count = 50, int page = 1)
-        {
+        public string ByTags(string tid, int count = 50, int page = 1) {
             return (Client.GetCommand("favorites/by_tags",
                                       new WeiboParameter("tid", tid),
                                       new WeiboParameter("count", count),
@@ -65,8 +60,7 @@
         /// <param name="count">单页返回的记录条数，默认为10。</param>
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <returns></returns>
-        public string Tags(int count = 10, int page = 1)
-        {
+        public string Tags(int count = 10, int page = 1) {
             return (Client.GetCommand("favorites/tags",
                                       new WeiboParameter("count", count),
                                       new WeiboParameter("page", page)));
@@ -79,8 +73,7 @@
         /// <param name="count">单页返回的记录条数，默认为50。</param>
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <returns></returns>
-        public string ByTagIDs(string tid, int count = 50, int page = 1)
-        {
+        public string ByTagIDs(string tid, int count = 50, int page = 1) {
             return (Client.GetCommand("favorites/by_tags/ids",
                                       new WeiboParameter("tid", tid),
                                       new WeiboParameter("count", count),
@@ -92,8 +85,7 @@
         /// </summary>
         /// <param name="id">要收藏的微博ID。</param>
         /// <returns></returns>
-        public string Create(string id)
-        {
+        public string Create(string id) {
             return (Client.PostCommand("favorites/create",
                                        new WeiboParameter("id", id)));
         }
@@ -103,8 +95,7 @@
         /// </summary>
         /// <param name="id">要取消收藏的微博ID。</param>
         /// <returns></returns>
-        public string Destroy(string id)
-        {
+        public string Destroy(string id) {
             return (Client.PostCommand("favorites/destroy",
                                        new WeiboParameter("id", id)));
         }
@@ -114,8 +105,7 @@
         /// </summary>
         /// <param name="ids">要取消收藏的收藏ID最多不超过10个。 </param>
         /// <returns></returns>
-        public string DestroyBatch(params string[] ids)
-        {
+        public string DestroyBatch(params string[] ids) {
             return (Client.PostCommand("favorites/destroy_batch",
                                        new WeiboParameter("ids", string.Join(",", ids))));
         }
@@ -126,8 +116,7 @@
         /// <param name="id">需要更新的收藏ID。</param>
         /// <param name="tags">需要更新的标签内容，最多不超过2条。</param>
         /// <returns></returns>
-        public string UpdateTags(string id, params string[] tags)
-        {
+        public string UpdateTags(string id, params string[] tags) {
             return (Client.PostCommand("favorites/tags/update",
                                        new WeiboParameter("id", id),
                                        new WeiboParameter("tags", string.Join(",", tags))));
@@ -139,8 +128,7 @@
         /// <param name="tid">需要更新的标签ID</param>
         /// <param name="tag">需要更新的标签内容</param>
         /// <returns></returns>
-        public string UpdateTagsBatch(string tid, string tag)
-        {
+        public string UpdateTagsBatch(string tid, string tag) {
             return (Client.PostCommand("favorites/tags/update_batch",
                                        new WeiboParameter("tid", tid),
                                        new WeiboParameter("tag", tag)));
@@ -151,8 +139,7 @@
         /// </summary>
         /// <param name="tid">需要删除的标签ID</param>
         /// <returns></returns>
-        public string DestroyTags(string[] tid)
-        {
+        public string DestroyTags(string[] tid) {
             return (Client.PostCommand("favorites/tags/destroy_batch",
                                        new WeiboParameter("tid", string.Join(",", tid))));
         }

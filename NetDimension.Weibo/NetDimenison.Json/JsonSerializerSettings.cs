@@ -66,8 +66,7 @@ namespace NetDimension.Json
         internal int? _maxDepth;
         internal bool _maxDepthSet;
 
-        static JsonSerializerSettings()
-        {
+        static JsonSerializerSettings() {
             DefaultContext = new StreamingContext();
             DefaultCulture = CultureInfo.InvariantCulture;
         }
@@ -75,8 +74,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Initializes a new instance of the <see cref="JsonSerializerSettings" /> class.
         /// </summary>
-        public JsonSerializerSettings()
-        {
+        public JsonSerializerSettings() {
             ReferenceLoopHandling = DefaultReferenceLoopHandling;
             MissingMemberHandling = DefaultMissingMemberHandling;
             ObjectCreationHandling = DefaultObjectCreationHandling;
@@ -187,13 +185,12 @@ namespace NetDimension.Json
         ///         cref="JsonReaderException" />
         ///     .
         /// </summary>
-        public int? MaxDepth
-        {
+        public int? MaxDepth {
             get { return _maxDepth; }
-            set
-            {
-                if (value <= 0)
+            set {
+                if (value <= 0) {
                     throw new ArgumentException("Value must be positive.", "value");
+                }
 
                 _maxDepth = value;
                 _maxDepthSet = true;
@@ -203,8 +200,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Indicates how JSON text output is formatted.
         /// </summary>
-        public Formatting Formatting
-        {
+        public Formatting Formatting {
             get { return _formatting ?? DefaultFormatting; }
             set { _formatting = value; }
         }
@@ -212,8 +208,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Get or set how dates are written to JSON text.
         /// </summary>
-        public DateFormatHandling DateFormatHandling
-        {
+        public DateFormatHandling DateFormatHandling {
             get { return _dateFormatHandling ?? DefaultDateFormatHandling; }
             set { _dateFormatHandling = value; }
         }
@@ -221,8 +216,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Get or set how <see cref="DateTime" /> time zones are handling during serialization and deserialization.
         /// </summary>
-        public DateTimeZoneHandling DateTimeZoneHandling
-        {
+        public DateTimeZoneHandling DateTimeZoneHandling {
             get { return _dateTimeZoneHandling ?? DefaultDateTimeZoneHandling; }
             set { _dateTimeZoneHandling = value; }
         }
@@ -230,8 +224,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Get or set how date formatted strings, e.g. "\/Date(1198908717056)\/" and "2012-03-21T05:40Z", are parsed when reading JSON.
         /// </summary>
-        public DateParseHandling DateParseHandling
-        {
+        public DateParseHandling DateParseHandling {
             get { return _dateParseHandling ?? DefaultDateParseHandling; }
             set { _dateParseHandling = value; }
         }
@@ -239,8 +232,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Gets or sets the culture used when reading JSON. Defaults to <see cref="CultureInfo.InvariantCulture" />.
         /// </summary>
-        public CultureInfo Culture
-        {
+        public CultureInfo Culture {
             get { return _culture ?? DefaultCulture; }
             set { _culture = value; }
         }
@@ -251,8 +243,7 @@ namespace NetDimension.Json
         /// <value>
         ///     <c>true</c> if there will be a check for additional content after deserializing an object; otherwise, <c>false</c>.
         /// </value>
-        public bool CheckAdditionalContent
-        {
+        public bool CheckAdditionalContent {
             get { return _checkAdditionalContent ?? DefaultCheckAdditionalContent; }
             set { _checkAdditionalContent = value; }
         }

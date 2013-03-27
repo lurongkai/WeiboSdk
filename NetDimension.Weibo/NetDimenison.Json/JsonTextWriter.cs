@@ -43,12 +43,11 @@ namespace NetDimension.Json
         private char _quoteChar;
         private bool _quoteName;
 
-        private Base64Encoder Base64Encoder
-        {
-            get
-            {
-                if (_base64Encoder == null)
+        private Base64Encoder Base64Encoder {
+            get {
+                if (_base64Encoder == null) {
                     _base64Encoder = new Base64Encoder(_writer);
+                }
 
                 return _base64Encoder;
             }
@@ -57,13 +56,12 @@ namespace NetDimension.Json
         /// <summary>
         ///     Gets or sets how many IndentChars to write for each level in the hierarchy when <see cref="Formatting" /> is set to <c>Formatting.Indented</c>.
         /// </summary>
-        public int Indentation
-        {
+        public int Indentation {
             get { return _indentation; }
-            set
-            {
-                if (value < 0)
+            set {
+                if (value < 0) {
                     throw new ArgumentException("Indentation value must be greater than 0.");
+                }
 
                 _indentation = value;
             }
@@ -72,14 +70,13 @@ namespace NetDimension.Json
         /// <summary>
         ///     Gets or sets which character to use to quote attribute values.
         /// </summary>
-        public char QuoteChar
-        {
+        public char QuoteChar {
             get { return _quoteChar; }
-            set
-            {
-                if (value != '"' && value != '\'')
+            set {
+                if (value != '"' && value != '\'') {
                     throw new ArgumentException(
                         @"Invalid JavaScript string quote character. Valid quote characters are ' and string.Empty.");
+                }
 
                 _quoteChar = value;
             }
@@ -88,8 +85,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Gets or sets which character to use for indenting when <see cref="Formatting" /> is set to <c>Formatting.Indented</c>.
         /// </summary>
-        public char IndentChar
-        {
+        public char IndentChar {
             get { return _indentChar; }
             set { _indentChar = value; }
         }
@@ -97,8 +93,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Gets or sets a value indicating whether object names will be surrounded with quotes.
         /// </summary>
-        public bool QuoteName
-        {
+        public bool QuoteName {
             get { return _quoteName; }
             set { _quoteName = value; }
         }
@@ -109,10 +104,10 @@ namespace NetDimension.Json
         /// <param name="textWriter">
         ///     The <c>TextWriter</c> to write to.
         /// </param>
-        public JsonTextWriter(TextWriter textWriter)
-        {
-            if (textWriter == null)
+        public JsonTextWriter(TextWriter textWriter) {
+            if (textWriter == null) {
                 throw new ArgumentNullException("textWriter");
+            }
 
             _writer = textWriter;
             _quoteChar = '"';
@@ -124,21 +119,20 @@ namespace NetDimension.Json
         /// <summary>
         ///     Flushes whatever is in the buffer to the underlying streams and also flushes the underlying stream.
         /// </summary>
-        public override void Flush()
-        {
+        public override void Flush() {
             _writer.Flush();
         }
 
         /// <summary>
         ///     Closes this stream and the underlying stream.
         /// </summary>
-        public override void Close()
-        {
+        public override void Close() {
             base.Close();
 
-            if (CloseOutput && _writer != null)
+            if (CloseOutput && _writer != null) {
 #if !(NETFX_CORE || PORTABLE)
                 _writer.Close();
+            }
 #else
         _writer.Dispose();
 #endif
@@ -147,8 +141,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Writes the beginning of a Json object.
         /// </summary>
-        public override void WriteStartObject()
-        {
+        public override void WriteStartObject() {
             base.WriteStartObject();
 
             _writer.Write("{");
@@ -157,8 +150,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Writes the beginning of a Json array.
         /// </summary>
-        public override void WriteStartArray()
-        {
+        public override void WriteStartArray() {
             base.WriteStartArray();
 
             _writer.Write("[");
@@ -168,8 +160,7 @@ namespace NetDimension.Json
         ///     Writes the start of a constructor with the given name.
         /// </summary>
         /// <param name="name">The name of the constructor.</param>
-        public override void WriteStartConstructor(string name)
-        {
+        public override void WriteStartConstructor(string name) {
             base.WriteStartConstructor(name);
 
             _writer.Write("new ");
@@ -181,10 +172,8 @@ namespace NetDimension.Json
         ///     Writes the specified end token.
         /// </summary>
         /// <param name="token">The end token to write.</param>
-        protected override void WriteEnd(JsonToken token)
-        {
-            switch (token)
-            {
+        protected override void WriteEnd(JsonToken token) {
+            switch (token) {
                 case JsonToken.EndObject:
                     _writer.Write("}");
                     break;
@@ -203,8 +192,7 @@ namespace NetDimension.Json
         ///     Writes the property name of a name/value pair on a Json object.
         /// </summary>
         /// <param name="name">The name of the property.</param>
-        public override void WritePropertyName(string name)
-        {
+        public override void WritePropertyName(string name) {
             base.WritePropertyName(name);
 
             JavaScriptUtils.WriteEscapedJavaScriptString(_writer, name, _quoteChar, _quoteName);
@@ -215,15 +203,13 @@ namespace NetDimension.Json
         /// <summary>
         ///     Writes indent characters.
         /// </summary>
-        protected override void WriteIndent()
-        {
+        protected override void WriteIndent() {
             _writer.Write(Environment.NewLine);
 
             // levels of indentation multiplied by the indent count
             var currentIndentCount = Top*_indentation;
 
-            while (currentIndentCount > 0)
-            {
+            while (currentIndentCount > 0) {
                 // write up to a max of 10 characters at once to avoid creating too many new strings
                 var writeCount = Math.Min(currentIndentCount, 10);
 
@@ -236,21 +222,18 @@ namespace NetDimension.Json
         /// <summary>
         ///     Writes the JSON value delimiter.
         /// </summary>
-        protected override void WriteValueDelimiter()
-        {
+        protected override void WriteValueDelimiter() {
             _writer.Write(',');
         }
 
         /// <summary>
         ///     Writes an indent space.
         /// </summary>
-        protected override void WriteIndentSpace()
-        {
+        protected override void WriteIndentSpace() {
             _writer.Write(' ');
         }
 
-        private void WriteValueInternal(string value, JsonToken token)
-        {
+        private void WriteValueInternal(string value, JsonToken token) {
             _writer.Write(value);
         }
 
@@ -259,8 +242,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Writes a null value.
         /// </summary>
-        public override void WriteNull()
-        {
+        public override void WriteNull() {
             base.WriteNull();
             WriteValueInternal(JsonConvert.Null, JsonToken.Null);
         }
@@ -268,8 +250,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Writes an undefined value.
         /// </summary>
-        public override void WriteUndefined()
-        {
+        public override void WriteUndefined() {
             base.WriteUndefined();
             WriteValueInternal(JsonConvert.Undefined, JsonToken.Undefined);
         }
@@ -278,8 +259,7 @@ namespace NetDimension.Json
         ///     Writes raw JSON.
         /// </summary>
         /// <param name="json">The raw JSON to write.</param>
-        public override void WriteRaw(string json)
-        {
+        public override void WriteRaw(string json) {
             base.WriteRaw(json);
 
             _writer.Write(json);
@@ -291,13 +271,13 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="string" /> value to write.
         /// </param>
-        public override void WriteValue(string value)
-        {
+        public override void WriteValue(string value) {
             base.WriteValue(value);
-            if (value == null)
+            if (value == null) {
                 WriteValueInternal(JsonConvert.Null, JsonToken.Null);
-            else
+            } else {
                 JavaScriptUtils.WriteEscapedJavaScriptString(_writer, value, _quoteChar, true);
+            }
         }
 
         /// <summary>
@@ -306,8 +286,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="int" /> value to write.
         /// </param>
-        public override void WriteValue(int value)
-        {
+        public override void WriteValue(int value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.Integer);
         }
@@ -319,8 +298,7 @@ namespace NetDimension.Json
         ///     The <see cref="uint" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public override void WriteValue(uint value)
-        {
+        public override void WriteValue(uint value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.Integer);
         }
@@ -331,8 +309,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="long" /> value to write.
         /// </param>
-        public override void WriteValue(long value)
-        {
+        public override void WriteValue(long value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.Integer);
         }
@@ -344,8 +321,7 @@ namespace NetDimension.Json
         ///     The <see cref="ulong" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public override void WriteValue(ulong value)
-        {
+        public override void WriteValue(ulong value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.Integer);
         }
@@ -356,8 +332,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="float" /> value to write.
         /// </param>
-        public override void WriteValue(float value)
-        {
+        public override void WriteValue(float value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.Float);
         }
@@ -368,8 +343,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="double" /> value to write.
         /// </param>
-        public override void WriteValue(double value)
-        {
+        public override void WriteValue(double value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.Float);
         }
@@ -380,8 +354,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="bool" /> value to write.
         /// </param>
-        public override void WriteValue(bool value)
-        {
+        public override void WriteValue(bool value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.Boolean);
         }
@@ -392,8 +365,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="short" /> value to write.
         /// </param>
-        public override void WriteValue(short value)
-        {
+        public override void WriteValue(short value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.Integer);
         }
@@ -405,8 +377,7 @@ namespace NetDimension.Json
         ///     The <see cref="ushort" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public override void WriteValue(ushort value)
-        {
+        public override void WriteValue(ushort value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.Integer);
         }
@@ -417,8 +388,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="char" /> value to write.
         /// </param>
-        public override void WriteValue(char value)
-        {
+        public override void WriteValue(char value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.Integer);
         }
@@ -429,8 +399,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="byte" /> value to write.
         /// </param>
-        public override void WriteValue(byte value)
-        {
+        public override void WriteValue(byte value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.Integer);
         }
@@ -442,8 +411,7 @@ namespace NetDimension.Json
         ///     The <see cref="sbyte" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public override void WriteValue(sbyte value)
-        {
+        public override void WriteValue(sbyte value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.Integer);
         }
@@ -454,8 +422,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="decimal" /> value to write.
         /// </param>
-        public override void WriteValue(decimal value)
-        {
+        public override void WriteValue(decimal value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.Float);
         }
@@ -466,8 +433,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="DateTime" /> value to write.
         /// </param>
-        public override void WriteValue(DateTime value)
-        {
+        public override void WriteValue(DateTime value) {
             base.WriteValue(value);
             value = JsonConvert.EnsureDateTime(value, DateTimeZoneHandling);
             JsonConvert.WriteDateTimeString(_writer, value, DateFormatHandling);
@@ -479,12 +445,10 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="T:Byte[]" /> value to write.
         /// </param>
-        public override void WriteValue(byte[] value)
-        {
+        public override void WriteValue(byte[] value) {
             base.WriteValue(value);
 
-            if (value != null)
-            {
+            if (value != null) {
                 _writer.Write(_quoteChar);
                 Base64Encoder.Encode(value, 0, value.Length);
                 Base64Encoder.Flush();
@@ -499,8 +463,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="DateTimeOffset" /> value to write.
         /// </param>
-        public override void WriteValue(DateTimeOffset value)
-        {
+        public override void WriteValue(DateTimeOffset value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value, DateFormatHandling), JsonToken.Date);
         }
@@ -512,8 +475,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Guid" /> value to write.
         /// </param>
-        public override void WriteValue(Guid value)
-        {
+        public override void WriteValue(Guid value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.String);
         }
@@ -524,8 +486,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="TimeSpan" /> value to write.
         /// </param>
-        public override void WriteValue(TimeSpan value)
-        {
+        public override void WriteValue(TimeSpan value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.String);
         }
@@ -536,8 +497,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Uri" /> value to write.
         /// </param>
-        public override void WriteValue(Uri value)
-        {
+        public override void WriteValue(Uri value) {
             base.WriteValue(value);
             WriteValueInternal(JsonConvert.ToString(value), JsonToken.String);
         }
@@ -548,8 +508,7 @@ namespace NetDimension.Json
         ///     Writes out a comment <code>/*...*/</code> containing the specified text.
         /// </summary>
         /// <param name="text">Text to place inside the comment.</param>
-        public override void WriteComment(string text)
-        {
+        public override void WriteComment(string text) {
             base.WriteComment(text);
 
             _writer.Write("/*");
@@ -561,8 +520,7 @@ namespace NetDimension.Json
         ///     Writes out the given white space.
         /// </summary>
         /// <param name="ws">The string of white space characters.</param>
-        public override void WriteWhitespace(string ws)
-        {
+        public override void WriteWhitespace(string ws) {
             base.WriteWhitespace(ws);
 
             _writer.Write(ws);

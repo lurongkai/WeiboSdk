@@ -41,8 +41,7 @@ namespace NetDimension.Json.Converters
         /// <value>
         ///     <c>true</c> if this <see cref="JsonConverter" /> can write JSON; otherwise, <c>false</c>.
         /// </value>
-        public override bool CanWrite
-        {
+        public override bool CanWrite {
             get { return false; }
         }
 
@@ -54,8 +53,7 @@ namespace NetDimension.Json.Converters
         /// </param>
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             throw new NotSupportedException("CustomCreationConverter should only be used while deserializing.");
         }
 
@@ -70,14 +68,15 @@ namespace NetDimension.Json.Converters
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-                                        JsonSerializer serializer)
-        {
-            if (reader.TokenType == JsonToken.Null)
+                                        JsonSerializer serializer) {
+            if (reader.TokenType == JsonToken.Null) {
                 return null;
+            }
 
             var value = Create(objectType);
-            if (value == null)
+            if (value == null) {
                 throw new JsonSerializationException("No object created.");
+            }
 
             serializer.Populate(reader, value);
             return value;
@@ -97,8 +96,7 @@ namespace NetDimension.Json.Converters
         /// <returns>
         ///     <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
         /// </returns>
-        public override bool CanConvert(Type objectType)
-        {
+        public override bool CanConvert(Type objectType) {
             return typeof (T).IsAssignableFrom(objectType);
         }
     }

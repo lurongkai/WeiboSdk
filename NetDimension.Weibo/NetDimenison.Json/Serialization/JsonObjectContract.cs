@@ -42,8 +42,7 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="underlyingType">The underlying type for the contract.</param>
         public JsonObjectContract(Type underlyingType)
-            : base(underlyingType)
-        {
+            : base(underlyingType) {
             ContractType = JsonContractType.Object;
 
             Properties = new JsonPropertyCollection(UnderlyingType);
@@ -89,26 +88,18 @@ namespace NetDimension.Json.Serialization
         /// <value>The parametrized constructor.</value>
         public ConstructorInfo ParametrizedConstructor { get; set; }
 
-        internal bool HasRequiredOrDefaultValueProperties
-        {
-            get
-            {
-                if (_hasRequiredOrDefaultValueProperties == null)
-                {
+        internal bool HasRequiredOrDefaultValueProperties {
+            get {
+                if (_hasRequiredOrDefaultValueProperties == null) {
                     _hasRequiredOrDefaultValueProperties = false;
 
-                    if (ItemRequired.GetValueOrDefault(Required.Default) != Required.Default)
-                    {
+                    if (ItemRequired.GetValueOrDefault(Required.Default) != Required.Default) {
                         _hasRequiredOrDefaultValueProperties = true;
-                    }
-                    else
-                    {
-                        foreach (var property in Properties)
-                        {
+                    } else {
+                        foreach (var property in Properties) {
                             if (property.Required != Required.Default ||
                                 ((property.DefaultValueHandling & DefaultValueHandling.Populate) ==
-                                 DefaultValueHandling.Populate) && property.Writable)
-                            {
+                                 DefaultValueHandling.Populate) && property.Writable) {
                                 _hasRequiredOrDefaultValueProperties = true;
                                 break;
                             }

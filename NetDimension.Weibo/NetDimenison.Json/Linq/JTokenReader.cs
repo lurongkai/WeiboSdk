@@ -36,19 +36,61 @@ namespace NetDimension.Json.Linq
     public class JTokenReader : JsonReader, IJsonLineInfo
     {
         private readonly JToken _root;
-        private JToken _parent;
         private JToken _current;
+        private JToken _parent;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="JTokenReader" /> class.
         /// </summary>
         /// <param name="token">The token to read from.</param>
-        public JTokenReader(JToken token)
-        {
+        public JTokenReader(JToken token) {
             ValidationUtils.ArgumentNotNull(token, "token");
 
             _root = token;
             _current = token;
+        }
+
+        private bool IsEndElement {
+            get { return (_current == _parent); }
+        }
+
+        bool IJsonLineInfo.HasLineInfo() {
+            if (CurrentState == State.Start) {
+                return false;
+            }
+
+            IJsonLineInfo info = IsEndElement ? null : _current;
+            return (info != null && info.HasLineInfo());
+        }
+
+        int IJsonLineInfo.LineNumber {
+            get {
+                if (CurrentState == State.Start) {
+                    return 0;
+                }
+
+                IJsonLineInfo info = IsEndElement ? null : _current;
+                if (info != null) {
+                    return info.LineNumber;
+                }
+
+                return 0;
+            }
+        }
+
+        int IJsonLineInfo.LinePosition {
+            get {
+                if (CurrentState == State.Start) {
+                    return 0;
+                }
+
+                IJsonLineInfo info = IsEndElement ? null : _current;
+                if (info != null) {
+                    return info.LinePosition;
+                }
+
+                return 0;
+            }
         }
 
         /// <summary>
@@ -57,8 +99,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="T:Byte[]" /> or a null reference if the next JSON token is null. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override byte[] ReadAsBytes()
-        {
+        public override byte[] ReadAsBytes() {
             return ReadAsBytesInternal();
         }
 
@@ -68,8 +109,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="Nullable{Decimal}" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override decimal? ReadAsDecimal()
-        {
+        public override decimal? ReadAsDecimal() {
             return ReadAsDecimalInternal();
         }
 
@@ -79,8 +119,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="Nullable{Int32}" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override int? ReadAsInt32()
-        {
+        public override int? ReadAsInt32() {
             return ReadAsInt32Internal();
         }
 
@@ -90,8 +129,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="String" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override string ReadAsString()
-        {
+        public override string ReadAsString() {
             return ReadAsStringInternal();
         }
 
@@ -101,31 +139,28 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="String" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override DateTime? ReadAsDateTime()
-        {
+        public override DateTime? ReadAsDateTime() {
             return ReadAsDateTimeInternal();
         }
-        
+
         /// <summary>
         ///     Reads the next JSON token from the stream as a <see cref="Nullable{DateTimeOffset}" />.
         /// </summary>
         /// <returns>
         ///     A <see cref="Nullable{DateTimeOffset}" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override DateTimeOffset? ReadAsDateTimeOffset()
-        {
+        public override DateTimeOffset? ReadAsDateTimeOffset() {
             return ReadAsDateTimeOffsetInternal();
         }
 
-        internal override bool ReadInternal()
-        {
-            if (CurrentState != State.Start)
-            {
+        internal override bool ReadInternal() {
+            if (CurrentState != State.Start) {
                 var container = _current as JContainer;
-                if (container != null && _parent != container)
+                if (container != null && _parent != container) {
                     return ReadInto(container);
-                else
+                } else {
                     return ReadOver(_current);
+                }
             }
 
             SetToken(_current);
@@ -138,49 +173,38 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     true if the next token was read successfully; false if there are no more tokens to read.
         /// </returns>
-        public override bool Read()
-        {
+        public override bool Read() {
             _readType = ReadType.Read;
 
             return ReadInternal();
         }
 
-        private bool ReadOver(JToken t)
-        {
-            if (t == _root)
+        private bool ReadOver(JToken t) {
+            if (t == _root) {
                 return ReadToEnd();
+            }
 
             var next = t.Next;
-            if ((next == null || next == t) || t == t.Parent.Last)
-            {
-                if (t.Parent == null)
+            if ((next == null || next == t) || t == t.Parent.Last) {
+                if (t.Parent == null) {
                     return ReadToEnd();
+                }
 
                 return SetEnd(t.Parent);
-            }
-            else
-            {
+            } else {
                 _current = next;
                 SetToken(_current);
                 return true;
             }
         }
 
-        private bool ReadToEnd()
-        {
+        private bool ReadToEnd() {
             SetToken(JsonToken.None);
             return false;
         }
 
-        private bool IsEndElement
-        {
-            get { return (_current == _parent); }
-        }
-
-        private JsonToken? GetEndToken(JContainer c)
-        {
-            switch (c.Type)
-            {
+        private JsonToken? GetEndToken(JContainer c) {
+            switch (c.Type) {
                 case JTokenType.Object:
                     return JsonToken.EndObject;
                 case JTokenType.Array:
@@ -195,15 +219,11 @@ namespace NetDimension.Json.Linq
             }
         }
 
-        private bool ReadInto(JContainer c)
-        {
+        private bool ReadInto(JContainer c) {
             var firstChild = c.First;
-            if (firstChild == null)
-            {
+            if (firstChild == null) {
                 return SetEnd(c);
-            }
-            else
-            {
+            } else {
                 SetToken(firstChild);
                 _current = firstChild;
                 _parent = c;
@@ -211,26 +231,20 @@ namespace NetDimension.Json.Linq
             }
         }
 
-        private bool SetEnd(JContainer c)
-        {
+        private bool SetEnd(JContainer c) {
             var endToken = GetEndToken(c);
-            if (endToken != null)
-            {
+            if (endToken != null) {
                 SetToken(endToken.Value);
                 _current = c;
                 _parent = c;
                 return true;
-            }
-            else
-            {
+            } else {
                 return ReadOver(c);
             }
         }
 
-        private void SetToken(JToken token)
-        {
-            switch (token.Type)
-            {
+        private void SetToken(JToken token) {
+            switch (token.Type) {
                 case JTokenType.Object:
                     SetToken(JsonToken.StartObject);
                     break;
@@ -288,48 +302,8 @@ namespace NetDimension.Json.Linq
             }
         }
 
-        private string SafeToString(object value)
-        {
+        private string SafeToString(object value) {
             return (value != null) ? value.ToString() : null;
-        }
-
-        bool IJsonLineInfo.HasLineInfo()
-        {
-            if (CurrentState == State.Start)
-                return false;
-
-            IJsonLineInfo info = IsEndElement ? null : _current;
-            return (info != null && info.HasLineInfo());
-        }
-
-        int IJsonLineInfo.LineNumber
-        {
-            get
-            {
-                if (CurrentState == State.Start)
-                    return 0;
-
-                IJsonLineInfo info = IsEndElement ? null : _current;
-                if (info != null)
-                    return info.LineNumber;
-
-                return 0;
-            }
-        }
-
-        int IJsonLineInfo.LinePosition
-        {
-            get
-            {
-                if (CurrentState == State.Start)
-                    return 0;
-
-                IJsonLineInfo info = IsEndElement ? null : _current;
-                if (info != null)
-                    return info.LinePosition;
-
-                return 0;
-            }
         }
     }
 }

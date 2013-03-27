@@ -45,10 +45,10 @@ namespace NetDimension.Json
         ///     Initializes a new instance of the <see cref="JsonConverterAttribute" /> class.
         /// </summary>
         /// <param name="converterType">Type of the converter.</param>
-        public JsonConverterAttribute(Type converterType)
-        {
-            if (converterType == null)
+        public JsonConverterAttribute(Type converterType) {
+            if (converterType == null) {
                 throw new ArgumentNullException("converterType");
+            }
 
             _converterType = converterType;
         }
@@ -57,19 +57,14 @@ namespace NetDimension.Json
         ///     Gets the type of the converter.
         /// </summary>
         /// <value>The type of the converter.</value>
-        public Type ConverterType
-        {
+        public Type ConverterType {
             get { return _converterType; }
         }
 
-        internal static JsonConverter CreateJsonConverterInstance(Type converterType)
-        {
-            try
-            {
+        internal static JsonConverter CreateJsonConverterInstance(Type converterType) {
+            try {
                 return (JsonConverter) Activator.CreateInstance(converterType);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 throw new JsonException("Error creating {0}".FormatWith(CultureInfo.InvariantCulture, converterType), ex);
             }
         }

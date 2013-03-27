@@ -35,9 +35,9 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using NetDimension.Json.Utilities;
+
 #if !(WINDOWS_PHONE || PORTABLE)
 #endif
-
 
 namespace NetDimension.Json.Linq
 {
@@ -64,12 +64,11 @@ namespace NetDimension.Json.Linq
         /// <value>
         ///     A <see cref="JTokenEqualityComparer" /> that can compare two nodes for value equality.
         /// </value>
-        public static JTokenEqualityComparer EqualityComparer
-        {
-            get
-            {
-                if (_equalityComparer == null)
+        public static JTokenEqualityComparer EqualityComparer {
+            get {
+                if (_equalityComparer == null) {
                     _equalityComparer = new JTokenEqualityComparer();
+                }
 
                 return _equalityComparer;
             }
@@ -79,9 +78,9 @@ namespace NetDimension.Json.Linq
         ///     Gets or sets the parent.
         /// </summary>
         /// <value>The parent.</value>
-        public JContainer Parent
-        {
-            [DebuggerStepThrough] get { return _parent; }
+        public JContainer Parent {
+            [DebuggerStepThrough]
+            get { return _parent; }
             internal set { _parent = value; }
         }
 
@@ -91,16 +90,14 @@ namespace NetDimension.Json.Linq
         /// <value>
         ///     The root <see cref="JToken" /> of this <see cref="JToken" />.
         /// </value>
-        public JToken Root
-        {
-            get
-            {
+        public JToken Root {
+            get {
                 var parent = Parent;
-                if (parent == null)
+                if (parent == null) {
                     return this;
+                }
 
-                while (parent.Parent != null)
-                {
+                while (parent.Parent != null) {
                     parent = parent.Parent;
                 }
 
@@ -135,8 +132,7 @@ namespace NetDimension.Json.Linq
         ///     The second <see cref="JToken" /> to compare.
         /// </param>
         /// <returns>true if the tokens are equal; otherwise false.</returns>
-        public static bool DeepEquals(JToken t1, JToken t2)
-        {
+        public static bool DeepEquals(JToken t1, JToken t2) {
             return (t1 == t2 || (t1 != null && t2 != null && t1.DeepEquals(t2)));
         }
 
@@ -156,18 +152,17 @@ namespace NetDimension.Json.Linq
         /// </value>
         public JToken Previous { get; internal set; }
 
-        internal JToken()
-        {
+        internal JToken() {
         }
 
         /// <summary>
         ///     Adds the specified content immediately after this token.
         /// </summary>
         /// <param name="content">A content object that contains simple content or a collection of content objects to be added after this token.</param>
-        public void AddAfterSelf(object content)
-        {
-            if (_parent == null)
+        public void AddAfterSelf(object content) {
+            if (_parent == null) {
                 throw new InvalidOperationException("The parent is missing.");
+            }
 
             var index = _parent.IndexOfItem(this);
             _parent.AddInternal(index + 1, content, false);
@@ -177,10 +172,10 @@ namespace NetDimension.Json.Linq
         ///     Adds the specified content immediately before this token.
         /// </summary>
         /// <param name="content">A content object that contains simple content or a collection of content objects to be added before this token.</param>
-        public void AddBeforeSelf(object content)
-        {
-            if (_parent == null)
+        public void AddBeforeSelf(object content) {
+            if (_parent == null) {
                 throw new InvalidOperationException("The parent is missing.");
+            }
 
             var index = _parent.IndexOfItem(this);
             _parent.AddInternal(index, content, false);
@@ -190,10 +185,8 @@ namespace NetDimension.Json.Linq
         ///     Returns a collection of the ancestor tokens of this token.
         /// </summary>
         /// <returns>A collection of the ancestor tokens of this token.</returns>
-        public IEnumerable<JToken> Ancestors()
-        {
-            for (JToken parent = Parent; parent != null; parent = parent.Parent)
-            {
+        public IEnumerable<JToken> Ancestors() {
+            for (JToken parent = Parent; parent != null; parent = parent.Parent) {
                 yield return parent;
             }
         }
@@ -202,13 +195,12 @@ namespace NetDimension.Json.Linq
         ///     Returns a collection of the sibling tokens after this token, in document order.
         /// </summary>
         /// <returns>A collection of the sibling tokens after this tokens, in document order.</returns>
-        public IEnumerable<JToken> AfterSelf()
-        {
-            if (Parent == null)
+        public IEnumerable<JToken> AfterSelf() {
+            if (Parent == null) {
                 yield break;
+            }
 
-            for (var o = Next; o != null; o = o.Next)
-            {
+            for (var o = Next; o != null; o = o.Next) {
                 yield return o;
             }
         }
@@ -217,10 +209,8 @@ namespace NetDimension.Json.Linq
         ///     Returns a collection of the sibling tokens before this token, in document order.
         /// </summary>
         /// <returns>A collection of the sibling tokens before this token, in document order.</returns>
-        public IEnumerable<JToken> BeforeSelf()
-        {
-            for (var o = Parent.First; o != this; o = o.Next)
-            {
+        public IEnumerable<JToken> BeforeSelf() {
+            for (var o = Parent.First; o != this; o = o.Next) {
                 yield return o;
             }
         }
@@ -231,15 +221,12 @@ namespace NetDimension.Json.Linq
         /// <value>
         ///     The <see cref="JToken" /> with the specified key.
         /// </value>
-        public virtual JToken this[object key]
-        {
-            get
-            {
+        public virtual JToken this[object key] {
+            get {
                 throw new InvalidOperationException(
                     "Cannot access child value on {0}.".FormatWith(CultureInfo.InvariantCulture, GetType()));
             }
-            set
-            {
+            set {
                 throw new InvalidOperationException(
                     "Cannot set child value on {0}.".FormatWith(CultureInfo.InvariantCulture, GetType()));
             }
@@ -251,8 +238,7 @@ namespace NetDimension.Json.Linq
         /// <typeparam name="T">The type to convert the token to.</typeparam>
         /// <param name="key">The token key.</param>
         /// <returns>The converted token value.</returns>
-        public virtual T Value<T>(object key)
-        {
+        public virtual T Value<T>(object key) {
             var token = this[key];
 
             return token.Convert<JToken, T>();
@@ -264,10 +250,8 @@ namespace NetDimension.Json.Linq
         /// <value>
         ///     A <see cref="JToken" /> containing the first child token of the <see cref="JToken" />.
         /// </value>
-        public virtual JToken First
-        {
-            get
-            {
+        public virtual JToken First {
+            get {
                 throw new InvalidOperationException(
                     "Cannot access child value on {0}.".FormatWith(CultureInfo.InvariantCulture, GetType()));
             }
@@ -279,10 +263,8 @@ namespace NetDimension.Json.Linq
         /// <value>
         ///     A <see cref="JToken" /> containing the last child token of the <see cref="JToken" />.
         /// </value>
-        public virtual JToken Last
-        {
-            get
-            {
+        public virtual JToken Last {
+            get {
                 throw new InvalidOperationException(
                     "Cannot access child value on {0}.".FormatWith(CultureInfo.InvariantCulture, GetType()));
             }
@@ -294,8 +276,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="IEnumerable{T}" /> of <see cref="JToken" /> containing the child tokens of this <see cref="JToken" />, in document order.
         /// </returns>
-        public virtual JEnumerable<JToken> Children()
-        {
+        public virtual JEnumerable<JToken> Children() {
             return JEnumerable<JToken>.Empty;
         }
 
@@ -306,8 +287,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JEnumerable{T}" /> containing the child tokens of this <see cref="JToken" />, in document order.
         /// </returns>
-        public JEnumerable<T> Children<T>() where T : JToken
-        {
+        public JEnumerable<T> Children<T>() where T : JToken {
             return new JEnumerable<T>(Children().OfType<T>());
         }
 
@@ -318,8 +298,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="IEnumerable{T}" /> containing the child values of this <see cref="JToken" />, in document order.
         /// </returns>
-        public virtual IEnumerable<T> Values<T>()
-        {
+        public virtual IEnumerable<T> Values<T>() {
             throw new InvalidOperationException(
                 "Cannot access child value on {0}.".FormatWith(CultureInfo.InvariantCulture, GetType()));
         }
@@ -327,10 +306,10 @@ namespace NetDimension.Json.Linq
         /// <summary>
         ///     Removes this token from its parent.
         /// </summary>
-        public void Remove()
-        {
-            if (_parent == null)
+        public void Remove() {
+            if (_parent == null) {
                 throw new InvalidOperationException("The parent is missing.");
+            }
 
             _parent.RemoveItem(this);
         }
@@ -339,10 +318,10 @@ namespace NetDimension.Json.Linq
         ///     Replaces this token with the specified token.
         /// </summary>
         /// <param name="value">The value.</param>
-        public void Replace(JToken value)
-        {
-            if (_parent == null)
+        public void Replace(JToken value) {
+            if (_parent == null) {
                 throw new InvalidOperationException("The parent is missing.");
+            }
 
             _parent.ReplaceItem(this, value);
         }
@@ -364,8 +343,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The indented JSON for this token.
         /// </returns>
-        public override string ToString()
-        {
+        public override string ToString() {
             return ToString(Formatting.Indented);
         }
 
@@ -377,10 +355,8 @@ namespace NetDimension.Json.Linq
         ///     A collection of <see cref="JsonConverter" /> which will be used when writing the token.
         /// </param>
         /// <returns>The JSON for this token using the given formatting and converters.</returns>
-        public string ToString(Formatting formatting, params JsonConverter[] converters)
-        {
-            using (var sw = new StringWriter(CultureInfo.InvariantCulture))
-            {
+        public string ToString(Formatting formatting, params JsonConverter[] converters) {
+            using (var sw = new StringWriter(CultureInfo.InvariantCulture)) {
                 var jw = new JsonTextWriter(sw);
                 jw.Formatting = formatting;
 
@@ -390,62 +366,56 @@ namespace NetDimension.Json.Linq
             }
         }
 
-        private static JValue EnsureValue(JToken value)
-        {
-            if (value == null)
+        private static JValue EnsureValue(JToken value) {
+            if (value == null) {
                 throw new ArgumentNullException("value");
+            }
 
-            if (value is JProperty)
+            if (value is JProperty) {
                 value = ((JProperty) value).Value;
+            }
 
             var v = value as JValue;
 
             return v;
         }
 
-        private static string GetType(JToken token)
-        {
+        private static string GetType(JToken token) {
             ValidationUtils.ArgumentNotNull(token, "token");
 
-            if (token is JProperty)
+            if (token is JProperty) {
                 token = ((JProperty) token).Value;
+            }
 
             return token.Type.ToString();
         }
 
-        private static bool IsNullable(JToken o)
-        {
+        private static bool IsNullable(JToken o) {
             return (o.Type == JTokenType.Undefined || o.Type == JTokenType.Null);
         }
 
-        private static bool ValidateFloat(JToken o, bool nullable)
-        {
+        private static bool ValidateFloat(JToken o, bool nullable) {
             return (o.Type == JTokenType.Float || o.Type == JTokenType.Integer || (nullable && IsNullable(o)));
         }
 
-        private static bool ValidateInteger(JToken o, bool nullable)
-        {
+        private static bool ValidateInteger(JToken o, bool nullable) {
             return (o.Type == JTokenType.Integer || (nullable && IsNullable(o)));
         }
 
-        private static bool ValidateDate(JToken o, bool nullable)
-        {
+        private static bool ValidateDate(JToken o, bool nullable) {
             return (o.Type == JTokenType.Date || (nullable && IsNullable(o)));
         }
 
-        private static bool ValidateBoolean(JToken o, bool nullable)
-        {
+        private static bool ValidateBoolean(JToken o, bool nullable) {
             return (o.Type == JTokenType.Boolean || (nullable && IsNullable(o)));
         }
 
-        private static bool ValidateString(JToken o)
-        {
+        private static bool ValidateString(JToken o) {
             return (o.Type == JTokenType.String || o.Type == JTokenType.Comment || o.Type == JTokenType.Raw ||
                     IsNullable(o));
         }
 
-        private static bool ValidateBytes(JToken o)
-        {
+        private static bool ValidateBytes(JToken o) {
             return (o.Type == JTokenType.Bytes || IsNullable(o));
         }
 
@@ -456,12 +426,12 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator bool(JToken value)
-        {
+        public static explicit operator bool(JToken value) {
             var v = EnsureValue(value);
-            if (v == null || !ValidateBoolean(v, false))
+            if (v == null || !ValidateBoolean(v, false)) {
                 throw new ArgumentException("Can not convert {0} to Boolean.".FormatWith(CultureInfo.InvariantCulture,
                                                                                          GetType(value)));
+            }
 
             return Convert.ToBoolean(v.Value, CultureInfo.InvariantCulture);
         }
@@ -475,12 +445,12 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator DateTimeOffset(JToken value)
-        {
+        public static explicit operator DateTimeOffset(JToken value) {
             var v = EnsureValue(value);
-            if (v == null || !ValidateDate(v, false))
+            if (v == null || !ValidateDate(v, false)) {
                 throw new ArgumentException(
                     "Can not convert {0} to DateTimeOffset.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
+            }
 
             return (DateTimeOffset) v.Value;
         }
@@ -491,15 +461,16 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator bool?(JToken value)
-        {
-            if (value == null)
+        public static explicit operator bool?(JToken value) {
+            if (value == null) {
                 return null;
+            }
 
             var v = EnsureValue(value);
-            if (v == null || !ValidateBoolean(v, true))
+            if (v == null || !ValidateBoolean(v, true)) {
                 throw new ArgumentException("Can not convert {0} to Boolean.".FormatWith(CultureInfo.InvariantCulture,
                                                                                          GetType(value)));
+            }
 
             return (v.Value != null) ? (bool?) Convert.ToBoolean(v.Value, CultureInfo.InvariantCulture) : null;
         }
@@ -509,12 +480,12 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator long(JToken value)
-        {
+        public static explicit operator long(JToken value) {
             var v = EnsureValue(value);
-            if (v == null || !ValidateInteger(v, false))
+            if (v == null || !ValidateInteger(v, false)) {
                 throw new ArgumentException("Can not convert {0} to Int64.".FormatWith(CultureInfo.InvariantCulture,
                                                                                        GetType(value)));
+            }
 
             return Convert.ToInt64(v.Value, CultureInfo.InvariantCulture);
         }
@@ -524,15 +495,16 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator DateTime?(JToken value)
-        {
-            if (value == null)
+        public static explicit operator DateTime?(JToken value) {
+            if (value == null) {
                 return null;
+            }
 
             var v = EnsureValue(value);
-            if (v == null || !ValidateDate(v, true))
+            if (v == null || !ValidateDate(v, true)) {
                 throw new ArgumentException("Can not convert {0} to DateTime.".FormatWith(CultureInfo.InvariantCulture,
                                                                                           GetType(value)));
+            }
 
             return (v.Value != null) ? (DateTime?) Convert.ToDateTime(v.Value, CultureInfo.InvariantCulture) : null;
         }
@@ -546,15 +518,16 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator DateTimeOffset?(JToken value)
-        {
-            if (value == null)
+        public static explicit operator DateTimeOffset?(JToken value) {
+            if (value == null) {
                 return null;
+            }
 
             var v = EnsureValue(value);
-            if (v == null || !ValidateDate(v, true))
+            if (v == null || !ValidateDate(v, true)) {
                 throw new ArgumentException(
                     "Can not convert {0} to DateTimeOffset.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
+            }
 
             return (DateTimeOffset?) v.Value;
         }
@@ -565,15 +538,16 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator decimal?(JToken value)
-        {
-            if (value == null)
+        public static explicit operator decimal?(JToken value) {
+            if (value == null) {
                 return null;
+            }
 
             var v = EnsureValue(value);
-            if (v == null || !ValidateFloat(v, true))
+            if (v == null || !ValidateFloat(v, true)) {
                 throw new ArgumentException("Can not convert {0} to Decimal.".FormatWith(CultureInfo.InvariantCulture,
                                                                                          GetType(value)));
+            }
 
             return (v.Value != null) ? (decimal?) Convert.ToDecimal(v.Value, CultureInfo.InvariantCulture) : null;
         }
@@ -583,15 +557,16 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator double?(JToken value)
-        {
-            if (value == null)
+        public static explicit operator double?(JToken value) {
+            if (value == null) {
                 return null;
+            }
 
             var v = EnsureValue(value);
-            if (v == null || !ValidateFloat(v, true))
+            if (v == null || !ValidateFloat(v, true)) {
                 throw new ArgumentException("Can not convert {0} to Double.".FormatWith(CultureInfo.InvariantCulture,
                                                                                         GetType(value)));
+            }
 
             return (double?) v.Value;
         }
@@ -601,12 +576,12 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator int(JToken value)
-        {
+        public static explicit operator int(JToken value) {
             var v = EnsureValue(value);
-            if (v == null || !ValidateInteger(v, false))
+            if (v == null || !ValidateInteger(v, false)) {
                 throw new ArgumentException("Can not convert {0} to Int32.".FormatWith(CultureInfo.InvariantCulture,
                                                                                        GetType(value)));
+            }
 
             return Convert.ToInt32(v.Value, CultureInfo.InvariantCulture);
         }
@@ -616,12 +591,12 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator short(JToken value)
-        {
+        public static explicit operator short(JToken value) {
             var v = EnsureValue(value);
-            if (v == null || !ValidateInteger(v, false))
+            if (v == null || !ValidateInteger(v, false)) {
                 throw new ArgumentException("Can not convert {0} to Int16.".FormatWith(CultureInfo.InvariantCulture,
                                                                                        GetType(value)));
+            }
 
             return Convert.ToInt16(v.Value, CultureInfo.InvariantCulture);
         }
@@ -632,12 +607,12 @@ namespace NetDimension.Json.Linq
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         [CLSCompliant(false)]
-        public static explicit operator ushort(JToken value)
-        {
+        public static explicit operator ushort(JToken value) {
             var v = EnsureValue(value);
-            if (v == null || !ValidateInteger(v, false))
+            if (v == null || !ValidateInteger(v, false)) {
                 throw new ArgumentException("Can not convert {0} to UInt16.".FormatWith(CultureInfo.InvariantCulture,
                                                                                         GetType(value)));
+            }
 
             return Convert.ToUInt16(v.Value, CultureInfo.InvariantCulture);
         }
@@ -647,15 +622,16 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator int?(JToken value)
-        {
-            if (value == null)
+        public static explicit operator int?(JToken value) {
+            if (value == null) {
                 return null;
+            }
 
             var v = EnsureValue(value);
-            if (v == null || !ValidateInteger(v, true))
+            if (v == null || !ValidateInteger(v, true)) {
                 throw new ArgumentException("Can not convert {0} to Int32.".FormatWith(CultureInfo.InvariantCulture,
                                                                                        GetType(value)));
+            }
 
             return (v.Value != null) ? (int?) Convert.ToInt32(v.Value, CultureInfo.InvariantCulture) : null;
         }
@@ -665,15 +641,16 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator short?(JToken value)
-        {
-            if (value == null)
+        public static explicit operator short?(JToken value) {
+            if (value == null) {
                 return null;
+            }
 
             var v = EnsureValue(value);
-            if (v == null || !ValidateInteger(v, true))
+            if (v == null || !ValidateInteger(v, true)) {
                 throw new ArgumentException("Can not convert {0} to Int16.".FormatWith(CultureInfo.InvariantCulture,
                                                                                        GetType(value)));
+            }
 
             return (v.Value != null) ? (short?) Convert.ToInt16(v.Value, CultureInfo.InvariantCulture) : null;
         }
@@ -684,15 +661,16 @@ namespace NetDimension.Json.Linq
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         [CLSCompliant(false)]
-        public static explicit operator ushort?(JToken value)
-        {
-            if (value == null)
+        public static explicit operator ushort?(JToken value) {
+            if (value == null) {
                 return null;
+            }
 
             var v = EnsureValue(value);
-            if (v == null || !ValidateInteger(v, true))
+            if (v == null || !ValidateInteger(v, true)) {
                 throw new ArgumentException("Can not convert {0} to UInt16.".FormatWith(CultureInfo.InvariantCulture,
                                                                                         GetType(value)));
+            }
 
             return (v.Value != null) ? (ushort?) Convert.ToInt16(v.Value, CultureInfo.InvariantCulture) : null;
         }
@@ -702,12 +680,12 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator DateTime(JToken value)
-        {
+        public static explicit operator DateTime(JToken value) {
             var v = EnsureValue(value);
-            if (v == null || !ValidateDate(v, false))
+            if (v == null || !ValidateDate(v, false)) {
                 throw new ArgumentException("Can not convert {0} to DateTime.".FormatWith(CultureInfo.InvariantCulture,
                                                                                           GetType(value)));
+            }
 
             return Convert.ToDateTime(v.Value, CultureInfo.InvariantCulture);
         }
@@ -717,15 +695,16 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator long?(JToken value)
-        {
-            if (value == null)
+        public static explicit operator long?(JToken value) {
+            if (value == null) {
                 return null;
+            }
 
             var v = EnsureValue(value);
-            if (v == null || !ValidateInteger(v, true))
+            if (v == null || !ValidateInteger(v, true)) {
                 throw new ArgumentException("Can not convert {0} to Int64.".FormatWith(CultureInfo.InvariantCulture,
                                                                                        GetType(value)));
+            }
 
             return (v.Value != null) ? (long?) Convert.ToInt64(v.Value, CultureInfo.InvariantCulture) : null;
         }
@@ -735,15 +714,16 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator float?(JToken value)
-        {
-            if (value == null)
+        public static explicit operator float?(JToken value) {
+            if (value == null) {
                 return null;
+            }
 
             var v = EnsureValue(value);
-            if (v == null || !ValidateFloat(v, true))
+            if (v == null || !ValidateFloat(v, true)) {
                 throw new ArgumentException("Can not convert {0} to Single.".FormatWith(CultureInfo.InvariantCulture,
                                                                                         GetType(value)));
+            }
 
             return (v.Value != null) ? (float?) Convert.ToSingle(v.Value, CultureInfo.InvariantCulture) : null;
         }
@@ -753,12 +733,12 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator decimal(JToken value)
-        {
+        public static explicit operator decimal(JToken value) {
             var v = EnsureValue(value);
-            if (v == null || !ValidateFloat(v, false))
+            if (v == null || !ValidateFloat(v, false)) {
                 throw new ArgumentException("Can not convert {0} to Decimal.".FormatWith(CultureInfo.InvariantCulture,
                                                                                          GetType(value)));
+            }
 
             return Convert.ToDecimal(v.Value, CultureInfo.InvariantCulture);
         }
@@ -769,15 +749,16 @@ namespace NetDimension.Json.Linq
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         [CLSCompliant(false)]
-        public static explicit operator uint?(JToken value)
-        {
-            if (value == null)
+        public static explicit operator uint?(JToken value) {
+            if (value == null) {
                 return null;
+            }
 
             var v = EnsureValue(value);
-            if (v == null || !ValidateInteger(v, true))
+            if (v == null || !ValidateInteger(v, true)) {
                 throw new ArgumentException("Can not convert {0} to UInt32.".FormatWith(CultureInfo.InvariantCulture,
                                                                                         GetType(value)));
+            }
 
             return (v.Value != null) ? (uint?) Convert.ToUInt32(v.Value, CultureInfo.InvariantCulture) : null;
         }
@@ -788,15 +769,16 @@ namespace NetDimension.Json.Linq
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         [CLSCompliant(false)]
-        public static explicit operator ulong?(JToken value)
-        {
-            if (value == null)
+        public static explicit operator ulong?(JToken value) {
+            if (value == null) {
                 return null;
+            }
 
             var v = EnsureValue(value);
-            if (v == null || !ValidateInteger(v, true))
+            if (v == null || !ValidateInteger(v, true)) {
                 throw new ArgumentException("Can not convert {0} to UInt64.".FormatWith(CultureInfo.InvariantCulture,
                                                                                         GetType(value)));
+            }
 
             return (v.Value != null) ? (ulong?) Convert.ToUInt64(v.Value, CultureInfo.InvariantCulture) : null;
         }
@@ -806,12 +788,12 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator double(JToken value)
-        {
+        public static explicit operator double(JToken value) {
             var v = EnsureValue(value);
-            if (v == null || !ValidateFloat(v, false))
+            if (v == null || !ValidateFloat(v, false)) {
                 throw new ArgumentException("Can not convert {0} to Double.".FormatWith(CultureInfo.InvariantCulture,
                                                                                         GetType(value)));
+            }
 
             return Convert.ToDouble(v.Value, CultureInfo.InvariantCulture);
         }
@@ -821,12 +803,12 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator float(JToken value)
-        {
+        public static explicit operator float(JToken value) {
             var v = EnsureValue(value);
-            if (v == null || !ValidateFloat(v, false))
+            if (v == null || !ValidateFloat(v, false)) {
                 throw new ArgumentException("Can not convert {0} to Single.".FormatWith(CultureInfo.InvariantCulture,
                                                                                         GetType(value)));
+            }
 
             return Convert.ToSingle(v.Value, CultureInfo.InvariantCulture);
         }
@@ -836,15 +818,16 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator string(JToken value)
-        {
-            if (value == null)
+        public static explicit operator string(JToken value) {
+            if (value == null) {
                 return null;
+            }
 
             var v = EnsureValue(value);
-            if (v == null || !ValidateString(v))
+            if (v == null || !ValidateString(v)) {
                 throw new ArgumentException("Can not convert {0} to String.".FormatWith(CultureInfo.InvariantCulture,
                                                                                         GetType(value)));
+            }
 
             return (v.Value != null) ? Convert.ToString(v.Value, CultureInfo.InvariantCulture) : null;
         }
@@ -855,12 +838,12 @@ namespace NetDimension.Json.Linq
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         [CLSCompliant(false)]
-        public static explicit operator uint(JToken value)
-        {
+        public static explicit operator uint(JToken value) {
             var v = EnsureValue(value);
-            if (v == null || !ValidateInteger(v, false))
+            if (v == null || !ValidateInteger(v, false)) {
                 throw new ArgumentException("Can not convert {0} to UInt32.".FormatWith(CultureInfo.InvariantCulture,
                                                                                         GetType(value)));
+            }
 
             return Convert.ToUInt32(v.Value, CultureInfo.InvariantCulture);
         }
@@ -871,12 +854,12 @@ namespace NetDimension.Json.Linq
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
         [CLSCompliant(false)]
-        public static explicit operator ulong(JToken value)
-        {
+        public static explicit operator ulong(JToken value) {
             var v = EnsureValue(value);
-            if (v == null || !ValidateInteger(v, false))
+            if (v == null || !ValidateInteger(v, false)) {
                 throw new ArgumentException("Can not convert {0} to UInt64.".FormatWith(CultureInfo.InvariantCulture,
                                                                                         GetType(value)));
+            }
 
             return Convert.ToUInt64(v.Value, CultureInfo.InvariantCulture);
         }
@@ -886,12 +869,12 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static explicit operator byte[](JToken value)
-        {
+        public static explicit operator byte[](JToken value) {
             var v = EnsureValue(value);
-            if (v == null || !ValidateBytes(v))
+            if (v == null || !ValidateBytes(v)) {
                 throw new ArgumentException("Can not convert {0} to byte array.".FormatWith(
                     CultureInfo.InvariantCulture, GetType(value)));
+            }
 
             return (byte[]) v.Value;
         }
@@ -909,8 +892,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(bool value)
-        {
+        public static implicit operator JToken(bool value) {
             return new JValue(value);
         }
 
@@ -924,8 +906,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(DateTimeOffset value)
-        {
+        public static implicit operator JToken(DateTimeOffset value) {
             return new JValue(value);
         }
 #endif
@@ -939,8 +920,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(bool? value)
-        {
+        public static implicit operator JToken(bool? value) {
             return new JValue(value);
         }
 
@@ -953,8 +933,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(long value)
-        {
+        public static implicit operator JToken(long value) {
             return new JValue(value);
         }
 
@@ -967,8 +946,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(DateTime? value)
-        {
+        public static implicit operator JToken(DateTime? value) {
             return new JValue(value);
         }
 
@@ -982,8 +960,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(DateTimeOffset? value)
-        {
+        public static implicit operator JToken(DateTimeOffset? value) {
             return new JValue(value);
         }
 #endif
@@ -997,8 +974,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(decimal? value)
-        {
+        public static implicit operator JToken(decimal? value) {
             return new JValue(value);
         }
 
@@ -1011,8 +987,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(double? value)
-        {
+        public static implicit operator JToken(double? value) {
             return new JValue(value);
         }
 
@@ -1026,8 +1001,7 @@ namespace NetDimension.Json.Linq
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(short value)
-        {
+        public static implicit operator JToken(short value) {
             return new JValue(value);
         }
 
@@ -1041,8 +1015,7 @@ namespace NetDimension.Json.Linq
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(ushort value)
-        {
+        public static implicit operator JToken(ushort value) {
             return new JValue(value);
         }
 
@@ -1055,8 +1028,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(int value)
-        {
+        public static implicit operator JToken(int value) {
             return new JValue(value);
         }
 
@@ -1069,8 +1041,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(int? value)
-        {
+        public static implicit operator JToken(int? value) {
             return new JValue(value);
         }
 
@@ -1083,8 +1054,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(DateTime value)
-        {
+        public static implicit operator JToken(DateTime value) {
             return new JValue(value);
         }
 
@@ -1097,8 +1067,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(long? value)
-        {
+        public static implicit operator JToken(long? value) {
             return new JValue(value);
         }
 
@@ -1111,8 +1080,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(float? value)
-        {
+        public static implicit operator JToken(float? value) {
             return new JValue(value);
         }
 
@@ -1125,8 +1093,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(decimal value)
-        {
+        public static implicit operator JToken(decimal value) {
             return new JValue(value);
         }
 
@@ -1140,8 +1107,7 @@ namespace NetDimension.Json.Linq
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(short? value)
-        {
+        public static implicit operator JToken(short? value) {
             return new JValue(value);
         }
 
@@ -1155,8 +1121,7 @@ namespace NetDimension.Json.Linq
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(ushort? value)
-        {
+        public static implicit operator JToken(ushort? value) {
             return new JValue(value);
         }
 
@@ -1170,8 +1135,7 @@ namespace NetDimension.Json.Linq
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(uint? value)
-        {
+        public static implicit operator JToken(uint? value) {
             return new JValue(value);
         }
 
@@ -1185,8 +1149,7 @@ namespace NetDimension.Json.Linq
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(ulong? value)
-        {
+        public static implicit operator JToken(ulong? value) {
             return new JValue(value);
         }
 
@@ -1199,8 +1162,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(double value)
-        {
+        public static implicit operator JToken(double value) {
             return new JValue(value);
         }
 
@@ -1213,8 +1175,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(float value)
-        {
+        public static implicit operator JToken(float value) {
             return new JValue(value);
         }
 
@@ -1227,8 +1188,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(string value)
-        {
+        public static implicit operator JToken(string value) {
             return new JValue(value);
         }
 
@@ -1242,8 +1202,7 @@ namespace NetDimension.Json.Linq
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(uint value)
-        {
+        public static implicit operator JToken(uint value) {
             return new JValue(value);
         }
 
@@ -1257,8 +1216,7 @@ namespace NetDimension.Json.Linq
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
         [CLSCompliant(false)]
-        public static implicit operator JToken(ulong value)
-        {
+        public static implicit operator JToken(ulong value) {
             return new JValue(value);
         }
 
@@ -1271,27 +1229,23 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JValue" /> initialized with the specified value.
         /// </returns>
-        public static implicit operator JToken(byte[] value)
-        {
+        public static implicit operator JToken(byte[] value) {
             return new JValue(value);
         }
 
         #endregion
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
+        IEnumerator IEnumerable.GetEnumerator() {
             return ((IEnumerable<JToken>) this).GetEnumerator();
         }
 
-        IEnumerator<JToken> IEnumerable<JToken>.GetEnumerator()
-        {
+        IEnumerator<JToken> IEnumerable<JToken>.GetEnumerator() {
             return Children().GetEnumerator();
         }
 
         internal abstract int GetDeepHashCode();
 
-        IJEnumerable<JToken> IJEnumerable<JToken>.this[object key]
-        {
+        IJEnumerable<JToken> IJEnumerable<JToken>.this[object key] {
             get { return this[key]; }
         }
 
@@ -1301,19 +1255,16 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="JsonReader" /> that can be used to read this token and its descendants.
         /// </returns>
-        public JsonReader CreateReader()
-        {
+        public JsonReader CreateReader() {
             return new JTokenReader(this);
         }
 
-        internal static JToken FromObjectInternal(object o, JsonSerializer jsonSerializer)
-        {
+        internal static JToken FromObjectInternal(object o, JsonSerializer jsonSerializer) {
             ValidationUtils.ArgumentNotNull(o, "o");
             ValidationUtils.ArgumentNotNull(jsonSerializer, "jsonSerializer");
 
             JToken token;
-            using (var jsonWriter = new JTokenWriter())
-            {
+            using (var jsonWriter = new JTokenWriter()) {
                 jsonSerializer.Serialize(jsonWriter, o);
                 token = jsonWriter.Token;
             }
@@ -1330,8 +1281,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JToken" /> with the value of the specified object
         /// </returns>
-        public static JToken FromObject(object o)
-        {
+        public static JToken FromObject(object o) {
             return FromObjectInternal(o, new JsonSerializer());
         }
 
@@ -1347,8 +1297,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JToken" /> with the value of the specified object
         /// </returns>
-        public static JToken FromObject(object o, JsonSerializer jsonSerializer)
-        {
+        public static JToken FromObject(object o, JsonSerializer jsonSerializer) {
             return FromObjectInternal(o, jsonSerializer);
         }
 
@@ -1356,8 +1305,7 @@ namespace NetDimension.Json.Linq
         ///     Creates the specified .NET type from the <see cref="JToken" />.
         /// </summary>
         /// <returns>The new object created from the JSON value.</returns>
-        public T ToObject<T>()
-        {
+        public T ToObject<T>() {
             return ToObject<T>(new JsonSerializer());
         }
 
@@ -1368,12 +1316,10 @@ namespace NetDimension.Json.Linq
         ///     The <see cref="JsonSerializer" /> that will be used when creating the object.
         /// </param>
         /// <returns>The new object created from the JSON value.</returns>
-        public T ToObject<T>(JsonSerializer jsonSerializer)
-        {
+        public T ToObject<T>(JsonSerializer jsonSerializer) {
             ValidationUtils.ArgumentNotNull(jsonSerializer, "jsonSerializer");
 
-            using (var jsonReader = new JTokenReader(this))
-            {
+            using (var jsonReader = new JTokenReader(this)) {
                 return jsonSerializer.Deserialize<T>(jsonReader);
             }
         }
@@ -1389,30 +1335,34 @@ namespace NetDimension.Json.Linq
         ///     that were read from the reader. The runtime type of the token is determined
         ///     by the token type of the first token encountered in the reader.
         /// </returns>
-        public static JToken ReadFrom(JsonReader reader)
-        {
+        public static JToken ReadFrom(JsonReader reader) {
             ValidationUtils.ArgumentNotNull(reader, "reader");
 
-            if (reader.TokenType == JsonToken.None)
-            {
-                if (!reader.Read())
+            if (reader.TokenType == JsonToken.None) {
+                if (!reader.Read()) {
                     throw JsonReaderException.Create(reader, "Error reading JToken from JsonReader.");
+                }
             }
 
-            if (reader.TokenType == JsonToken.StartObject)
+            if (reader.TokenType == JsonToken.StartObject) {
                 return JObject.Load(reader);
+            }
 
-            if (reader.TokenType == JsonToken.StartArray)
+            if (reader.TokenType == JsonToken.StartArray) {
                 return JArray.Load(reader);
+            }
 
-            if (reader.TokenType == JsonToken.PropertyName)
+            if (reader.TokenType == JsonToken.PropertyName) {
                 return JProperty.Load(reader);
+            }
 
-            if (reader.TokenType == JsonToken.StartConstructor)
+            if (reader.TokenType == JsonToken.StartConstructor) {
                 return JConstructor.Load(reader);
+            }
 
-            if (!JsonReader.IsStartToken(reader.TokenType))
+            if (!JsonReader.IsStartToken(reader.TokenType)) {
                 return new JValue(reader.Value);
+            }
 
             // TODO: loading constructor and parameters?
             throw JsonReaderException.Create(reader,
@@ -1429,14 +1379,14 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JToken" /> populated from the string that contains JSON.
         /// </returns>
-        public static JToken Parse(string json)
-        {
+        public static JToken Parse(string json) {
             JsonReader reader = new JsonTextReader(new StringReader(json));
 
             var t = Load(reader);
 
-            if (reader.Read() && reader.TokenType != JsonToken.Comment)
+            if (reader.Read() && reader.TokenType != JsonToken.Comment) {
                 throw JsonReaderException.Create(reader, "Additional text found in JSON string after parsing content.");
+            }
 
             return t;
         }
@@ -1452,37 +1402,32 @@ namespace NetDimension.Json.Linq
         ///     that were read from the reader. The runtime type of the token is determined
         ///     by the token type of the first token encountered in the reader.
         /// </returns>
-        public static JToken Load(JsonReader reader)
-        {
+        public static JToken Load(JsonReader reader) {
             return ReadFrom(reader);
         }
 
-        internal void SetLineInfo(IJsonLineInfo lineInfo)
-        {
-            if (lineInfo == null || !lineInfo.HasLineInfo())
+        internal void SetLineInfo(IJsonLineInfo lineInfo) {
+            if (lineInfo == null || !lineInfo.HasLineInfo()) {
                 return;
+            }
 
             SetLineInfo(lineInfo.LineNumber, lineInfo.LinePosition);
         }
 
-        internal void SetLineInfo(int lineNumber, int linePosition)
-        {
+        internal void SetLineInfo(int lineNumber, int linePosition) {
             _lineNumber = lineNumber;
             _linePosition = linePosition;
         }
 
-        bool IJsonLineInfo.HasLineInfo()
-        {
+        bool IJsonLineInfo.HasLineInfo() {
             return (_lineNumber != null && _linePosition != null);
         }
 
-        int IJsonLineInfo.LineNumber
-        {
+        int IJsonLineInfo.LineNumber {
             get { return _lineNumber ?? 0; }
         }
 
-        int IJsonLineInfo.LinePosition
-        {
+        int IJsonLineInfo.LinePosition {
             get { return _linePosition ?? 0; }
         }
 
@@ -1498,8 +1443,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JToken" /> that matches the object path or a null reference if no matching token is found.
         /// </returns>
-        public JToken SelectToken(string path)
-        {
+        public JToken SelectToken(string path) {
             return SelectToken(path, false);
         }
 
@@ -1516,8 +1460,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="JToken" /> that matches the object path.
         /// </returns>
-        public JToken SelectToken(string path, bool errorWhenNoMatch)
-        {
+        public JToken SelectToken(string path, bool errorWhenNoMatch) {
             var p = new JPath(path);
             return p.Evaluate(this, errorWhenNoMatch);
         }
@@ -1530,8 +1473,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="T:System.Dynamic.DynamicMetaObject" /> to bind this object.
         /// </returns>
-        protected virtual DynamicMetaObject GetMetaObject(Expression parameter)
-        {
+        protected virtual DynamicMetaObject GetMetaObject(Expression parameter) {
             return new DynamicProxyMetaObject<JToken>(parameter, this, new DynamicProxy<JToken>(), true);
         }
 
@@ -1542,15 +1484,13 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="T:System.Dynamic.DynamicMetaObject" /> to bind this object.
         /// </returns>
-        DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter)
-        {
+        DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter) {
             return GetMetaObject(parameter);
         }
 #endif
 
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
-        object ICloneable.Clone()
-        {
+        object ICloneable.Clone() {
             return DeepClone();
         }
 #endif
@@ -1561,8 +1501,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A new instance of the <see cref="JToken" />.
         /// </returns>
-        public JToken DeepClone()
-        {
+        public JToken DeepClone() {
             return CloneToken();
         }
     }

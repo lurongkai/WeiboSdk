@@ -33,6 +33,7 @@ using System.Linq;
 using NetDimension.Json.Linq;
 using NetDimension.Json.Serialization;
 using NetDimension.Json.Utilities;
+
 #if NETFX_CORE
 using IConvertible = NetDimension.Json.Utilities.Convertible;
 #endif
@@ -55,12 +56,11 @@ namespace NetDimension.Json.Schema
         ///     Gets or sets the contract resolver.
         /// </summary>
         /// <value>The contract resolver.</value>
-        public IContractResolver ContractResolver
-        {
-            get
-            {
-                if (_contractResolver == null)
+        public IContractResolver ContractResolver {
+            get {
+                if (_contractResolver == null) {
                     return DefaultContractResolver.Instance;
+                }
 
                 return _contractResolver;
             }
@@ -69,8 +69,7 @@ namespace NetDimension.Json.Schema
 
         private class TypeSchema
         {
-            public TypeSchema(Type type, JsonSchema schema)
-            {
+            public TypeSchema(Type type, JsonSchema schema) {
                 ValidationUtils.ArgumentNotNull(type, "type");
                 ValidationUtils.ArgumentNotNull(schema, "schema");
 
@@ -86,29 +85,23 @@ namespace NetDimension.Json.Schema
         private readonly IList<TypeSchema> _stack = new List<TypeSchema>();
         private JsonSchema _currentSchema;
 
-        private JsonSchema CurrentSchema
-        {
+        private JsonSchema CurrentSchema {
             get { return _currentSchema; }
         }
 
-        private void Push(TypeSchema typeSchema)
-        {
+        private void Push(TypeSchema typeSchema) {
             _currentSchema = typeSchema.Schema;
             _stack.Add(typeSchema);
             _resolver.LoadedSchemas.Add(typeSchema.Schema);
         }
 
-        private TypeSchema Pop()
-        {
+        private TypeSchema Pop() {
             var popped = _stack[_stack.Count - 1];
             _stack.RemoveAt(_stack.Count - 1);
             var newValue = _stack.LastOrDefault();
-            if (newValue != null)
-            {
+            if (newValue != null) {
                 _currentSchema = newValue.Schema;
-            }
-            else
-            {
+            } else {
                 _currentSchema = null;
             }
 
@@ -124,8 +117,7 @@ namespace NetDimension.Json.Schema
         /// <returns>
         ///     A <see cref="JsonSchema" /> generated from the specified type.
         /// </returns>
-        public JsonSchema Generate(Type type)
-        {
+        public JsonSchema Generate(Type type) {
             return Generate(type, new JsonSchemaResolver(), false);
         }
 
@@ -141,8 +133,7 @@ namespace NetDimension.Json.Schema
         /// <returns>
         ///     A <see cref="JsonSchema" /> generated from the specified type.
         /// </returns>
-        public JsonSchema Generate(Type type, JsonSchemaResolver resolver)
-        {
+        public JsonSchema Generate(Type type, JsonSchemaResolver resolver) {
             return Generate(type, resolver, false);
         }
 
@@ -158,8 +149,7 @@ namespace NetDimension.Json.Schema
         /// <returns>
         ///     A <see cref="JsonSchema" /> generated from the specified type.
         /// </returns>
-        public JsonSchema Generate(Type type, bool rootSchemaNullable)
-        {
+        public JsonSchema Generate(Type type, bool rootSchemaNullable) {
             return Generate(type, new JsonSchemaResolver(), rootSchemaNullable);
         }
 
@@ -178,8 +168,7 @@ namespace NetDimension.Json.Schema
         /// <returns>
         ///     A <see cref="JsonSchema" /> generated from the specified type.
         /// </returns>
-        public JsonSchema Generate(Type type, JsonSchemaResolver resolver, bool rootSchemaNullable)
-        {
+        public JsonSchema Generate(Type type, JsonSchemaResolver resolver, bool rootSchemaNullable) {
             ValidationUtils.ArgumentNotNull(type, "type");
             ValidationUtils.ArgumentNotNull(resolver, "resolver");
 
@@ -188,44 +177,45 @@ namespace NetDimension.Json.Schema
             return GenerateInternal(type, (!rootSchemaNullable) ? Required.Always : Required.Default, false);
         }
 
-        private string GetTitle(Type type)
-        {
+        private string GetTitle(Type type) {
             var containerAttribute = JsonTypeReflector.GetJsonContainerAttribute(type);
 
-            if (containerAttribute != null && !string.IsNullOrEmpty(containerAttribute.Title))
+            if (containerAttribute != null && !string.IsNullOrEmpty(containerAttribute.Title)) {
                 return containerAttribute.Title;
+            }
 
             return null;
         }
 
-        private string GetDescription(Type type)
-        {
+        private string GetDescription(Type type) {
             var containerAttribute = JsonTypeReflector.GetJsonContainerAttribute(type);
 
-            if (containerAttribute != null && !string.IsNullOrEmpty(containerAttribute.Description))
+            if (containerAttribute != null && !string.IsNullOrEmpty(containerAttribute.Description)) {
                 return containerAttribute.Description;
+            }
 
 #if !(NETFX_CORE || PORTABLE)
             var descriptionAttribute = ReflectionUtils.GetAttribute<DescriptionAttribute>(type);
-            if (descriptionAttribute != null)
+            if (descriptionAttribute != null) {
                 return descriptionAttribute.Description;
+            }
 #endif
 
             return null;
         }
 
-        private string GetTypeId(Type type, bool explicitOnly)
-        {
+        private string GetTypeId(Type type, bool explicitOnly) {
             var containerAttribute = JsonTypeReflector.GetJsonContainerAttribute(type);
 
-            if (containerAttribute != null && !string.IsNullOrEmpty(containerAttribute.Id))
+            if (containerAttribute != null && !string.IsNullOrEmpty(containerAttribute.Id)) {
                 return containerAttribute.Id;
+            }
 
-            if (explicitOnly)
+            if (explicitOnly) {
                 return null;
+            }
 
-            switch (UndefinedSchemaIdHandling)
-            {
+            switch (UndefinedSchemaIdHandling) {
                 case UndefinedSchemaIdHandling.UseTypeName:
                     return type.FullName;
                 case UndefinedSchemaIdHandling.UseAssemblyQualifiedName:
@@ -235,32 +225,30 @@ namespace NetDimension.Json.Schema
             }
         }
 
-        private JsonSchema GenerateInternal(Type type, Required valueRequired, bool required)
-        {
+        private JsonSchema GenerateInternal(Type type, Required valueRequired, bool required) {
             ValidationUtils.ArgumentNotNull(type, "type");
 
             var resolvedId = GetTypeId(type, false);
             var explicitId = GetTypeId(type, true);
 
-            if (!string.IsNullOrEmpty(resolvedId))
-            {
+            if (!string.IsNullOrEmpty(resolvedId)) {
                 var resolvedSchema = _resolver.GetSchema(resolvedId);
-                if (resolvedSchema != null)
-                {
+                if (resolvedSchema != null) {
                     // resolved schema is not null but referencing member allows nulls
                     // change resolved schema to allow nulls. hacky but what are ya gonna do?
-                    if (valueRequired != Required.Always && !HasFlag(resolvedSchema.Type, JsonSchemaType.Null))
+                    if (valueRequired != Required.Always && !HasFlag(resolvedSchema.Type, JsonSchemaType.Null)) {
                         resolvedSchema.Type |= JsonSchemaType.Null;
-                    if (required && resolvedSchema.Required != true)
+                    }
+                    if (required && resolvedSchema.Required != true) {
                         resolvedSchema.Required = true;
+                    }
 
                     return resolvedSchema;
                 }
             }
 
             // test for unresolved circular reference
-            if (_stack.Any(tc => tc.Type == type))
-            {
+            if (_stack.Any(tc => tc.Type == type)) {
                 throw new JsonException(
                     "Unresolved circular reference for type '{0}'. Explicitly define an Id for the type using a JsonObject/JsonArray attribute or automatically generate a type Id using the UndefinedSchemaIdHandling property."
                         .FormatWith(CultureInfo.InvariantCulture, type));
@@ -268,32 +256,30 @@ namespace NetDimension.Json.Schema
 
             var contract = ContractResolver.ResolveContract(type);
             JsonConverter converter;
-            if ((converter = contract.Converter) != null || (converter = contract.InternalConverter) != null)
-            {
+            if ((converter = contract.Converter) != null || (converter = contract.InternalConverter) != null) {
                 var converterSchema = converter.GetSchema();
-                if (converterSchema != null)
+                if (converterSchema != null) {
                     return converterSchema;
+                }
             }
 
             Push(new TypeSchema(type, new JsonSchema()));
 
-            if (explicitId != null)
+            if (explicitId != null) {
                 CurrentSchema.Id = explicitId;
+            }
 
-            if (required)
+            if (required) {
                 CurrentSchema.Required = true;
+            }
             CurrentSchema.Title = GetTitle(type);
             CurrentSchema.Description = GetDescription(type);
 
-            if (converter != null)
-            {
+            if (converter != null) {
                 // todo: Add GetSchema to JsonConverter and use here?
                 CurrentSchema.Type = JsonSchemaType.Any;
-            }
-            else
-            {
-                switch (contract.ContractType)
-                {
+            } else {
+                switch (contract.ContractType) {
                     case JsonContractType.Object:
                         CurrentSchema.Type = AddNullType(JsonSchemaType.Object, valueRequired);
                         CurrentSchema.Id = GetTypeId(type, false);
@@ -308,8 +294,7 @@ namespace NetDimension.Json.Schema
                         var allowNullItem = (arrayAttribute == null || arrayAttribute.AllowNullItems);
 
                         var collectionItemType = ReflectionUtils.GetCollectionItemType(type);
-                        if (collectionItemType != null)
-                        {
+                        if (collectionItemType != null) {
                             CurrentSchema.Items = new List<JsonSchema>();
                             CurrentSchema.Items.Add(GenerateInternal(collectionItemType,
                                                                      (!allowNullItem)
@@ -321,14 +306,12 @@ namespace NetDimension.Json.Schema
                         CurrentSchema.Type = GetJsonSchemaType(type, valueRequired);
 
                         if (CurrentSchema.Type == JsonSchemaType.Integer && type.IsEnum() &&
-                            !type.IsDefined(typeof (FlagsAttribute), true))
-                        {
+                            !type.IsDefined(typeof (FlagsAttribute), true)) {
                             CurrentSchema.Enum = new List<JToken>();
                             CurrentSchema.Options = new Dictionary<JToken, string>();
 
                             var enumValues = EnumUtils.GetNamesAndValues<long>(type);
-                            foreach (var enumValue in enumValues)
-                            {
+                            foreach (var enumValue in enumValues) {
                                 var value = JToken.FromObject(enumValue.Value);
 
                                 CurrentSchema.Enum.Add(value);
@@ -350,11 +333,9 @@ namespace NetDimension.Json.Schema
                         Type valueType;
                         ReflectionUtils.GetDictionaryKeyValueTypes(type, out keyType, out valueType);
 
-                        if (keyType != null)
-                        {
+                        if (keyType != null) {
                             // can be converted to a string
-                            if (ConvertUtils.IsConvertible(keyType))
-                            {
+                            if (ConvertUtils.IsConvertible(keyType)) {
                                 CurrentSchema.AdditionalProperties = GenerateInternal(valueType, Required.Default, false);
                             }
                         }
@@ -381,26 +362,22 @@ namespace NetDimension.Json.Schema
             return Pop().Schema;
         }
 
-        private JsonSchemaType AddNullType(JsonSchemaType type, Required valueRequired)
-        {
-            if (valueRequired != Required.Always)
+        private JsonSchemaType AddNullType(JsonSchemaType type, Required valueRequired) {
+            if (valueRequired != Required.Always) {
                 return type | JsonSchemaType.Null;
+            }
 
             return type;
         }
 
-        private bool HasFlag(DefaultValueHandling value, DefaultValueHandling flag)
-        {
+        private bool HasFlag(DefaultValueHandling value, DefaultValueHandling flag) {
             return ((value & flag) == flag);
         }
 
-        private void GenerateObjectSchema(Type type, JsonObjectContract contract)
-        {
+        private void GenerateObjectSchema(Type type, JsonObjectContract contract) {
             CurrentSchema.Properties = new Dictionary<string, JsonSchema>();
-            foreach (var property in contract.Properties)
-            {
-                if (!property.Ignored)
-                {
+            foreach (var property in contract.Properties) {
+                if (!property.Ignored) {
                     var optional = property.NullValueHandling == NullValueHandling.Ignore ||
                                    HasFlag(property.DefaultValueHandling.GetValueOrDefault(),
                                            DefaultValueHandling.Ignore) ||
@@ -409,55 +386,56 @@ namespace NetDimension.Json.Schema
 
                     var propertySchema = GenerateInternal(property.PropertyType, property.Required, !optional);
 
-                    if (property.DefaultValue != null)
+                    if (property.DefaultValue != null) {
                         propertySchema.Default = JToken.FromObject(property.DefaultValue);
+                    }
 
                     CurrentSchema.Properties.Add(property.PropertyName, propertySchema);
                 }
             }
 
-            if (type.IsSealed())
+            if (type.IsSealed()) {
                 CurrentSchema.AllowAdditionalProperties = false;
+            }
         }
 
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
-        private void GenerateISerializableContract(Type type, JsonISerializableContract contract)
-        {
+        private void GenerateISerializableContract(Type type, JsonISerializableContract contract) {
             CurrentSchema.AllowAdditionalProperties = true;
         }
 #endif
 
-        internal static bool HasFlag(JsonSchemaType? value, JsonSchemaType flag)
-        {
+        internal static bool HasFlag(JsonSchemaType? value, JsonSchemaType flag) {
             // default value is Any
-            if (value == null)
+            if (value == null) {
                 return true;
+            }
 
             var match = ((value & flag) == flag);
-            if (match)
+            if (match) {
                 return true;
+            }
 
             // integer is a subset of float
-            if (value == JsonSchemaType.Float && flag == JsonSchemaType.Integer)
+            if (value == JsonSchemaType.Float && flag == JsonSchemaType.Integer) {
                 return true;
+            }
 
             return false;
         }
 
-        private JsonSchemaType GetJsonSchemaType(Type type, Required valueRequired)
-        {
+        private JsonSchemaType GetJsonSchemaType(Type type, Required valueRequired) {
             var schemaType = JsonSchemaType.None;
-            if (valueRequired != Required.Always && ReflectionUtils.IsNullable(type))
-            {
+            if (valueRequired != Required.Always && ReflectionUtils.IsNullable(type)) {
                 schemaType = JsonSchemaType.Null;
-                if (ReflectionUtils.IsNullableType(type))
+                if (ReflectionUtils.IsNullableType(type)) {
                     type = Nullable.GetUnderlyingType(type);
+                }
             }
 
             var typeCode = ConvertUtils.GetTypeCode(type);
 
-            switch (typeCode)
-            {
+            switch (typeCode) {
                 case TypeCode.Empty:
                 case TypeCode.Object:
                     return schemaType | JsonSchemaType.String;

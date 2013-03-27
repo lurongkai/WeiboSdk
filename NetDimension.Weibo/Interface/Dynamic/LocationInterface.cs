@@ -14,8 +14,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="client">操作类</param>
         public LocationInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new LocationAPI(client);
         }
 
@@ -40,8 +39,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         public dynamic GetMapImage(string center = "", string city = "", string coordinates = "", string names = null,
                                    string offsetX = "", string offsetY = "", string font = "", string lines = "",
                                    string polygons = "", string size = "240×240", string format = "png",
-                                   string zoom = "", bool scale = false, bool traffic = false)
-        {
+                                   string zoom = "", bool scale = false, bool traffic = false) {
             return
                 DynamicJson.Parse(api.GetMapImage(center, city, coordinates, names, offsetX, offsetY, font, lines,
                                                   polygons, size, format, zoom, scale, traffic));
@@ -52,8 +50,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="ips">需要获取坐标的IP地址，最多不超过10个。</param>
         /// <returns></returns>
-        public dynamic IPtoGeo(string[] ips)
-        {
+        public dynamic IPtoGeo(string[] ips) {
             return DynamicJson.Parse(api.IPtoGeo(ips));
         }
 
@@ -62,8 +59,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="address">需要获取坐标的实际地址</param>
         /// <returns></returns>
-        public dynamic AddressToGeo(string address)
-        {
+        public dynamic AddressToGeo(string address) {
             return DynamicJson.Parse(api.AddressToGeo(address));
         }
 
@@ -72,8 +68,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="coordinate">需要获取实际地址的坐标，经度纬度用逗号分隔。 </param>
         /// <returns></returns>
-        public string GeoToAddress(string coordinate)
-        {
+        public string GeoToAddress(string coordinate) {
             return DynamicJson.Parse(api.GeoToAddress(coordinate));
         }
 
@@ -82,8 +77,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="coordinate">需要获取偏移坐标的源坐标，经度纬度用逗号分隔。 </param>
         /// <returns></returns>
-        public string GpsToOffset(string coordinate)
-        {
+        public string GpsToOffset(string coordinate) {
             return DynamicJson.Parse(api.GpsToOffset(coordinate));
         }
 
@@ -92,8 +86,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="coordinates">需要判断的坐标，格式：经度,纬度,字符标识|经度,纬度,字符标识。其中经度纬度用逗号分隔，字符标识用于返回结果中的返回值标识。“|”分隔多个坐标。一次最多50个坐标。示例：coordinates=120.035847163,23.1014362572,g1|116.035847163,38.1014362572,g2。 </param>
         /// <returns></returns>
-        public dynamic IsDomestic(string coordinates)
-        {
+        public dynamic IsDomestic(string coordinates) {
             return DynamicJson.Parse(api.IsDomestic(coordinates));
         }
 
@@ -102,8 +95,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="srcids">需要获取POI的来源ID，是由用户通过add接口自己提交的，最多不超过5个。 </param>
         /// <returns></returns>
-        public dynamic ShowPOIs(string[] srcids)
-        {
+        public dynamic ShowPOIs(string[] srcids) {
             return DynamicJson.Parse(api.ShowPOIs(srcids));
         }
 
@@ -117,8 +109,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">单页返回的记录条数，默认为10，最大为20。 </param>
         /// <returns></returns>
         public dynamic SearchPOIsByLocation(string q = "", string category = "", string city = "", int page = 1,
-                                            int count = 20)
-        {
+                                            int count = 20) {
             return DynamicJson.Parse(api.SearchPOIsByLocation(q, category, city, page, count));
         }
 
@@ -135,8 +126,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">单页返回的记录条数，默认为10，最大为20。 </param>
         /// <returns></returns>
         public dynamic SearchPOIsByGeo(string q = "", string category = "", string coordinate = "", string pid = "",
-                                       string city = "", int range = 500, int page = 1, int count = 20)
-        {
+                                       string city = "", int range = 500, int page = 1, int count = 20) {
             return DynamicJson.Parse(api.SearchPOIsByGeo(q, category, coordinate, pid, city, range, page, count));
         }
 
@@ -151,8 +141,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">单页返回的记录条数，默认为10，最大为20。 </param>
         /// <returns></returns>
         public dynamic SearchPOIsByArea(string q = "", string category = "", string coordinates = "", string city = "",
-                                        int page = 1, int count = 20)
-        {
+                                        int page = 1, int count = 20) {
             return DynamicJson.Parse(api.SearchPOIsByArea(q, category, coordinates, city, page, count));
         }
 
@@ -176,8 +165,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <returns></returns>
         public dynamic AddPOI(string srcid, string name, string address, string cityName, string category,
                               string longitude, string latitude, string phone = "", string picUrl = "", string url = "",
-                              string tags = "", string description = "", string intro = "", string traffic = "")
-        {
+                              string tags = "", string description = "", string intro = "", string traffic = "") {
             return
                 DynamicJson.Parse(api.AddPOI(srcid, name, address, cityName, category, longitude, latitude, phone,
                                              picUrl, url, tags, description, intro, traffic));
@@ -188,8 +176,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="json">特殊的JSON参数形式</param>
         /// <returns></returns>
-        public dynamic GetLocationByMobileStation(string json)
-        {
+        public dynamic GetLocationByMobileStation(string json) {
             return DynamicJson.Parse(api.GetLocationByMobileStation(json));
         }
 
@@ -203,8 +190,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="type">查询类型，0：速度优先、1：费用优先、2：距离优先，默认值为0。 </param>
         /// <returns></returns>
         public dynamic DriveRouteLine(string beginPID = "", string beginCoordinate = "", string endPID = "",
-                                      string endCoordinate = "", int type = 0)
-        {
+                                      string endCoordinate = "", int type = 0) {
             return DynamicJson.Parse(api.DriveRouteLine(beginPID, beginCoordinate, endPID, endCoordinate, type));
         }
 
@@ -218,8 +204,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="type">查询类型，0：速度优先、1：费用优先、2：距离优先，默认值为0。 </param>
         /// <returns></returns>
         public dynamic BusRouteLine(string beginPID = "", string beginCoordinate = "", string endPID = "",
-                                    string endCoordinate = "", int type = 0)
-        {
+                                    string endCoordinate = "", int type = 0) {
             return DynamicJson.Parse(api.BusRouteLine(beginPID, beginCoordinate, endPID, endCoordinate, type));
         }
 
@@ -231,8 +216,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="page">返回结果的页码，默认为1，最大为40。 </param>
         /// <param name="count">单页返回的记录条数，默认为10，最大为50。 </param>
         /// <returns></returns>
-        public dynamic BusLine(string q, string city = "", int page = 1, int count = 10)
-        {
+        public dynamic BusLine(string q, string city = "", int page = 1, int count = 10) {
             return DynamicJson.Parse(api.BusLine(q, city, page, count));
         }
 
@@ -244,8 +228,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="page">返回结果的页码，默认为1，最大为40。 </param>
         /// <param name="count">单页返回的记录条数，默认为10，最大为50。 </param>
         /// <returns></returns>
-        public dynamic BusStation(string q, string city = "", int page = 1, int count = 10)
-        {
+        public dynamic BusStation(string q, string city = "", int page = 1, int count = 10) {
             return DynamicJson.Parse(api.BusStation(q, city, page, count));
         }
     }

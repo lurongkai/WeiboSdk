@@ -41,13 +41,14 @@ namespace NetDimension.Json.Converters
         /// <returns>
         ///     <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
         /// </returns>
-        public override bool CanConvert(Type objectType)
-        {
-            if (objectType == typeof (DateTime) || objectType == typeof (DateTime?))
+        public override bool CanConvert(Type objectType) {
+            if (objectType == typeof (DateTime) || objectType == typeof (DateTime?)) {
                 return true;
+            }
 #if !PocketPC
-            if (objectType == typeof (DateTimeOffset) || objectType == typeof (DateTimeOffset?))
+            if (objectType == typeof (DateTimeOffset) || objectType == typeof (DateTimeOffset?)) {
                 return true;
+            }
 #endif
 
             return false;

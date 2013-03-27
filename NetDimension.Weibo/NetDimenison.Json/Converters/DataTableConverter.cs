@@ -45,21 +45,19 @@ namespace NetDimension.Json.Converters
         /// </param>
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             var table = (DataTable) value;
             var resolver = serializer.ContractResolver as DefaultContractResolver;
 
             writer.WriteStartArray();
 
-            foreach (DataRow row in table.Rows)
-            {
+            foreach (DataRow row in table.Rows) {
                 writer.WriteStartObject();
-                foreach (DataColumn column in row.Table.Columns)
-                {
+                foreach (DataColumn column in row.Table.Columns) {
                     if (serializer.NullValueHandling == NullValueHandling.Ignore &&
-                        (row[column] == null || row[column] == DBNull.Value))
+                        (row[column] == null || row[column] == DBNull.Value)) {
                         continue;
+                    }
 
                     writer.WritePropertyName((resolver != null)
                                                  ? resolver.GetResolvedPropertyName(column.ColumnName)
@@ -83,35 +81,28 @@ namespace NetDimension.Json.Converters
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-                                        JsonSerializer serializer)
-        {
+                                        JsonSerializer serializer) {
             DataTable dt;
 
-            if (reader.TokenType == JsonToken.PropertyName)
-            {
+            if (reader.TokenType == JsonToken.PropertyName) {
                 dt = new DataTable((string) reader.Value);
                 reader.Read();
-            }
-            else
-            {
+            } else {
                 dt = new DataTable();
             }
 
             reader.Read();
 
-            while (reader.TokenType == JsonToken.StartObject)
-            {
+            while (reader.TokenType == JsonToken.StartObject) {
                 var dr = dt.NewRow();
                 reader.Read();
 
-                while (reader.TokenType == JsonToken.PropertyName)
-                {
+                while (reader.TokenType == JsonToken.PropertyName) {
                     var columnName = (string) reader.Value;
 
                     reader.Read();
 
-                    if (!dt.Columns.Contains(columnName))
-                    {
+                    if (!dt.Columns.Contains(columnName)) {
                         var columnType = GetColumnDataType(reader.TokenType);
                         dt.Columns.Add(new DataColumn(columnName, columnType));
                     }
@@ -129,10 +120,8 @@ namespace NetDimension.Json.Converters
             return dt;
         }
 
-        private static Type GetColumnDataType(JsonToken tokenType)
-        {
-            switch (tokenType)
-            {
+        private static Type GetColumnDataType(JsonToken tokenType) {
+            switch (tokenType) {
                 case JsonToken.Integer:
                     return typeof (long);
                 case JsonToken.Float:
@@ -157,8 +146,7 @@ namespace NetDimension.Json.Converters
         /// <returns>
         ///     <c>true</c> if this instance can convert the specified value type; otherwise, <c>false</c>.
         /// </returns>
-        public override bool CanConvert(Type valueType)
-        {
+        public override bool CanConvert(Type valueType) {
             return (valueType == typeof (DataTable));
         }
     }

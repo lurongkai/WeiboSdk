@@ -41,8 +41,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Initializes a new instance of the <see cref="JsonSerializationException" /> class.
         /// </summary>
-        public JsonSerializationException()
-        {
+        public JsonSerializationException() {
         }
 
         /// <summary>
@@ -51,8 +50,7 @@ namespace NetDimension.Json
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         public JsonSerializationException(string message)
-            : base(message)
-        {
+            : base(message) {
         }
 
         /// <summary>
@@ -62,8 +60,7 @@ namespace NetDimension.Json
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
         public JsonSerializationException(string message, Exception innerException)
-            : base(message, innerException)
-        {
+            : base(message, innerException) {
         }
 
 #if !(WINDOWS_PHONE || SILVERLIGHT || NETFX_CORE || PORTABLE)
@@ -83,24 +80,20 @@ namespace NetDimension.Json
         ///     The class name is null or <see cref="P:System.Exception.HResult" /> is zero (0).
         /// </exception>
         public JsonSerializationException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
+            : base(info, context) {
         }
 #endif
 
-        internal static JsonSerializationException Create(JsonReader reader, string message)
-        {
+        internal static JsonSerializationException Create(JsonReader reader, string message) {
             return Create(reader, message, null);
         }
 
-        internal static JsonSerializationException Create(JsonReader reader, string message, Exception ex)
-        {
+        internal static JsonSerializationException Create(JsonReader reader, string message, Exception ex) {
             return Create(reader as IJsonLineInfo, reader.Path, message, ex);
         }
 
         internal static JsonSerializationException Create(IJsonLineInfo lineInfo, string path, string message,
-                                                          Exception ex)
-        {
+                                                          Exception ex) {
             message = FormatExceptionMessage(lineInfo, path, message);
 
             return new JsonSerializationException(message, ex);

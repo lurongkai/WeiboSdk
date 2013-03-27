@@ -33,8 +33,7 @@ namespace NetDimension.Json.Schema
 {
     internal class JsonSchemaModel
     {
-        public JsonSchemaModel()
-        {
+        public JsonSchemaModel() {
             Type = JsonSchemaType.Any;
             AllowAdditionalProperties = true;
             Required = false;
@@ -60,20 +59,17 @@ namespace NetDimension.Json.Schema
         public IList<JToken> Enum { get; set; }
         public JsonSchemaType Disallow { get; set; }
 
-        public static JsonSchemaModel Create(IList<JsonSchema> schemata)
-        {
+        public static JsonSchemaModel Create(IList<JsonSchema> schemata) {
             var model = new JsonSchemaModel();
 
-            foreach (var schema in schemata)
-            {
+            foreach (var schema in schemata) {
                 Combine(model, schema);
             }
 
             return model;
         }
 
-        private static void Combine(JsonSchemaModel model, JsonSchema schema)
-        {
+        private static void Combine(JsonSchemaModel model, JsonSchema schema) {
             // Version 3 of the Draft JSON Schema has the default value of Not Required
             model.Required = model.Required || (schema.Required ?? false);
             model.Type = model.Type & (schema.Type ?? JsonSchemaType.Any);
@@ -92,19 +88,19 @@ namespace NetDimension.Json.Schema
             model.MinimumItems = MathUtils.Max(model.MinimumItems, schema.MinimumItems);
             model.MaximumItems = MathUtils.Min(model.MaximumItems, schema.MaximumItems);
             model.AllowAdditionalProperties = model.AllowAdditionalProperties && schema.AllowAdditionalProperties;
-            if (schema.Enum != null)
-            {
-                if (model.Enum == null)
+            if (schema.Enum != null) {
+                if (model.Enum == null) {
                     model.Enum = new List<JToken>();
+                }
 
                 model.Enum.AddRangeDistinct(schema.Enum, new JTokenEqualityComparer());
             }
             model.Disallow = model.Disallow | (schema.Disallow ?? JsonSchemaType.None);
 
-            if (schema.Pattern != null)
-            {
-                if (model.Patterns == null)
+            if (schema.Pattern != null) {
+                if (model.Patterns == null) {
                     model.Patterns = new List<string>();
+                }
 
                 model.Patterns.AddDistinct(schema.Pattern);
             }

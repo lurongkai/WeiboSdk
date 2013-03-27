@@ -17,8 +17,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="client">操作类</param>
         public SuggestionInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new SuggestionAPI(client);
         }
 
@@ -27,8 +26,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
-        public IEnumerable<Entities.user.Entity> HotUsers(HotUserCatagory category = HotUserCatagory.@default)
-        {
+        public IEnumerable<Entities.user.Entity> HotUsers(HotUserCatagory category = HotUserCatagory.@default) {
             return JsonConvert.DeserializeObject<IEnumerable<Entities.user.Entity>>(api.HotUsers(category));
         }
 
@@ -38,8 +36,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public string MayInterestedUsers(int count = 10, int page = 1)
-        {
+        public string MayInterestedUsers(int count = 10, int page = 1) {
             return api.MayInterestedUsers(count, page);
         }
 
@@ -49,8 +46,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="content"></param>
         /// <param name="num"></param>
         /// <returns></returns>
-        public IEnumerable<Entities.user.Entity> UsersByStatus(string content, int num = 10)
-        {
+        public IEnumerable<Entities.user.Entity> UsersByStatus(string content, int num = 10) {
             return
                 JsonConvert.DeserializeObject<IEnumerable<Entities.user.Entity>>(
                     JObject.Parse(api.UsersByStatus(content, num))["users"].ToString());
@@ -65,8 +61,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
         public IEnumerable<Entities.status.Entity> HotStatuses(int type = 1, bool isPic = false, int count = 20,
-                                                               int page = 1)
-        {
+                                                               int page = 1) {
             return
                 JsonConvert.DeserializeObject<IEnumerable<Entities.status.Entity>>(
                     JObject.Parse(api.HotStatuses(type, isPic, count, page))["statuses"].ToString());
@@ -79,8 +74,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count">单页返回的记录条数，默认为50。</param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public IEnumerable<Entities.status.Entity> ReorderStatuses(int section, int count = 50, int page = 1)
-        {
+        public IEnumerable<Entities.status.Entity> ReorderStatuses(int section, int count = 50, int page = 1) {
             return
                 JsonConvert.DeserializeObject<IEnumerable<Entities.status.Entity>>(
                     JObject.Parse(api.ReorderStatuses(section, count, page))["statuses"].ToString());
@@ -93,8 +87,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count">单页返回的记录条数，默认为50。</param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public IDs ReorderStatusIDs(int section, int count = 50, int page = 1)
-        {
+        public IDs ReorderStatusIDs(int section, int count = 50, int page = 1) {
             return JsonConvert.DeserializeObject<IDs>(api.ReorderStatusIDs(section, count, page));
         }
 
@@ -104,8 +97,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public IEnumerable<Entities.status.Entity> HotFavorites(int count = 20, int page = 1)
-        {
+        public IEnumerable<Entities.status.Entity> HotFavorites(int count = 20, int page = 1) {
             return JsonConvert.DeserializeObject<IEnumerable<Entities.status.Entity>>(api.HotFavorites(count, page));
         }
 
@@ -114,8 +106,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="uid">不感兴趣的用户的UID。 </param>
         /// <returns></returns>
-        public Entities.user.Entity NotInterestedUsers(string uid)
-        {
+        public Entities.user.Entity NotInterestedUsers(string uid) {
             return JsonConvert.DeserializeObject<Entities.user.Entity>(api.NotInterestedUsers(uid));
         }
     }

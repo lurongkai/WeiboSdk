@@ -31,6 +31,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using NetDimension.Json.Utilities;
+
 #if NETFX_CORE
 using IConvertible = NetDimension.Json.Utilities.Convertible;
 #endif
@@ -118,18 +119,14 @@ namespace NetDimension.Json
                     }
             };
 
-        internal static State[][] BuildStateArray()
-        {
+        internal static State[][] BuildStateArray() {
             var allStates = StateArrayTempate.ToList();
             var errorStates = StateArrayTempate[0];
             var valueStates = StateArrayTempate[7];
 
-            foreach (JsonToken valueToken in EnumUtils.GetValues(typeof (JsonToken)))
-            {
-                if (allStates.Count <= (int) valueToken)
-                {
-                    switch (valueToken)
-                    {
+            foreach (JsonToken valueToken in EnumUtils.GetValues(typeof (JsonToken))) {
+                if (allStates.Count <= (int) valueToken) {
+                    switch (valueToken) {
                         case JsonToken.Integer:
                         case JsonToken.Float:
                         case JsonToken.String:
@@ -150,8 +147,7 @@ namespace NetDimension.Json
             return allStates.ToArray();
         }
 
-        static JsonWriter()
-        {
+        static JsonWriter() {
             StateArray = BuildStateArray();
         }
 
@@ -174,24 +170,22 @@ namespace NetDimension.Json
         ///     Gets the top.
         /// </summary>
         /// <value>The top.</value>
-        protected internal int Top
-        {
-            get
-            {
+        protected internal int Top {
+            get {
                 var depth = _stack.Count;
-                if (Peek() != JsonContainerType.None)
+                if (Peek() != JsonContainerType.None) {
                     depth++;
+                }
 
                 return depth;
             }
         }
 
-        internal string ContainerPath
-        {
-            get
-            {
-                if (_currentPosition.Type == JsonContainerType.None)
+        internal string ContainerPath {
+            get {
+                if (_currentPosition.Type == JsonContainerType.None) {
                     return string.Empty;
+                }
 
                 var positions = (_currentPosition.InsideContainer())
                                     ? _stack
@@ -204,12 +198,9 @@ namespace NetDimension.Json
         /// <summary>
         ///     Gets the state of the writer.
         /// </summary>
-        public WriteState WriteState
-        {
-            get
-            {
-                switch (_currentState)
-                {
+        public WriteState WriteState {
+            get {
+                switch (_currentState) {
                     case State.Error:
                         return WriteState.Error;
                     case State.Closed:
@@ -236,12 +227,11 @@ namespace NetDimension.Json
         /// <summary>
         ///     Gets the path of the writer.
         /// </summary>
-        public string Path
-        {
-            get
-            {
-                if (_currentPosition.Type == JsonContainerType.None)
+        public string Path {
+            get {
+                if (_currentPosition.Type == JsonContainerType.None) {
                     return string.Empty;
+                }
 
                 return JsonPosition.BuildPath(_stack.Concat(new[] {_currentPosition}));
             }
@@ -250,8 +240,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Indicates how JSON text output is formatted.
         /// </summary>
-        public Formatting Formatting
-        {
+        public Formatting Formatting {
             get { return _formatting; }
             set { _formatting = value; }
         }
@@ -269,8 +258,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Creates an instance of the <c>JsonWriter</c> class.
         /// </summary>
-        protected JsonWriter()
-        {
+        protected JsonWriter() {
             _stack = new List<JsonPosition>(4);
             _currentState = State.Start;
             _formatting = Formatting.None;
@@ -279,28 +267,23 @@ namespace NetDimension.Json
             CloseOutput = true;
         }
 
-        private void UpdateScopeWithFinishedValue()
-        {
+        private void UpdateScopeWithFinishedValue() {
             if (_currentPosition.Type == JsonContainerType.Array
-                || _currentPosition.Type == JsonContainerType.Constructor)
-            {
-                if (_currentPosition.Position == null)
+                || _currentPosition.Type == JsonContainerType.Constructor) {
+                if (_currentPosition.Position == null) {
                     _currentPosition.Position = 0;
-                else
+                } else {
                     _currentPosition.Position++;
+                }
             }
         }
 
-        private void Push(JsonContainerType value)
-        {
+        private void Push(JsonContainerType value) {
             UpdateScopeWithFinishedValue();
 
-            if (_currentPosition.Type == JsonContainerType.None)
-            {
+            if (_currentPosition.Type == JsonContainerType.None) {
                 _currentPosition.Type = value;
-            }
-            else
-            {
+            } else {
                 _stack.Add(_currentPosition);
                 var state = new JsonPosition
                     {
@@ -310,17 +293,13 @@ namespace NetDimension.Json
             }
         }
 
-        private JsonContainerType Pop()
-        {
+        private JsonContainerType Pop() {
             JsonPosition oldPosition;
-            if (_stack.Count > 0)
-            {
+            if (_stack.Count > 0) {
                 oldPosition = _currentPosition;
                 _currentPosition = _stack[_stack.Count - 1];
                 _stack.RemoveAt(_stack.Count - 1);
-            }
-            else
-            {
+            } else {
                 oldPosition = _currentPosition;
                 _currentPosition = new JsonPosition();
             }
@@ -328,8 +307,7 @@ namespace NetDimension.Json
             return oldPosition.Type;
         }
 
-        private JsonContainerType Peek()
-        {
+        private JsonContainerType Peek() {
             return _currentPosition.Type;
         }
 
@@ -341,16 +319,14 @@ namespace NetDimension.Json
         /// <summary>
         ///     Closes this stream and the underlying stream.
         /// </summary>
-        public virtual void Close()
-        {
+        public virtual void Close() {
             AutoCompleteAll();
         }
 
         /// <summary>
         ///     Writes the beginning of a Json object.
         /// </summary>
-        public virtual void WriteStartObject()
-        {
+        public virtual void WriteStartObject() {
             AutoComplete(JsonToken.StartObject);
             Push(JsonContainerType.Object);
         }
@@ -358,16 +334,14 @@ namespace NetDimension.Json
         /// <summary>
         ///     Writes the end of a Json object.
         /// </summary>
-        public virtual void WriteEndObject()
-        {
+        public virtual void WriteEndObject() {
             AutoCompleteClose(JsonToken.EndObject);
         }
 
         /// <summary>
         ///     Writes the beginning of a Json array.
         /// </summary>
-        public virtual void WriteStartArray()
-        {
+        public virtual void WriteStartArray() {
             AutoComplete(JsonToken.StartArray);
             Push(JsonContainerType.Array);
         }
@@ -375,8 +349,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Writes the end of an array.
         /// </summary>
-        public virtual void WriteEndArray()
-        {
+        public virtual void WriteEndArray() {
             AutoCompleteClose(JsonToken.EndArray);
         }
 
@@ -384,8 +357,7 @@ namespace NetDimension.Json
         ///     Writes the start of a constructor with the given name.
         /// </summary>
         /// <param name="name">The name of the constructor.</param>
-        public virtual void WriteStartConstructor(string name)
-        {
+        public virtual void WriteStartConstructor(string name) {
             AutoComplete(JsonToken.StartConstructor);
             Push(JsonContainerType.Constructor);
         }
@@ -393,8 +365,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Writes the end constructor.
         /// </summary>
-        public virtual void WriteEndConstructor()
-        {
+        public virtual void WriteEndConstructor() {
             AutoCompleteClose(JsonToken.EndConstructor);
         }
 
@@ -402,8 +373,7 @@ namespace NetDimension.Json
         ///     Writes the property name of a name/value pair on a Json object.
         /// </summary>
         /// <param name="name">The name of the property.</param>
-        public virtual void WritePropertyName(string name)
-        {
+        public virtual void WritePropertyName(string name) {
             _currentPosition.PropertyName = name;
             AutoComplete(JsonToken.PropertyName);
         }
@@ -411,8 +381,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Writes the end of the current Json object or array.
         /// </summary>
-        public virtual void WriteEnd()
-        {
+        public virtual void WriteEnd() {
             WriteEnd(Peek());
         }
 
@@ -422,28 +391,25 @@ namespace NetDimension.Json
         /// <param name="reader">
         ///     The <see cref="JsonReader" /> to read the token from.
         /// </param>
-        public void WriteToken(JsonReader reader)
-        {
+        public void WriteToken(JsonReader reader) {
             ValidationUtils.ArgumentNotNull(reader, "reader");
 
             int initialDepth;
 
-            if (reader.TokenType == JsonToken.None)
+            if (reader.TokenType == JsonToken.None) {
                 initialDepth = -1;
-            else if (!IsStartToken(reader.TokenType))
+            } else if (!IsStartToken(reader.TokenType)) {
                 initialDepth = reader.Depth + 1;
-            else
+            } else {
                 initialDepth = reader.Depth;
+            }
 
             WriteToken(reader, initialDepth);
         }
 
-        internal void WriteToken(JsonReader reader, int initialDepth)
-        {
-            do
-            {
-                switch (reader.TokenType)
-                {
+        internal void WriteToken(JsonReader reader, int initialDepth) {
+            do {
+                switch (reader.TokenType) {
                     case JsonToken.None:
                         // read to next
                         break;
@@ -456,10 +422,11 @@ namespace NetDimension.Json
                     case JsonToken.StartConstructor:
                         var constructorName = reader.Value.ToString();
                         // write a JValue date when the constructor is for a date
-                        if (string.Equals(constructorName, "Date", StringComparison.Ordinal))
+                        if (string.Equals(constructorName, "Date", StringComparison.Ordinal)) {
                             WriteConstructorDate(reader);
-                        else
+                        } else {
                             WriteStartConstructor(reader.Value.ToString());
+                        }
                         break;
                     case JsonToken.PropertyName:
                         WritePropertyName(reader.Value.ToString());
@@ -513,32 +480,33 @@ namespace NetDimension.Json
                 && reader.Read());
         }
 
-        private void WriteConstructorDate(JsonReader reader)
-        {
-            if (!reader.Read())
+        private void WriteConstructorDate(JsonReader reader) {
+            if (!reader.Read()) {
                 throw JsonWriterException.Create(this, "Unexpected end when reading date constructor.", null);
-            if (reader.TokenType != JsonToken.Integer)
+            }
+            if (reader.TokenType != JsonToken.Integer) {
                 throw JsonWriterException.Create(this,
                                                  "Unexpected token when reading date constructor. Expected Integer, got " +
                                                  reader.TokenType, null);
+            }
 
             var ticks = (long) reader.Value;
             var date = JsonConvert.ConvertJavaScriptTicksToDateTime(ticks);
 
-            if (!reader.Read())
+            if (!reader.Read()) {
                 throw JsonWriterException.Create(this, "Unexpected end when reading date constructor.", null);
-            if (reader.TokenType != JsonToken.EndConstructor)
+            }
+            if (reader.TokenType != JsonToken.EndConstructor) {
                 throw JsonWriterException.Create(this,
                                                  "Unexpected token when reading date constructor. Expected EndConstructor, got " +
                                                  reader.TokenType, null);
+            }
 
             WriteValue(date);
         }
 
-        private bool IsEndToken(JsonToken token)
-        {
-            switch (token)
-            {
+        private bool IsEndToken(JsonToken token) {
+            switch (token) {
                 case JsonToken.EndObject:
                 case JsonToken.EndArray:
                 case JsonToken.EndConstructor:
@@ -548,10 +516,8 @@ namespace NetDimension.Json
             }
         }
 
-        private bool IsStartToken(JsonToken token)
-        {
-            switch (token)
-            {
+        private bool IsStartToken(JsonToken token) {
+            switch (token) {
                 case JsonToken.StartObject:
                 case JsonToken.StartArray:
                 case JsonToken.StartConstructor:
@@ -561,10 +527,8 @@ namespace NetDimension.Json
             }
         }
 
-        private void WriteEnd(JsonContainerType type)
-        {
-            switch (type)
-            {
+        private void WriteEnd(JsonContainerType type) {
+            switch (type) {
                 case JsonContainerType.Object:
                     WriteEndObject();
                     break;
@@ -579,18 +543,14 @@ namespace NetDimension.Json
             }
         }
 
-        private void AutoCompleteAll()
-        {
-            while (Top > 0)
-            {
+        private void AutoCompleteAll() {
+            while (Top > 0) {
                 WriteEnd();
             }
         }
 
-        private JsonContainerType GetTypeForCloseToken(JsonToken token)
-        {
-            switch (token)
-            {
+        private JsonContainerType GetTypeForCloseToken(JsonToken token) {
+            switch (token) {
                 case JsonToken.EndObject:
                     return JsonContainerType.Object;
                 case JsonToken.EndArray:
@@ -602,10 +562,8 @@ namespace NetDimension.Json
             }
         }
 
-        private JsonToken GetCloseTokenForType(JsonContainerType type)
-        {
-            switch (type)
-            {
+        private JsonToken GetCloseTokenForType(JsonContainerType type) {
+            switch (type) {
                 case JsonContainerType.Object:
                     return JsonToken.EndObject;
                 case JsonContainerType.Array:
@@ -617,51 +575,44 @@ namespace NetDimension.Json
             }
         }
 
-        private void AutoCompleteClose(JsonToken tokenBeingClosed)
-        {
+        private void AutoCompleteClose(JsonToken tokenBeingClosed) {
             // write closing symbol and calculate new state
 
             var levelsToComplete = 0;
             var type = GetTypeForCloseToken(tokenBeingClosed);
 
-            if (_currentPosition.Type == type)
-            {
+            if (_currentPosition.Type == type) {
                 levelsToComplete = 1;
-            }
-            else
-            {
+            } else {
                 var top = Top - 2;
-                for (var i = top; i >= 0; i--)
-                {
+                for (var i = top; i >= 0; i--) {
                     var currentLevel = top - i;
 
-                    if (_stack[currentLevel].Type == type)
-                    {
+                    if (_stack[currentLevel].Type == type) {
                         levelsToComplete = i + 2;
                         break;
                     }
                 }
             }
 
-            if (levelsToComplete == 0)
+            if (levelsToComplete == 0) {
                 throw JsonWriterException.Create(this, "No token to close.", null);
+            }
 
-            for (var i = 0; i < levelsToComplete; i++)
-            {
+            for (var i = 0; i < levelsToComplete; i++) {
                 var token = GetCloseTokenForType(Pop());
 
-                if (_formatting == Formatting.Indented)
-                {
-                    if (_currentState != State.ObjectStart && _currentState != State.ArrayStart)
+                if (_formatting == Formatting.Indented) {
+                    if (_currentState != State.ObjectStart && _currentState != State.ArrayStart) {
                         WriteIndent();
+                    }
                 }
 
                 WriteEnd(token);
 
                 var currentLevelType = Peek();
 
-                switch (currentLevelType)
-                {
+                switch (currentLevelType) {
                     case JsonContainerType.Object:
                         _currentState = State.Object;
                         break;
@@ -684,67 +635,60 @@ namespace NetDimension.Json
         ///     Writes the specified end token.
         /// </summary>
         /// <param name="token">The end token to write.</param>
-        protected virtual void WriteEnd(JsonToken token)
-        {
+        protected virtual void WriteEnd(JsonToken token) {
         }
 
         /// <summary>
         ///     Writes indent characters.
         /// </summary>
-        protected virtual void WriteIndent()
-        {
+        protected virtual void WriteIndent() {
         }
 
         /// <summary>
         ///     Writes the JSON value delimiter.
         /// </summary>
-        protected virtual void WriteValueDelimiter()
-        {
+        protected virtual void WriteValueDelimiter() {
         }
 
         /// <summary>
         ///     Writes an indent space.
         /// </summary>
-        protected virtual void WriteIndentSpace()
-        {
+        protected virtual void WriteIndentSpace() {
         }
 
-        internal void AutoComplete(JsonToken tokenBeingWritten)
-        {
+        internal void AutoComplete(JsonToken tokenBeingWritten) {
             if (tokenBeingWritten != JsonToken.StartObject
                 && tokenBeingWritten != JsonToken.StartArray
-                && tokenBeingWritten != JsonToken.StartConstructor)
+                && tokenBeingWritten != JsonToken.StartConstructor) {
                 UpdateScopeWithFinishedValue();
+            }
 
             // gets new state based on the current state and what is being written
             var newState = StateArray[(int) tokenBeingWritten][(int) _currentState];
 
-            if (newState == State.Error)
+            if (newState == State.Error) {
                 throw JsonWriterException.Create(this,
                                                  "Token {0} in state {1} would result in an invalid JSON object."
                                                      .FormatWith(CultureInfo.InvariantCulture,
                                                                  tokenBeingWritten.ToString(), _currentState.ToString()),
                                                  null);
+            }
 
             if ((_currentState == State.Object || _currentState == State.Array || _currentState == State.Constructor) &&
-                tokenBeingWritten != JsonToken.Comment)
-            {
+                tokenBeingWritten != JsonToken.Comment) {
                 WriteValueDelimiter();
-            }
-            else if (_currentState == State.Property)
-            {
-                if (_formatting == Formatting.Indented)
+            } else if (_currentState == State.Property) {
+                if (_formatting == Formatting.Indented) {
                     WriteIndentSpace();
+                }
             }
 
-            if (_formatting == Formatting.Indented)
-            {
+            if (_formatting == Formatting.Indented) {
                 var writeState = WriteState;
 
                 // don't indent a property when it is the first token to be written (i.e. at the start)
                 if ((tokenBeingWritten == JsonToken.PropertyName && writeState != WriteState.Start) ||
-                    writeState == WriteState.Array || writeState == WriteState.Constructor)
-                {
+                    writeState == WriteState.Array || writeState == WriteState.Constructor) {
                     WriteIndent();
                 }
             }
@@ -757,16 +701,14 @@ namespace NetDimension.Json
         /// <summary>
         ///     Writes a null value.
         /// </summary>
-        public virtual void WriteNull()
-        {
+        public virtual void WriteNull() {
             AutoComplete(JsonToken.Null);
         }
 
         /// <summary>
         ///     Writes an undefined value.
         /// </summary>
-        public virtual void WriteUndefined()
-        {
+        public virtual void WriteUndefined() {
             AutoComplete(JsonToken.Undefined);
         }
 
@@ -774,16 +716,14 @@ namespace NetDimension.Json
         ///     Writes raw JSON without changing the writer's state.
         /// </summary>
         /// <param name="json">The raw JSON to write.</param>
-        public virtual void WriteRaw(string json)
-        {
+        public virtual void WriteRaw(string json) {
         }
 
         /// <summary>
         ///     Writes raw JSON where a value is expected and updates the writer's state.
         /// </summary>
         /// <param name="json">The raw JSON to write.</param>
-        public virtual void WriteRawValue(string json)
-        {
+        public virtual void WriteRawValue(string json) {
             // hack. want writer to change state as if a value had been written
             AutoComplete(JsonToken.Undefined);
             WriteRaw(json);
@@ -795,8 +735,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="String" /> value to write.
         /// </param>
-        public virtual void WriteValue(string value)
-        {
+        public virtual void WriteValue(string value) {
             AutoComplete(JsonToken.String);
         }
 
@@ -806,8 +745,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Int32" /> value to write.
         /// </param>
-        public virtual void WriteValue(int value)
-        {
+        public virtual void WriteValue(int value) {
             AutoComplete(JsonToken.Integer);
         }
 
@@ -818,8 +756,7 @@ namespace NetDimension.Json
         ///     The <see cref="UInt32" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public virtual void WriteValue(uint value)
-        {
+        public virtual void WriteValue(uint value) {
             AutoComplete(JsonToken.Integer);
         }
 
@@ -829,8 +766,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Int64" /> value to write.
         /// </param>
-        public virtual void WriteValue(long value)
-        {
+        public virtual void WriteValue(long value) {
             AutoComplete(JsonToken.Integer);
         }
 
@@ -841,8 +777,7 @@ namespace NetDimension.Json
         ///     The <see cref="UInt64" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public virtual void WriteValue(ulong value)
-        {
+        public virtual void WriteValue(ulong value) {
             AutoComplete(JsonToken.Integer);
         }
 
@@ -852,8 +787,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Single" /> value to write.
         /// </param>
-        public virtual void WriteValue(float value)
-        {
+        public virtual void WriteValue(float value) {
             AutoComplete(JsonToken.Float);
         }
 
@@ -863,8 +797,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Double" /> value to write.
         /// </param>
-        public virtual void WriteValue(double value)
-        {
+        public virtual void WriteValue(double value) {
             AutoComplete(JsonToken.Float);
         }
 
@@ -874,8 +807,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Boolean" /> value to write.
         /// </param>
-        public virtual void WriteValue(bool value)
-        {
+        public virtual void WriteValue(bool value) {
             AutoComplete(JsonToken.Boolean);
         }
 
@@ -885,8 +817,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Int16" /> value to write.
         /// </param>
-        public virtual void WriteValue(short value)
-        {
+        public virtual void WriteValue(short value) {
             AutoComplete(JsonToken.Integer);
         }
 
@@ -897,8 +828,7 @@ namespace NetDimension.Json
         ///     The <see cref="UInt16" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public virtual void WriteValue(ushort value)
-        {
+        public virtual void WriteValue(ushort value) {
             AutoComplete(JsonToken.Integer);
         }
 
@@ -908,8 +838,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Char" /> value to write.
         /// </param>
-        public virtual void WriteValue(char value)
-        {
+        public virtual void WriteValue(char value) {
             AutoComplete(JsonToken.String);
         }
 
@@ -919,8 +848,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Byte" /> value to write.
         /// </param>
-        public virtual void WriteValue(byte value)
-        {
+        public virtual void WriteValue(byte value) {
             AutoComplete(JsonToken.Integer);
         }
 
@@ -931,8 +859,7 @@ namespace NetDimension.Json
         ///     The <see cref="SByte" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public virtual void WriteValue(sbyte value)
-        {
+        public virtual void WriteValue(sbyte value) {
             AutoComplete(JsonToken.Integer);
         }
 
@@ -942,8 +869,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Decimal" /> value to write.
         /// </param>
-        public virtual void WriteValue(decimal value)
-        {
+        public virtual void WriteValue(decimal value) {
             AutoComplete(JsonToken.Float);
         }
 
@@ -953,8 +879,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="DateTime" /> value to write.
         /// </param>
-        public virtual void WriteValue(DateTime value)
-        {
+        public virtual void WriteValue(DateTime value) {
             AutoComplete(JsonToken.Date);
         }
 
@@ -965,8 +890,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="DateTimeOffset" /> value to write.
         /// </param>
-        public virtual void WriteValue(DateTimeOffset value)
-        {
+        public virtual void WriteValue(DateTimeOffset value) {
             AutoComplete(JsonToken.Date);
         }
 #endif
@@ -977,8 +901,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Guid" /> value to write.
         /// </param>
-        public virtual void WriteValue(Guid value)
-        {
+        public virtual void WriteValue(Guid value) {
             AutoComplete(JsonToken.String);
         }
 
@@ -988,8 +911,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="TimeSpan" /> value to write.
         /// </param>
-        public virtual void WriteValue(TimeSpan value)
-        {
+        public virtual void WriteValue(TimeSpan value) {
             AutoComplete(JsonToken.String);
         }
 
@@ -999,12 +921,12 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Nullable{Int32}" /> value to write.
         /// </param>
-        public virtual void WriteValue(int? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(int? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
         /// <summary>
@@ -1014,12 +936,12 @@ namespace NetDimension.Json
         ///     The <see cref="Nullable{UInt32}" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public virtual void WriteValue(uint? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(uint? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
         /// <summary>
@@ -1028,12 +950,12 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Nullable{Int64}" /> value to write.
         /// </param>
-        public virtual void WriteValue(long? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(long? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
         /// <summary>
@@ -1043,12 +965,12 @@ namespace NetDimension.Json
         ///     The <see cref="Nullable{UInt64}" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public virtual void WriteValue(ulong? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(ulong? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
         /// <summary>
@@ -1057,12 +979,12 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Nullable{Single}" /> value to write.
         /// </param>
-        public virtual void WriteValue(float? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(float? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
         /// <summary>
@@ -1071,12 +993,12 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Nullable{Double}" /> value to write.
         /// </param>
-        public virtual void WriteValue(double? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(double? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
         /// <summary>
@@ -1085,12 +1007,12 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Nullable{Boolean}" /> value to write.
         /// </param>
-        public virtual void WriteValue(bool? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(bool? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
         /// <summary>
@@ -1099,12 +1021,12 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Nullable{Int16}" /> value to write.
         /// </param>
-        public virtual void WriteValue(short? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(short? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
         /// <summary>
@@ -1114,12 +1036,12 @@ namespace NetDimension.Json
         ///     The <see cref="Nullable{UInt16}" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public virtual void WriteValue(ushort? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(ushort? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
         /// <summary>
@@ -1128,12 +1050,12 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Nullable{Char}" /> value to write.
         /// </param>
-        public virtual void WriteValue(char? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(char? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
         /// <summary>
@@ -1142,12 +1064,12 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Nullable{Byte}" /> value to write.
         /// </param>
-        public virtual void WriteValue(byte? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(byte? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
         /// <summary>
@@ -1157,12 +1079,12 @@ namespace NetDimension.Json
         ///     The <see cref="Nullable{SByte}" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public virtual void WriteValue(sbyte? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(sbyte? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
         /// <summary>
@@ -1171,12 +1093,12 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Nullable{Decimal}" /> value to write.
         /// </param>
-        public virtual void WriteValue(decimal? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(decimal? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
         /// <summary>
@@ -1185,12 +1107,12 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Nullable{DateTime}" /> value to write.
         /// </param>
-        public virtual void WriteValue(DateTime? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(DateTime? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
 #if !PocketPC
@@ -1200,12 +1122,12 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Nullable{DateTimeOffset}" /> value to write.
         /// </param>
-        public virtual void WriteValue(DateTimeOffset? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(DateTimeOffset? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 #endif
 
@@ -1215,12 +1137,12 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Nullable{Guid}" /> value to write.
         /// </param>
-        public virtual void WriteValue(Guid? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(Guid? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
         /// <summary>
@@ -1229,12 +1151,12 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Nullable{TimeSpan}" /> value to write.
         /// </param>
-        public virtual void WriteValue(TimeSpan? value)
-        {
-            if (value == null)
+        public virtual void WriteValue(TimeSpan? value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 WriteValue(value.Value);
+            }
         }
 
         /// <summary>
@@ -1243,12 +1165,12 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="T:Byte[]" /> value to write.
         /// </param>
-        public virtual void WriteValue(byte[] value)
-        {
-            if (value == null)
+        public virtual void WriteValue(byte[] value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 AutoComplete(JsonToken.Bytes);
+            }
         }
 
         /// <summary>
@@ -1257,12 +1179,12 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Uri" /> value to write.
         /// </param>
-        public virtual void WriteValue(Uri value)
-        {
-            if (value == null)
+        public virtual void WriteValue(Uri value) {
+            if (value == null) {
                 WriteNull();
-            else
+            } else {
                 AutoComplete(JsonToken.String);
+            }
         }
 
         /// <summary>
@@ -1272,19 +1194,14 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Object" /> value to write.
         /// </param>
-        public virtual void WriteValue(object value)
-        {
-            if (value == null)
-            {
+        public virtual void WriteValue(object value) {
+            if (value == null) {
                 WriteNull();
                 return;
-            }
-            else if (ConvertUtils.IsConvertible(value))
-            {
+            } else if (ConvertUtils.IsConvertible(value)) {
                 var convertible = ConvertUtils.ToConvertible(value);
 
-                switch (convertible.GetTypeCode())
-                {
+                switch (convertible.GetTypeCode()) {
                     case TypeCode.String:
                         WriteValue(convertible.ToString(CultureInfo.InvariantCulture));
                         return;
@@ -1338,29 +1255,21 @@ namespace NetDimension.Json
                 }
             }
 #if !PocketPC
-            else if (value is DateTimeOffset)
-            {
+            else if (value is DateTimeOffset) {
                 WriteValue((DateTimeOffset) value);
                 return;
             }
 #endif
-            else if (value is byte[])
-            {
+            else if (value is byte[]) {
                 WriteValue((byte[]) value);
                 return;
-            }
-            else if (value is Guid)
-            {
+            } else if (value is Guid) {
                 WriteValue((Guid) value);
                 return;
-            }
-            else if (value is Uri)
-            {
+            } else if (value is Uri) {
                 WriteValue((Uri) value);
                 return;
-            }
-            else if (value is TimeSpan)
-            {
+            } else if (value is TimeSpan) {
                 WriteValue((TimeSpan) value);
                 return;
             }
@@ -1376,8 +1285,7 @@ namespace NetDimension.Json
         ///     Writes out a comment <code>/*...*/</code> containing the specified text.
         /// </summary>
         /// <param name="text">Text to place inside the comment.</param>
-        public virtual void WriteComment(string text)
-        {
+        public virtual void WriteComment(string text) {
             AutoComplete(JsonToken.Comment);
         }
 
@@ -1385,25 +1293,23 @@ namespace NetDimension.Json
         ///     Writes out the given white space.
         /// </summary>
         /// <param name="ws">The string of white space characters.</param>
-        public virtual void WriteWhitespace(string ws)
-        {
-            if (ws != null)
-            {
-                if (!StringUtils.IsWhiteSpace(ws))
+        public virtual void WriteWhitespace(string ws) {
+            if (ws != null) {
+                if (!StringUtils.IsWhiteSpace(ws)) {
                     throw JsonWriterException.Create(this, "Only white space characters should be used.", null);
+                }
             }
         }
 
 
-        void IDisposable.Dispose()
-        {
+        void IDisposable.Dispose() {
             Dispose(true);
         }
 
-        private void Dispose(bool disposing)
-        {
-            if (_currentState != State.Closed)
+        private void Dispose(bool disposing) {
+            if (_currentState != State.Closed) {
                 Close();
+            }
         }
     }
 }

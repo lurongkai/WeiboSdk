@@ -34,6 +34,7 @@ using System.Xml;
 using System.Xml.Linq;
 using NetDimension.Json.Converters;
 using NetDimension.Json.Utilities;
+
 #if !(SILVERLIGHT || PORTABLE)
 #endif
 #if (!SILVERLIGHT || WINDOWS_PHONE) && !PORTABLE
@@ -94,8 +95,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="DateTime" />.
         /// </returns>
-        public static string ToString(DateTime value)
-        {
+        public static string ToString(DateTime value) {
             return ToString(value, DateFormatHandling.IsoDateFormat, DateTimeZoneHandling.RoundtripKind);
         }
 
@@ -108,22 +108,18 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="DateTime" />.
         /// </returns>
-        public static string ToString(DateTime value, DateFormatHandling format, DateTimeZoneHandling timeZoneHandling)
-        {
+        public static string ToString(DateTime value, DateFormatHandling format, DateTimeZoneHandling timeZoneHandling) {
             var updatedDateTime = EnsureDateTime(value, timeZoneHandling);
 
-            using (var writer = StringUtils.CreateStringWriter(64))
-            {
+            using (var writer = StringUtils.CreateStringWriter(64)) {
                 WriteDateTimeString(writer, updatedDateTime, updatedDateTime.GetUtcOffset(), updatedDateTime.Kind,
                                     format);
                 return writer.ToString();
             }
         }
 
-        internal static DateTime EnsureDateTime(DateTime value, DateTimeZoneHandling timeZone)
-        {
-            switch (timeZone)
-            {
+        internal static DateTime EnsureDateTime(DateTime value, DateTimeZoneHandling timeZone) {
+            switch (timeZone) {
                 case DateTimeZoneHandling.Local:
                     value = SwitchToLocalTime(value);
                     break;
@@ -150,8 +146,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="DateTimeOffset" />.
         /// </returns>
-        public static string ToString(DateTimeOffset value)
-        {
+        public static string ToString(DateTimeOffset value) {
             return ToString(value, DateFormatHandling.IsoDateFormat);
         }
 
@@ -166,10 +161,8 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="DateTimeOffset" />.
         /// </returns>
-        public static string ToString(DateTimeOffset value, DateFormatHandling format)
-        {
-            using (var writer = StringUtils.CreateStringWriter(64))
-            {
+        public static string ToString(DateTimeOffset value, DateFormatHandling format) {
+            using (var writer = StringUtils.CreateStringWriter(64)) {
                 WriteDateTimeString(writer,
                                     (format == DateFormatHandling.IsoDateFormat) ? value.DateTime : value.UtcDateTime,
                                     value.Offset, DateTimeKind.Local, format);
@@ -178,26 +171,23 @@ namespace NetDimension.Json
         }
 #endif
 
-        internal static void WriteDateTimeString(TextWriter writer, DateTime value, DateFormatHandling format)
-        {
+        internal static void WriteDateTimeString(TextWriter writer, DateTime value, DateFormatHandling format) {
             WriteDateTimeString(writer, value, value.GetUtcOffset(), value.Kind, format);
         }
 
         internal static void WriteDateTimeString(TextWriter writer, DateTime value, TimeSpan offset, DateTimeKind kind,
-                                                 DateFormatHandling format)
-        {
-            if (format == DateFormatHandling.MicrosoftDateFormat)
-            {
+                                                 DateFormatHandling format) {
+            if (format == DateFormatHandling.MicrosoftDateFormat) {
                 var javaScriptTicks = ConvertDateTimeToJavaScriptTicks(value, offset);
 
                 writer.Write(@"""\/Date(");
                 writer.Write(javaScriptTicks);
 
-                switch (kind)
-                {
+                switch (kind) {
                     case DateTimeKind.Unspecified:
-                        if (value != DateTime.MaxValue && value != DateTime.MinValue)
+                        if (value != DateTime.MaxValue && value != DateTime.MinValue) {
                             WriteDateTimeOffset(writer, offset, format);
+                        }
                         break;
                     case DateTimeKind.Local:
                         WriteDateTimeOffset(writer, offset, format);
@@ -205,14 +195,11 @@ namespace NetDimension.Json
                 }
 
                 writer.Write(@")\/string.Empty");
-            }
-            else
-            {
+            } else {
                 writer.Write(@"""");
                 writer.Write(value.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFF", CultureInfo.InvariantCulture));
 
-                switch (kind)
-                {
+                switch (kind) {
                     case DateTimeKind.Local:
                         WriteDateTimeOffset(writer, offset, format);
                         break;
@@ -226,86 +213,83 @@ namespace NetDimension.Json
             }
         }
 
-        internal static void WriteDateTimeOffset(TextWriter writer, TimeSpan offset, DateFormatHandling format)
-        {
+        internal static void WriteDateTimeOffset(TextWriter writer, TimeSpan offset, DateFormatHandling format) {
             writer.Write((offset.Ticks >= 0L) ? "+" : "-");
 
             var absHours = Math.Abs(offset.Hours);
-            if (absHours < 10)
+            if (absHours < 10) {
                 writer.Write(0);
+            }
             writer.Write(absHours);
 
-            if (format == DateFormatHandling.IsoDateFormat)
+            if (format == DateFormatHandling.IsoDateFormat) {
                 writer.Write(':');
+            }
 
             var absMinutes = Math.Abs(offset.Minutes);
-            if (absMinutes < 10)
+            if (absMinutes < 10) {
                 writer.Write(0);
+            }
             writer.Write(absMinutes);
         }
 
-        private static long ToUniversalTicks(DateTime dateTime)
-        {
-            if (dateTime.Kind == DateTimeKind.Utc)
+        private static long ToUniversalTicks(DateTime dateTime) {
+            if (dateTime.Kind == DateTimeKind.Utc) {
                 return dateTime.Ticks;
+            }
 
             return ToUniversalTicks(dateTime, dateTime.GetUtcOffset());
         }
 
-        private static long ToUniversalTicks(DateTime dateTime, TimeSpan offset)
-        {
+        private static long ToUniversalTicks(DateTime dateTime, TimeSpan offset) {
             // special case min and max value
             // they never have a timezone appended to avoid issues
-            if (dateTime.Kind == DateTimeKind.Utc || dateTime == DateTime.MaxValue || dateTime == DateTime.MinValue)
+            if (dateTime.Kind == DateTimeKind.Utc || dateTime == DateTime.MaxValue || dateTime == DateTime.MinValue) {
                 return dateTime.Ticks;
+            }
 
             var ticks = dateTime.Ticks - offset.Ticks;
-            if (ticks > 3155378975999999999L)
+            if (ticks > 3155378975999999999L) {
                 return 3155378975999999999L;
+            }
 
-            if (ticks < 0L)
+            if (ticks < 0L) {
                 return 0L;
+            }
 
             return ticks;
         }
 
-        internal static long ConvertDateTimeToJavaScriptTicks(DateTime dateTime, TimeSpan offset)
-        {
+        internal static long ConvertDateTimeToJavaScriptTicks(DateTime dateTime, TimeSpan offset) {
             var universialTicks = ToUniversalTicks(dateTime, offset);
 
             return UniversialTicksToJavaScriptTicks(universialTicks);
         }
 
-        internal static long ConvertDateTimeToJavaScriptTicks(DateTime dateTime)
-        {
+        internal static long ConvertDateTimeToJavaScriptTicks(DateTime dateTime) {
             return ConvertDateTimeToJavaScriptTicks(dateTime, true);
         }
 
-        internal static long ConvertDateTimeToJavaScriptTicks(DateTime dateTime, bool convertToUtc)
-        {
+        internal static long ConvertDateTimeToJavaScriptTicks(DateTime dateTime, bool convertToUtc) {
             var ticks = (convertToUtc) ? ToUniversalTicks(dateTime) : dateTime.Ticks;
 
             return UniversialTicksToJavaScriptTicks(ticks);
         }
 
-        private static long UniversialTicksToJavaScriptTicks(long universialTicks)
-        {
+        private static long UniversialTicksToJavaScriptTicks(long universialTicks) {
             var javaScriptTicks = (universialTicks - InitialJavaScriptDateTicks)/10000;
 
             return javaScriptTicks;
         }
 
-        internal static DateTime ConvertJavaScriptTicksToDateTime(long javaScriptTicks)
-        {
+        internal static DateTime ConvertJavaScriptTicksToDateTime(long javaScriptTicks) {
             var dateTime = new DateTime((javaScriptTicks*10000) + InitialJavaScriptDateTicks, DateTimeKind.Utc);
 
             return dateTime;
         }
 
-        private static DateTime SwitchToLocalTime(DateTime value)
-        {
-            switch (value.Kind)
-            {
+        private static DateTime SwitchToLocalTime(DateTime value) {
+            switch (value.Kind) {
                 case DateTimeKind.Unspecified:
                     return new DateTime(value.Ticks, DateTimeKind.Local);
 
@@ -318,10 +302,8 @@ namespace NetDimension.Json
             return value;
         }
 
-        private static DateTime SwitchToUtcTime(DateTime value)
-        {
-            switch (value.Kind)
-            {
+        private static DateTime SwitchToUtcTime(DateTime value) {
+            switch (value.Kind) {
                 case DateTimeKind.Unspecified:
                     return new DateTime(value.Ticks, DateTimeKind.Utc);
 
@@ -341,8 +323,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="Boolean" />.
         /// </returns>
-        public static string ToString(bool value)
-        {
+        public static string ToString(bool value) {
             return (value) ? True : False;
         }
 
@@ -353,8 +334,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="Char" />.
         /// </returns>
-        public static string ToString(char value)
-        {
+        public static string ToString(char value) {
             return ToString(char.ToString(value));
         }
 
@@ -365,8 +345,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="Enum" />.
         /// </returns>
-        public static string ToString(Enum value)
-        {
+        public static string ToString(Enum value) {
             return value.ToString("D");
         }
 
@@ -377,8 +356,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="Int32" />.
         /// </returns>
-        public static string ToString(int value)
-        {
+        public static string ToString(int value) {
             return value.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -389,8 +367,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="Int16" />.
         /// </returns>
-        public static string ToString(short value)
-        {
+        public static string ToString(short value) {
             return value.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -402,8 +379,7 @@ namespace NetDimension.Json
         ///     A JSON string representation of the <see cref="UInt16" />.
         /// </returns>
         [CLSCompliant(false)]
-        public static string ToString(ushort value)
-        {
+        public static string ToString(ushort value) {
             return value.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -415,8 +391,7 @@ namespace NetDimension.Json
         ///     A JSON string representation of the <see cref="UInt32" />.
         /// </returns>
         [CLSCompliant(false)]
-        public static string ToString(uint value)
-        {
+        public static string ToString(uint value) {
             return value.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -427,8 +402,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="Int64" />.
         /// </returns>
-        public static string ToString(long value)
-        {
+        public static string ToString(long value) {
             return value.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -440,8 +414,7 @@ namespace NetDimension.Json
         ///     A JSON string representation of the <see cref="UInt64" />.
         /// </returns>
         [CLSCompliant(false)]
-        public static string ToString(ulong value)
-        {
+        public static string ToString(ulong value) {
             return value.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -452,8 +425,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="Single" />.
         /// </returns>
-        public static string ToString(float value)
-        {
+        public static string ToString(float value) {
             return EnsureDecimalPlace(value, value.ToString("R", CultureInfo.InvariantCulture));
         }
 
@@ -464,24 +436,23 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="Double" />.
         /// </returns>
-        public static string ToString(double value)
-        {
+        public static string ToString(double value) {
             return EnsureDecimalPlace(value, value.ToString("R", CultureInfo.InvariantCulture));
         }
 
-        private static string EnsureDecimalPlace(double value, string text)
-        {
+        private static string EnsureDecimalPlace(double value, string text) {
             if (double.IsNaN(value) || double.IsInfinity(value) || text.IndexOf('.') != -1 || text.IndexOf('E') != -1 ||
-                text.IndexOf('e') != -1)
+                text.IndexOf('e') != -1) {
                 return text;
+            }
 
             return text + ".0";
         }
 
-        private static string EnsureDecimalPlace(string text)
-        {
-            if (text.IndexOf('.') != -1)
+        private static string EnsureDecimalPlace(string text) {
+            if (text.IndexOf('.') != -1) {
                 return text;
+            }
 
             return text + ".0";
         }
@@ -493,8 +464,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="Byte" />.
         /// </returns>
-        public static string ToString(byte value)
-        {
+        public static string ToString(byte value) {
             return value.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -506,8 +476,7 @@ namespace NetDimension.Json
         ///     A JSON string representation of the <see cref="SByte" />.
         /// </returns>
         [CLSCompliant(false)]
-        public static string ToString(sbyte value)
-        {
+        public static string ToString(sbyte value) {
             return value.ToString(null, CultureInfo.InvariantCulture);
         }
 
@@ -518,8 +487,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="SByte" />.
         /// </returns>
-        public static string ToString(decimal value)
-        {
+        public static string ToString(decimal value) {
             return EnsureDecimalPlace(value.ToString(null, CultureInfo.InvariantCulture));
         }
 
@@ -530,8 +498,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="Guid" />.
         /// </returns>
-        public static string ToString(Guid value)
-        {
+        public static string ToString(Guid value) {
             string text = null;
 
 #if !(NETFX_CORE || PORTABLE)
@@ -550,8 +517,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="TimeSpan" />.
         /// </returns>
-        public static string ToString(TimeSpan value)
-        {
+        public static string ToString(TimeSpan value) {
             return '"' + value.ToString() + '"';
         }
 
@@ -562,10 +528,10 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="Uri" />.
         /// </returns>
-        public static string ToString(Uri value)
-        {
-            if (value == null)
+        public static string ToString(Uri value) {
+            if (value == null) {
                 return Null;
+            }
 
             return ToString(value.ToString());
         }
@@ -577,8 +543,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="String" />.
         /// </returns>
-        public static string ToString(string value)
-        {
+        public static string ToString(string value) {
             return ToString(value, '"');
         }
 
@@ -590,8 +555,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="String" />.
         /// </returns>
-        public static string ToString(string value, char delimter)
-        {
+        public static string ToString(string value, char delimter) {
             return JavaScriptUtils.ToEscapedJavaScriptString(value, delimter, true);
         }
 
@@ -602,17 +566,15 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the <see cref="Object" />.
         /// </returns>
-        public static string ToString(object value)
-        {
-            if (value == null)
+        public static string ToString(object value) {
+            if (value == null) {
                 return Null;
+            }
 
             var convertible = ConvertUtils.ToConvertible(value);
 
-            if (convertible != null)
-            {
-                switch (convertible.GetTypeCode())
-                {
+            if (convertible != null) {
+                switch (convertible.GetTypeCode()) {
                     case TypeCode.String:
                         return ToString(convertible.ToString(CultureInfo.InvariantCulture));
                     case TypeCode.Char:
@@ -650,21 +612,15 @@ namespace NetDimension.Json
                 }
             }
 #if !PocketPC
-            else if (value is DateTimeOffset)
-            {
+            else if (value is DateTimeOffset) {
                 return ToString((DateTimeOffset) value);
             }
 #endif
-            else if (value is Guid)
-            {
+            else if (value is Guid) {
                 return ToString((Guid) value);
-            }
-            else if (value is Uri)
-            {
+            } else if (value is Uri) {
                 return ToString((Uri) value);
-            }
-            else if (value is TimeSpan)
-            {
+            } else if (value is TimeSpan) {
                 return ToString((TimeSpan) value);
             }
 
@@ -673,10 +629,8 @@ namespace NetDimension.Json
                     .FormatWith(CultureInfo.InvariantCulture, value.GetType()));
         }
 
-        private static bool IsJsonPrimitiveTypeCode(TypeCode typeCode)
-        {
-            switch (typeCode)
-            {
+        private static bool IsJsonPrimitiveTypeCode(TypeCode typeCode) {
+            switch (typeCode) {
                 case TypeCode.String:
                 case TypeCode.Char:
                 case TypeCode.Boolean:
@@ -701,23 +655,28 @@ namespace NetDimension.Json
             }
         }
 
-        internal static bool IsJsonPrimitiveType(Type type)
-        {
-            if (ReflectionUtils.IsNullableType(type))
+        internal static bool IsJsonPrimitiveType(Type type) {
+            if (ReflectionUtils.IsNullableType(type)) {
                 type = Nullable.GetUnderlyingType(type);
+            }
 
 #if !PocketPC
-            if (type == typeof (DateTimeOffset))
+            if (type == typeof (DateTimeOffset)) {
                 return true;
+            }
 #endif
-            if (type == typeof (byte[]))
+            if (type == typeof (byte[])) {
                 return true;
-            if (type == typeof (Uri))
+            }
+            if (type == typeof (Uri)) {
                 return true;
-            if (type == typeof (TimeSpan))
+            }
+            if (type == typeof (TimeSpan)) {
                 return true;
-            if (type == typeof (Guid))
+            }
+            if (type == typeof (Guid)) {
                 return true;
+            }
 
             return IsJsonPrimitiveTypeCode(ConvertUtils.GetTypeCode(type));
         }
@@ -729,8 +688,7 @@ namespace NetDimension.Json
         /// </summary>
         /// <param name="value">The object to serialize.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(object value)
-        {
+        public static string SerializeObject(object value) {
             return SerializeObject(value, Formatting.None, (JsonSerializerSettings) null);
         }
 
@@ -742,8 +700,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the object.
         /// </returns>
-        public static string SerializeObject(object value, Formatting formatting)
-        {
+        public static string SerializeObject(object value, Formatting formatting) {
             return SerializeObject(value, formatting, (JsonSerializerSettings) null);
         }
 
@@ -753,8 +710,7 @@ namespace NetDimension.Json
         /// <param name="value">The object to serialize.</param>
         /// <param name="converters">A collection converters used while serializing.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(object value, params JsonConverter[] converters)
-        {
+        public static string SerializeObject(object value, params JsonConverter[] converters) {
             return SerializeObject(value, Formatting.None, converters);
         }
 
@@ -765,8 +721,7 @@ namespace NetDimension.Json
         /// <param name="formatting">Indicates how the output is formatted.</param>
         /// <param name="converters">A collection converters used while serializing.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(object value, Formatting formatting, params JsonConverter[] converters)
-        {
+        public static string SerializeObject(object value, Formatting formatting, params JsonConverter[] converters) {
             var settings = (converters != null && converters.Length > 0)
                                ? new JsonSerializerSettings {Converters = converters}
                                : null;
@@ -785,8 +740,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the object.
         /// </returns>
-        public static string SerializeObject(object value, JsonSerializerSettings settings)
-        {
+        public static string SerializeObject(object value, JsonSerializerSettings settings) {
             return SerializeObject(value, Formatting.None, settings);
         }
 
@@ -802,14 +756,12 @@ namespace NetDimension.Json
         /// <returns>
         ///     A JSON string representation of the object.
         /// </returns>
-        public static string SerializeObject(object value, Formatting formatting, JsonSerializerSettings settings)
-        {
+        public static string SerializeObject(object value, Formatting formatting, JsonSerializerSettings settings) {
             var jsonSerializer = JsonSerializer.Create(settings);
 
             var sb = new StringBuilder(256);
             var sw = new StringWriter(sb, CultureInfo.InvariantCulture);
-            using (var jsonWriter = new JsonTextWriter(sw))
-            {
+            using (var jsonWriter = new JsonTextWriter(sw)) {
                 jsonWriter.Formatting = formatting;
 
                 jsonSerializer.Serialize(jsonWriter, value);
@@ -826,8 +778,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A task that represents the asynchronous serialize operation. The value of the <c>TResult</c> parameter contains a JSON string representation of the object.
         /// </returns>
-        public static Task<string> SerializeObjectAsync(object value)
-        {
+        public static Task<string> SerializeObjectAsync(object value) {
             return SerializeObjectAsync(value, Formatting.None, null);
         }
 
@@ -839,8 +790,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A task that represents the asynchronous serialize operation. The value of the <c>TResult</c> parameter contains a JSON string representation of the object.
         /// </returns>
-        public static Task<string> SerializeObjectAsync(object value, Formatting formatting)
-        {
+        public static Task<string> SerializeObjectAsync(object value, Formatting formatting) {
             return SerializeObjectAsync(value, formatting, null);
         }
 
@@ -857,8 +807,7 @@ namespace NetDimension.Json
         ///     A task that represents the asynchronous serialize operation. The value of the <c>TResult</c> parameter contains a JSON string representation of the object.
         /// </returns>
         public static Task<string> SerializeObjectAsync(object value, Formatting formatting,
-                                                        JsonSerializerSettings settings)
-        {
+                                                        JsonSerializerSettings settings) {
             return Task.Factory.StartNew(() => SerializeObject(value, formatting, settings));
         }
 #endif
@@ -872,8 +821,7 @@ namespace NetDimension.Json
         /// </summary>
         /// <param name="value">The JSON to deserialize.</param>
         /// <returns>The deserialized object from the Json string.</returns>
-        public static object DeserializeObject(string value)
-        {
+        public static object DeserializeObject(string value) {
             return DeserializeObject(value, null, (JsonSerializerSettings) null);
         }
 
@@ -886,8 +834,7 @@ namespace NetDimension.Json
         ///     If this is null, default serialization settings will be is used.
         /// </param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeObject(string value, JsonSerializerSettings settings)
-        {
+        public static object DeserializeObject(string value, JsonSerializerSettings settings) {
             return DeserializeObject(value, null, settings);
         }
 
@@ -899,8 +846,7 @@ namespace NetDimension.Json
         ///     The <see cref="Type" /> of object being deserialized.
         /// </param>
         /// <returns>The deserialized object from the Json string.</returns>
-        public static object DeserializeObject(string value, Type type)
-        {
+        public static object DeserializeObject(string value, Type type) {
             return DeserializeObject(value, type, (JsonSerializerSettings) null);
         }
 
@@ -910,8 +856,7 @@ namespace NetDimension.Json
         /// <typeparam name="T">The type of the object to deserialize to.</typeparam>
         /// <param name="value">The JSON to deserialize.</param>
         /// <returns>The deserialized object from the Json string.</returns>
-        public static T DeserializeObject<T>(string value)
-        {
+        public static T DeserializeObject<T>(string value) {
             return DeserializeObject<T>(value, (JsonSerializerSettings) null);
         }
 
@@ -926,8 +871,7 @@ namespace NetDimension.Json
         /// <param name="value">The JSON to deserialize.</param>
         /// <param name="anonymousTypeObject">The anonymous type object.</param>
         /// <returns>The deserialized anonymous type from the JSON string.</returns>
-        public static T DeserializeAnonymousType<T>(string value, T anonymousTypeObject)
-        {
+        public static T DeserializeAnonymousType<T>(string value, T anonymousTypeObject) {
             return DeserializeObject<T>(value);
         }
 
@@ -938,8 +882,7 @@ namespace NetDimension.Json
         /// <param name="value">The JSON to deserialize.</param>
         /// <param name="converters">Converters to use while deserializing.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static T DeserializeObject<T>(string value, params JsonConverter[] converters)
-        {
+        public static T DeserializeObject<T>(string value, params JsonConverter[] converters) {
             return (T) DeserializeObject(value, typeof (T), converters);
         }
 
@@ -953,8 +896,7 @@ namespace NetDimension.Json
         ///     If this is null, default serialization settings will be is used.
         /// </param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static T DeserializeObject<T>(string value, JsonSerializerSettings settings)
-        {
+        public static T DeserializeObject<T>(string value, JsonSerializerSettings settings) {
             return (T) DeserializeObject(value, typeof (T), settings);
         }
 
@@ -965,8 +907,7 @@ namespace NetDimension.Json
         /// <param name="type">The type of the object to deserialize.</param>
         /// <param name="converters">Converters to use while deserializing.</param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeObject(string value, Type type, params JsonConverter[] converters)
-        {
+        public static object DeserializeObject(string value, Type type, params JsonConverter[] converters) {
             var settings = (converters != null && converters.Length > 0)
                                ? new JsonSerializerSettings {Converters = converters}
                                : null;
@@ -984,16 +925,16 @@ namespace NetDimension.Json
         ///     If this is null, default serialization settings will be is used.
         /// </param>
         /// <returns>The deserialized object from the JSON string.</returns>
-        public static object DeserializeObject(string value, Type type, JsonSerializerSettings settings)
-        {
+        public static object DeserializeObject(string value, Type type, JsonSerializerSettings settings) {
             ValidationUtils.ArgumentNotNull(value, "value");
 
             var sr = new StringReader(value);
             var jsonSerializer = JsonSerializer.Create(settings);
 
             // by default DeserializeObject should check for additional content
-            if (!jsonSerializer.IsCheckAdditionalContentSet())
+            if (!jsonSerializer.IsCheckAdditionalContentSet()) {
                 jsonSerializer.CheckAdditionalContent = true;
+            }
 
             return jsonSerializer.Deserialize(new JsonTextReader(sr), type);
         }
@@ -1007,8 +948,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A task that represents the asynchronous deserialize operation. The value of the <c>TResult</c> parameter contains the deserialized object from the JSON string.
         /// </returns>
-        public static Task<T> DeserializeObjectAsync<T>(string value)
-        {
+        public static Task<T> DeserializeObjectAsync<T>(string value) {
             return DeserializeObjectAsync<T>(value, null);
         }
 
@@ -1024,8 +964,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A task that represents the asynchronous deserialize operation. The value of the <c>TResult</c> parameter contains the deserialized object from the JSON string.
         /// </returns>
-        public static Task<T> DeserializeObjectAsync<T>(string value, JsonSerializerSettings settings)
-        {
+        public static Task<T> DeserializeObjectAsync<T>(string value, JsonSerializerSettings settings) {
             return Task.Factory.StartNew(() => DeserializeObject<T>(value, settings));
         }
 
@@ -1036,8 +975,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A task that represents the asynchronous deserialize operation. The value of the <c>TResult</c> parameter contains the deserialized object from the JSON string.
         /// </returns>
-        public static Task<object> DeserializeObjectAsync(string value)
-        {
+        public static Task<object> DeserializeObjectAsync(string value) {
             return DeserializeObjectAsync(value, null, null);
         }
 
@@ -1053,8 +991,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A task that represents the asynchronous deserialize operation. The value of the <c>TResult</c> parameter contains the deserialized object from the JSON string.
         /// </returns>
-        public static Task<object> DeserializeObjectAsync(string value, Type type, JsonSerializerSettings settings)
-        {
+        public static Task<object> DeserializeObjectAsync(string value, Type type, JsonSerializerSettings settings) {
             return Task.Factory.StartNew(() => DeserializeObject(value, type, settings));
         }
 #endif
@@ -1066,8 +1003,7 @@ namespace NetDimension.Json
         /// </summary>
         /// <param name="value">The JSON to populate values from.</param>
         /// <param name="target">The target object to populate values onto.</param>
-        public static void PopulateObject(string value, object target)
-        {
+        public static void PopulateObject(string value, object target) {
             PopulateObject(value, target, null);
         }
 
@@ -1080,18 +1016,17 @@ namespace NetDimension.Json
         ///     The <see cref="JsonSerializerSettings" /> used to deserialize the object.
         ///     If this is null, default serialization settings will be is used.
         /// </param>
-        public static void PopulateObject(string value, object target, JsonSerializerSettings settings)
-        {
+        public static void PopulateObject(string value, object target, JsonSerializerSettings settings) {
             var sr = new StringReader(value);
             var jsonSerializer = JsonSerializer.Create(settings);
 
-            using (JsonReader jsonReader = new JsonTextReader(sr))
-            {
+            using (JsonReader jsonReader = new JsonTextReader(sr)) {
                 jsonSerializer.Populate(jsonReader, target);
 
-                if (jsonReader.Read() && jsonReader.TokenType != JsonToken.Comment)
+                if (jsonReader.Read() && jsonReader.TokenType != JsonToken.Comment) {
                     throw new JsonSerializationException(
                         "Additional text found in JSON string after finishing deserializing object.");
+                }
             }
         }
 
@@ -1108,8 +1043,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A task that represents the asynchronous populate operation.
         /// </returns>
-        public static Task PopulateObjectAsync(string value, object target, JsonSerializerSettings settings)
-        {
+        public static Task PopulateObjectAsync(string value, object target, JsonSerializerSettings settings) {
             return Task.Factory.StartNew(() => PopulateObject(value, target, settings));
         }
 #endif
@@ -1120,8 +1054,7 @@ namespace NetDimension.Json
         /// </summary>
         /// <param name="node">The node to serialize.</param>
         /// <returns>A JSON string of the XmlNode.</returns>
-        public static string SerializeXmlNode(XmlNode node)
-        {
+        public static string SerializeXmlNode(XmlNode node) {
             return SerializeXmlNode(node, Formatting.None);
         }
 
@@ -1131,8 +1064,7 @@ namespace NetDimension.Json
         /// <param name="node">The node to serialize.</param>
         /// <param name="formatting">Indicates how the output is formatted.</param>
         /// <returns>A JSON string of the XmlNode.</returns>
-        public static string SerializeXmlNode(XmlNode node, Formatting formatting)
-        {
+        public static string SerializeXmlNode(XmlNode node, Formatting formatting) {
             var converter = new XmlNodeConverter();
 
             return SerializeObject(node, formatting, converter);
@@ -1145,8 +1077,7 @@ namespace NetDimension.Json
         /// <param name="formatting">Indicates how the output is formatted.</param>
         /// <param name="omitRootObject">Omits writing the root object.</param>
         /// <returns>A JSON string of the XmlNode.</returns>
-        public static string SerializeXmlNode(XmlNode node, Formatting formatting, bool omitRootObject)
-        {
+        public static string SerializeXmlNode(XmlNode node, Formatting formatting, bool omitRootObject) {
             var converter = new XmlNodeConverter {OmitRootObject = omitRootObject};
 
             return SerializeObject(node, formatting, converter);
@@ -1157,8 +1088,7 @@ namespace NetDimension.Json
         /// </summary>
         /// <param name="value">The JSON string.</param>
         /// <returns>The deserialized XmlNode</returns>
-        public static XmlDocument DeserializeXmlNode(string value)
-        {
+        public static XmlDocument DeserializeXmlNode(string value) {
             return DeserializeXmlNode(value, null);
         }
 
@@ -1168,8 +1098,7 @@ namespace NetDimension.Json
         /// <param name="value">The JSON string.</param>
         /// <param name="deserializeRootElementName">The name of the root element to append when deserializing.</param>
         /// <returns>The deserialized XmlNode</returns>
-        public static XmlDocument DeserializeXmlNode(string value, string deserializeRootElementName)
-        {
+        public static XmlDocument DeserializeXmlNode(string value, string deserializeRootElementName) {
             return DeserializeXmlNode(value, deserializeRootElementName, false);
         }
 
@@ -1184,8 +1113,7 @@ namespace NetDimension.Json
         /// </param>
         /// <returns>The deserialized XmlNode</returns>
         public static XmlDocument DeserializeXmlNode(string value, string deserializeRootElementName,
-                                                     bool writeArrayAttribute)
-        {
+                                                     bool writeArrayAttribute) {
             var converter = new XmlNodeConverter();
             converter.DeserializeRootElementName = deserializeRootElementName;
             converter.WriteArrayAttribute = writeArrayAttribute;
@@ -1200,8 +1128,7 @@ namespace NetDimension.Json
         /// </summary>
         /// <param name="node">The node to convert to JSON.</param>
         /// <returns>A JSON string of the XNode.</returns>
-        public static string SerializeXNode(XObject node)
-        {
+        public static string SerializeXNode(XObject node) {
             return SerializeXNode(node, Formatting.None);
         }
 
@@ -1211,8 +1138,7 @@ namespace NetDimension.Json
         /// <param name="node">The node to convert to JSON.</param>
         /// <param name="formatting">Indicates how the output is formatted.</param>
         /// <returns>A JSON string of the XNode.</returns>
-        public static string SerializeXNode(XObject node, Formatting formatting)
-        {
+        public static string SerializeXNode(XObject node, Formatting formatting) {
             return SerializeXNode(node, formatting, false);
         }
 
@@ -1223,8 +1149,7 @@ namespace NetDimension.Json
         /// <param name="formatting">Indicates how the output is formatted.</param>
         /// <param name="omitRootObject">Omits writing the root object.</param>
         /// <returns>A JSON string of the XNode.</returns>
-        public static string SerializeXNode(XObject node, Formatting formatting, bool omitRootObject)
-        {
+        public static string SerializeXNode(XObject node, Formatting formatting, bool omitRootObject) {
             var converter = new XmlNodeConverter {OmitRootObject = omitRootObject};
 
             return SerializeObject(node, formatting, converter);
@@ -1235,8 +1160,7 @@ namespace NetDimension.Json
         /// </summary>
         /// <param name="value">The JSON string.</param>
         /// <returns>The deserialized XNode</returns>
-        public static XDocument DeserializeXNode(string value)
-        {
+        public static XDocument DeserializeXNode(string value) {
             return DeserializeXNode(value, null);
         }
 
@@ -1246,8 +1170,7 @@ namespace NetDimension.Json
         /// <param name="value">The JSON string.</param>
         /// <param name="deserializeRootElementName">The name of the root element to append when deserializing.</param>
         /// <returns>The deserialized XNode</returns>
-        public static XDocument DeserializeXNode(string value, string deserializeRootElementName)
-        {
+        public static XDocument DeserializeXNode(string value, string deserializeRootElementName) {
             return DeserializeXNode(value, deserializeRootElementName, false);
         }
 
@@ -1262,8 +1185,7 @@ namespace NetDimension.Json
         /// </param>
         /// <returns>The deserialized XNode</returns>
         public static XDocument DeserializeXNode(string value, string deserializeRootElementName,
-                                                 bool writeArrayAttribute)
-        {
+                                                 bool writeArrayAttribute) {
             var converter = new XmlNodeConverter();
             converter.DeserializeRootElementName = deserializeRootElementName;
             converter.WriteArrayAttribute = writeArrayAttribute;

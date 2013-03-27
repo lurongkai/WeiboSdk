@@ -3,8 +3,7 @@
     internal class CommentAPI : WeiboAPI
     {
         public CommentAPI(Client client)
-            : base(client)
-        {
+            : base(client) {
         }
 
         /// <summary>
@@ -18,8 +17,7 @@
         /// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。</param>
         /// <returns>JSON</returns>
         public string Show(string id, string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                           int filterByAuthor = 0)
-        {
+                           int filterByAuthor = 0) {
             return (Client.GetCommand("comments/show",
                                       new WeiboParameter("id", id),
                                       new WeiboParameter("since_id", sinceID),
@@ -38,8 +36,7 @@
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <param name="filterBySource">来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。 </param>
         /// <returns></returns>
-        public string ByMe(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterBySource = 0)
-        {
+        public string ByMe(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterBySource = 0) {
             return (Client.GetCommand("comments/by_me",
                                       new WeiboParameter("since_id", sinceID),
                                       new WeiboParameter("max_id", maxID),
@@ -59,8 +56,7 @@
         /// <param name="filterBySource"></param>
         /// <returns></returns>
         public string ToMe(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0,
-                           int filterBySource = 0)
-        {
+                           int filterBySource = 0) {
             return (Client.GetCommand("comments/to_me",
                                       new WeiboParameter("since_id", sinceID),
                                       new WeiboParameter("max_id", maxID),
@@ -78,8 +74,7 @@
         /// <param name="count">单页返回的记录条数，默认为50。 </param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns>JSON</returns>
-        public string Timeline(string sinceID = "", string maxID = "", int count = 50, int page = 1)
-        {
+        public string Timeline(string sinceID = "", string maxID = "", int count = 50, int page = 1) {
             return (Client.GetCommand("comments/timeline",
                                       new WeiboParameter("since_id", sinceID),
                                       new WeiboParameter("max_id", maxID),
@@ -98,8 +93,7 @@
         /// <param name="filterBySource">来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。</param>
         /// <returns></returns>
         public string Mentions(string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                               int filterByAuthor = 0, int filterBySource = 0)
-        {
+                               int filterByAuthor = 0, int filterBySource = 0) {
             return (Client.GetCommand("comments/mentions",
                                       new WeiboParameter("since_id", sinceID),
                                       new WeiboParameter("max_id", maxID),
@@ -114,8 +108,7 @@
         /// </summary>
         /// <param name="cids">需要查询的批量评论ID，最大50。</param>
         /// <returns></returns>
-        public string ShowBatch(params string[] cids)
-        {
+        public string ShowBatch(params string[] cids) {
             return (Client.GetCommand("comments/show_batch",
                                       new WeiboParameter("cids", string.Join(",", cids))));
         }
@@ -127,8 +120,7 @@
         /// <param name="comment">评论内容，必须做URLencode，内容不超过140个汉字。 </param>
         /// <param name="commentOrigin">当评论转发微博时，是否评论给原微博，0：否、1：是，默认为0。 </param>
         /// <returns></returns>
-        public string Create(string id, string comment, bool commentOrigin = false)
-        {
+        public string Create(string id, string comment, bool commentOrigin = false) {
             return (Client.PostCommand("comments/create",
                                        new WeiboParameter("id", id),
                                        new WeiboParameter("comment", comment),
@@ -140,8 +132,7 @@
         /// </summary>
         /// <param name="cid">要删除的评论ID，只能删除登录用户自己发布的评论。 </param>
         /// <returns></returns>
-        public string Destroy(string cid)
-        {
+        public string Destroy(string cid) {
             return (Client.PostCommand("comments/destroy",
                                        new WeiboParameter("cid", cid)));
         }
@@ -151,8 +142,7 @@
         /// </summary>
         /// <param name="ids">需要删除的评论ID，最多20个。 </param>
         /// <returns></returns>
-        public string DestroyBatch(params string[] ids)
-        {
+        public string DestroyBatch(params string[] ids) {
             return (Client.PostCommand("comments/destroy",
                                        new WeiboParameter("destroy_batch", string.Join(",", ids))));
         }
@@ -167,8 +157,7 @@
         /// <param name="commentOrigin">当评论转发微博时，是否评论给原微博，0：否、1：是，默认为0。 </param>
         /// <returns></returns>
         public string Reply(string cid, string id, string comment, bool withoutMention = false,
-                            bool commentOrigin = false)
-        {
+                            bool commentOrigin = false) {
             return (Client.PostCommand("comments/reply",
                                        new WeiboParameter("cid", cid),
                                        new WeiboParameter("id", id),

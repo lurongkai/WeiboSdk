@@ -10,8 +10,7 @@ namespace NetDimension.Weibo.Interface.Entity
         private readonly CommonAPI api;
 
         public CommonInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new CommonAPI(client);
         }
 
@@ -20,8 +19,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="codes">需要查询的地址编码</param>
         /// <returns></returns>
-        public Dictionary<string, string> CodeToLocation(params string[] codes)
-        {
+        public Dictionary<string, string> CodeToLocation(params string[] codes) {
             return Utility.GetDictionaryFromJSON(api.CodeToLocation(codes));
         }
 
@@ -31,8 +29,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="province">省份的省份代码。</param>
         /// <param name="capital">城市的首字母，a-z，可为空代表返回全部，默认为全部。</param>
         /// <returns></returns>
-        public Dictionary<string, string> GetCity(string province, string capital = "")
-        {
+        public Dictionary<string, string> GetCity(string province, string capital = "") {
             return Utility.GetDictionaryFromJSON(api.GetCity(province, capital));
         }
 
@@ -42,8 +39,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="country">国家的国家代码。</param>
         /// <param name="capital">省份的首字母，a-z，可为空代表返回全部，默认为全部。 </param>
         /// <returns></returns>
-        public Dictionary<string, string> GetProvince(string country, string capital = "")
-        {
+        public Dictionary<string, string> GetProvince(string country, string capital = "") {
             return Utility.GetDictionaryFromJSON(api.GetProvince(country, capital));
         }
 
@@ -52,8 +48,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="capital">国家的首字母，a-z，可为空代表返回全部，默认为全部。</param>
         /// <returns></returns>
-        public Dictionary<string, string> GetCountry(string capital = "")
-        {
+        public Dictionary<string, string> GetCountry(string capital = "") {
             return Utility.GetDictionaryFromJSON(api.GetCountry(capital));
         }
 
@@ -61,8 +56,7 @@ namespace NetDimension.Weibo.Interface.Entity
         ///     获取时区配置表
         /// </summary>
         /// <returns></returns>
-        public Dictionary<string, string> GetTimezone()
-        {
+        public Dictionary<string, string> GetTimezone() {
             return Utility.GetDictionaryFromJSON(api.GetTimezone());
         }
     }

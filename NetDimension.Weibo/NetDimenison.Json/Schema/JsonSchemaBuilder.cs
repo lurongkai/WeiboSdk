@@ -41,26 +41,22 @@ namespace NetDimension.Json.Schema
         private JsonSchema _currentSchema;
         private JsonReader _reader;
 
-        public JsonSchemaBuilder(JsonSchemaResolver resolver)
-        {
+        public JsonSchemaBuilder(JsonSchemaResolver resolver) {
             _stack = new List<JsonSchema>();
             _resolver = resolver;
         }
 
-        private JsonSchema CurrentSchema
-        {
+        private JsonSchema CurrentSchema {
             get { return _currentSchema; }
         }
 
-        private void Push(JsonSchema value)
-        {
+        private void Push(JsonSchema value) {
             _currentSchema = value;
             _stack.Add(value);
             _resolver.LoadedSchemas.Add(value);
         }
 
-        private JsonSchema Pop()
-        {
+        private JsonSchema Pop() {
             var poppedSchema = _currentSchema;
             _stack.RemoveAt(_stack.Count - 1);
             _currentSchema = _stack.LastOrDefault();
@@ -68,27 +64,26 @@ namespace NetDimension.Json.Schema
             return poppedSchema;
         }
 
-        internal JsonSchema Parse(JsonReader reader)
-        {
+        internal JsonSchema Parse(JsonReader reader) {
             _reader = reader;
 
-            if (reader.TokenType == JsonToken.None)
+            if (reader.TokenType == JsonToken.None) {
                 _reader.Read();
+            }
 
             return BuildSchema();
         }
 
-        private JsonSchema BuildSchema()
-        {
-            if (_reader.TokenType != JsonToken.StartObject)
+        private JsonSchema BuildSchema() {
+            if (_reader.TokenType != JsonToken.StartObject) {
                 throw JsonReaderException.Create(_reader,
                                                  "Expected StartObject while parsing schema object, got {0}.".FormatWith
                                                      (CultureInfo.InvariantCulture, _reader.TokenType));
+            }
 
             _reader.Read();
             // empty schema object
-            if (_reader.TokenType == JsonToken.EndObject)
-            {
+            if (_reader.TokenType == JsonToken.EndObject) {
                 Push(new JsonSchema());
                 return Pop();
             }
@@ -97,23 +92,23 @@ namespace NetDimension.Json.Schema
             _reader.Read();
 
             // schema reference
-            if (propertyName == JsonSchemaConstants.ReferencePropertyName)
-            {
+            if (propertyName == JsonSchemaConstants.ReferencePropertyName) {
                 var id = (string) _reader.Value;
 
                 // skip to the end of the current object
-                while (_reader.Read() && _reader.TokenType != JsonToken.EndObject)
-                {
-                    if (_reader.TokenType == JsonToken.StartObject)
+                while (_reader.Read() && _reader.TokenType != JsonToken.EndObject) {
+                    if (_reader.TokenType == JsonToken.StartObject) {
                         throw JsonReaderException.Create(_reader,
                                                          "Found StartObject within the schema reference with the Id '{0}'"
                                                              .FormatWith(CultureInfo.InvariantCulture, id));
+                    }
                 }
 
                 var referencedSchema = _resolver.GetSchema(id);
-                if (referencedSchema == null)
+                if (referencedSchema == null) {
                     throw new JsonException(
                         "Could not resolve schema reference for Id '{0}'.".FormatWith(CultureInfo.InvariantCulture, id));
+                }
 
                 return referencedSchema;
             }
@@ -123,8 +118,7 @@ namespace NetDimension.Json.Schema
 
             ProcessSchemaProperty(propertyName);
 
-            while (_reader.Read() && _reader.TokenType != JsonToken.EndObject)
-            {
+            while (_reader.Read() && _reader.TokenType != JsonToken.EndObject) {
                 propertyName = Convert.ToString(_reader.Value, CultureInfo.InvariantCulture);
                 _reader.Read();
 
@@ -134,10 +128,8 @@ namespace NetDimension.Json.Schema
             return Pop();
         }
 
-        private void ProcessSchemaProperty(string propertyName)
-        {
-            switch (propertyName)
-            {
+        private void ProcessSchemaProperty(string propertyName) {
+            switch (propertyName) {
                 case JsonSchemaConstants.TypePropertyName:
                     CurrentSchema.Type = ProcessType();
                     break;
@@ -231,51 +223,45 @@ namespace NetDimension.Json.Schema
             }
         }
 
-        private void ProcessExtends()
-        {
+        private void ProcessExtends() {
             CurrentSchema.Extends = BuildSchema();
         }
 
-        private void ProcessEnum()
-        {
-            if (_reader.TokenType != JsonToken.StartArray)
+        private void ProcessEnum() {
+            if (_reader.TokenType != JsonToken.StartArray) {
                 throw JsonReaderException.Create(_reader,
                                                  "Expected StartArray token while parsing enum values, got {0}."
                                                      .FormatWith(CultureInfo.InvariantCulture, _reader.TokenType));
+            }
 
             CurrentSchema.Enum = new List<JToken>();
 
-            while (_reader.Read() && _reader.TokenType != JsonToken.EndArray)
-            {
+            while (_reader.Read() && _reader.TokenType != JsonToken.EndArray) {
                 var value = JToken.ReadFrom(_reader);
                 CurrentSchema.Enum.Add(value);
             }
         }
 
-        private void ProcessOptions()
-        {
+        private void ProcessOptions() {
             CurrentSchema.Options = new Dictionary<JToken, string>(new JTokenEqualityComparer());
 
-            switch (_reader.TokenType)
-            {
+            switch (_reader.TokenType) {
                 case JsonToken.StartArray:
-                    while (_reader.Read() && _reader.TokenType != JsonToken.EndArray)
-                    {
-                        if (_reader.TokenType != JsonToken.StartObject)
+                    while (_reader.Read() && _reader.TokenType != JsonToken.EndArray) {
+                        if (_reader.TokenType != JsonToken.StartObject) {
                             throw JsonReaderException.Create(_reader,
                                                              "Expect object token, got {0}.".FormatWith(
                                                                  CultureInfo.InvariantCulture, _reader.TokenType));
+                        }
 
                         string label = null;
                         JToken value = null;
 
-                        while (_reader.Read() && _reader.TokenType != JsonToken.EndObject)
-                        {
+                        while (_reader.Read() && _reader.TokenType != JsonToken.EndObject) {
                             var propertyName = Convert.ToString(_reader.Value, CultureInfo.InvariantCulture);
                             _reader.Read();
 
-                            switch (propertyName)
-                            {
+                            switch (propertyName) {
                                 case JsonSchemaConstants.OptionValuePropertyName:
                                     value = JToken.ReadFrom(_reader);
                                     break;
@@ -290,13 +276,15 @@ namespace NetDimension.Json.Schema
                             }
                         }
 
-                        if (value == null)
+                        if (value == null) {
                             throw new JsonException("No value specified for JSON schema option.");
+                        }
 
-                        if (CurrentSchema.Options.ContainsKey(value))
+                        if (CurrentSchema.Options.ContainsKey(value)) {
                             throw new JsonException(
                                 "Duplicate value in JSON schema option collection: {0}".FormatWith(
                                     CultureInfo.InvariantCulture, value));
+                        }
 
                         CurrentSchema.Options.Add(value, label);
                     }
@@ -308,28 +296,25 @@ namespace NetDimension.Json.Schema
             }
         }
 
-        private void ProcessDefault()
-        {
+        private void ProcessDefault() {
             CurrentSchema.Default = JToken.ReadFrom(_reader);
         }
 
-        private void ProcessIdentity()
-        {
+        private void ProcessIdentity() {
             CurrentSchema.Identity = new List<string>();
 
-            switch (_reader.TokenType)
-            {
+            switch (_reader.TokenType) {
                 case JsonToken.String:
                     CurrentSchema.Identity.Add(_reader.Value.ToString());
                     break;
                 case JsonToken.StartArray:
-                    while (_reader.Read() && _reader.TokenType != JsonToken.EndArray)
-                    {
-                        if (_reader.TokenType != JsonToken.String)
+                    while (_reader.Read() && _reader.TokenType != JsonToken.EndArray) {
+                        if (_reader.TokenType != JsonToken.String) {
                             throw JsonReaderException.Create(_reader,
                                                              "Exception JSON property name string token, got {0}."
                                                                  .FormatWith(CultureInfo.InvariantCulture,
                                                                              _reader.TokenType));
+                        }
 
                         CurrentSchema.Identity.Add(_reader.Value.ToString());
                     }
@@ -341,30 +326,30 @@ namespace NetDimension.Json.Schema
             }
         }
 
-        private void ProcessAdditionalProperties()
-        {
-            if (_reader.TokenType == JsonToken.Boolean)
+        private void ProcessAdditionalProperties() {
+            if (_reader.TokenType == JsonToken.Boolean) {
                 CurrentSchema.AllowAdditionalProperties = (bool) _reader.Value;
-            else
+            } else {
                 CurrentSchema.AdditionalProperties = BuildSchema();
+            }
         }
 
-        private void ProcessPatternProperties()
-        {
+        private void ProcessPatternProperties() {
             var patternProperties = new Dictionary<string, JsonSchema>();
 
-            if (_reader.TokenType != JsonToken.StartObject)
+            if (_reader.TokenType != JsonToken.StartObject) {
                 throw JsonReaderException.Create(_reader, "Expected StartObject token.");
+            }
 
-            while (_reader.Read() && _reader.TokenType != JsonToken.EndObject)
-            {
+            while (_reader.Read() && _reader.TokenType != JsonToken.EndObject) {
                 var propertyName = Convert.ToString(_reader.Value, CultureInfo.InvariantCulture);
                 _reader.Read();
 
-                if (patternProperties.ContainsKey(propertyName))
+                if (patternProperties.ContainsKey(propertyName)) {
                     throw new JsonException(
                         "Property {0} has already been defined in schema.".FormatWith(CultureInfo.InvariantCulture,
                                                                                       propertyName));
+                }
 
                 patternProperties.Add(propertyName, BuildSchema());
             }
@@ -372,18 +357,15 @@ namespace NetDimension.Json.Schema
             CurrentSchema.PatternProperties = patternProperties;
         }
 
-        private void ProcessItems()
-        {
+        private void ProcessItems() {
             CurrentSchema.Items = new List<JsonSchema>();
 
-            switch (_reader.TokenType)
-            {
+            switch (_reader.TokenType) {
                 case JsonToken.StartObject:
                     CurrentSchema.Items.Add(BuildSchema());
                     break;
                 case JsonToken.StartArray:
-                    while (_reader.Read() && _reader.TokenType != JsonToken.EndArray)
-                    {
+                    while (_reader.Read() && _reader.TokenType != JsonToken.EndArray) {
                         CurrentSchema.Items.Add(BuildSchema());
                     }
                     break;
@@ -394,24 +376,24 @@ namespace NetDimension.Json.Schema
             }
         }
 
-        private void ProcessProperties()
-        {
+        private void ProcessProperties() {
             IDictionary<string, JsonSchema> properties = new Dictionary<string, JsonSchema>();
 
-            if (_reader.TokenType != JsonToken.StartObject)
+            if (_reader.TokenType != JsonToken.StartObject) {
                 throw JsonReaderException.Create(_reader,
                                                  "Expected StartObject token while parsing schema properties, got {0}."
                                                      .FormatWith(CultureInfo.InvariantCulture, _reader.TokenType));
+            }
 
-            while (_reader.Read() && _reader.TokenType != JsonToken.EndObject)
-            {
+            while (_reader.Read() && _reader.TokenType != JsonToken.EndObject) {
                 var propertyName = Convert.ToString(_reader.Value, CultureInfo.InvariantCulture);
                 _reader.Read();
 
-                if (properties.ContainsKey(propertyName))
+                if (properties.ContainsKey(propertyName)) {
                     throw new JsonException(
                         "Property {0} has already been defined in schema.".FormatWith(CultureInfo.InvariantCulture,
                                                                                       propertyName));
+                }
 
                 properties.Add(propertyName, BuildSchema());
             }
@@ -419,23 +401,21 @@ namespace NetDimension.Json.Schema
             CurrentSchema.Properties = properties;
         }
 
-        private JsonSchemaType? ProcessType()
-        {
-            switch (_reader.TokenType)
-            {
+        private JsonSchemaType? ProcessType() {
+            switch (_reader.TokenType) {
                 case JsonToken.String:
                     return MapType(_reader.Value.ToString());
                 case JsonToken.StartArray:
                     // ensure type is in blank state before ORing values
                     JsonSchemaType? type = JsonSchemaType.None;
 
-                    while (_reader.Read() && _reader.TokenType != JsonToken.EndArray)
-                    {
-                        if (_reader.TokenType != JsonToken.String)
+                    while (_reader.Read() && _reader.TokenType != JsonToken.EndArray) {
+                        if (_reader.TokenType != JsonToken.String) {
                             throw JsonReaderException.Create(_reader,
                                                              "Exception JSON schema type string token, got {0}."
                                                                  .FormatWith(CultureInfo.InvariantCulture,
                                                                              _reader.TokenType));
+                        }
 
                         type = type | MapType(_reader.Value.ToString());
                     }
@@ -448,17 +428,16 @@ namespace NetDimension.Json.Schema
             }
         }
 
-        internal static JsonSchemaType MapType(string type)
-        {
+        internal static JsonSchemaType MapType(string type) {
             JsonSchemaType mappedType;
-            if (!JsonSchemaConstants.JsonSchemaTypeMapping.TryGetValue(type, out mappedType))
+            if (!JsonSchemaConstants.JsonSchemaTypeMapping.TryGetValue(type, out mappedType)) {
                 throw new JsonException("Invalid JSON schema type: {0}".FormatWith(CultureInfo.InvariantCulture, type));
+            }
 
             return mappedType;
         }
 
-        internal static string MapType(JsonSchemaType type)
-        {
+        internal static string MapType(JsonSchemaType type) {
             return JsonSchemaConstants.JsonSchemaTypeMapping.Single(kv => kv.Value == type).Key;
         }
     }

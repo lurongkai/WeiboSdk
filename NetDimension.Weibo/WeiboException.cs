@@ -14,8 +14,7 @@ namespace NetDimension.Weibo
         /// <summary>
         ///     构造函数
         /// </summary>
-        public WeiboException()
-        {
+        public WeiboException() {
         }
 
         /// <summary>
@@ -23,8 +22,7 @@ namespace NetDimension.Weibo
         /// </summary>
         /// <param name="message"></param>
         public WeiboException(string message)
-            : base(message)
-        {
+            : base(message) {
         }
 
         /// <summary>
@@ -33,8 +31,7 @@ namespace NetDimension.Weibo
         /// <param name="message"></param>
         /// <param name="inner"></param>
         public WeiboException(string message, WebException inner)
-            : base(message, inner)
-        {
+            : base(message, inner) {
         }
 
         /// <summary>
@@ -44,8 +41,7 @@ namespace NetDimension.Weibo
         /// <param name="status"></param>
         /// <param name="request"></param>
         public WeiboException(string code, string status, string request) :
-            base(GetErrorMsg(code))
-        {
+            base(GetErrorMsg(code)) {
             ErrorCode = code;
             ErrorStatus = status;
             Request = request;
@@ -60,8 +56,7 @@ namespace NetDimension.Weibo
         protected WeiboException(
             SerializationInfo info,
             StreamingContext context)
-            : base(info, context)
-        {
+            : base(info, context) {
         }
 
         /// <summary>
@@ -89,18 +84,15 @@ namespace NetDimension.Weibo
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        public override void GetObjectData(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        {
+        public override void GetObjectData(SerializationInfo serializationInfo, StreamingContext streamingContext) {
             base.GetObjectData(serializationInfo, streamingContext);
 
-            if (serializationInfo != null)
-            {
+            if (serializationInfo != null) {
             }
         }
 
 
-        private static string GetErrorMsg(string errorCode)
-        {
+        private static string GetErrorMsg(string errorCode) {
             //GO http://open.weibo.com/wiki/Error_code
             var ErrorMsgBag = new Dictionary<string, string>
                 {
@@ -268,10 +260,11 @@ namespace NetDimension.Weibo
                     {"21333", "禁止使用此认证方式"}
                 };
 
-            if (ErrorMsgBag.ContainsKey(errorCode))
+            if (ErrorMsgBag.ContainsKey(errorCode)) {
                 return ErrorMsgBag[errorCode];
-            else
+            } else {
                 return "未知错误";
+            }
         }
     }
 }

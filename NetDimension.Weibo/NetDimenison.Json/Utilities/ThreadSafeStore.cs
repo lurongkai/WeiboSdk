@@ -36,43 +36,40 @@ namespace NetDimension.Json.Utilities
         private readonly object _lock = new object();
         private Dictionary<TKey, TValue> _store;
 
-        public ThreadSafeStore(Func<TKey, TValue> creator)
-        {
-            if (creator == null)
+        public ThreadSafeStore(Func<TKey, TValue> creator) {
+            if (creator == null) {
                 throw new ArgumentNullException("creator");
+            }
 
             _creator = creator;
         }
 
-        public TValue Get(TKey key)
-        {
-            if (_store == null)
+        public TValue Get(TKey key) {
+            if (_store == null) {
                 return AddValue(key);
+            }
 
             TValue value;
-            if (!_store.TryGetValue(key, out value))
+            if (!_store.TryGetValue(key, out value)) {
                 return AddValue(key);
+            }
 
             return value;
         }
 
-        private TValue AddValue(TKey key)
-        {
+        private TValue AddValue(TKey key) {
             var value = _creator(key);
 
-            lock (_lock)
-            {
-                if (_store == null)
-                {
+            lock (_lock) {
+                if (_store == null) {
                     _store = new Dictionary<TKey, TValue>();
                     _store[key] = value;
-                }
-                else
-                {
+                } else {
                     // double check locking
                     TValue checkValue;
-                    if (_store.TryGetValue(key, out checkValue))
+                    if (_store.TryGetValue(key, out checkValue)) {
                         return checkValue;
+                    }
 
                     var newStore = new Dictionary<TKey, TValue>(_store);
                     newStore[key] = value;

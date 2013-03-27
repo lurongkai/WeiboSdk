@@ -3,8 +3,7 @@
     internal class StatusAPI : WeiboAPI
     {
         public StatusAPI(Client client)
-            : base(client)
-        {
+            : base(client) {
         }
 
         /// <summary>
@@ -14,8 +13,7 @@
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。 </param>
         /// <returns>dynamic json</returns>
-        public string PublicTimeline(int count = 50, int page = 1, bool baseApp = false)
-        {
+        public string PublicTimeline(int count = 50, int page = 1, bool baseApp = false) {
             return (Client.GetCommand("statuses/public_timeline",
                                       new WeiboParameter("count", count),
                                       new WeiboParameter("page", page),
@@ -33,8 +31,7 @@
         /// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。</param>
         /// <returns>dynamic json</returns>
         public string FriendsTimeline(string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                                      bool baseApp = false, int feature = 0)
-        {
+                                      bool baseApp = false, int feature = 0) {
             return (Client.GetCommand("statuses/friends_timeline",
                                       new WeiboParameter("since_id", sinceID),
                                       new WeiboParameter("max_id", maxID),
@@ -55,8 +52,7 @@
         /// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。 </param>
         /// <returns></returns>
         public string HomeTimeline(string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                                   bool baseApp = false, int feature = 0)
-        {
+                                   bool baseApp = false, int feature = 0) {
             return (Client.GetCommand("statuses/home_timeline",
                                       new WeiboParameter("since_id", sinceID),
                                       new WeiboParameter("max_id", maxID),
@@ -77,8 +73,7 @@
         /// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。</param>
         /// <returns></returns>
         public string FriendsTimelineIDs(string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                                         bool baseApp = false, int feature = 0)
-        {
+                                         bool baseApp = false, int feature = 0) {
             return (Client.GetCommand("statuses/friends_timeline/ids",
                                       new WeiboParameter("since_id", sinceID),
                                       new WeiboParameter("max_id", maxID),
@@ -103,8 +98,7 @@
         /// <returns></returns>
         public string UserTimeline(string uid = "", string screenName = "", string sinceID = "", string maxID = "",
                                    int count = 50, int page = 1, bool baseApp = false, int feature = 0,
-                                   bool trimUser = false)
-        {
+                                   bool trimUser = false) {
             return (Client.GetCommand("statuses/user_timeline",
                                       string.IsNullOrEmpty(uid)
                                           ? new WeiboParameter("screen_name", screenName)
@@ -131,8 +125,7 @@
         /// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。 </param>
         /// <returns></returns>
         public string UserTimelineIDs(string uid = "", string screenName = "", string sinceID = "", string maxID = "",
-                                      int count = 50, int page = 1, bool baseApp = false, int feature = 0)
-        {
+                                      int count = 50, int page = 1, bool baseApp = false, int feature = 0) {
             return (Client.GetCommand("statuses/user_timeline/ids",
                                       string.IsNullOrEmpty(uid)
                                           ? new WeiboParameter("screen_name", screenName)
@@ -156,8 +149,7 @@
         /// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。 </param>
         /// <returns></returns>
         public string RepostTimeline(string id, string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                                     int filterByAuthor = 0)
-        {
+                                     int filterByAuthor = 0) {
             return (Client.GetCommand("statuses/repost_timeline",
                                       new WeiboParameter("id", id),
                                       new WeiboParameter("since_id", sinceID),
@@ -178,8 +170,7 @@
         /// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。 </param>
         /// <returns></returns>
         public string RepostTimelineIDs(string id, string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                                        int filterByAuthor = 0)
-        {
+                                        int filterByAuthor = 0) {
             return (Client.GetCommand("statuses/repost_timeline/ids",
                                       new WeiboParameter("id", id),
                                       new WeiboParameter("since_id", sinceID),
@@ -197,8 +188,7 @@
         /// <param name="count">单页返回的记录条数，默认为50。 </param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public string RepostByMe(string sinceID = "", string maxID = "", int count = 50, int page = 1)
-        {
+        public string RepostByMe(string sinceID = "", string maxID = "", int count = 50, int page = 1) {
             return (Client.GetCommand("statuses/repost_by_me",
                                       new WeiboParameter("since_id", sinceID),
                                       new WeiboParameter("max_id", maxID),
@@ -218,8 +208,7 @@
         /// <param name="filterByType">原创筛选类型，0：全部微博、1：原创的微博，默认为0。</param>
         /// <returns></returns>
         public string Mentions(string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                               int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0)
-        {
+                               int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0) {
             return (Client.GetCommand("statuses/mentions",
                                       new WeiboParameter("since_id", sinceID),
                                       new WeiboParameter("max_id", maxID),
@@ -242,8 +231,7 @@
         /// <param name="filterByType">原创筛选类型，0：全部微博、1：原创的微博，默认为0。</param>
         /// <returns></returns>
         public string MentionIDs(string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                                 int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0)
-        {
+                                 int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0) {
             return (Client.GetCommand("statuses/mentions/ids",
                                       new WeiboParameter("since_id", sinceID),
                                       new WeiboParameter("max_id", maxID),
@@ -265,8 +253,7 @@
         /// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。</param>
         /// <returns></returns>
         public string BilateralTimeline(string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                                        bool baseApp = false, int feature = 0)
-        {
+                                        bool baseApp = false, int feature = 0) {
             return (Client.GetCommand("statuses/bilateral_timeline",
                                       new WeiboParameter("since_id", sinceID),
                                       new WeiboParameter("max_id", maxID),
@@ -281,8 +268,7 @@
         /// </summary>
         /// <param name="id">需要获取的微博ID。</param>
         /// <returns></returns>
-        public string Show(string id)
-        {
+        public string Show(string id) {
             return (Client.GetCommand("statuses/show",
                                       new WeiboParameter("id", id)));
         }
@@ -293,8 +279,7 @@
         /// <param name="type">获取类型，1：微博、2：评论、3：私信，默认为1。 </param>
         /// <param name="ids">需要查询的微博（评论、私信）ID</param>
         /// <returns></returns>
-        public string QueryMID(int type = 1, params string[] ids)
-        {
+        public string QueryMID(int type = 1, params string[] ids) {
             return (Client.GetCommand("statuses/querymid",
                                       new WeiboParameter("id", string.Join(",", ids)),
                                       new WeiboParameter("type", type),
@@ -309,8 +294,7 @@
         /// <param name="isBase62">MID是否是base62编码，0：否、1：是，默认为0。 </param>
         /// <param name="mids">需要查询的微博（评论、私信）MID，批量模式下，用半角逗号分隔，最多不超过20个。</param>
         /// <returns></returns>
-        public string QueryID(int type = 1, bool inbox = false, bool isBase62 = false, params string[] mids)
-        {
+        public string QueryID(int type = 1, bool inbox = false, bool isBase62 = false, params string[] mids) {
             return (Client.GetCommand("statuses/queryid",
                                       new WeiboParameter("mid", string.Join(",", mids)),
                                       new WeiboParameter("type", type),
@@ -325,8 +309,7 @@
         /// <param name="count"></param>
         /// <param name="baseApp"></param>
         /// <returns></returns>
-        public string HotRepostDaily(int count = 20, bool baseApp = false)
-        {
+        public string HotRepostDaily(int count = 20, bool baseApp = false) {
             return (Client.GetCommand("statuses/hot/repost_daily",
                                       new WeiboParameter("count", count),
                                       new WeiboParameter("base_app", baseApp)));
@@ -338,8 +321,7 @@
         /// <param name="count"></param>
         /// <param name="baseApp"></param>
         /// <returns></returns>
-        public string HotRepostWeekly(int count = 20, bool baseApp = false)
-        {
+        public string HotRepostWeekly(int count = 20, bool baseApp = false) {
             return (Client.GetCommand("statuses/hot/repost_weekly",
                                       new WeiboParameter("count", count),
                                       new WeiboParameter("base_app", baseApp)));
@@ -351,8 +333,7 @@
         /// <param name="count"></param>
         /// <param name="baseApp"></param>
         /// <returns></returns>
-        public string HotCommentsDaily(int count = 20, bool baseApp = false)
-        {
+        public string HotCommentsDaily(int count = 20, bool baseApp = false) {
             return (Client.GetCommand("statuses/hot/comments_daily",
                                       new WeiboParameter("count", count),
                                       new WeiboParameter("base_app", baseApp)));
@@ -364,8 +345,7 @@
         /// <param name="count"></param>
         /// <param name="baseApp"></param>
         /// <returns></returns>
-        public string HotCommentsWeekly(int count = 20, bool baseApp = false)
-        {
+        public string HotCommentsWeekly(int count = 20, bool baseApp = false) {
             return (Client.GetCommand("statuses/hot/comments_weekly",
                                       new WeiboParameter("count", count),
                                       new WeiboParameter("base_app", baseApp)));
@@ -376,8 +356,7 @@
         /// </summary>
         /// <param name="ids">需要获取数据的微博ID</param>
         /// <returns></returns>
-        public string Count(params string[] ids)
-        {
+        public string Count(params string[] ids) {
             return (Client.GetCommand("statuses/count",
                                       new WeiboParameter("ids", string.Join(",", ids))));
         }
@@ -389,8 +368,7 @@
         /// <param name="status">添加的转发文本，内容不超过140个汉字，不填则默认为“转发微博”。 </param>
         /// <param name="isComment">是否在转发的同时发表评论，0：否、1：评论给当前微博、2：评论给原微博、3：都评论，默认为0 。 </param>
         /// <returns></returns>
-        public string Repost(string id, string status, int isComment)
-        {
+        public string Repost(string id, string status, int isComment) {
             return (Client.PostCommand("statuses/repost",
                                        new WeiboParameter("id", id),
                                        new WeiboParameter("status", status),
@@ -402,8 +380,7 @@
         /// </summary>
         /// <param name="id">需要删除的微博ID。 </param>
         /// <returns></returns>
-        public string Destroy(string id)
-        {
+        public string Destroy(string id) {
             return (Client.PostCommand("statuses/destroy",
                                        new WeiboParameter("id", id)));
         }
@@ -416,8 +393,7 @@
         /// <param name="log">经度，有效范围：-180.0到+180.0，+表示东经，默认为0.0。 </param>
         /// <param name="annotations">元数据，主要是为了方便第三方应用记录一些适合于自己使用的信息，每条微博可以包含一个或者多个元数据，必须以json字串的形式提交，字串长度不超过512个字符，具体内容可以自定。 </param>
         /// <returns></returns>
-        public string Update(string status, float lat = 0.0f, float log = 0.0f, string annotations = "")
-        {
+        public string Update(string status, float lat = 0.0f, float log = 0.0f, string annotations = "") {
             return (Client.PostCommand("statuses/update",
                                        new WeiboParameter("status", status),
                                        new WeiboParameter("lat", lat),
@@ -434,8 +410,7 @@
         /// <param name="log">经度，有效范围：-180.0到+180.0，+表示东经，默认为0.0。 </param>
         /// <param name="annotations">元数据，主要是为了方便第三方应用记录一些适合于自己使用的信息，每条微博可以包含一个或者多个元数据，必须以json字串的形式提交，字串长度不超过512个字符，具体内容可以自定。 </param>
         /// <returns></returns>
-        public string Upload(string status, byte[] pic, float lat = 0.0f, float log = 0.0f, string annotations = "")
-        {
+        public string Upload(string status, byte[] pic, float lat = 0.0f, float log = 0.0f, string annotations = "") {
             return (Client.PostCommand("statuses/upload",
                                        new WeiboParameter("status", status),
                                        new WeiboParameter("pic", pic),
@@ -454,8 +429,7 @@
         /// <param name="annotations">元数据，主要是为了方便第三方应用记录一些适合于自己使用的信息，每条微博可以包含一个或者多个元数据，必须以json字串的形式提交，字串长度不超过512个字符，具体内容可以自定。 </param>
         /// <returns></returns>
         public string UploadUrlText(string status, string url, float lat = 0.0f, float log = 0.0f,
-                                    string annotations = "")
-        {
+                                    string annotations = "") {
             return (Client.PostCommand("statuses/upload_url_text",
                                        new WeiboParameter("status", status),
                                        new WeiboParameter("url", url),
@@ -469,8 +443,7 @@
         /// <param name="type">表情类别，face：普通表情、ani：魔法表情、cartoon：动漫表情，默认为face。 </param>
         /// <param name="language">语言类别，cnname：简体、twname：繁体，默认为cnname。 </param>
         /// <returns></returns>
-        public string Emotions(EmotionType type, LanguageType language)
-        {
+        public string Emotions(EmotionType type, LanguageType language) {
             return (Client.GetCommand("emotions",
                                       new WeiboParameter("type", type),
                                       new WeiboParameter("language", language)));

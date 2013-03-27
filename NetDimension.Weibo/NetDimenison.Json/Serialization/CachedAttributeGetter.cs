@@ -40,8 +40,7 @@ namespace NetDimension.Json.Serialization
         private static readonly ThreadSafeStore<ICustomAttributeProvider, T> TypeAttributeCache =
             new ThreadSafeStore<ICustomAttributeProvider, T>(JsonTypeReflector.GetAttribute<T>);
 
-        public static T GetAttribute(ICustomAttributeProvider type)
-        {
+        public static T GetAttribute(ICustomAttributeProvider type) {
             return TypeAttributeCache.Get(type);
         }
     }

@@ -18,8 +18,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="client">操作类</param>
         public FriendshipInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new FriendshipAPI(client);
         }
 
@@ -34,8 +33,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="trimStatus">返回值中user字段中的status字段开关，0：返回完整status字段、1：status字段仅返回status_id，默认为1。 </param>
         /// <returns></returns>
         public Collection Friends(string uid = "", string screenName = "", int count = 50, int cursor = 0,
-                                  bool trimStatus = true)
-        {
+                                  bool trimStatus = true) {
             return JsonConvert.DeserializeObject<Collection>(api.Friends(uid, screenName, count, cursor, trimStatus));
         }
 
@@ -47,8 +45,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count">单页返回的记录条数，默认为500，最大不超过5000。 </param>
         /// <param name="cursor">返回结果的游标，下一页用返回值里的next_cursor，上一页用previous_cursor，默认为0。</param>
         /// <returns></returns>
-        public IDCollection FriendIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0)
-        {
+        public IDCollection FriendIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0) {
             return JsonConvert.DeserializeObject<IDCollection>(api.FriendIDs(uid, screenName, count, cursor));
         }
 
@@ -61,8 +58,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <returns></returns>
         public IEnumerable<Entities.user.Entity> FriendsInCommon(string uid = "", string suid = "", int count = 50,
-                                                                 int page = 1)
-        {
+                                                                 int page = 1) {
             return
                 JsonConvert.DeserializeObject<IEnumerable<Entities.user.Entity>>(
                     JObject.Parse(api.FriendsInCommon(uid, suid, count, page))["users"].ToString());
@@ -77,8 +73,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="sort">排序类型，0：按关注时间最近排序，默认为0。</param>
         /// <returns></returns>
         public IEnumerable<Entities.user.Entity> FriendsOnBilateral(string uid, int count = 50, int page = 1,
-                                                                    bool sort = false)
-        {
+                                                                    bool sort = false) {
             return
                 JsonConvert.DeserializeObject<IEnumerable<Entities.user.Entity>>(
                     JObject.Parse(api.FriendsOnBilateral(uid, count, page, sort))["users"].ToString());
@@ -92,8 +87,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <param name="sort">排序类型，0：按关注时间最近排序，默认为0。 </param>
         /// <returns></returns>
-        public IDCollection FriendsOnBilateralIDs(string uid, int count = 50, int page = 1, bool sort = false)
-        {
+        public IDCollection FriendsOnBilateralIDs(string uid, int count = 50, int page = 1, bool sort = false) {
             //return JsonConvert.DeserializeObject<NetDimension.Weibo.Entities.user.IDCollection>(JObject.Parse(api.FriendsOnBilateralIDs(uid, count, page, sort))["ids"].ToString());
             return JsonConvert.DeserializeObject<IDCollection>(api.FriendsOnBilateralIDs(uid, count, page, sort));
         }
@@ -108,8 +102,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="trimStatus">返回值中user字段中的status字段开关，0：返回完整status字段、1：status字段仅返回status_id，默认为1。 </param>
         /// <returns></returns>
         public Collection Followers(string uid = "", string screenName = "", int count = 50, int cursor = 0,
-                                    bool trimStatus = true)
-        {
+                                    bool trimStatus = true) {
             return JsonConvert.DeserializeObject<Collection>(api.Followers(uid, screenName, count, cursor, trimStatus));
         }
 
@@ -121,8 +114,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count">单页返回的记录条数，默认为500，最大不超过5000。</param>
         /// <param name="cursor">返回结果的游标，下一页用返回值里的next_cursor，上一页用previous_cursor，默认为0。 </param>
         /// <returns></returns>
-        public IDCollection FollowerIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0)
-        {
+        public IDCollection FollowerIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0) {
             return JsonConvert.DeserializeObject<IDCollection>(api.FollowerIDs(uid, screenName, count, cursor));
         }
 
@@ -132,8 +124,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="uid">需要查询的用户UID。 </param>
         /// <param name="count">返回的记录条数，默认为20，最大不超过200。 </param>
         /// <returns></returns>
-        public IEnumerable<Entities.user.Entity> FollowersInActive(string uid, int count = 20)
-        {
+        public IEnumerable<Entities.user.Entity> FollowersInActive(string uid, int count = 20) {
             return
                 JsonConvert.DeserializeObject<IEnumerable<Entities.user.Entity>>(
                     JObject.Parse(api.FollowersInActive(uid, count))["users"].ToString());
@@ -146,8 +137,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count">单页返回的记录条数，默认为50。 </param>
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <returns></returns>
-        public Collection FriendsChain(string uid, int count = 50, int page = 1)
-        {
+        public Collection FriendsChain(string uid, int count = 50, int page = 1) {
             return JsonConvert.DeserializeObject<Collection>(api.FriendsChain(uid, count, page));
         }
 
@@ -160,8 +150,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="targetScreenName">目标用户的微博昵称。 </param>
         /// <returns></returns>
         public Result Show(string sourceID = "", string sourceScreenName = "", string targetID = "",
-                           string targetScreenName = "")
-        {
+                           string targetScreenName = "") {
             return
                 JsonConvert.DeserializeObject<Result>(api.Show(sourceID, sourceScreenName, targetID, targetScreenName));
         }
@@ -172,8 +161,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="uid">需要关注的用户ID。</param>
         /// <param name="screenName">需要关注的用户昵称。 </param>
         /// <returns></returns>
-        public Entities.user.Entity Create(string uid = "", string screenName = "")
-        {
+        public Entities.user.Entity Create(string uid = "", string screenName = "") {
             return JsonConvert.DeserializeObject<Entities.user.Entity>(api.Create(uid, screenName));
         }
 
@@ -183,8 +171,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="uid">需要取消关注的用户ID。</param>
         /// <param name="screenName">需要取消关注的用户昵称。 </param>
         /// <returns></returns>
-        public Entities.user.Entity Destroy(string uid = "", string screenName = "")
-        {
+        public Entities.user.Entity Destroy(string uid = "", string screenName = "") {
             return JsonConvert.DeserializeObject<Entities.user.Entity>(api.Destroy(uid, screenName));
         }
 
@@ -194,8 +181,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="uid">需要修改备注信息的用户UID。 </param>
         /// <param name="remark">备注信息</param>
         /// <returns></returns>
-        public Entities.user.Entity UpdateRemark(string uid, string remark)
-        {
+        public Entities.user.Entity UpdateRemark(string uid, string remark) {
             return JsonConvert.DeserializeObject<Entities.user.Entity>(api.UpdateRemark(uid, remark));
         }
     }

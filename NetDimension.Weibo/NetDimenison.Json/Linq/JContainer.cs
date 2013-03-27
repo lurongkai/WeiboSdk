@@ -34,6 +34,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using NetDimension.Json.Utilities;
+
 #if !PORTABLE
 #endif
 
@@ -80,26 +81,23 @@ namespace NetDimension.Json.Linq
         private object _syncRoot;
         private bool _busy;
 
-        internal JContainer()
-        {
+        internal JContainer() {
         }
 
-        internal JContainer(JContainer other)
-        {
+        internal JContainer(JContainer other) {
             ValidationUtils.ArgumentNotNull(other, "c");
 
-            foreach (var child in other)
-            {
+            foreach (var child in other) {
                 Add(child);
             }
         }
 
-        internal void CheckReentrancy()
-        {
-            if (_busy)
+        internal void CheckReentrancy() {
+            if (_busy) {
                 throw new InvalidOperationException(
                     "Cannot change {0} during a collection change event.".FormatWith(CultureInfo.InvariantCulture,
                                                                                      GetType()));
+            }
         }
 
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
@@ -109,11 +107,11 @@ namespace NetDimension.Json.Linq
         /// <param name="e">
         ///     The <see cref="AddingNewEventArgs" /> instance containing the event data.
         /// </param>
-        protected virtual void OnAddingNew(AddingNewEventArgs e)
-        {
+        protected virtual void OnAddingNew(AddingNewEventArgs e) {
             var handler = AddingNew;
-            if (handler != null)
+            if (handler != null) {
                 handler(this, e);
+            }
         }
 
         /// <summary>
@@ -122,19 +120,14 @@ namespace NetDimension.Json.Linq
         /// <param name="e">
         ///     The <see cref="ListChangedEventArgs" /> instance containing the event data.
         /// </param>
-        protected virtual void OnListChanged(ListChangedEventArgs e)
-        {
+        protected virtual void OnListChanged(ListChangedEventArgs e) {
             var handler = ListChanged;
 
-            if (handler != null)
-            {
+            if (handler != null) {
                 _busy = true;
-                try
-                {
+                try {
                     handler(this, e);
-                }
-                finally
-                {
+                } finally {
                     _busy = false;
                 }
             }
@@ -147,19 +140,14 @@ namespace NetDimension.Json.Linq
         /// <param name="e">
         ///     The <see cref="NotifyCollectionChangedEventArgs" /> instance containing the event data.
         /// </param>
-        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-        {
+        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e) {
             var handler = CollectionChanged;
 
-            if (handler != null)
-            {
+            if (handler != null) {
                 _busy = true;
-                try
-                {
+                try {
                     handler(this, e);
-                }
-                finally
-                {
+                } finally {
                     _busy = false;
                 }
             }
@@ -172,26 +160,26 @@ namespace NetDimension.Json.Linq
         /// <value>
         ///     <c>true</c> if this token has child values; otherwise, <c>false</c>.
         /// </value>
-        public override bool HasValues
-        {
+        public override bool HasValues {
             get { return ChildrenTokens.Count > 0; }
         }
 
-        internal bool ContentsEqual(JContainer container)
-        {
-            if (container == this)
+        internal bool ContentsEqual(JContainer container) {
+            if (container == this) {
                 return true;
+            }
 
             var t1 = ChildrenTokens;
             var t2 = container.ChildrenTokens;
 
-            if (t1.Count != t2.Count)
+            if (t1.Count != t2.Count) {
                 return false;
+            }
 
-            for (var i = 0; i < t1.Count; i++)
-            {
-                if (!t1[i].DeepEquals(t2[i]))
+            for (var i = 0; i < t1.Count; i++) {
+                if (!t1[i].DeepEquals(t2[i])) {
                     return false;
+                }
             }
 
             return true;
@@ -203,8 +191,7 @@ namespace NetDimension.Json.Linq
         /// <value>
         ///     A <see cref="JToken" /> containing the first child token of the <see cref="JToken" />.
         /// </value>
-        public override JToken First
-        {
+        public override JToken First {
             get { return ChildrenTokens.FirstOrDefault(); }
         }
 
@@ -214,8 +201,7 @@ namespace NetDimension.Json.Linq
         /// <value>
         ///     A <see cref="JToken" /> containing the last child token of the <see cref="JToken" />.
         /// </value>
-        public override JToken Last
-        {
+        public override JToken Last {
             get { return ChildrenTokens.LastOrDefault(); }
         }
 
@@ -225,8 +211,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="IEnumerable{T}" /> of <see cref="JToken" /> containing the child tokens of this <see cref="JToken" />, in document order.
         /// </returns>
-        public override JEnumerable<JToken> Children()
-        {
+        public override JEnumerable<JToken> Children() {
             return new JEnumerable<JToken>(ChildrenTokens);
         }
 
@@ -237,8 +222,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="IEnumerable{T}" /> containing the child values of this <see cref="JToken" />, in document order.
         /// </returns>
-        public override IEnumerable<T> Values<T>()
-        {
+        public override IEnumerable<T> Values<T>() {
             return ChildrenTokens.Convert<JToken, T>();
         }
 
@@ -248,41 +232,38 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="IEnumerable{JToken}" /> containing the descendant tokens of the <see cref="JToken" />.
         /// </returns>
-        public IEnumerable<JToken> Descendants()
-        {
-            foreach (var o in ChildrenTokens)
-            {
+        public IEnumerable<JToken> Descendants() {
+            foreach (var o in ChildrenTokens) {
                 yield return o;
                 var c = o as JContainer;
-                if (c != null)
-                {
-                    foreach (var d in c.Descendants())
-                    {
+                if (c != null) {
+                    foreach (var d in c.Descendants()) {
                         yield return d;
                     }
                 }
             }
         }
 
-        internal bool IsMultiContent(object content)
-        {
+        internal bool IsMultiContent(object content) {
             return (content is IEnumerable && !(content is string) && !(content is JToken) && !(content is byte[]));
         }
 
-        internal JToken EnsureParentToken(JToken item, bool skipParentCheck)
-        {
-            if (item == null)
+        internal JToken EnsureParentToken(JToken item, bool skipParentCheck) {
+            if (item == null) {
                 return new JValue((object) null);
+            }
 
-            if (skipParentCheck)
+            if (skipParentCheck) {
                 return item;
+            }
 
             // to avoid a token having multiple parents or creating a recursive loop, create a copy if...
             // the item already has a parent
             // the item is being added to itself
             // the item is being added to the root parent of itself
-            if (item.Parent != null || item == this || (item.HasValues && Root == item))
+            if (item.Parent != null || item == this || (item.HasValues && Root == item)) {
                 item = item.CloneToken();
+            }
 
             return item;
         }
@@ -291,29 +272,27 @@ namespace NetDimension.Json.Linq
         {
             public static readonly JTokenReferenceEqualityComparer Instance = new JTokenReferenceEqualityComparer();
 
-            public bool Equals(JToken x, JToken y)
-            {
+            public bool Equals(JToken x, JToken y) {
                 return ReferenceEquals(x, y);
             }
 
-            public int GetHashCode(JToken obj)
-            {
-                if (obj == null)
+            public int GetHashCode(JToken obj) {
+                if (obj == null) {
                     return 0;
+                }
 
                 return obj.GetHashCode();
             }
         }
 
-        internal int IndexOfItem(JToken item)
-        {
+        internal int IndexOfItem(JToken item) {
             return ChildrenTokens.IndexOf(item, JTokenReferenceEqualityComparer.Instance);
         }
 
-        internal virtual void InsertItem(int index, JToken item, bool skipParentCheck)
-        {
-            if (index > ChildrenTokens.Count)
+        internal virtual void InsertItem(int index, JToken item, bool skipParentCheck) {
+            if (index > ChildrenTokens.Count) {
                 throw new ArgumentOutOfRangeException("index", "Index must be within the bounds of the List.");
+            }
 
             CheckReentrancy();
 
@@ -328,31 +307,36 @@ namespace NetDimension.Json.Linq
             item.Parent = this;
 
             item.Previous = previous;
-            if (previous != null)
+            if (previous != null) {
                 previous.Next = item;
+            }
 
             item.Next = next;
-            if (next != null)
+            if (next != null) {
                 next.Previous = item;
+            }
 
             ChildrenTokens.Insert(index, item);
 
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
-            if (ListChanged != null)
+            if (ListChanged != null) {
                 OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
+            }
 #endif
 #if SILVERLIGHT || !PORTABLE
-            if (CollectionChanged != null)
+            if (CollectionChanged != null) {
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
+            }
 #endif
         }
 
-        internal virtual void RemoveItemAt(int index)
-        {
-            if (index < 0)
+        internal virtual void RemoveItemAt(int index) {
+            if (index < 0) {
                 throw new ArgumentOutOfRangeException("index", "Index is less than 0.");
-            if (index >= ChildrenTokens.Count)
+            }
+            if (index >= ChildrenTokens.Count) {
                 throw new ArgumentOutOfRangeException("index", "Index is equal to or greater than Count.");
+            }
 
             CheckReentrancy();
 
@@ -360,10 +344,12 @@ namespace NetDimension.Json.Linq
             var previous = (index == 0) ? null : ChildrenTokens[index - 1];
             var next = (index == ChildrenTokens.Count - 1) ? null : ChildrenTokens[index + 1];
 
-            if (previous != null)
+            if (previous != null) {
                 previous.Next = next;
-            if (next != null)
+            }
+            if (next != null) {
                 next.Previous = previous;
+            }
 
             item.Parent = null;
             item.Previous = null;
@@ -379,11 +365,9 @@ namespace NetDimension.Json.Linq
 #endif
         }
 
-        internal virtual bool RemoveItem(JToken item)
-        {
+        internal virtual bool RemoveItem(JToken item) {
             var index = IndexOfItem(item);
-            if (index >= 0)
-            {
+            if (index >= 0) {
                 RemoveItemAt(index);
                 return true;
             }
@@ -391,22 +375,23 @@ namespace NetDimension.Json.Linq
             return false;
         }
 
-        internal virtual JToken GetItem(int index)
-        {
+        internal virtual JToken GetItem(int index) {
             return ChildrenTokens[index];
         }
 
-        internal virtual void SetItem(int index, JToken item)
-        {
-            if (index < 0)
+        internal virtual void SetItem(int index, JToken item) {
+            if (index < 0) {
                 throw new ArgumentOutOfRangeException("index", "Index is less than 0.");
-            if (index >= ChildrenTokens.Count)
+            }
+            if (index >= ChildrenTokens.Count) {
                 throw new ArgumentOutOfRangeException("index", "Index is equal to or greater than Count.");
+            }
 
             var existing = ChildrenTokens[index];
 
-            if (IsTokenUnchanged(existing, item))
+            if (IsTokenUnchanged(existing, item)) {
                 return;
+            }
 
             CheckReentrancy();
 
@@ -420,12 +405,14 @@ namespace NetDimension.Json.Linq
             item.Parent = this;
 
             item.Previous = previous;
-            if (previous != null)
+            if (previous != null) {
                 previous.Next = item;
+            }
 
             item.Next = next;
-            if (next != null)
+            if (next != null) {
                 next.Previous = item;
+            }
 
             ChildrenTokens[index] = item;
 
@@ -442,12 +429,10 @@ namespace NetDimension.Json.Linq
 #endif
         }
 
-        internal virtual void ClearItems()
-        {
+        internal virtual void ClearItems() {
             CheckReentrancy();
 
-            foreach (var item in ChildrenTokens)
-            {
+            foreach (var item in ChildrenTokens) {
                 item.Parent = null;
                 item.Previous = null;
                 item.Next = null;
@@ -463,48 +448,48 @@ namespace NetDimension.Json.Linq
 #endif
         }
 
-        internal virtual void ReplaceItem(JToken existing, JToken replacement)
-        {
-            if (existing == null || existing.Parent != this)
+        internal virtual void ReplaceItem(JToken existing, JToken replacement) {
+            if (existing == null || existing.Parent != this) {
                 return;
+            }
 
             var index = IndexOfItem(existing);
             SetItem(index, replacement);
         }
 
-        internal virtual bool ContainsItem(JToken item)
-        {
+        internal virtual bool ContainsItem(JToken item) {
             return (IndexOfItem(item) != -1);
         }
 
-        internal virtual void CopyItemsTo(Array array, int arrayIndex)
-        {
-            if (array == null)
+        internal virtual void CopyItemsTo(Array array, int arrayIndex) {
+            if (array == null) {
                 throw new ArgumentNullException("array");
-            if (arrayIndex < 0)
+            }
+            if (arrayIndex < 0) {
                 throw new ArgumentOutOfRangeException("arrayIndex", "arrayIndex is less than 0.");
-            if (arrayIndex >= array.Length)
+            }
+            if (arrayIndex >= array.Length) {
                 throw new ArgumentException("arrayIndex is equal to or greater than the length of array.");
-            if (Count > array.Length - arrayIndex)
+            }
+            if (Count > array.Length - arrayIndex) {
                 throw new ArgumentException(
                     "The number of elements in the source JObject is greater than the available space from arrayIndex to the end of the destination array.");
+            }
 
             var index = 0;
-            foreach (var token in ChildrenTokens)
-            {
+            foreach (var token in ChildrenTokens) {
                 array.SetValue(token, arrayIndex + index);
                 index++;
             }
         }
 
-        internal static bool IsTokenUnchanged(JToken currentValue, JToken newValue)
-        {
+        internal static bool IsTokenUnchanged(JToken currentValue, JToken newValue) {
             var v1 = currentValue as JValue;
-            if (v1 != null)
-            {
+            if (v1 != null) {
                 // null will get turned into a JValue of type null
-                if (v1.Type == JTokenType.Null && newValue == null)
+                if (v1.Type == JTokenType.Null && newValue == null) {
                     return true;
+                }
 
                 return v1.Equals(newValue);
             }
@@ -512,26 +497,24 @@ namespace NetDimension.Json.Linq
             return false;
         }
 
-        internal virtual void ValidateToken(JToken o, JToken existing)
-        {
+        internal virtual void ValidateToken(JToken o, JToken existing) {
             ValidationUtils.ArgumentNotNull(o, "o");
 
-            if (o.Type == JTokenType.Property)
+            if (o.Type == JTokenType.Property) {
                 throw new ArgumentException("Can not add {0} to {1}.".FormatWith(CultureInfo.InvariantCulture,
                                                                                  o.GetType(), GetType()));
+            }
         }
 
         /// <summary>
         ///     Adds the specified content as children of this <see cref="JToken" />.
         /// </summary>
         /// <param name="content">The content to be added.</param>
-        public virtual void Add(object content)
-        {
+        public virtual void Add(object content) {
             AddInternal(ChildrenTokens.Count, content, false);
         }
 
-        internal void AddAndSkipParentCheck(JToken token)
-        {
+        internal void AddAndSkipParentCheck(JToken token) {
             AddInternal(ChildrenTokens.Count, token, true);
         }
 
@@ -539,36 +522,30 @@ namespace NetDimension.Json.Linq
         ///     Adds the specified content as the first children of this <see cref="JToken" />.
         /// </summary>
         /// <param name="content">The content to be added.</param>
-        public void AddFirst(object content)
-        {
+        public void AddFirst(object content) {
             AddInternal(0, content, false);
         }
 
-        internal void AddInternal(int index, object content, bool skipParentCheck)
-        {
-            if (IsMultiContent(content))
-            {
+        internal void AddInternal(int index, object content, bool skipParentCheck) {
+            if (IsMultiContent(content)) {
                 var enumerable = (IEnumerable) content;
 
                 var multiIndex = index;
-                foreach (var c in enumerable)
-                {
+                foreach (var c in enumerable) {
                     AddInternal(multiIndex, c, skipParentCheck);
                     multiIndex++;
                 }
-            }
-            else
-            {
+            } else {
                 var item = CreateFromContent(content);
 
                 InsertItem(index, item, skipParentCheck);
             }
         }
 
-        internal JToken CreateFromContent(object content)
-        {
-            if (content is JToken)
+        internal JToken CreateFromContent(object content) {
+            if (content is JToken) {
                 return (JToken) content;
+            }
 
             return new JValue(content);
         }
@@ -579,8 +556,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="JsonWriter" /> that is ready to have content written to it.
         /// </returns>
-        public JsonWriter CreateWriter()
-        {
+        public JsonWriter CreateWriter() {
             return new JTokenWriter(this);
         }
 
@@ -588,8 +564,7 @@ namespace NetDimension.Json.Linq
         ///     Replaces the children nodes of this token with the specified content.
         /// </summary>
         /// <param name="content">The content.</param>
-        public void ReplaceAll(object content)
-        {
+        public void ReplaceAll(object content) {
             ClearItems();
             Add(content);
         }
@@ -597,49 +572,46 @@ namespace NetDimension.Json.Linq
         /// <summary>
         ///     Removes the child nodes from this token.
         /// </summary>
-        public void RemoveAll()
-        {
+        public void RemoveAll() {
             ClearItems();
         }
 
-        internal void ReadTokenFrom(JsonReader reader)
-        {
+        internal void ReadTokenFrom(JsonReader reader) {
             var startDepth = reader.Depth;
 
-            if (!reader.Read())
+            if (!reader.Read()) {
                 throw JsonReaderException.Create(reader,
                                                  "Error reading {0} from JsonReader.".FormatWith(
                                                      CultureInfo.InvariantCulture, GetType().Name));
+            }
 
             ReadContentFrom(reader);
 
             var endDepth = reader.Depth;
 
-            if (endDepth > startDepth)
+            if (endDepth > startDepth) {
                 throw JsonReaderException.Create(reader,
                                                  "Unexpected end of content while loading {0}.".FormatWith(
                                                      CultureInfo.InvariantCulture, GetType().Name));
+            }
         }
 
-        internal void ReadContentFrom(JsonReader r)
-        {
+        internal void ReadContentFrom(JsonReader r) {
             ValidationUtils.ArgumentNotNull(r, "r");
             var lineInfo = r as IJsonLineInfo;
 
             var parent = this;
 
-            do
-            {
-                if (parent is JProperty && ((JProperty) parent).Value != null)
-                {
-                    if (parent == this)
+            do {
+                if (parent is JProperty && ((JProperty) parent).Value != null) {
+                    if (parent == this) {
                         return;
+                    }
 
                     parent = parent.Parent;
                 }
 
-                switch (r.TokenType)
-                {
+                switch (r.TokenType) {
                     case JsonToken.None:
                         // new reader. move to actual content
                         break;
@@ -651,8 +623,9 @@ namespace NetDimension.Json.Linq
                         break;
 
                     case JsonToken.EndArray:
-                        if (parent == this)
+                        if (parent == this) {
                             return;
+                        }
 
                         parent = parent.Parent;
                         break;
@@ -663,8 +636,9 @@ namespace NetDimension.Json.Linq
                         parent = o;
                         break;
                     case JsonToken.EndObject:
-                        if (parent == this)
+                        if (parent == this) {
                             return;
+                        }
 
                         parent = parent.Parent;
                         break;
@@ -675,8 +649,9 @@ namespace NetDimension.Json.Linq
                         parent = constructor;
                         break;
                     case JsonToken.EndConstructor:
-                        if (parent == this)
+                        if (parent == this) {
                             return;
+                        }
 
                         parent = parent.Parent;
                         break;
@@ -712,10 +687,11 @@ namespace NetDimension.Json.Linq
                         var parentObject = (JObject) parent;
                         // handle multiple properties with the same name in JSON
                         var existingPropertyWithName = parentObject.Property(propertyName);
-                        if (existingPropertyWithName == null)
+                        if (existingPropertyWithName == null) {
                             parent.Add(property);
-                        else
+                        } else {
                             existingPropertyWithName.Replace(property);
+                        }
                         parent = property;
                         break;
                     default:
@@ -726,27 +702,24 @@ namespace NetDimension.Json.Linq
             } while (r.Read());
         }
 
-        internal int ContentsHashCode()
-        {
+        internal int ContentsHashCode() {
             var hashCode = 0;
-            foreach (var item in ChildrenTokens)
-            {
+            foreach (var item in ChildrenTokens) {
                 hashCode ^= item.GetDeepHashCode();
             }
             return hashCode;
         }
 
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
-        string ITypedList.GetListName(PropertyDescriptor[] listAccessors)
-        {
+        string ITypedList.GetListName(PropertyDescriptor[] listAccessors) {
             return string.Empty;
         }
 
-        PropertyDescriptorCollection ITypedList.GetItemProperties(PropertyDescriptor[] listAccessors)
-        {
+        PropertyDescriptorCollection ITypedList.GetItemProperties(PropertyDescriptor[] listAccessors) {
             var d = First as ICustomTypeDescriptor;
-            if (d != null)
+            if (d != null) {
                 return d.GetProperties();
+            }
 
             return null;
         }
@@ -754,23 +727,19 @@ namespace NetDimension.Json.Linq
 
         #region IList<JToken> Members
 
-        int IList<JToken>.IndexOf(JToken item)
-        {
+        int IList<JToken>.IndexOf(JToken item) {
             return IndexOfItem(item);
         }
 
-        void IList<JToken>.Insert(int index, JToken item)
-        {
+        void IList<JToken>.Insert(int index, JToken item) {
             InsertItem(index, item, false);
         }
 
-        void IList<JToken>.RemoveAt(int index)
-        {
+        void IList<JToken>.RemoveAt(int index) {
             RemoveItemAt(index);
         }
 
-        JToken IList<JToken>.this[int index]
-        {
+        JToken IList<JToken>.this[int index] {
             get { return GetItem(index); }
             set { SetItem(index, value); }
         }
@@ -779,99 +748,84 @@ namespace NetDimension.Json.Linq
 
         #region ICollection<JToken> Members
 
-        void ICollection<JToken>.Add(JToken item)
-        {
+        void ICollection<JToken>.Add(JToken item) {
             Add(item);
         }
 
-        void ICollection<JToken>.Clear()
-        {
+        void ICollection<JToken>.Clear() {
             ClearItems();
         }
 
-        bool ICollection<JToken>.Contains(JToken item)
-        {
+        bool ICollection<JToken>.Contains(JToken item) {
             return ContainsItem(item);
         }
 
-        void ICollection<JToken>.CopyTo(JToken[] array, int arrayIndex)
-        {
+        void ICollection<JToken>.CopyTo(JToken[] array, int arrayIndex) {
             CopyItemsTo(array, arrayIndex);
         }
 
-        bool ICollection<JToken>.IsReadOnly
-        {
+        bool ICollection<JToken>.IsReadOnly {
             get { return false; }
         }
 
-        bool ICollection<JToken>.Remove(JToken item)
-        {
+        bool ICollection<JToken>.Remove(JToken item) {
             return RemoveItem(item);
         }
 
         #endregion
 
-        private JToken EnsureValue(object value)
-        {
-            if (value == null)
+        private JToken EnsureValue(object value) {
+            if (value == null) {
                 return null;
+            }
 
-            if (value is JToken)
+            if (value is JToken) {
                 return (JToken) value;
+            }
 
             throw new ArgumentException("Argument is not a JToken.");
         }
 
         #region IList Members
 
-        int IList.Add(object value)
-        {
+        int IList.Add(object value) {
             Add(EnsureValue(value));
             return Count - 1;
         }
 
-        void IList.Clear()
-        {
+        void IList.Clear() {
             ClearItems();
         }
 
-        bool IList.Contains(object value)
-        {
+        bool IList.Contains(object value) {
             return ContainsItem(EnsureValue(value));
         }
 
-        int IList.IndexOf(object value)
-        {
+        int IList.IndexOf(object value) {
             return IndexOfItem(EnsureValue(value));
         }
 
-        void IList.Insert(int index, object value)
-        {
+        void IList.Insert(int index, object value) {
             InsertItem(index, EnsureValue(value), false);
         }
 
-        bool IList.IsFixedSize
-        {
+        bool IList.IsFixedSize {
             get { return false; }
         }
 
-        bool IList.IsReadOnly
-        {
+        bool IList.IsReadOnly {
             get { return false; }
         }
 
-        void IList.Remove(object value)
-        {
+        void IList.Remove(object value) {
             RemoveItem(EnsureValue(value));
         }
 
-        void IList.RemoveAt(int index)
-        {
+        void IList.RemoveAt(int index) {
             RemoveItemAt(index);
         }
 
-        object IList.this[int index]
-        {
+        object IList.this[int index] {
             get { return GetItem(index); }
             set { SetItem(index, EnsureValue(value)); }
         }
@@ -880,8 +834,7 @@ namespace NetDimension.Json.Linq
 
         #region ICollection Members
 
-        void ICollection.CopyTo(Array array, int index)
-        {
+        void ICollection.CopyTo(Array array, int index) {
             CopyItemsTo(array, index);
         }
 
@@ -889,22 +842,19 @@ namespace NetDimension.Json.Linq
         ///     Gets the count of child JSON tokens.
         /// </summary>
         /// <value>The count of child JSON tokens</value>
-        public int Count
-        {
+        public int Count {
             get { return ChildrenTokens.Count; }
         }
 
-        bool ICollection.IsSynchronized
-        {
+        bool ICollection.IsSynchronized {
             get { return false; }
         }
 
-        object ICollection.SyncRoot
-        {
-            get
-            {
-                if (_syncRoot == null)
+        object ICollection.SyncRoot {
+            get {
+                if (_syncRoot == null) {
                     Interlocked.CompareExchange(ref _syncRoot, new object(), null);
+                }
 
                 return _syncRoot;
             }
@@ -915,23 +865,23 @@ namespace NetDimension.Json.Linq
         #region IBindingList Members
 
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
-        void IBindingList.AddIndex(PropertyDescriptor property)
-        {
+        void IBindingList.AddIndex(PropertyDescriptor property) {
         }
 
-        object IBindingList.AddNew()
-        {
+        object IBindingList.AddNew() {
             var args = new AddingNewEventArgs();
             OnAddingNew(args);
 
-            if (args.NewObject == null)
+            if (args.NewObject == null) {
                 throw new JsonException(
                     "Could not determine new value to add to '{0}'.".FormatWith(CultureInfo.InvariantCulture, GetType()));
+            }
 
-            if (!(args.NewObject is JToken))
+            if (!(args.NewObject is JToken)) {
                 throw new JsonException(
                     "New item to be added to collection must be compatible with {0}.".FormatWith(
                         CultureInfo.InvariantCulture, typeof (JToken)));
+            }
 
             var newItem = (JToken) args.NewObject;
             Add(newItem);
@@ -939,67 +889,54 @@ namespace NetDimension.Json.Linq
             return newItem;
         }
 
-        bool IBindingList.AllowEdit
-        {
+        bool IBindingList.AllowEdit {
             get { return true; }
         }
 
-        bool IBindingList.AllowNew
-        {
+        bool IBindingList.AllowNew {
             get { return true; }
         }
 
-        bool IBindingList.AllowRemove
-        {
+        bool IBindingList.AllowRemove {
             get { return true; }
         }
 
-        void IBindingList.ApplySort(PropertyDescriptor property, ListSortDirection direction)
-        {
+        void IBindingList.ApplySort(PropertyDescriptor property, ListSortDirection direction) {
             throw new NotSupportedException();
         }
 
-        int IBindingList.Find(PropertyDescriptor property, object key)
-        {
+        int IBindingList.Find(PropertyDescriptor property, object key) {
             throw new NotSupportedException();
         }
 
-        bool IBindingList.IsSorted
-        {
+        bool IBindingList.IsSorted {
             get { return false; }
         }
 
-        void IBindingList.RemoveIndex(PropertyDescriptor property)
-        {
+        void IBindingList.RemoveIndex(PropertyDescriptor property) {
         }
 
-        void IBindingList.RemoveSort()
-        {
+        void IBindingList.RemoveSort() {
             throw new NotSupportedException();
         }
 
-        ListSortDirection IBindingList.SortDirection
-        {
+        ListSortDirection IBindingList.SortDirection {
             get { return ListSortDirection.Ascending; }
         }
 
-        PropertyDescriptor IBindingList.SortProperty
-        {
+        PropertyDescriptor IBindingList.SortProperty {
             get { return null; }
         }
 
-        bool IBindingList.SupportsChangeNotification
-        {
+        bool IBindingList.SupportsChangeNotification {
             get { return true; }
         }
 
-        bool IBindingList.SupportsSearching
-        {
+        bool IBindingList.SupportsSearching {
             get { return false; }
         }
 
-        bool IBindingList.SupportsSorting
-        {
+        bool IBindingList.SupportsSorting {
             get { return false; }
         }
 #endif

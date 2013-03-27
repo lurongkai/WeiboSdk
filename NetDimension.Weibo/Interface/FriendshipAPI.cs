@@ -3,8 +3,7 @@
     internal class FriendshipAPI : WeiboAPI
     {
         public FriendshipAPI(Client client)
-            : base(client)
-        {
+            : base(client) {
         }
 
         /// <summary>
@@ -16,8 +15,7 @@
         /// <param name="cursor">返回结果的游标，下一页用返回值里的next_cursor，上一页用previous_cursor，默认为0。</param>
         /// <returns></returns>
         public string Friends(string uid = "", string screenName = "", int count = 50, int cursor = 0,
-                              bool trimStatus = true)
-        {
+                              bool trimStatus = true) {
             return (Client.GetCommand("friendships/friends",
                                       string.IsNullOrEmpty(uid)
                                           ? new WeiboParameter("screen_name", screenName)
@@ -35,8 +33,7 @@
         /// <param name="count">单页返回的记录条数，默认为500，最大不超过5000。 </param>
         /// <param name="cursor">返回结果的游标，下一页用返回值里的next_cursor，上一页用previous_cursor，默认为0。</param>
         /// <returns></returns>
-        public string FriendIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0)
-        {
+        public string FriendIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0) {
             return (Client.GetCommand("friendships/friends/ids",
                                       string.IsNullOrEmpty(uid)
                                           ? new WeiboParameter("screen_name", screenName)
@@ -53,8 +50,7 @@
         /// <param name="count">单页返回的记录条数，默认为50。 </param>
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <returns></returns>
-        public string FriendsInCommon(string uid = "", string suid = "", int count = 50, int page = 1)
-        {
+        public string FriendsInCommon(string uid = "", string suid = "", int count = 50, int page = 1) {
             return (Client.GetCommand("friendships/friends/in_common",
                                       new WeiboParameter("uid", uid),
                                       new WeiboParameter("suid", suid),
@@ -70,8 +66,7 @@
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <param name="sort">排序类型，0：按关注时间最近排序，默认为0。</param>
         /// <returns></returns>
-        public string FriendsOnBilateral(string uid, int count = 50, int page = 1, bool sort = false)
-        {
+        public string FriendsOnBilateral(string uid, int count = 50, int page = 1, bool sort = false) {
             return (Client.GetCommand("friendships/friends/bilateral",
                                       new WeiboParameter("uid", uid),
                                       new WeiboParameter("count", count),
@@ -87,8 +82,7 @@
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <param name="sort">排序类型，0：按关注时间最近排序，默认为0。 </param>
         /// <returns></returns>
-        public string FriendsOnBilateralIDs(string uid, int count = 50, int page = 1, bool sort = false)
-        {
+        public string FriendsOnBilateralIDs(string uid, int count = 50, int page = 1, bool sort = false) {
             return (Client.GetCommand("friendships/friends/bilateral/ids",
                                       new WeiboParameter("uid", uid),
                                       new WeiboParameter("count", count),
@@ -106,8 +100,7 @@
         /// <param name="trimStatus">返回值中user字段中的status字段开关，0：返回完整status字段、1：status字段仅返回status_id，默认为1。 </param>
         /// <returns></returns>
         public string Followers(string uid = "", string screenName = "", int count = 50, int cursor = 0,
-                                bool trimStatus = true)
-        {
+                                bool trimStatus = true) {
             return (Client.GetCommand("friendships/followers",
                                       string.IsNullOrEmpty(uid)
                                           ? new WeiboParameter("screen_name", screenName)
@@ -125,8 +118,7 @@
         /// <param name="count">单页返回的记录条数，默认为500，最大不超过5000。</param>
         /// <param name="cursor">返回结果的游标，下一页用返回值里的next_cursor，上一页用previous_cursor，默认为0。 </param>
         /// <returns></returns>
-        public string FollowerIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0)
-        {
+        public string FollowerIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0) {
             return (Client.GetCommand("friendships/followers/ids",
                                       string.IsNullOrEmpty(uid)
                                           ? new WeiboParameter("screen_name", screenName)
@@ -141,8 +133,7 @@
         /// <param name="uid">需要查询的用户UID。 </param>
         /// <param name="count">返回的记录条数，默认为20，最大不超过200。 </param>
         /// <returns></returns>
-        public string FollowersInActive(string uid, int count = 20)
-        {
+        public string FollowersInActive(string uid, int count = 20) {
             return (Client.GetCommand("friendships/followers/active",
                                       new WeiboParameter("uid", uid),
                                       new WeiboParameter("count", count)));
@@ -155,8 +146,7 @@
         /// <param name="count">单页返回的记录条数，默认为50。 </param>
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <returns></returns>
-        public string FriendsChain(string uid, int count = 50, int page = 1)
-        {
+        public string FriendsChain(string uid, int count = 50, int page = 1) {
             return (Client.GetCommand("friendships/friends_chain/followers",
                                       new WeiboParameter("uid", uid),
                                       new WeiboParameter("count", count),
@@ -172,8 +162,7 @@
         /// <param name="targetScreenName">目标用户的微博昵称。 </param>
         /// <returns></returns>
         public string Show(string sourceID = "", string sourceScreenName = "", string targetID = "",
-                           string targetScreenName = "")
-        {
+                           string targetScreenName = "") {
             return (Client.GetCommand("friendships/show",
                                       string.IsNullOrEmpty(sourceID)
                                           ? new WeiboParameter("source_screen_name", sourceScreenName)
@@ -189,8 +178,7 @@
         /// <param name="uid">需要关注的用户ID。</param>
         /// <param name="screenName">需要关注的用户昵称。 </param>
         /// <returns></returns>
-        public string Create(string uid = "", string screenName = "")
-        {
+        public string Create(string uid = "", string screenName = "") {
             return (Client.PostCommand("friendships/create",
                                        string.IsNullOrEmpty(uid)
                                            ? new WeiboParameter("screen_name", screenName)
@@ -203,8 +191,7 @@
         /// <param name="uid">需要取消关注的用户ID。</param>
         /// <param name="screenName">需要取消关注的用户昵称。 </param>
         /// <returns></returns>
-        public string Destroy(string uid = "", string screenName = "")
-        {
+        public string Destroy(string uid = "", string screenName = "") {
             return (Client.PostCommand("friendships/destroy",
                                        string.IsNullOrEmpty(uid)
                                            ? new WeiboParameter("screen_name", screenName)
@@ -217,8 +204,7 @@
         /// <param name="uid">需要修改备注信息的用户UID。 </param>
         /// <param name="remark">备注信息</param>
         /// <returns></returns>
-        public string UpdateRemark(string uid, string remark)
-        {
+        public string UpdateRemark(string uid, string remark) {
             return (Client.PostCommand("friendships/remark/update",
                                        new WeiboParameter("uid", uid),
                                        new WeiboParameter("remark", remark)));

@@ -76,8 +76,7 @@ namespace NetDimension.Json.Utilities
     }
 #endif
 
-        public static MemberTypes MemberType(this MemberInfo memberInfo)
-        {
+        public static MemberTypes MemberType(this MemberInfo memberInfo) {
 #if !(NETFX_CORE || PORTABLE)
             return memberInfo.MemberType;
 #else
@@ -94,8 +93,7 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static bool ContainsGenericParameters(this Type type)
-        {
+        public static bool ContainsGenericParameters(this Type type) {
 #if !NETFX_CORE
             return type.ContainsGenericParameters;
 #else
@@ -103,8 +101,7 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static bool IsInterface(this Type type)
-        {
+        public static bool IsInterface(this Type type) {
 #if !NETFX_CORE
             return type.IsInterface;
 #else
@@ -112,8 +109,7 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static bool IsGenericType(this Type type)
-        {
+        public static bool IsGenericType(this Type type) {
 #if !NETFX_CORE
             return type.IsGenericType;
 #else
@@ -121,8 +117,7 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static bool IsGenericTypeDefinition(this Type type)
-        {
+        public static bool IsGenericTypeDefinition(this Type type) {
 #if !NETFX_CORE
             return type.IsGenericTypeDefinition;
 #else
@@ -130,8 +125,7 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static Type BaseType(this Type type)
-        {
+        public static Type BaseType(this Type type) {
 #if !NETFX_CORE
             return type.BaseType;
 #else
@@ -139,8 +133,7 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static bool IsEnum(this Type type)
-        {
+        public static bool IsEnum(this Type type) {
 #if !NETFX_CORE
             return type.IsEnum;
 #else
@@ -148,8 +141,7 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static bool IsClass(this Type type)
-        {
+        public static bool IsClass(this Type type) {
 #if !NETFX_CORE
             return type.IsClass;
 #else
@@ -157,8 +149,7 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static bool IsSealed(this Type type)
-        {
+        public static bool IsSealed(this Type type) {
 #if !NETFX_CORE
             return type.IsSealed;
 #else
@@ -476,8 +467,7 @@ namespace NetDimension.Json.Utilities
     }
 #endif
 
-        public static bool IsAbstract(this Type type)
-        {
+        public static bool IsAbstract(this Type type) {
 #if !NETFX_CORE
             return type.IsAbstract;
 #else
@@ -485,8 +475,7 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static bool IsVisible(this Type type)
-        {
+        public static bool IsVisible(this Type type) {
 #if !NETFX_CORE
             return type.IsVisible;
 #else
@@ -494,8 +483,7 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static bool IsValueType(this Type type)
-        {
+        public static bool IsValueType(this Type type) {
 #if !NETFX_CORE
             return type.IsValueType;
 #else
@@ -503,14 +491,11 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static bool AssignableToTypeName(this Type type, string fullTypeName, out Type match)
-        {
+        public static bool AssignableToTypeName(this Type type, string fullTypeName, out Type match) {
             var current = type;
 
-            while (current != null)
-            {
-                if (string.Equals(current.FullName, fullTypeName, StringComparison.Ordinal))
-                {
+            while (current != null) {
+                if (string.Equals(current.FullName, fullTypeName, StringComparison.Ordinal)) {
                     match = current;
                     return true;
                 }
@@ -518,10 +503,8 @@ namespace NetDimension.Json.Utilities
                 current = current.BaseType();
             }
 
-            foreach (var i in type.GetInterfaces())
-            {
-                if (string.Equals(i.Name, fullTypeName, StringComparison.Ordinal))
-                {
+            foreach (var i in type.GetInterfaces()) {
+                if (string.Equals(i.Name, fullTypeName, StringComparison.Ordinal)) {
                     match = type;
                     return true;
                 }
@@ -531,53 +514,49 @@ namespace NetDimension.Json.Utilities
             return false;
         }
 
-        public static bool AssignableToTypeName(this Type type, string fullTypeName)
-        {
+        public static bool AssignableToTypeName(this Type type, string fullTypeName) {
             Type match;
             return type.AssignableToTypeName(fullTypeName, out match);
         }
 
-        public static MethodInfo GetGenericMethod(this Type type, string name, params Type[] parameterTypes)
-        {
+        public static MethodInfo GetGenericMethod(this Type type, string name, params Type[] parameterTypes) {
             var methods = type.GetMethods().Where(method => method.Name == name);
 
-            foreach (var method in methods)
-            {
-                if (method.HasParameters(parameterTypes))
+            foreach (var method in methods) {
+                if (method.HasParameters(parameterTypes)) {
                     return method;
+                }
             }
 
             return null;
         }
 
-        public static bool HasParameters(this MethodInfo method, params Type[] parameterTypes)
-        {
+        public static bool HasParameters(this MethodInfo method, params Type[] parameterTypes) {
             var methodParameters = method.GetParameters().Select(parameter => parameter.ParameterType).ToArray();
 
-            if (methodParameters.Length != parameterTypes.Length)
+            if (methodParameters.Length != parameterTypes.Length) {
                 return false;
+            }
 
-            for (var i = 0; i < methodParameters.Length; i++)
-                if (methodParameters[i].ToString() != parameterTypes[i].ToString())
+            for (var i = 0; i < methodParameters.Length; i++) {
+                if (methodParameters[i].ToString() != parameterTypes[i].ToString()) {
                     return false;
+                }
+            }
 
             return true;
         }
 
-        public static IEnumerable<Type> GetAllInterfaces(this Type target)
-        {
-            foreach (var i in target.GetInterfaces())
-            {
+        public static IEnumerable<Type> GetAllInterfaces(this Type target) {
+            foreach (var i in target.GetInterfaces()) {
                 yield return i;
-                foreach (var ci in i.GetInterfaces())
-                {
+                foreach (var ci in i.GetInterfaces()) {
                     yield return ci;
                 }
             }
         }
 
-        public static IEnumerable<MethodInfo> GetAllMethods(this Type target)
-        {
+        public static IEnumerable<MethodInfo> GetAllMethods(this Type target) {
             var allTypes = target.GetAllInterfaces().ToList();
             allTypes.Add(target);
 

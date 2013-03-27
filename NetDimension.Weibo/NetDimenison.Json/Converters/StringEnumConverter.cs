@@ -61,10 +61,8 @@ namespace NetDimension.Json.Converters
         /// </param>
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            if (value == null)
-            {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
+            if (value == null) {
                 writer.WriteNull();
                 return;
             }
@@ -73,20 +71,16 @@ namespace NetDimension.Json.Converters
 
             var enumName = e.ToString("G");
 
-            if (char.IsNumber(enumName[0]) || enumName[0] == '-')
-            {
+            if (char.IsNumber(enumName[0]) || enumName[0] == '-') {
                 writer.WriteValue(value);
-            }
-            else
-            {
+            } else {
                 var map = GetEnumNameMap(e.GetType());
 
                 string resolvedEnumName;
                 map.TryGetByFirst(enumName, out resolvedEnumName);
                 resolvedEnumName = resolvedEnumName ?? enumName;
 
-                if (CamelCaseText)
-                {
+                if (CamelCaseText) {
                     var names =
                         resolvedEnumName.Split(',').Select(item => StringUtils.ToCamelCase(item.Trim())).ToArray();
                     resolvedEnumName = string.Join(", ", names);
@@ -107,24 +101,22 @@ namespace NetDimension.Json.Converters
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-                                        JsonSerializer serializer)
-        {
+                                        JsonSerializer serializer) {
             var t = (ReflectionUtils.IsNullableType(objectType))
                         ? Nullable.GetUnderlyingType(objectType)
                         : objectType;
 
-            if (reader.TokenType == JsonToken.Null)
-            {
-                if (!ReflectionUtils.IsNullableType(objectType))
+            if (reader.TokenType == JsonToken.Null) {
+                if (!ReflectionUtils.IsNullableType(objectType)) {
                     throw JsonSerializationException.Create(reader,
                                                             "Cannot convert null value to {0}.".FormatWith(
                                                                 CultureInfo.InvariantCulture, objectType));
+                }
 
                 return null;
             }
 
-            if (reader.TokenType == JsonToken.String)
-            {
+            if (reader.TokenType == JsonToken.String) {
                 var map = GetEnumNameMap(t);
                 string resolvedEnumName;
                 map.TryGetBySecond(reader.Value.ToString(), out resolvedEnumName);
@@ -133,8 +125,9 @@ namespace NetDimension.Json.Converters
                 return Enum.Parse(t, resolvedEnumName, true);
             }
 
-            if (reader.TokenType == JsonToken.Integer)
+            if (reader.TokenType == JsonToken.Integer) {
                 return ConvertUtils.ConvertOrCast(reader.Value, CultureInfo.InvariantCulture, t);
+            }
 
             throw JsonSerializationException.Create(reader,
                                                     "Unexpected token when parsing enum. Expected String or Integer, got {0}."
@@ -151,23 +144,20 @@ namespace NetDimension.Json.Converters
         ///         cref="EnumMemberAttribute" />
         ///     ).
         /// </returns>
-        private BidirectionalDictionary<string, string> GetEnumNameMap(Type t)
-        {
+        private BidirectionalDictionary<string, string> GetEnumNameMap(Type t) {
             BidirectionalDictionary<string, string> map;
 
-            if (!_enumMemberNamesPerType.TryGetValue(t, out map))
-            {
-                lock (_enumMemberNamesPerType)
-                {
-                    if (_enumMemberNamesPerType.TryGetValue(t, out map))
+            if (!_enumMemberNamesPerType.TryGetValue(t, out map)) {
+                lock (_enumMemberNamesPerType) {
+                    if (_enumMemberNamesPerType.TryGetValue(t, out map)) {
                         return map;
+                    }
 
                     map = new BidirectionalDictionary<string, string>(
                         StringComparer.OrdinalIgnoreCase,
                         StringComparer.OrdinalIgnoreCase);
 
-                    foreach (var f in t.GetFields())
-                    {
+                    foreach (var f in t.GetFields()) {
                         var n1 = f.Name;
                         string n2;
 
@@ -177,8 +167,7 @@ namespace NetDimension.Json.Converters
                               .SingleOrDefault() ?? f.Name;
 
                         string s;
-                        if (map.TryGetBySecond(n2, out s))
-                        {
+                        if (map.TryGetBySecond(n2, out s)) {
                             throw new InvalidOperationException("Enum name '{0}' already exists on enum '{1}'."
                                                                     .FormatWith(CultureInfo.InvariantCulture, n2, t.Name));
                         }
@@ -200,8 +189,7 @@ namespace NetDimension.Json.Converters
         /// <returns>
         ///     <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
         /// </returns>
-        public override bool CanConvert(Type objectType)
-        {
+        public override bool CanConvert(Type objectType) {
             var t = (ReflectionUtils.IsNullableType(objectType))
                         ? Nullable.GetUnderlyingType(objectType)
                         : objectType;

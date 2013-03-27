@@ -32,19 +32,16 @@ namespace NetDimension.Json.Utilities
         private readonly string _name;
         private readonly T _value;
 
-        public EnumValue(string name, T value)
-        {
+        public EnumValue(string name, T value) {
             _name = name;
             _value = value;
         }
 
-        public string Name
-        {
+        public string Name {
             get { return _name; }
         }
 
-        public T Value
-        {
+        public T Value {
             get { return _value; }
         }
     }

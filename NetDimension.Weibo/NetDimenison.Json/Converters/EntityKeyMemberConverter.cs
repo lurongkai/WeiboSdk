@@ -54,8 +54,7 @@ namespace NetDimension.Json.Converters
         /// </param>
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             var entityKeyMember = DynamicWrapper.CreateWrapper<IEntityKeyMember>(value);
             var keyType = (entityKeyMember.Value != null) ? entityKeyMember.Value.GetType() : null;
 
@@ -67,35 +66,33 @@ namespace NetDimension.Json.Converters
 
             writer.WritePropertyName("Value");
 
-            if (keyType != null)
-            {
+            if (keyType != null) {
                 string valueJson;
-                if (JsonSerializerInternalWriter.TryConvertToString(entityKeyMember.Value, keyType, out valueJson))
+                if (JsonSerializerInternalWriter.TryConvertToString(entityKeyMember.Value, keyType, out valueJson)) {
                     writer.WriteValue(valueJson);
-                else
+                } else {
                     writer.WriteValue(entityKeyMember.Value);
-            }
-            else
-            {
+                }
+            } else {
                 writer.WriteNull();
             }
 
             writer.WriteEndObject();
         }
 
-        private static void ReadAndAssertProperty(JsonReader reader, string propertyName)
-        {
+        private static void ReadAndAssertProperty(JsonReader reader, string propertyName) {
             ReadAndAssert(reader);
 
-            if (reader.TokenType != JsonToken.PropertyName || reader.Value.ToString() != propertyName)
+            if (reader.TokenType != JsonToken.PropertyName || reader.Value.ToString() != propertyName) {
                 throw new JsonSerializationException(
                     "Expected JSON property '{0}'.".FormatWith(CultureInfo.InvariantCulture, propertyName));
+            }
         }
 
-        private static void ReadAndAssert(JsonReader reader)
-        {
-            if (!reader.Read())
+        private static void ReadAndAssert(JsonReader reader) {
+            if (!reader.Read()) {
                 throw new JsonSerializationException("Unexpected end.");
+            }
         }
 
         /// <summary>
@@ -109,8 +106,7 @@ namespace NetDimension.Json.Converters
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-                                        JsonSerializer serializer)
-        {
+                                        JsonSerializer serializer) {
             var entityKeyMember = DynamicWrapper.CreateWrapper<IEntityKeyMember>(Activator.CreateInstance(objectType));
 
             ReadAndAssertProperty(reader, "Key");
@@ -139,8 +135,7 @@ namespace NetDimension.Json.Converters
         /// <returns>
         ///     <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
         /// </returns>
-        public override bool CanConvert(Type objectType)
-        {
+        public override bool CanConvert(Type objectType) {
             return (objectType.AssignableToTypeName(EntityKeyMemberFullTypeName));
         }
     }

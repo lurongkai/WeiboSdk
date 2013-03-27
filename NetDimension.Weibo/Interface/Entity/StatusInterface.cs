@@ -17,8 +17,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="client">操作类</param>
         public StatusInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new StatusAPI(client);
         }
 
@@ -30,8 +29,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。 </param>
         /// <returns>dynamic json</returns>
-        public Collection PublicTimeline(int count = 50, int page = 1, bool baseApp = false)
-        {
+        public Collection PublicTimeline(int count = 50, int page = 1, bool baseApp = false) {
             return JsonConvert.DeserializeObject<Collection>(api.PublicTimeline(count, page, baseApp));
         }
 
@@ -46,8 +44,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。</param>
         /// <returns>dynamic json</returns>
         public Collection FriendsTimeline(string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                                          bool baseApp = false, int feature = 0)
-        {
+                                          bool baseApp = false, int feature = 0) {
             return
                 JsonConvert.DeserializeObject<Collection>(api.FriendsTimeline(sinceID, maxID, count, page, baseApp,
                                                                               feature));
@@ -64,8 +61,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。 </param>
         /// <returns></returns>
         public Collection HomeTimeline(string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                                       bool baseApp = false, int feature = 0)
-        {
+                                       bool baseApp = false, int feature = 0) {
             return
                 JsonConvert.DeserializeObject<Collection>(api.HomeTimeline(sinceID, maxID, count, page, baseApp, feature));
         }
@@ -81,8 +77,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。</param>
         /// <returns></returns>
         public IDs FriendsTimelineIDs(string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                                      bool baseApp = false, int feature = 0)
-        {
+                                      bool baseApp = false, int feature = 0) {
             return JsonConvert.DeserializeObject<IDs>(api.FriendsTimeline(sinceID, maxID, count, page, baseApp, feature));
         }
 
@@ -101,8 +96,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <returns></returns>
         public Collection UserTimeline(string uid = "", string screenName = "", string sinceID = "", string maxID = "",
                                        int count = 50, int page = 1, bool baseApp = false, int feature = 0,
-                                       bool trimUser = false)
-        {
+                                       bool trimUser = false) {
             return
                 JsonConvert.DeserializeObject<Collection>(api.UserTimeline(uid, screenName, sinceID, maxID, count, page,
                                                                            baseApp, feature, trimUser));
@@ -121,8 +115,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。 </param>
         /// <returns></returns>
         public IDs UserTimelineIDs(string uid = "", string screenName = "", string sinceID = "", string maxID = "",
-                                   int count = 50, int page = 1, bool baseApp = false, int feature = 0)
-        {
+                                   int count = 50, int page = 1, bool baseApp = false, int feature = 0) {
             return
                 JsonConvert.DeserializeObject<IDs>(api.UserTimelineIDs(uid, screenName, sinceID, maxID, count, page,
                                                                        baseApp, feature));
@@ -139,8 +132,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。 </param>
         /// <returns></returns>
         public Entities.repost.Collection RepostTimeline(string id, string sinceID = "", string maxID = "",
-                                                         int count = 50, int page = 1, int filterByAuthor = 0)
-        {
+                                                         int count = 50, int page = 1, int filterByAuthor = 0) {
             return
                 JsonConvert.DeserializeObject<Entities.repost.Collection>(api.RepostTimeline(id, sinceID, maxID, count,
                                                                                              page, filterByAuthor));
@@ -157,8 +149,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。 </param>
         /// <returns></returns>
         public IDs RepostTimelineIDs(string id, string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                                     int filterByAuthor = 0)
-        {
+                                     int filterByAuthor = 0) {
             return
                 JsonConvert.DeserializeObject<IDs>(api.RepostTimelineIDs(id, sinceID, maxID, count, page, filterByAuthor));
         }
@@ -171,8 +162,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count">单页返回的记录条数，默认为50。 </param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public Collection RepostByMe(string sinceID = "", string maxID = "", int count = 50, int page = 1)
-        {
+        public Collection RepostByMe(string sinceID = "", string maxID = "", int count = 50, int page = 1) {
             return JsonConvert.DeserializeObject<Collection>(api.RepostByMe(sinceID, maxID, count, page));
         }
 
@@ -188,8 +178,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="filterByType">原创筛选类型，0：全部微博、1：原创的微博，默认为0。</param>
         /// <returns></returns>
         public Collection Mentions(string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                                   int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0)
-        {
+                                   int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0) {
             return
                 JsonConvert.DeserializeObject<Collection>(api.Mentions(sinceID, maxID, count, page, filterByAuthor,
                                                                        filterBySource, filterByType));
@@ -207,8 +196,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="filterByType">原创筛选类型，0：全部微博、1：原创的微博，默认为0。</param>
         /// <returns></returns>
         public IDs MentionIDs(string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                              int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0)
-        {
+                              int filterByAuthor = 0, int filterBySource = 0, int filterByType = 0) {
             return
                 JsonConvert.DeserializeObject<IDs>(api.MentionIDs(sinceID, maxID, count, page, filterByAuthor,
                                                                   filterBySource, filterByType));
@@ -225,8 +213,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="feature">过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。</param>
         /// <returns></returns>
         public Collection BilateralTimeline(string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                                            bool baseApp = false, int feature = 0)
-        {
+                                            bool baseApp = false, int feature = 0) {
             return
                 JsonConvert.DeserializeObject<Collection>(api.BilateralTimeline(sinceID, maxID, count, page, baseApp,
                                                                                 feature));
@@ -237,8 +224,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="id">需要获取的微博ID。</param>
         /// <returns></returns>
-        public Entities.status.Entity Show(string id)
-        {
+        public Entities.status.Entity Show(string id) {
             return JsonConvert.DeserializeObject<Entities.status.Entity>(api.Show(id));
         }
 
@@ -248,8 +234,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="type">获取类型，1：微博、2：评论、3：私信，默认为1。 </param>
         /// <param name="id">需要查询的微博（评论、私信）ID</param>
         /// <returns></returns>
-        public string QueryMID(int type = 1, string id = "")
-        {
+        public string QueryMID(int type = 1, string id = "") {
             return string.Format("{0}", JObject.Parse(api.QueryMID(type, id))["mid"]);
         }
 
@@ -259,8 +244,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="type">获取类型，1：微博、2：评论、3：私信，默认为1。 </param>
         /// <param name="ids">需要查询的微博（评论、私信）ID</param>
         /// <returns></returns>
-        public IEnumerable<string> QueryMID(int type = 1, params string[] ids)
-        {
+        public IEnumerable<string> QueryMID(int type = 1, params string[] ids) {
             return Utility.GetStringListFromJSON(api.QueryMID(type, ids));
         }
 
@@ -272,8 +256,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="isBase62">MID是否是base62编码，0：否、1：是，默认为0。 </param>
         /// <param name="mids">需要查询的微博（评论、私信）MID，批量模式下，用半角逗号分隔，最多不超过20个。</param>
         /// <returns></returns>
-        public string QueryID(int type = 1, bool inbox = false, bool isBase62 = true, string mids = "")
-        {
+        public string QueryID(int type = 1, bool inbox = false, bool isBase62 = true, string mids = "") {
             return string.Format("{0}", JObject.Parse(api.QueryID(type, inbox, isBase62, mids))["id"]);
         }
 
@@ -285,8 +268,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="isBase62">MID是否是base62编码，0：否、1：是，默认为0。 </param>
         /// <param name="mids">需要查询的微博（评论、私信）MID，批量模式下，用半角逗号分隔，最多不超过20个。</param>
         /// <returns></returns>
-        public IEnumerable<string> QueryID(int type = 1, bool inbox = false, bool isBase62 = true, params string[] mids)
-        {
+        public IEnumerable<string> QueryID(int type = 1, bool inbox = false, bool isBase62 = true, params string[] mids) {
             return Utility.GetStringListFromJSON(api.QueryID(type, inbox, isBase62, mids));
         }
 
@@ -296,8 +278,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count"></param>
         /// <param name="baseApp"></param>
         /// <returns></returns>
-        public IEnumerable<Entities.status.Entity> HotRepostDaily(int count = 20, bool baseApp = false)
-        {
+        public IEnumerable<Entities.status.Entity> HotRepostDaily(int count = 20, bool baseApp = false) {
             return JsonConvert.DeserializeObject<IEnumerable<Entities.status.Entity>>(api.HotRepostDaily(count, baseApp));
         }
 
@@ -307,8 +288,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count"></param>
         /// <param name="baseApp"></param>
         /// <returns></returns>
-        public IEnumerable<Entities.status.Entity> HotRepostWeekly(int count = 20, bool baseApp = false)
-        {
+        public IEnumerable<Entities.status.Entity> HotRepostWeekly(int count = 20, bool baseApp = false) {
             return
                 JsonConvert.DeserializeObject<IEnumerable<Entities.status.Entity>>(api.HotRepostWeekly(count, baseApp));
         }
@@ -319,8 +299,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count"></param>
         /// <param name="baseApp"></param>
         /// <returns></returns>
-        public IEnumerable<Entities.status.Entity> HotCommentsDaily(int count = 20, bool baseApp = false)
-        {
+        public IEnumerable<Entities.status.Entity> HotCommentsDaily(int count = 20, bool baseApp = false) {
             return
                 JsonConvert.DeserializeObject<IEnumerable<Entities.status.Entity>>(api.HotCommentsDaily(count, baseApp));
         }
@@ -331,8 +310,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count"></param>
         /// <param name="baseApp"></param>
         /// <returns></returns>
-        public IEnumerable<Entities.status.Entity> HotCommentsWeekly(int count = 20, bool baseApp = false)
-        {
+        public IEnumerable<Entities.status.Entity> HotCommentsWeekly(int count = 20, bool baseApp = false) {
             return
                 JsonConvert.DeserializeObject<IEnumerable<Entities.status.Entity>>(api.HotCommentsWeekly(count, baseApp));
         }
@@ -342,8 +320,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="ids">需要获取数据的微博ID</param>
         /// <returns></returns>
-        public IEnumerable<Count> Count(params string[] ids)
-        {
+        public IEnumerable<Count> Count(params string[] ids) {
             return JsonConvert.DeserializeObject<IEnumerable<Count>>(api.Count(ids));
         }
 
@@ -354,8 +331,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="status">添加的转发文本，内容不超过140个汉字，不填则默认为“转发微博”。 </param>
         /// <param name="isComment">是否在转发的同时发表评论，0：否、1：评论给当前微博、2：评论给原微博、3：都评论，默认为0 。 </param>
         /// <returns></returns>
-        public Entities.status.Entity Repost(string id, string status, int isComment)
-        {
+        public Entities.status.Entity Repost(string id, string status, int isComment) {
             return JsonConvert.DeserializeObject<Entities.status.Entity>(api.Repost(id, status, isComment));
         }
 
@@ -364,8 +340,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="id">需要删除的微博ID。 </param>
         /// <returns></returns>
-        public Entities.status.Entity Destroy(string id)
-        {
+        public Entities.status.Entity Destroy(string id) {
             return JsonConvert.DeserializeObject<Entities.status.Entity>(api.Destroy(id));
         }
 
@@ -377,8 +352,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="log">经度，有效范围：-180.0到+180.0，+表示东经，默认为0.0。 </param>
         /// <param name="annotations">元数据，主要是为了方便第三方应用记录一些适合于自己使用的信息，每条微博可以包含一个或者多个元数据，必须以json字串的形式提交，字串长度不超过512个字符，具体内容可以自定。 </param>
         /// <returns></returns>
-        public Entities.status.Entity Update(string status, float lat = 0.0f, float log = 0.0f, string annotations = "")
-        {
+        public Entities.status.Entity Update(string status, float lat = 0.0f, float log = 0.0f, string annotations = "") {
             return JsonConvert.DeserializeObject<Entities.status.Entity>(api.Update(status, lat, log, annotations));
         }
 
@@ -392,8 +366,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="annotations">元数据，主要是为了方便第三方应用记录一些适合于自己使用的信息，每条微博可以包含一个或者多个元数据，必须以json字串的形式提交，字串长度不超过512个字符，具体内容可以自定。 </param>
         /// <returns></returns>
         public Entities.status.Entity Upload(string status, byte[] pic, float lat = 0.0f, float log = 0.0f,
-                                             string annotations = "")
-        {
+                                             string annotations = "") {
             return JsonConvert.DeserializeObject<Entities.status.Entity>(api.Upload(status, pic, lat, log, annotations));
         }
 
@@ -407,8 +380,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="annotations">元数据，主要是为了方便第三方应用记录一些适合于自己使用的信息，每条微博可以包含一个或者多个元数据，必须以json字串的形式提交，字串长度不超过512个字符，具体内容可以自定。 </param>
         /// <returns></returns>
         public Entities.status.Entity UploadUrlText(string status, string url, float lat = 0.0f, float log = 0.0f,
-                                                    string annotations = "")
-        {
+                                                    string annotations = "") {
             return
                 JsonConvert.DeserializeObject<Entities.status.Entity>(api.UploadUrlText(status, url, lat, log,
                                                                                         annotations));
@@ -420,8 +392,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="language">语言类别，cnname：简体、twname：繁体，默认为cnname。 </param>
         /// <returns></returns>
         public IEnumerable<Emotion> Emotions(EmotionType type = EmotionType.face,
-                                             LanguageType language = LanguageType.cnname)
-        {
+                                             LanguageType language = LanguageType.cnname) {
             return JsonConvert.DeserializeObject<IEnumerable<Emotion>>(api.Emotions(type, language));
         }
     }

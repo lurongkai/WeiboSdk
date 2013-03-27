@@ -39,8 +39,7 @@ namespace NetDimension.Json.Utilities
 {
     internal static class DynamicUtils
     {
-        public static bool TryGetMember(this IDynamicMetaObjectProvider dynamicProvider, string name, out object value)
-        {
+        public static bool TryGetMember(this IDynamicMetaObjectProvider dynamicProvider, string name, out object value) {
             ValidationUtils.ArgumentNotNull(dynamicProvider, "dynamicProvider");
 
             var getMemberBinder = (GetMemberBinder) BinderWrapper.GetMember(name, typeof (DynamicUtils));
@@ -49,20 +48,16 @@ namespace NetDimension.Json.Utilities
 
             var result = callSite.Target(callSite, dynamicProvider);
 
-            if (!ReferenceEquals(result, NoThrowExpressionVisitor.ErrorResult))
-            {
+            if (!ReferenceEquals(result, NoThrowExpressionVisitor.ErrorResult)) {
                 value = result;
                 return true;
-            }
-            else
-            {
+            } else {
                 value = null;
                 return false;
             }
         }
 
-        public static bool TrySetMember(this IDynamicMetaObjectProvider dynamicProvider, string name, object value)
-        {
+        public static bool TrySetMember(this IDynamicMetaObjectProvider dynamicProvider, string name, object value) {
             ValidationUtils.ArgumentNotNull(dynamicProvider, "dynamicProvider");
 
             var binder = (SetMemberBinder) BinderWrapper.SetMember(name, typeof (DynamicUtils));
@@ -74,8 +69,7 @@ namespace NetDimension.Json.Utilities
             return !ReferenceEquals(result, NoThrowExpressionVisitor.ErrorResult);
         }
 
-        public static IEnumerable<string> GetDynamicMemberNames(this IDynamicMetaObjectProvider dynamicProvider)
-        {
+        public static IEnumerable<string> GetDynamicMemberNames(this IDynamicMetaObjectProvider dynamicProvider) {
             var metaObject = dynamicProvider.GetMetaObject(Expression.Constant(dynamicProvider));
             return metaObject.GetDynamicMemberNames();
         }
@@ -106,15 +100,14 @@ namespace NetDimension.Json.Utilities
             private static MethodCall<object, object> _setMemberCall;
             private static bool _init;
 
-            private static void Init()
-            {
-                if (!_init)
-                {
+            private static void Init() {
+                if (!_init) {
                     var binderType = Type.GetType(BinderTypeName, false);
-                    if (binderType == null)
+                    if (binderType == null) {
                         throw new InvalidOperationException(
                             "Could not resolve type '{0}'. You may need to add a reference to Microsoft.CSharp.dll to work with dynamic types."
                                 .FormatWith(CultureInfo.InvariantCulture, BinderTypeName));
+                    }
 
                     // None
                     _getCSharpArgumentInfoArray = CreateSharpArgumentInfoArray(0);
@@ -126,15 +119,13 @@ namespace NetDimension.Json.Utilities
                 }
             }
 
-            private static object CreateSharpArgumentInfoArray(params int[] values)
-            {
+            private static object CreateSharpArgumentInfoArray(params int[] values) {
                 var csharpArgumentInfoType = Type.GetType(CSharpArgumentInfoTypeName);
                 var csharpArgumentInfoFlags = Type.GetType(CSharpArgumentInfoFlagsTypeName);
 
                 var a = Array.CreateInstance(csharpArgumentInfoType, values.Length);
 
-                for (var i = 0; i < values.Length; i++)
-                {
+                for (var i = 0; i < values.Length; i++) {
                     var createArgumentInfoMethod = csharpArgumentInfoType.GetMethod("Create",
                                                                                     BindingFlags.Public |
                                                                                     BindingFlags.Static, null,
@@ -150,8 +141,7 @@ namespace NetDimension.Json.Utilities
                 return a;
             }
 
-            private static void CreateMemberCalls()
-            {
+            private static void CreateMemberCalls() {
                 var csharpArgumentInfoType = Type.GetType(CSharpArgumentInfoTypeName);
                 var csharpBinderFlagsType = Type.GetType(CSharpBinderFlagsTypeName);
                 var binderType = Type.GetType(BinderTypeName);
@@ -177,14 +167,12 @@ namespace NetDimension.Json.Utilities
                 _setMemberCall = JsonTypeReflector.ReflectionDelegateFactory.CreateMethodCall<object>(setMemberMethod);
             }
 
-            public static CallSiteBinder GetMember(string name, Type context)
-            {
+            public static CallSiteBinder GetMember(string name, Type context) {
                 Init();
                 return (CallSiteBinder) _getMemberCall(null, 0, name, context, _getCSharpArgumentInfoArray);
             }
 
-            public static CallSiteBinder SetMember(string name, Type context)
-            {
+            public static CallSiteBinder SetMember(string name, Type context) {
                 Init();
                 return (CallSiteBinder) _setMemberCall(null, 0, name, context, _setCSharpArgumentInfoArray);
             }
@@ -194,11 +182,11 @@ namespace NetDimension.Json.Utilities
         {
             internal static readonly object ErrorResult = new object();
 
-            protected override Expression VisitConditional(ConditionalExpression node)
-            {
+            protected override Expression VisitConditional(ConditionalExpression node) {
                 // if the result of a test is to throw an error, rewrite to result an error result value
-                if (node.IfFalse.NodeType == ExpressionType.Throw)
+                if (node.IfFalse.NodeType == ExpressionType.Throw) {
                     return Expression.Condition(node.Test, node.IfTrue, Expression.Constant(ErrorResult));
+                }
 
                 return base.VisitConditional(node);
             }
@@ -209,14 +197,12 @@ namespace NetDimension.Json.Utilities
             private readonly GetMemberBinder _innerBinder;
 
             public NoThrowGetBinderMember(GetMemberBinder innerBinder)
-                : base(innerBinder.Name, innerBinder.IgnoreCase)
-            {
+                : base(innerBinder.Name, innerBinder.IgnoreCase) {
                 _innerBinder = innerBinder;
             }
 
             public override DynamicMetaObject FallbackGetMember(DynamicMetaObject target,
-                                                                DynamicMetaObject errorSuggestion)
-            {
+                                                                DynamicMetaObject errorSuggestion) {
                 var retMetaObject = _innerBinder.Bind(target, new DynamicMetaObject[] {});
 
                 var noThrowVisitor = new NoThrowExpressionVisitor();
@@ -232,14 +218,12 @@ namespace NetDimension.Json.Utilities
             private readonly SetMemberBinder _innerBinder;
 
             public NoThrowSetBinderMember(SetMemberBinder innerBinder)
-                : base(innerBinder.Name, innerBinder.IgnoreCase)
-            {
+                : base(innerBinder.Name, innerBinder.IgnoreCase) {
                 _innerBinder = innerBinder;
             }
 
             public override DynamicMetaObject FallbackSetMember(DynamicMetaObject target, DynamicMetaObject value,
-                                                                DynamicMetaObject errorSuggestion)
-            {
+                                                                DynamicMetaObject errorSuggestion) {
                 var retMetaObject = _innerBinder.Bind(target, new[] {value});
 
                 var noThrowVisitor = new NoThrowExpressionVisitor();

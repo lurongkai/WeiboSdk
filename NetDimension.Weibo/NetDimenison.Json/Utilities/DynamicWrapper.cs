@@ -48,23 +48,17 @@ namespace NetDimension.Json.Utilities
 
         private static ModuleBuilder _moduleBuilder;
 
-        private static ModuleBuilder ModuleBuilder
-        {
-            get
-            {
+        private static ModuleBuilder ModuleBuilder {
+            get {
                 Init();
                 return _moduleBuilder;
             }
         }
 
-        private static void Init()
-        {
-            if (_moduleBuilder == null)
-            {
-                lock (_lock)
-                {
-                    if (_moduleBuilder == null)
-                    {
+        private static void Init() {
+            if (_moduleBuilder == null) {
+                lock (_lock) {
+                    if (_moduleBuilder == null) {
                         var assemblyName = new AssemblyName("NetDimension.Json.Dynamic");
                         assemblyName.KeyPair = new StrongNameKeyPair(GetStrongKey());
 
@@ -76,14 +70,13 @@ namespace NetDimension.Json.Utilities
             }
         }
 
-        private static byte[] GetStrongKey()
-        {
+        private static byte[] GetStrongKey() {
             const string name = "NetDimension.Json.Dynamic.snk";
 
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name))
-            {
-                if (stream == null)
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name)) {
+                if (stream == null) {
                     throw new MissingManifestResourceException("Should have " + name + " as an embedded resource.");
+                }
 
                 var length = (int) stream.Length;
                 var buffer = new byte[length];
@@ -93,18 +86,14 @@ namespace NetDimension.Json.Utilities
             }
         }
 
-        public static Type GetWrapper(Type interfaceType, Type realObjectType)
-        {
+        public static Type GetWrapper(Type interfaceType, Type realObjectType) {
             var wrapperType = _wrapperDictionary.GetType(interfaceType, realObjectType);
 
-            if (wrapperType == null)
-            {
-                lock (_lock)
-                {
+            if (wrapperType == null) {
+                lock (_lock) {
                     wrapperType = _wrapperDictionary.GetType(interfaceType, realObjectType);
 
-                    if (wrapperType == null)
-                    {
+                    if (wrapperType == null) {
                         wrapperType = GenerateWrapperType(interfaceType, realObjectType);
                         _wrapperDictionary.SetType(interfaceType, realObjectType, wrapperType);
                     }
@@ -114,17 +103,16 @@ namespace NetDimension.Json.Utilities
             return wrapperType;
         }
 
-        public static object GetUnderlyingObject(object wrapper)
-        {
+        public static object GetUnderlyingObject(object wrapper) {
             var wrapperBase = wrapper as DynamicWrapperBase;
-            if (wrapperBase == null)
+            if (wrapperBase == null) {
                 throw new ArgumentException("Object is not a wrapper.", "wrapper");
+            }
 
             return wrapperBase.UnderlyingObject;
         }
 
-        private static Type GenerateWrapperType(Type interfaceType, Type underlyingType)
-        {
+        private static Type GenerateWrapperType(Type interfaceType, Type underlyingType) {
             var wrapperBuilder = ModuleBuilder.DefineType(
                 "{0}_{1}_Wrapper".FormatWith(CultureInfo.InvariantCulture, interfaceType.Name, underlyingType.Name),
                 TypeAttributes.NotPublic | TypeAttributes.Sealed,
@@ -133,16 +121,14 @@ namespace NetDimension.Json.Utilities
 
             var wrapperMethod = new WrapperMethodBuilder(underlyingType, wrapperBuilder);
 
-            foreach (var method in interfaceType.GetAllMethods())
-            {
+            foreach (var method in interfaceType.GetAllMethods()) {
                 wrapperMethod.Generate(method);
             }
 
             return wrapperBuilder.CreateType();
         }
 
-        public static T CreateWrapper<T>(object realObject) where T : class
-        {
+        public static T CreateWrapper<T>(object realObject) where T : class {
             var dynamicType = GetWrapper(typeof (T), realObject.GetType());
             var dynamicWrapper = (DynamicWrapperBase) Activator.CreateInstance(dynamicType);
 
@@ -157,16 +143,15 @@ namespace NetDimension.Json.Utilities
         private readonly Type _realObjectType;
         private readonly TypeBuilder _wrapperBuilder;
 
-        public WrapperMethodBuilder(Type realObjectType, TypeBuilder proxyBuilder)
-        {
+        public WrapperMethodBuilder(Type realObjectType, TypeBuilder proxyBuilder) {
             _realObjectType = realObjectType;
             _wrapperBuilder = proxyBuilder;
         }
 
-        public void Generate(MethodInfo newMethod)
-        {
-            if (newMethod.IsGenericMethod)
+        public void Generate(MethodInfo newMethod) {
+            if (newMethod.IsGenericMethod) {
                 newMethod = newMethod.GetGenericMethodDefinition();
+            }
 
             var srcField = typeof (DynamicWrapperBase).GetField("UnderlyingObject",
                                                                 BindingFlags.Instance | BindingFlags.NonPublic);
@@ -180,8 +165,7 @@ namespace NetDimension.Json.Utilities
                 newMethod.ReturnType,
                 parameterTypes);
 
-            if (newMethod.IsGenericMethod)
-            {
+            if (newMethod.IsGenericMethod) {
                 methodBuilder.DefineGenericParameters(
                     newMethod.GetGenericArguments().Select(arg => arg.Name).ToArray());
             }
@@ -194,38 +178,36 @@ namespace NetDimension.Json.Utilities
             Return(ilGenerator);
         }
 
-        private static void Return(ILGenerator ilGenerator)
-        {
+        private static void Return(ILGenerator ilGenerator) {
             ilGenerator.Emit(OpCodes.Ret);
         }
 
-        private void ExecuteMethod(MethodBase newMethod, Type[] parameterTypes, ILGenerator ilGenerator)
-        {
+        private void ExecuteMethod(MethodBase newMethod, Type[] parameterTypes, ILGenerator ilGenerator) {
             var srcMethod = GetMethod(newMethod, parameterTypes);
 
-            if (srcMethod == null)
+            if (srcMethod == null) {
                 throw new MissingMethodException("Unable to find method " + newMethod.Name + " on " +
                                                  _realObjectType.FullName);
+            }
 
             ilGenerator.Emit(OpCodes.Call, srcMethod);
         }
 
-        private MethodInfo GetMethod(MethodBase realMethod, Type[] parameterTypes)
-        {
-            if (realMethod.IsGenericMethod)
+        private MethodInfo GetMethod(MethodBase realMethod, Type[] parameterTypes) {
+            if (realMethod.IsGenericMethod) {
                 return _realObjectType.GetGenericMethod(realMethod.Name, parameterTypes);
+            }
 
             return _realObjectType.GetMethod(realMethod.Name, parameterTypes);
         }
 
-        private static void PushParameters(ICollection<ParameterInfo> parameters, ILGenerator ilGenerator)
-        {
-            for (var i = 1; i < parameters.Count + 1; i++)
+        private static void PushParameters(ICollection<ParameterInfo> parameters, ILGenerator ilGenerator) {
+            for (var i = 1; i < parameters.Count + 1; i++) {
                 ilGenerator.Emit(OpCodes.Ldarg, i);
+            }
         }
 
-        private static void LoadUnderlyingObject(ILGenerator ilGenerator, FieldInfo srcField)
-        {
+        private static void LoadUnderlyingObject(ILGenerator ilGenerator, FieldInfo srcField) {
             ilGenerator.Emit(OpCodes.Ldarg_0);
             ilGenerator.Emit(OpCodes.Ldfld, srcField);
         }
@@ -235,29 +217,28 @@ namespace NetDimension.Json.Utilities
     {
         private readonly Dictionary<string, Type> _wrapperTypes = new Dictionary<string, Type>();
 
-        private static string GenerateKey(Type interfaceType, Type realObjectType)
-        {
+        private static string GenerateKey(Type interfaceType, Type realObjectType) {
             return interfaceType.Name + "_" + realObjectType.Name;
         }
 
-        public Type GetType(Type interfaceType, Type realObjectType)
-        {
+        public Type GetType(Type interfaceType, Type realObjectType) {
             var key = GenerateKey(interfaceType, realObjectType);
 
-            if (_wrapperTypes.ContainsKey(key))
+            if (_wrapperTypes.ContainsKey(key)) {
                 return _wrapperTypes[key];
+            }
 
             return null;
         }
 
-        public void SetType(Type interfaceType, Type realObjectType, Type wrapperType)
-        {
+        public void SetType(Type interfaceType, Type realObjectType, Type wrapperType) {
             var key = GenerateKey(interfaceType, realObjectType);
 
-            if (_wrapperTypes.ContainsKey(key))
+            if (_wrapperTypes.ContainsKey(key)) {
                 _wrapperTypes[key] = wrapperType;
-            else
+            } else {
                 _wrapperTypes.Add(key, wrapperType);
+            }
         }
     }
 }

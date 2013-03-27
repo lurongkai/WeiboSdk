@@ -37,8 +37,7 @@ namespace NetDimension.Json.Utilities
     {
         public static DynamicReflectionDelegateFactory Instance = new DynamicReflectionDelegateFactory();
 
-        private static DynamicMethod CreateDynamicMethod(string name, Type returnType, Type[] parameterTypes, Type owner)
-        {
+        private static DynamicMethod CreateDynamicMethod(string name, Type returnType, Type[] parameterTypes, Type owner) {
             var dynamicMethod = !owner.IsInterface()
                                     ? new DynamicMethod(name, returnType, parameterTypes, owner, true)
                                     : new DynamicMethod(name, returnType, parameterTypes, owner.Module, true);
@@ -46,8 +45,7 @@ namespace NetDimension.Json.Utilities
             return dynamicMethod;
         }
 
-        public override MethodCall<T, object> CreateMethodCall<T>(MethodBase method)
-        {
+        public override MethodCall<T, object> CreateMethodCall<T>(MethodBase method) {
             var dynamicMethod = CreateDynamicMethod(method.ToString(), typeof (object),
                                                     new[] {typeof (object), typeof (object[])}, method.DeclaringType);
             var generator = dynamicMethod.GetILGenerator();
@@ -57,8 +55,7 @@ namespace NetDimension.Json.Utilities
             return (MethodCall<T, object>) dynamicMethod.CreateDelegate(typeof (MethodCall<T, object>));
         }
 
-        private void GenerateCreateMethodCallIL(MethodBase method, ILGenerator generator)
-        {
+        private void GenerateCreateMethodCallIL(MethodBase method, ILGenerator generator) {
             var args = method.GetParameters();
 
             var argsOk = generator.DefineLabel();
@@ -74,11 +71,11 @@ namespace NetDimension.Json.Utilities
 
             generator.MarkLabel(argsOk);
 
-            if (!method.IsConstructor && !method.IsStatic)
+            if (!method.IsConstructor && !method.IsStatic) {
                 generator.PushInstance(method.DeclaringType);
+            }
 
-            for (var i = 0; i < args.Length; i++)
-            {
+            for (var i = 0; i < args.Length; i++) {
                 generator.Emit(OpCodes.Ldarg_1);
                 generator.Emit(OpCodes.Ldc_I4, i);
                 generator.Emit(OpCodes.Ldelem_Ref);
@@ -86,25 +83,26 @@ namespace NetDimension.Json.Utilities
                 generator.UnboxIfNeeded(args[i].ParameterType);
             }
 
-            if (method.IsConstructor)
+            if (method.IsConstructor) {
                 generator.Emit(OpCodes.Newobj, (ConstructorInfo) method);
-            else if (method.IsFinal || !method.IsVirtual)
+            } else if (method.IsFinal || !method.IsVirtual) {
                 generator.CallMethod((MethodInfo) method);
+            }
 
             var returnType = method.IsConstructor
                                  ? method.DeclaringType
                                  : ((MethodInfo) method).ReturnType;
 
-            if (returnType != typeof (void))
+            if (returnType != typeof (void)) {
                 generator.BoxIfNeeded(returnType);
-            else
+            } else {
                 generator.Emit(OpCodes.Ldnull);
+            }
 
             generator.Return();
         }
 
-        public override Func<T> CreateDefaultConstructor<T>(Type type)
-        {
+        public override Func<T> CreateDefaultConstructor<T>(Type type) {
             var dynamicMethod = CreateDynamicMethod("Create" + type.FullName, typeof (T), ReflectionUtils.EmptyTypes,
                                                     type);
             dynamicMethod.InitLocals = true;
@@ -115,23 +113,20 @@ namespace NetDimension.Json.Utilities
             return (Func<T>) dynamicMethod.CreateDelegate(typeof (Func<T>));
         }
 
-        private void GenerateCreateDefaultConstructorIL(Type type, ILGenerator generator)
-        {
-            if (type.IsValueType())
-            {
+        private void GenerateCreateDefaultConstructorIL(Type type, ILGenerator generator) {
+            if (type.IsValueType()) {
                 generator.DeclareLocal(type);
                 generator.Emit(OpCodes.Ldloc_0);
                 generator.Emit(OpCodes.Box, type);
-            }
-            else
-            {
+            } else {
                 var constructorInfo =
                     type.GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null,
                                         ReflectionUtils.EmptyTypes, null);
 
-                if (constructorInfo == null)
+                if (constructorInfo == null) {
                     throw new ArgumentException(
                         "Could not get constructor for {0}.".FormatWith(CultureInfo.InvariantCulture, type));
+                }
 
                 generator.Emit(OpCodes.Newobj, constructorInfo);
             }
@@ -139,8 +134,7 @@ namespace NetDimension.Json.Utilities
             generator.Return();
         }
 
-        public override Func<T, object> CreateGet<T>(PropertyInfo propertyInfo)
-        {
+        public override Func<T, object> CreateGet<T>(PropertyInfo propertyInfo) {
             var dynamicMethod = CreateDynamicMethod("Get" + propertyInfo.Name, typeof (T), new[] {typeof (object)},
                                                     propertyInfo.DeclaringType);
             var generator = dynamicMethod.GetILGenerator();
@@ -150,23 +144,23 @@ namespace NetDimension.Json.Utilities
             return (Func<T, object>) dynamicMethod.CreateDelegate(typeof (Func<T, object>));
         }
 
-        private void GenerateCreateGetPropertyIL(PropertyInfo propertyInfo, ILGenerator generator)
-        {
+        private void GenerateCreateGetPropertyIL(PropertyInfo propertyInfo, ILGenerator generator) {
             var getMethod = propertyInfo.GetGetMethod(true);
-            if (getMethod == null)
+            if (getMethod == null) {
                 throw new ArgumentException(
                     "Property '{0}' does not have a getter.".FormatWith(CultureInfo.InvariantCulture, propertyInfo.Name));
+            }
 
-            if (!getMethod.IsStatic)
+            if (!getMethod.IsStatic) {
                 generator.PushInstance(propertyInfo.DeclaringType);
+            }
 
             generator.CallMethod(getMethod);
             generator.BoxIfNeeded(propertyInfo.PropertyType);
             generator.Return();
         }
 
-        public override Func<T, object> CreateGet<T>(FieldInfo fieldInfo)
-        {
+        public override Func<T, object> CreateGet<T>(FieldInfo fieldInfo) {
             var dynamicMethod = CreateDynamicMethod("Get" + fieldInfo.Name, typeof (T), new[] {typeof (object)},
                                                     fieldInfo.DeclaringType);
             var generator = dynamicMethod.GetILGenerator();
@@ -176,18 +170,17 @@ namespace NetDimension.Json.Utilities
             return (Func<T, object>) dynamicMethod.CreateDelegate(typeof (Func<T, object>));
         }
 
-        private void GenerateCreateGetFieldIL(FieldInfo fieldInfo, ILGenerator generator)
-        {
-            if (!fieldInfo.IsStatic)
+        private void GenerateCreateGetFieldIL(FieldInfo fieldInfo, ILGenerator generator) {
+            if (!fieldInfo.IsStatic) {
                 generator.PushInstance(fieldInfo.DeclaringType);
+            }
 
             generator.Emit(OpCodes.Ldfld, fieldInfo);
             generator.BoxIfNeeded(fieldInfo.FieldType);
             generator.Return();
         }
 
-        public override Action<T, object> CreateSet<T>(FieldInfo fieldInfo)
-        {
+        public override Action<T, object> CreateSet<T>(FieldInfo fieldInfo) {
             var dynamicMethod = CreateDynamicMethod("Set" + fieldInfo.Name, null, new[] {typeof (T), typeof (object)},
                                                     fieldInfo.DeclaringType);
             var generator = dynamicMethod.GetILGenerator();
@@ -197,10 +190,10 @@ namespace NetDimension.Json.Utilities
             return (Action<T, object>) dynamicMethod.CreateDelegate(typeof (Action<T, object>));
         }
 
-        internal static void GenerateCreateSetFieldIL(FieldInfo fieldInfo, ILGenerator generator)
-        {
-            if (!fieldInfo.IsStatic)
+        internal static void GenerateCreateSetFieldIL(FieldInfo fieldInfo, ILGenerator generator) {
+            if (!fieldInfo.IsStatic) {
                 generator.PushInstance(fieldInfo.DeclaringType);
+            }
 
             generator.Emit(OpCodes.Ldarg_1);
             generator.UnboxIfNeeded(fieldInfo.FieldType);
@@ -208,8 +201,7 @@ namespace NetDimension.Json.Utilities
             generator.Return();
         }
 
-        public override Action<T, object> CreateSet<T>(PropertyInfo propertyInfo)
-        {
+        public override Action<T, object> CreateSet<T>(PropertyInfo propertyInfo) {
             var dynamicMethod = CreateDynamicMethod("Set" + propertyInfo.Name, null, new[] {typeof (T), typeof (object)},
                                                     propertyInfo.DeclaringType);
             var generator = dynamicMethod.GetILGenerator();
@@ -219,11 +211,11 @@ namespace NetDimension.Json.Utilities
             return (Action<T, object>) dynamicMethod.CreateDelegate(typeof (Action<T, object>));
         }
 
-        internal static void GenerateCreateSetPropertyIL(PropertyInfo propertyInfo, ILGenerator generator)
-        {
+        internal static void GenerateCreateSetPropertyIL(PropertyInfo propertyInfo, ILGenerator generator) {
             var setMethod = propertyInfo.GetSetMethod(true);
-            if (!setMethod.IsStatic)
+            if (!setMethod.IsStatic) {
                 generator.PushInstance(propertyInfo.DeclaringType);
+            }
 
             generator.Emit(OpCodes.Ldarg_1);
             generator.UnboxIfNeeded(propertyInfo.PropertyType);

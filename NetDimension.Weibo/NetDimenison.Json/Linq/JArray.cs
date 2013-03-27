@@ -43,8 +43,7 @@ namespace NetDimension.Json.Linq
         /// <summary>
         ///     Initializes a new instance of the <see cref="JArray" /> class.
         /// </summary>
-        public JArray()
-        {
+        public JArray() {
         }
 
         /// <summary>
@@ -54,8 +53,7 @@ namespace NetDimension.Json.Linq
         ///     A <see cref="JArray" /> object to copy from.
         /// </param>
         public JArray(JArray other)
-            : base(other)
-        {
+            : base(other) {
         }
 
         /// <summary>
@@ -63,16 +61,14 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="content">The contents of the array.</param>
         public JArray(params object[] content)
-            : this((object) content)
-        {
+            : this((object) content) {
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="JArray" /> class with the specified content.
         /// </summary>
         /// <param name="content">The contents of the array.</param>
-        public JArray(object content)
-        {
+        public JArray(object content) {
             Add(content);
         }
 
@@ -80,8 +76,7 @@ namespace NetDimension.Json.Linq
         ///     Gets the container's children tokens.
         /// </summary>
         /// <value>The container's children tokens.</value>
-        protected override IList<JToken> ChildrenTokens
-        {
+        protected override IList<JToken> ChildrenTokens {
             get { return _values; }
         }
 
@@ -89,8 +84,7 @@ namespace NetDimension.Json.Linq
         ///     Gets the node type for this <see cref="JToken" />.
         /// </summary>
         /// <value>The type.</value>
-        public override JTokenType Type
-        {
+        public override JTokenType Type {
             get { return JTokenType.Array; }
         }
 
@@ -100,27 +94,26 @@ namespace NetDimension.Json.Linq
         /// <value>
         ///     The <see cref="JToken" /> with the specified key.
         /// </value>
-        public override JToken this[object key]
-        {
-            get
-            {
+        public override JToken this[object key] {
+            get {
                 ValidationUtils.ArgumentNotNull(key, "o");
 
-                if (!(key is int))
+                if (!(key is int)) {
                     throw new ArgumentException(
                         "Accessed JArray values with invalid key value: {0}. Array position index expected.".FormatWith(
                             CultureInfo.InvariantCulture, MiscellaneousUtils.ToString(key)));
+                }
 
                 return GetItem((int) key);
             }
-            set
-            {
+            set {
                 ValidationUtils.ArgumentNotNull(key, "o");
 
-                if (!(key is int))
+                if (!(key is int)) {
                     throw new ArgumentException(
                         "Set JArray values with invalid key value: {0}. Array position index expected.".FormatWith(
                             CultureInfo.InvariantCulture, MiscellaneousUtils.ToString(key)));
+                }
 
                 SetItem((int) key, value);
             }
@@ -130,8 +123,7 @@ namespace NetDimension.Json.Linq
         ///     Gets or sets the <see cref="NetDimension.Json.Linq.JToken" /> at the specified index.
         /// </summary>
         /// <value></value>
-        public JToken this[int index]
-        {
+        public JToken this[int index] {
             get { return GetItem(index); }
             set { SetItem(index, value); }
         }
@@ -147,8 +139,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The index of <paramref name="item" /> if found in the list; otherwise, -1.
         /// </returns>
-        public int IndexOf(JToken item)
-        {
+        public int IndexOf(JToken item) {
             return IndexOfItem(item);
         }
 
@@ -167,8 +158,7 @@ namespace NetDimension.Json.Linq
         /// <exception cref="T:System.NotSupportedException">
         ///     The <see cref="T:System.Collections.Generic.IList`1" /> is read-only.
         /// </exception>
-        public void Insert(int index, JToken item)
-        {
+        public void Insert(int index, JToken item) {
             InsertItem(index, item, false);
         }
 
@@ -182,8 +172,7 @@ namespace NetDimension.Json.Linq
         /// <exception cref="T:System.NotSupportedException">
         ///     The <see cref="T:System.Collections.Generic.IList`1" /> is read-only.
         /// </exception>
-        public void RemoveAt(int index)
-        {
+        public void RemoveAt(int index) {
             RemoveItemAt(index);
         }
 
@@ -200,8 +189,7 @@ namespace NetDimension.Json.Linq
         /// <exception cref="T:System.NotSupportedException">
         ///     The <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only.
         /// </exception>
-        public void Add(JToken item)
-        {
+        public void Add(JToken item) {
             Add((object) item);
         }
 
@@ -211,8 +199,7 @@ namespace NetDimension.Json.Linq
         /// <exception cref="T:System.NotSupportedException">
         ///     The <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only.
         /// </exception>
-        public void Clear()
-        {
+        public void Clear() {
             ClearItems();
         }
 
@@ -225,18 +212,15 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     true if <paramref name="item" /> is found in the <see cref="T:System.Collections.Generic.ICollection`1" />; otherwise, false.
         /// </returns>
-        public bool Contains(JToken item)
-        {
+        public bool Contains(JToken item) {
             return ContainsItem(item);
         }
 
-        void ICollection<JToken>.CopyTo(JToken[] array, int arrayIndex)
-        {
+        void ICollection<JToken>.CopyTo(JToken[] array, int arrayIndex) {
             CopyItemsTo(array, arrayIndex);
         }
 
-        bool ICollection<JToken>.IsReadOnly
-        {
+        bool ICollection<JToken>.IsReadOnly {
             get { return false; }
         }
 
@@ -258,21 +242,18 @@ namespace NetDimension.Json.Linq
         /// <exception cref="T:System.NotSupportedException">
         ///     The <see cref="T:System.Collections.Generic.ICollection`1" /> is read-only.
         /// </exception>
-        public bool Remove(JToken item)
-        {
+        public bool Remove(JToken item) {
             return RemoveItem(item);
         }
 
         #endregion
 
-        internal override bool DeepEquals(JToken node)
-        {
+        internal override bool DeepEquals(JToken node) {
             var t = node as JArray;
             return (t != null && ContentsEqual(t));
         }
 
-        internal override JToken CloneToken()
-        {
+        internal override JToken CloneToken() {
             return new JArray(this);
         }
 
@@ -285,17 +266,17 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JArray" /> that contains the JSON that was read from the specified <see cref="JsonReader" />.
         /// </returns>
-        public new static JArray Load(JsonReader reader)
-        {
-            if (reader.TokenType == JsonToken.None)
-            {
-                if (!reader.Read())
+        public new static JArray Load(JsonReader reader) {
+            if (reader.TokenType == JsonToken.None) {
+                if (!reader.Read()) {
                     throw JsonReaderException.Create(reader, "Error reading JArray from JsonReader.");
+                }
             }
-            if (reader.TokenType != JsonToken.StartArray)
+            if (reader.TokenType != JsonToken.StartArray) {
                 throw JsonReaderException.Create(reader,
                                                  "Error reading JArray from JsonReader. Current JsonReader item is not an array: {0}"
                                                      .FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
+            }
 
             var a = new JArray();
             a.SetLineInfo(reader as IJsonLineInfo);
@@ -314,14 +295,14 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JArray" /> populated from the string that contains JSON.
         /// </returns>
-        public new static JArray Parse(string json)
-        {
+        public new static JArray Parse(string json) {
             JsonReader reader = new JsonTextReader(new StringReader(json));
 
             var a = Load(reader);
 
-            if (reader.Read() && reader.TokenType != JsonToken.Comment)
+            if (reader.Read() && reader.TokenType != JsonToken.Comment) {
                 throw JsonReaderException.Create(reader, "Additional text found in JSON string after parsing content.");
+            }
 
             return a;
         }
@@ -335,8 +316,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JArray" /> with the values of the specified object
         /// </returns>
-        public new static JArray FromObject(object o)
-        {
+        public new static JArray FromObject(object o) {
             return FromObject(o, new JsonSerializer());
         }
 
@@ -352,14 +332,14 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JArray" /> with the values of the specified object
         /// </returns>
-        public new static JArray FromObject(object o, JsonSerializer jsonSerializer)
-        {
+        public new static JArray FromObject(object o, JsonSerializer jsonSerializer) {
             var token = FromObjectInternal(o, jsonSerializer);
 
-            if (token.Type != JTokenType.Array)
+            if (token.Type != JTokenType.Array) {
                 throw new ArgumentException(
                     "Object serialized to {0}. JArray instance expected.".FormatWith(CultureInfo.InvariantCulture,
                                                                                      token.Type));
+            }
 
             return (JArray) token;
         }
@@ -373,20 +353,17 @@ namespace NetDimension.Json.Linq
         /// <param name="converters">
         ///     A collection of <see cref="JsonConverter" /> which will be used when writing the token.
         /// </param>
-        public override void WriteTo(JsonWriter writer, params JsonConverter[] converters)
-        {
+        public override void WriteTo(JsonWriter writer, params JsonConverter[] converters) {
             writer.WriteStartArray();
 
-            foreach (var token in ChildrenTokens)
-            {
+            foreach (var token in ChildrenTokens) {
                 token.WriteTo(writer, converters);
             }
 
             writer.WriteEndArray();
         }
 
-        internal override int GetDeepHashCode()
-        {
+        internal override int GetDeepHashCode() {
             return ContentsHashCode();
         }
     }

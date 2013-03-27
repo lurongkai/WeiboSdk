@@ -138,46 +138,45 @@ namespace NetDimension.Json.Serialization
         /// <value>The method called when an error is thrown during the serialization of the object.</value>
         public MethodInfo OnError { get; set; }
 
-        internal void InvokeOnSerializing(object o, StreamingContext context)
-        {
+        internal void InvokeOnSerializing(object o, StreamingContext context) {
 #if !PocketPC
-            if (OnSerializing != null)
+            if (OnSerializing != null) {
                 OnSerializing.Invoke(o, new object[] {context});
+            }
 #endif
         }
 
-        internal void InvokeOnSerialized(object o, StreamingContext context)
-        {
+        internal void InvokeOnSerialized(object o, StreamingContext context) {
 #if !PocketPC
-            if (OnSerialized != null)
+            if (OnSerialized != null) {
                 OnSerialized.Invoke(o, new object[] {context});
+            }
 #endif
         }
 
-        internal void InvokeOnDeserializing(object o, StreamingContext context)
-        {
+        internal void InvokeOnDeserializing(object o, StreamingContext context) {
 #if !PocketPC
-            if (OnDeserializing != null)
+            if (OnDeserializing != null) {
                 OnDeserializing.Invoke(o, new object[] {context});
+            }
 #endif
         }
 
-        internal void InvokeOnDeserialized(object o, StreamingContext context)
-        {
+        internal void InvokeOnDeserialized(object o, StreamingContext context) {
 #if !PocketPC
-            if (OnDeserialized != null)
+            if (OnDeserialized != null) {
                 OnDeserialized.Invoke(o, new object[] {context});
+            }
 #endif
         }
 
-        internal void InvokeOnError(object o, StreamingContext context, ErrorContext errorContext)
-        {
-            if (OnError != null)
+        internal void InvokeOnError(object o, StreamingContext context, ErrorContext errorContext) {
+            if (OnError != null) {
                 OnError.Invoke(o, new object[] {context, errorContext});
+            }
         }
 
-        internal JsonContract(Type underlyingType)
-        {
+        internal JsonContract(Type underlyingType) {
             ValidationUtils.ArgumentNotNull(underlyingType, "underlyingType");
 
             UnderlyingType = underlyingType;
@@ -191,32 +190,19 @@ namespace NetDimension.Json.Serialization
 
             IsConvertable = ConvertUtils.IsConvertible(NonNullableUnderlyingType);
 
-            if (NonNullableUnderlyingType == typeof (byte[]))
-            {
+            if (NonNullableUnderlyingType == typeof (byte[])) {
                 InternalReadType = ReadType.ReadAsBytes;
-            }
-            else if (NonNullableUnderlyingType == typeof (int))
-            {
+            } else if (NonNullableUnderlyingType == typeof (int)) {
                 InternalReadType = ReadType.ReadAsInt32;
-            }
-            else if (NonNullableUnderlyingType == typeof (decimal))
-            {
+            } else if (NonNullableUnderlyingType == typeof (decimal)) {
                 InternalReadType = ReadType.ReadAsDecimal;
-            }
-            else if (NonNullableUnderlyingType == typeof (string))
-            {
+            } else if (NonNullableUnderlyingType == typeof (string)) {
                 InternalReadType = ReadType.ReadAsString;
-            }
-            else if (NonNullableUnderlyingType == typeof (DateTime))
-            {
+            } else if (NonNullableUnderlyingType == typeof (DateTime)) {
                 InternalReadType = ReadType.ReadAsDateTime;
-            }
-            else if (NonNullableUnderlyingType == typeof (DateTimeOffset))
-            {
+            } else if (NonNullableUnderlyingType == typeof (DateTimeOffset)) {
                 InternalReadType = ReadType.ReadAsDateTimeOffset;
-            }
-            else
-            {
+            } else {
                 InternalReadType = ReadType.Read;
             }
         }

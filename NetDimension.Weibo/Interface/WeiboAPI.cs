@@ -14,8 +14,7 @@
         ///     构造函数
         /// </summary>
         /// <param name="client">操作类实例</param>
-        internal WeiboAPI(Client client)
-        {
+        internal WeiboAPI(Client client) {
             Client = client;
         }
     }

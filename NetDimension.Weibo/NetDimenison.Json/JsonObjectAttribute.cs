@@ -44,16 +44,14 @@ namespace NetDimension.Json
         /// <summary>
         ///     Initializes a new instance of the <see cref="JsonObjectAttribute" /> class.
         /// </summary>
-        public JsonObjectAttribute()
-        {
+        public JsonObjectAttribute() {
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="JsonObjectAttribute" /> class with the specified member serialization.
         /// </summary>
         /// <param name="memberSerialization">The member serialization.</param>
-        public JsonObjectAttribute(MemberSerialization memberSerialization)
-        {
+        public JsonObjectAttribute(MemberSerialization memberSerialization) {
             MemberSerialization = memberSerialization;
         }
 
@@ -62,16 +60,14 @@ namespace NetDimension.Json
         /// </summary>
         /// <param name="id">The container Id.</param>
         public JsonObjectAttribute(string id)
-            : base(id)
-        {
+            : base(id) {
         }
 
         /// <summary>
         ///     Gets or sets the member serialization.
         /// </summary>
         /// <value>The member serialization.</value>
-        public MemberSerialization MemberSerialization
-        {
+        public MemberSerialization MemberSerialization {
             get { return _memberSerialization; }
             set { _memberSerialization = value; }
         }
@@ -82,8 +78,7 @@ namespace NetDimension.Json
         /// <value>
         ///     A value indicating whether the object's properties are required.
         /// </value>
-        public Required ItemRequired
-        {
+        public Required ItemRequired {
             get { return _itemRequired ?? default(Required); }
             set { _itemRequired = value; }
         }

@@ -14,8 +14,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="client">操作类</param>
         public PlaceInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new PlaceAPI(client);
         }
 
@@ -25,8 +24,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">返回的动态数，最大为50，默认为20。 </param>
         /// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。 </param>
         /// <returns></returns>
-        public dynamic PublicTimeline(int count = 20, bool baseApp = false)
-        {
+        public dynamic PublicTimeline(int count = 20, bool baseApp = false) {
             return DynamicJson.Parse(api.PublicTimeline(count, baseApp));
         }
 
@@ -40,8 +38,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="type">关系过滤，0：仅返回关注的，1：返回好友的，默认为0</param>
         /// <returns></returns>
         public dynamic FriendsTimeline(string sinceID = "0", string maxID = "0", int count = 20, int page = 1,
-                                       int type = 0)
-        {
+                                       int type = 0) {
             return DynamicJson.Parse(api.FriendsTimeline(sinceID, maxID, count, page, type));
         }
 
@@ -56,8 +53,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。 </param>
         /// <returns></returns>
         public dynamic UserTimeline(string uid, string sinceID = "0", string maxID = "0", int count = 20, int page = 1,
-                                    bool baseApp = false)
-        {
+                                    bool baseApp = false) {
             return DynamicJson.Parse(api.UserTimeline(uid, sinceID, maxID, count, page, baseApp));
         }
 
@@ -72,8 +68,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0</param>
         /// <returns></returns>
         public dynamic POITimeline(string poiID, string sinceID = "0", string maxID = "0", int count = 20, int page = 1,
-                                   bool baseApp = false)
-        {
+                                   bool baseApp = false) {
             return DynamicJson.Parse(api.POITimeline(poiID, sinceID, maxID, count, page, baseApp));
         }
 
@@ -93,8 +88,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <returns></returns>
         public dynamic NearByTimeline(float lat, float log, int range = 2000, int startTime = 0, int endTime = 0,
                                       bool sort = false, int count = 20, int page = 1, bool baseApp = false,
-                                      bool offset = false)
-        {
+                                      bool offset = false) {
             return
                 DynamicJson.Parse(api.NearByTimeline(lat, log, range, startTime, endTime, sort, count, page, baseApp,
                                                      offset));
@@ -105,8 +99,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="id">需要获取的动态ID。</param>
         /// <returns></returns>
-        public dynamic StatusesShow(string id)
-        {
+        public dynamic StatusesShow(string id) {
             return DynamicJson.Parse(api.StatusesShow(id));
         }
 
@@ -116,8 +109,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="uid">需要查询的用户ID。</param>
         /// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。</param>
         /// <returns></returns>
-        public dynamic UsersShow(string uid, bool baseApp = false)
-        {
+        public dynamic UsersShow(string uid, bool baseApp = false) {
             return DynamicJson.Parse(api.UsersShow(uid, baseApp));
         }
 
@@ -129,8 +121,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。 </param>
         /// <returns></returns>
-        public dynamic UserCheckins(string uid, int count = 20, int page = 1, bool baseApp = false)
-        {
+        public dynamic UserCheckins(string uid, int count = 20, int page = 1, bool baseApp = false) {
             return DynamicJson.Parse(api.UserCheckins(uid, count, page, baseApp));
         }
 
@@ -142,8 +133,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。</param>
         /// <returns></returns>
-        public dynamic UserPhotos(string uid, int count = 20, int page = 1, bool baseApp = false)
-        {
+        public dynamic UserPhotos(string uid, int count = 20, int page = 1, bool baseApp = false) {
             return DynamicJson.Parse(api.UserPhotos(uid, count, page, baseApp));
         }
 
@@ -155,8 +145,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。 </param>
         /// <returns></returns>
-        public dynamic UserTips(string uid, int count = 20, int page = 1, bool baseApp = false)
-        {
+        public dynamic UserTips(string uid, int count = 20, int page = 1, bool baseApp = false) {
             return DynamicJson.Parse(api.UserTips(uid, count, page, baseApp));
         }
 
@@ -168,8 +157,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。 </param>
         /// <returns></returns>
-        public dynamic UserTodos(string uid, int count = 20, int page = 1, bool baseApp = false)
-        {
+        public dynamic UserTodos(string uid, int count = 20, int page = 1, bool baseApp = false) {
             return DynamicJson.Parse(api.UserTodos(uid, count, page, baseApp));
         }
 
@@ -179,8 +167,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="poiID">需要查询的POI地点ID。</param>
         /// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。 </param>
         /// <returns></returns>
-        public dynamic POIShow(string poiID, bool baseApp = false)
-        {
+        public dynamic POIShow(string poiID, bool baseApp = false) {
             return DynamicJson.Parse(api.POIShow(poiID, baseApp));
         }
 
@@ -192,8 +179,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。 </param>
         /// <returns></returns>
-        public dynamic POIUsers(string poiID, int count = 20, int page = 1, bool baseApp = false)
-        {
+        public dynamic POIUsers(string poiID, int count = 20, int page = 1, bool baseApp = false) {
             return DynamicJson.Parse(api.POIUsers(poiID, count, page, baseApp));
         }
 
@@ -206,8 +192,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="sort">排序方式，0：按时间、1：按热门，默认为0，目前只支持0。 </param>
         /// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。 </param>
         /// <returns></returns>
-        public dynamic POITips(string poiID, int count = 20, int page = 1, bool sort = false, bool baseApp = false)
-        {
+        public dynamic POITips(string poiID, int count = 20, int page = 1, bool sort = false, bool baseApp = false) {
             return DynamicJson.Parse(api.POITips(poiID, count, page, sort, baseApp));
         }
 
@@ -220,8 +205,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="sort">排序方式，0：按时间、1：按热门，默认为0，目前只支持0。 </param>
         /// <param name="baseApp">是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。</param>
         /// <returns></returns>
-        public dynamic POIPhotos(string poiID, int count = 20, int page = 1, bool sort = false, bool baseApp = false)
-        {
+        public dynamic POIPhotos(string poiID, int count = 20, int page = 1, bool sort = false, bool baseApp = false) {
             return DynamicJson.Parse(api.POIPhotos(poiID, count, page, sort, baseApp));
         }
 
@@ -234,8 +218,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">单页返回的记录条数，默认为20，最大为50。</param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public dynamic POISearch(string keyword, string city, string category, int count = 20, int page = 1)
-        {
+        public dynamic POISearch(string keyword, string city, string category, int count = 20, int page = 1) {
             return DynamicJson.Parse(api.POISearch(keyword, city, category, count, page));
         }
 
@@ -245,8 +228,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="pid">父分类ID，默认为0。</param>
         /// <param name="flag">是否返回全部分类，0：只返回本级下的分类，1：返回全部分类，默认为0。</param>
         /// <returns></returns>
-        public dynamic POICategory(string pid = "", bool flag = false)
-        {
+        public dynamic POICategory(string pid = "", bool flag = false) {
             return DynamicJson.Parse(api.POICategory(pid, flag));
         }
 
@@ -264,8 +246,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="offset">传入的经纬度是否是纠偏过，0：没纠偏、1：纠偏过，默认为0。 </param>
         /// <returns></returns>
         public dynamic NearByPOIs(float lat, float log, int range = 2000, string q = "", string category = "",
-                                  int count = 20, int page = 1, bool sort = false, bool offset = false)
-        {
+                                  int count = 20, int page = 1, bool sort = false, bool offset = false) {
             return DynamicJson.Parse(api.NearByPOIs(lat, log, range, q, category, count, page, sort, offset));
         }
 
@@ -283,8 +264,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="offset">传入的经纬度是否是纠偏过，0：没纠偏、1：纠偏过，默认为0。</param>
         /// <returns></returns>
         public dynamic NearByUsers(float lat, float log, int range = 2000, int count = 20, int page = 1,
-                                   int startTime = 0, int endTime = 0, bool sort = false, bool offset = false)
-        {
+                                   int startTime = 0, int endTime = 0, bool sort = false, bool offset = false) {
             return DynamicJson.Parse(api.NearByUsers(lat, log, range, count, page, startTime, endTime, sort, offset));
         }
 
@@ -302,8 +282,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="offset">传入的经纬度是否是纠偏过，0：没纠偏、1：纠偏过，默认为0。 </param>
         /// <returns></returns>
         public dynamic NearByPhotos(float lat, float log, int range = 2000, int count = 20, int page = 1,
-                                    int startTime = 0, int endTime = 0, bool sort = false, bool offset = false)
-        {
+                                    int startTime = 0, int endTime = 0, bool sort = false, bool offset = false) {
             return DynamicJson.Parse(api.NearByPhotos(lat, log, range, count, page, startTime, endTime, sort, offset));
         }
 
@@ -325,8 +304,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <returns></returns>
         public dynamic NearByUserList(float lat, float log, int count = 20, int page = 1, int range = 2000,
                                       bool sort = false, int filter = 0, int gender = 0, int level = 0, int startAge = 0,
-                                      int endAge = 0, bool offset = false)
-        {
+                                      int endAge = 0, bool offset = false) {
             return
                 DynamicJson.Parse(api.NearByUserList(lat, log, count, page, range, sort, filter, gender, level, startAge,
                                                      endAge, offset));
@@ -349,8 +327,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <returns></returns>
         public dynamic CreatePOI(string title, string address, string category = "500", float lat = 0.0f,
                                  float log = 0.0f, string city = "", string province = "", string country = "",
-                                 string phone = "", string postcode = "", string extra = "")
-        {
+                                 string phone = "", string postcode = "", string extra = "") {
             return
                 DynamicJson.Parse(api.CreatePOI(title, address, category, lat, log, city, province, country, phone,
                                                 postcode, extra));
@@ -364,8 +341,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="pic">需要上传的图片，仅支持JPEG、GIF、PNG格式，图片大小小于5M。</param>
         /// <param name="isPublic">是否同步到微博，1：是、0：否，默认为0。</param>
         /// <returns></returns>
-        public dynamic CheckIn(string poiID, string status, byte[] pic, bool isPublic = true)
-        {
+        public dynamic CheckIn(string poiID, string status, byte[] pic, bool isPublic = true) {
             return DynamicJson.Parse(api.CheckIn(poiID, status, pic, isPublic));
         }
 
@@ -377,8 +353,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="pic">需要上传的图片，仅支持JPEG、GIF、PNG格式，图片大小小于5M。 </param>
         /// <param name="isPublic">是否同步到微博，1：是、0：否，默认为0。 </param>
         /// <returns></returns>
-        public dynamic AddPhoto(string poiID, string status, byte[] pic, bool isPublic = true)
-        {
+        public dynamic AddPhoto(string poiID, string status, byte[] pic, bool isPublic = true) {
             return DynamicJson.Parse(api.AddPhoto(poiID, status, pic, isPublic));
         }
 
@@ -388,8 +363,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="status">点评时发布的动态内容，内容不超过140个汉字。 </param>
         /// <param name="isPublic">是否同步到微博，1：是、0：否，默认为0。 </param>
         /// <returns></returns>
-        public dynamic AddTip(string poiID, string status, bool isPublic = true)
-        {
+        public dynamic AddTip(string poiID, string status, bool isPublic = true) {
             return DynamicJson.Parse(api.AddTip(poiID, status, isPublic));
         }
 
@@ -400,8 +374,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="status">添加todo时发布的动态内容，内容不超过140个汉字。</param>
         /// <param name="isPublic">是否同步到微博，1：是、0：否，默认为0。 </param>
         /// <returns></returns>
-        public dynamic AddTodo(string poiID, string status, bool isPublic = true)
-        {
+        public dynamic AddTodo(string poiID, string status, bool isPublic = true) {
             return DynamicJson.Parse(api.AddTodo(poiID, status, isPublic));
         }
 
@@ -411,8 +384,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="lat">纬度，有效范围：-90.0到+90.0，+表示北纬。 </param>
         /// <param name="log">经度，有效范围：-180.0到+180.0，+表示东经。 </param>
         /// <returns></returns>
-        public dynamic CreateUserPosition(float lat, float log)
-        {
+        public dynamic CreateUserPosition(float lat, float log) {
             return DynamicJson.Parse(api.CreateUserPosition(lat, log));
         }
 
@@ -420,8 +392,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         ///     用户删除自己的位置
         /// </summary>
         /// <returns></returns>
-        public dynamic DestoryUserPostion()
-        {
+        public dynamic DestoryUserPostion() {
             return DynamicJson.Parse(api.DestoryUserPostion());
         }
     }

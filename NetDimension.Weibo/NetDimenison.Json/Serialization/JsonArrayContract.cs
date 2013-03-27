@@ -48,31 +48,25 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="underlyingType">The underlying type for the contract.</param>
         public JsonArrayContract(Type underlyingType)
-            : base(underlyingType)
-        {
+            : base(underlyingType) {
             ContractType = JsonContractType.Array;
 
             if (ReflectionUtils.ImplementsGenericDefinition(underlyingType, typeof (ICollection<>),
-                                                            out _genericCollectionDefinitionType))
-            {
+                                                            out _genericCollectionDefinitionType)) {
                 CollectionItemType = _genericCollectionDefinitionType.GetGenericArguments()[0];
-            }
-            else if (underlyingType.IsGenericType() &&
-                     underlyingType.GetGenericTypeDefinition() == typeof (IEnumerable<>))
-            {
+            } else if (underlyingType.IsGenericType() &&
+                       underlyingType.GetGenericTypeDefinition() == typeof (IEnumerable<>)) {
                 _genericCollectionDefinitionType = typeof (IEnumerable<>);
                 CollectionItemType = underlyingType.GetGenericArguments()[0];
-            }
-            else
-            {
+            } else {
                 CollectionItemType = ReflectionUtils.GetCollectionItemType(UnderlyingType);
             }
 
-            if (CollectionItemType != null)
+            if (CollectionItemType != null) {
                 _isCollectionItemTypeNullableType = ReflectionUtils.IsNullableType(CollectionItemType);
+            }
 
-            if (IsTypeGenericCollectionInterface(UnderlyingType))
-            {
+            if (IsTypeGenericCollectionInterface(UnderlyingType)) {
                 CreatedType = ReflectionUtils.MakeGenericType(typeof (List<>), CollectionItemType);
             }
         }
@@ -85,26 +79,21 @@ namespace NetDimension.Json.Serialization
         /// </value>
         public Type CollectionItemType { get; private set; }
 
-        internal IWrappedCollection CreateWrapper(object list)
-        {
+        internal IWrappedCollection CreateWrapper(object list) {
             if ((list is IList && (CollectionItemType == null || !_isCollectionItemTypeNullableType))
-                || UnderlyingType.IsArray)
+                || UnderlyingType.IsArray) {
                 return new CollectionWrapper<object>((IList) list);
+            }
 
-            if (_genericCollectionDefinitionType != null)
-            {
+            if (_genericCollectionDefinitionType != null) {
                 EnsureGenericWrapperCreator();
                 return (IWrappedCollection) _genericWrapperCreator(null, list);
-            }
-            else
-            {
+            } else {
                 IList values = ((IEnumerable) list).Cast<object>().ToList();
 
-                if (CollectionItemType != null)
-                {
+                if (CollectionItemType != null) {
                     var array = Array.CreateInstance(CollectionItemType, values.Count);
-                    for (var i = 0; i < values.Count; i++)
-                    {
+                    for (var i = 0; i < values.Count; i++) {
                         array.SetValue(values[i], i);
                     }
 
@@ -115,19 +104,18 @@ namespace NetDimension.Json.Serialization
             }
         }
 
-        private void EnsureGenericWrapperCreator()
-        {
-            if (_genericWrapperCreator == null)
-            {
+        private void EnsureGenericWrapperCreator() {
+            if (_genericWrapperCreator == null) {
                 _genericWrapperType = ReflectionUtils.MakeGenericType(typeof (CollectionWrapper<>), CollectionItemType);
 
                 Type constructorArgument;
 
                 if (ReflectionUtils.InheritsGenericDefinition(_genericCollectionDefinitionType, typeof (List<>))
-                    || _genericCollectionDefinitionType.GetGenericTypeDefinition() == typeof (IEnumerable<>))
+                    || _genericCollectionDefinitionType.GetGenericTypeDefinition() == typeof (IEnumerable<>)) {
                     constructorArgument = ReflectionUtils.MakeGenericType(typeof (ICollection<>), CollectionItemType);
-                else
+                } else {
                     constructorArgument = _genericCollectionDefinitionType;
+                }
 
                 var genericWrapperConstructor = _genericWrapperType.GetConstructor(new[] {constructorArgument});
                 _genericWrapperCreator =
@@ -135,10 +123,10 @@ namespace NetDimension.Json.Serialization
             }
         }
 
-        private bool IsTypeGenericCollectionInterface(Type type)
-        {
-            if (!type.IsGenericType())
+        private bool IsTypeGenericCollectionInterface(Type type) {
+            if (!type.IsGenericType()) {
                 return false;
+            }
 
             var genericDefinition = type.GetGenericTypeDefinition();
 

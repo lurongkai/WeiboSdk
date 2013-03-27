@@ -40,151 +40,143 @@ namespace NetDimension.Json.Utilities
         private readonly IList<T> _genericList;
 
         public ListWrapper(IList list)
-            : base(list)
-        {
+            : base(list) {
             ValidationUtils.ArgumentNotNull(list, "list");
 
-            if (list is IList<T>)
+            if (list is IList<T>) {
                 _genericList = (IList<T>) list;
+            }
         }
 
         public ListWrapper(IList<T> list)
-            : base(list)
-        {
+            : base(list) {
             ValidationUtils.ArgumentNotNull(list, "list");
 
             _genericList = list;
         }
 
-        public int IndexOf(T item)
-        {
-            if (_genericList != null)
+        public int IndexOf(T item) {
+            if (_genericList != null) {
                 return _genericList.IndexOf(item);
-            else
+            } else {
                 return ((IList) this).IndexOf(item);
+            }
         }
 
-        public void Insert(int index, T item)
-        {
-            if (_genericList != null)
+        public void Insert(int index, T item) {
+            if (_genericList != null) {
                 _genericList.Insert(index, item);
-            else
+            } else {
                 ((IList) this).Insert(index, item);
+            }
         }
 
-        public void RemoveAt(int index)
-        {
-            if (_genericList != null)
+        public void RemoveAt(int index) {
+            if (_genericList != null) {
                 _genericList.RemoveAt(index);
-            else
+            } else {
                 ((IList) this).RemoveAt(index);
+            }
         }
 
-        public T this[int index]
-        {
-            get
-            {
-                if (_genericList != null)
+        public T this[int index] {
+            get {
+                if (_genericList != null) {
                     return _genericList[index];
-                else
+                } else {
                     return (T) ((IList) this)[index];
+                }
             }
-            set
-            {
-                if (_genericList != null)
+            set {
+                if (_genericList != null) {
                     _genericList[index] = value;
-                else
+                } else {
                     ((IList) this)[index] = value;
+                }
             }
         }
 
-        public override void Add(T item)
-        {
-            if (_genericList != null)
+        public override void Add(T item) {
+            if (_genericList != null) {
                 _genericList.Add(item);
-            else
+            } else {
                 base.Add(item);
+            }
         }
 
-        public override void Clear()
-        {
-            if (_genericList != null)
+        public override void Clear() {
+            if (_genericList != null) {
                 _genericList.Clear();
-            else
+            } else {
                 base.Clear();
+            }
         }
 
-        public override bool Contains(T item)
-        {
-            if (_genericList != null)
+        public override bool Contains(T item) {
+            if (_genericList != null) {
                 return _genericList.Contains(item);
-            else
+            } else {
                 return base.Contains(item);
+            }
         }
 
-        public override void CopyTo(T[] array, int arrayIndex)
-        {
-            if (_genericList != null)
+        public override void CopyTo(T[] array, int arrayIndex) {
+            if (_genericList != null) {
                 _genericList.CopyTo(array, arrayIndex);
-            else
+            } else {
                 base.CopyTo(array, arrayIndex);
+            }
         }
 
-        public override int Count
-        {
-            get
-            {
-                if (_genericList != null)
+        public override int Count {
+            get {
+                if (_genericList != null) {
                     return _genericList.Count;
-                else
+                } else {
                     return base.Count;
+                }
             }
         }
 
-        public override bool IsReadOnly
-        {
-            get
-            {
-                if (_genericList != null)
+        public override bool IsReadOnly {
+            get {
+                if (_genericList != null) {
                     return _genericList.IsReadOnly;
-                else
+                } else {
                     return base.IsReadOnly;
+                }
             }
         }
 
-        public override bool Remove(T item)
-        {
-            if (_genericList != null)
-            {
+        public override bool Remove(T item) {
+            if (_genericList != null) {
                 return _genericList.Remove(item);
-            }
-            else
-            {
+            } else {
                 var contains = base.Contains(item);
 
-                if (contains)
+                if (contains) {
                     base.Remove(item);
+                }
 
                 return contains;
             }
         }
 
-        public override IEnumerator<T> GetEnumerator()
-        {
-            if (_genericList != null)
+        public override IEnumerator<T> GetEnumerator() {
+            if (_genericList != null) {
                 return _genericList.GetEnumerator();
+            }
 
             return base.GetEnumerator();
         }
 
-        public object UnderlyingList
-        {
-            get
-            {
-                if (_genericList != null)
+        public object UnderlyingList {
+            get {
+                if (_genericList != null) {
                     return _genericList;
-                else
+                } else {
                     return UnderlyingCollection;
+                }
             }
         }
     }

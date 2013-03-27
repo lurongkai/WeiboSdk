@@ -16,8 +16,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="client">操作类实例</param>
         public UserInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new UserAPI(client);
         }
 
@@ -27,8 +26,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="uid">需要查询的用户ID。 </param>
         /// <param name="screenName">需要查询的用户昵称。 </param>
         /// <returns></returns>
-        public Entities.user.Entity Show(string uid = "", string screenName = "")
-        {
+        public Entities.user.Entity Show(string uid = "", string screenName = "") {
             return JsonConvert.DeserializeObject<Entities.user.Entity>(api.Show(uid, screenName));
         }
 
@@ -37,8 +35,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="domain">需要查询的个性化域名。 </param>
         /// <returns></returns>
-        public Entities.user.Entity ShowByDomain(string domain)
-        {
+        public Entities.user.Entity ShowByDomain(string domain) {
             return JsonConvert.DeserializeObject<Entities.user.Entity>(api.ShowByDomain(domain));
         }
 
@@ -47,8 +44,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="uids"></param>
         /// <returns></returns>
-        public IEnumerable<Count> Counts(params string[] uids)
-        {
+        public IEnumerable<Count> Counts(params string[] uids) {
             return JsonConvert.DeserializeObject<IEnumerable<Count>>(api.Counts(uids));
         }
     }

@@ -55,8 +55,7 @@ namespace NetDimension.Json.Linq
         ///     Gets the container's children tokens.
         /// </summary>
         /// <value>The container's children tokens.</value>
-        protected override IList<JToken> ChildrenTokens
-        {
+        protected override IList<JToken> ChildrenTokens {
             get { return _properties; }
         }
 
@@ -75,8 +74,7 @@ namespace NetDimension.Json.Linq
         /// <summary>
         ///     Initializes a new instance of the <see cref="JObject" /> class.
         /// </summary>
-        public JObject()
-        {
+        public JObject() {
         }
 
         /// <summary>
@@ -86,8 +84,7 @@ namespace NetDimension.Json.Linq
         ///     A <see cref="JObject" /> object to copy from.
         /// </param>
         public JObject(JObject other)
-            : base(other)
-        {
+            : base(other) {
         }
 
         /// <summary>
@@ -95,63 +92,61 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="content">The contents of the object.</param>
         public JObject(params object[] content)
-            : this((object) content)
-        {
+            : this((object) content) {
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="JObject" /> class with the specified content.
         /// </summary>
         /// <param name="content">The contents of the object.</param>
-        public JObject(object content)
-        {
+        public JObject(object content) {
             Add(content);
         }
 
-        internal override bool DeepEquals(JToken node)
-        {
+        internal override bool DeepEquals(JToken node) {
             var t = node as JObject;
-            if (t == null)
+            if (t == null) {
                 return false;
+            }
 
             return _properties.Compare(t._properties);
         }
 
-        internal override void InsertItem(int index, JToken item, bool skipParentCheck)
-        {
+        internal override void InsertItem(int index, JToken item, bool skipParentCheck) {
             // don't add comments to JObject, no name to reference comment by
-            if (item != null && item.Type == JTokenType.Comment)
+            if (item != null && item.Type == JTokenType.Comment) {
                 return;
+            }
 
             base.InsertItem(index, item, skipParentCheck);
         }
 
-        internal override void ValidateToken(JToken o, JToken existing)
-        {
+        internal override void ValidateToken(JToken o, JToken existing) {
             ValidationUtils.ArgumentNotNull(o, "o");
 
-            if (o.Type != JTokenType.Property)
+            if (o.Type != JTokenType.Property) {
                 throw new ArgumentException("Can not add {0} to {1}.".FormatWith(CultureInfo.InvariantCulture,
                                                                                  o.GetType(), GetType()));
+            }
 
             var newProperty = (JProperty) o;
 
-            if (existing != null)
-            {
+            if (existing != null) {
                 var existingProperty = (JProperty) existing;
 
-                if (newProperty.Name == existingProperty.Name)
+                if (newProperty.Name == existingProperty.Name) {
                     return;
+                }
             }
 
-            if (_properties.TryGetValue(newProperty.Name, out existing))
+            if (_properties.TryGetValue(newProperty.Name, out existing)) {
                 throw new ArgumentException(
                     "Can not add property {0} to {1}. Property with the same name already exists on object.".FormatWith(
                         CultureInfo.InvariantCulture, newProperty.Name, GetType()));
+            }
         }
 
-        internal void InternalPropertyChanged(JProperty childProperty)
-        {
+        internal void InternalPropertyChanged(JProperty childProperty) {
             OnPropertyChanged(childProperty.Name);
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
             OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, IndexOfItem(childProperty)));
@@ -163,15 +158,13 @@ namespace NetDimension.Json.Linq
 #endif
         }
 
-        internal void InternalPropertyChanging(JProperty childProperty)
-        {
+        internal void InternalPropertyChanging(JProperty childProperty) {
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
             OnPropertyChanging(childProperty.Name);
 #endif
         }
 
-        internal override JToken CloneToken()
-        {
+        internal override JToken CloneToken() {
             return new JObject(this);
         }
 
@@ -179,8 +172,7 @@ namespace NetDimension.Json.Linq
         ///     Gets the node type for this <see cref="JToken" />.
         /// </summary>
         /// <value>The type.</value>
-        public override JTokenType Type
-        {
+        public override JTokenType Type {
             get { return JTokenType.Object; }
         }
 
@@ -190,8 +182,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="IEnumerable{JProperty}" /> of this object's properties.
         /// </returns>
-        public IEnumerable<JProperty> Properties()
-        {
+        public IEnumerable<JProperty> Properties() {
             return ChildrenTokens.Cast<JProperty>();
         }
 
@@ -202,10 +193,10 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JProperty" /> with the specified name or null.
         /// </returns>
-        public JProperty Property(string name)
-        {
-            if (name == null)
+        public JProperty Property(string name) {
+            if (name == null) {
                 return null;
+            }
 
             JToken property;
             _properties.TryGetValue(name, out property);
@@ -218,8 +209,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="JEnumerable{JToken}" /> of this object's property values.
         /// </returns>
-        public JEnumerable<JToken> PropertyValues()
-        {
+        public JEnumerable<JToken> PropertyValues() {
             return new JEnumerable<JToken>(Properties().Select(p => p.Value));
         }
 
@@ -229,29 +219,28 @@ namespace NetDimension.Json.Linq
         /// <value>
         ///     The <see cref="JToken" /> with the specified key.
         /// </value>
-        public override JToken this[object key]
-        {
-            get
-            {
+        public override JToken this[object key] {
+            get {
                 ValidationUtils.ArgumentNotNull(key, "o");
 
                 var propertyName = key as string;
-                if (propertyName == null)
+                if (propertyName == null) {
                     throw new ArgumentException(
                         "Accessed JObject values with invalid key value: {0}. Object property name expected.".FormatWith
                             (CultureInfo.InvariantCulture, MiscellaneousUtils.ToString(key)));
+                }
 
                 return this[propertyName];
             }
-            set
-            {
+            set {
                 ValidationUtils.ArgumentNotNull(key, "o");
 
                 var propertyName = key as string;
-                if (propertyName == null)
+                if (propertyName == null) {
                     throw new ArgumentException(
                         "Set JObject values with invalid key value: {0}. Object property name expected.".FormatWith(
                             CultureInfo.InvariantCulture, MiscellaneousUtils.ToString(key)));
+                }
 
                 this[propertyName] = value;
             }
@@ -261,25 +250,19 @@ namespace NetDimension.Json.Linq
         ///     Gets or sets the <see cref="NetDimension.Json.Linq.JToken" /> with the specified property name.
         /// </summary>
         /// <value></value>
-        public JToken this[string propertyName]
-        {
-            get
-            {
+        public JToken this[string propertyName] {
+            get {
                 ValidationUtils.ArgumentNotNull(propertyName, "propertyName");
 
                 var property = Property(propertyName);
 
                 return (property != null) ? property.Value : null;
             }
-            set
-            {
+            set {
                 var property = Property(propertyName);
-                if (property != null)
-                {
+                if (property != null) {
                     property.Value = value;
-                }
-                else
-                {
+                } else {
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
                     OnPropertyChanging(propertyName);
 #endif
@@ -298,18 +281,16 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JObject" /> that contains the JSON that was read from the specified <see cref="JsonReader" />.
         /// </returns>
-        public new static JObject Load(JsonReader reader)
-        {
+        public new static JObject Load(JsonReader reader) {
             ValidationUtils.ArgumentNotNull(reader, "reader");
 
-            if (reader.TokenType == JsonToken.None)
-            {
-                if (!reader.Read())
+            if (reader.TokenType == JsonToken.None) {
+                if (!reader.Read()) {
                     throw JsonReaderException.Create(reader, "Error reading JObject from JsonReader.");
+                }
             }
 
-            if (reader.TokenType != JsonToken.StartObject)
-            {
+            if (reader.TokenType != JsonToken.StartObject) {
                 throw JsonReaderException.Create(reader,
                                                  "Error reading JObject from JsonReader. Current JsonReader item is not an object: {0}"
                                                      .FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
@@ -332,14 +313,14 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JObject" /> populated from the string that contains JSON.
         /// </returns>
-        public new static JObject Parse(string json)
-        {
+        public new static JObject Parse(string json) {
             JsonReader reader = new JsonTextReader(new StringReader(json));
 
             var o = Load(reader);
 
-            if (reader.Read() && reader.TokenType != JsonToken.Comment)
+            if (reader.Read() && reader.TokenType != JsonToken.Comment) {
                 throw JsonReaderException.Create(reader, "Additional text found in JSON string after parsing content.");
+            }
 
             return o;
         }
@@ -353,8 +334,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JObject" /> with the values of the specified object
         /// </returns>
-        public new static JObject FromObject(object o)
-        {
+        public new static JObject FromObject(object o) {
             return FromObject(o, new JsonSerializer());
         }
 
@@ -370,14 +350,14 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JArray" /> with the values of the specified object
         /// </returns>
-        public new static JObject FromObject(object o, JsonSerializer jsonSerializer)
-        {
+        public new static JObject FromObject(object o, JsonSerializer jsonSerializer) {
             var token = FromObjectInternal(o, jsonSerializer);
 
-            if (token != null && token.Type != JTokenType.Object)
+            if (token != null && token.Type != JTokenType.Object) {
                 throw new ArgumentException(
                     "Object serialized to {0}. JObject instance expected.".FormatWith(CultureInfo.InvariantCulture,
                                                                                       token.Type));
+            }
 
             return (JObject) token;
         }
@@ -391,12 +371,10 @@ namespace NetDimension.Json.Linq
         /// <param name="converters">
         ///     A collection of <see cref="JsonConverter" /> which will be used when writing the token.
         /// </param>
-        public override void WriteTo(JsonWriter writer, params JsonConverter[] converters)
-        {
+        public override void WriteTo(JsonWriter writer, params JsonConverter[] converters) {
             writer.WriteStartObject();
 
-            foreach (JProperty property in ChildrenTokens)
-            {
+            foreach (JProperty property in ChildrenTokens) {
                 property.WriteTo(writer, converters);
             }
 
@@ -410,18 +388,15 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="value">The value.</param>
-        public void Add(string propertyName, JToken value)
-        {
+        public void Add(string propertyName, JToken value) {
             Add(new JProperty(propertyName, value));
         }
 
-        bool IDictionary<string, JToken>.ContainsKey(string key)
-        {
+        bool IDictionary<string, JToken>.ContainsKey(string key) {
             return _properties.Contains(key);
         }
 
-        ICollection<string> IDictionary<string, JToken>.Keys
-        {
+        ICollection<string> IDictionary<string, JToken>.Keys {
             // todo: make order the collection returned match JObject order
             get { return _properties.Keys; }
         }
@@ -431,11 +406,11 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns>true if item was successfully removed; otherwise, false.</returns>
-        public bool Remove(string propertyName)
-        {
+        public bool Remove(string propertyName) {
             var property = Property(propertyName);
-            if (property == null)
+            if (property == null) {
                 return false;
+            }
 
             property.Remove();
             return true;
@@ -447,11 +422,9 @@ namespace NetDimension.Json.Linq
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="value">The value.</param>
         /// <returns>true if a value was successfully retrieved; otherwise, false.</returns>
-        public bool TryGetValue(string propertyName, out JToken value)
-        {
+        public bool TryGetValue(string propertyName, out JToken value) {
             var property = Property(propertyName);
-            if (property == null)
-            {
+            if (property == null) {
                 value = null;
                 return false;
             }
@@ -460,10 +433,8 @@ namespace NetDimension.Json.Linq
             return true;
         }
 
-        ICollection<JToken> IDictionary<string, JToken>.Values
-        {
-            get
-            {
+        ICollection<JToken> IDictionary<string, JToken>.Values {
+            get {
                 // todo: need to wrap _properties.Values with a collection to get the JProperty value
                 throw new NotImplementedException();
             }
@@ -473,54 +444,53 @@ namespace NetDimension.Json.Linq
 
         #region ICollection<KeyValuePair<string,JToken>> Members
 
-        void ICollection<KeyValuePair<string, JToken>>.Add(KeyValuePair<string, JToken> item)
-        {
+        void ICollection<KeyValuePair<string, JToken>>.Add(KeyValuePair<string, JToken> item) {
             Add(new JProperty(item.Key, item.Value));
         }
 
-        void ICollection<KeyValuePair<string, JToken>>.Clear()
-        {
+        void ICollection<KeyValuePair<string, JToken>>.Clear() {
             RemoveAll();
         }
 
-        bool ICollection<KeyValuePair<string, JToken>>.Contains(KeyValuePair<string, JToken> item)
-        {
+        bool ICollection<KeyValuePair<string, JToken>>.Contains(KeyValuePair<string, JToken> item) {
             var property = Property(item.Key);
-            if (property == null)
+            if (property == null) {
                 return false;
+            }
 
             return (property.Value == item.Value);
         }
 
-        void ICollection<KeyValuePair<string, JToken>>.CopyTo(KeyValuePair<string, JToken>[] array, int arrayIndex)
-        {
-            if (array == null)
+        void ICollection<KeyValuePair<string, JToken>>.CopyTo(KeyValuePair<string, JToken>[] array, int arrayIndex) {
+            if (array == null) {
                 throw new ArgumentNullException("array");
-            if (arrayIndex < 0)
+            }
+            if (arrayIndex < 0) {
                 throw new ArgumentOutOfRangeException("arrayIndex", "arrayIndex is less than 0.");
-            if (arrayIndex >= array.Length)
+            }
+            if (arrayIndex >= array.Length) {
                 throw new ArgumentException("arrayIndex is equal to or greater than the length of array.");
-            if (Count > array.Length - arrayIndex)
+            }
+            if (Count > array.Length - arrayIndex) {
                 throw new ArgumentException(
                     "The number of elements in the source JObject is greater than the available space from arrayIndex to the end of the destination array.");
+            }
 
             var index = 0;
-            foreach (JProperty property in ChildrenTokens)
-            {
+            foreach (JProperty property in ChildrenTokens) {
                 array[arrayIndex + index] = new KeyValuePair<string, JToken>(property.Name, property.Value);
                 index++;
             }
         }
 
-        bool ICollection<KeyValuePair<string, JToken>>.IsReadOnly
-        {
+        bool ICollection<KeyValuePair<string, JToken>>.IsReadOnly {
             get { return false; }
         }
 
-        bool ICollection<KeyValuePair<string, JToken>>.Remove(KeyValuePair<string, JToken> item)
-        {
-            if (!((ICollection<KeyValuePair<string, JToken>>) this).Contains(item))
+        bool ICollection<KeyValuePair<string, JToken>>.Remove(KeyValuePair<string, JToken> item) {
+            if (!((ICollection<KeyValuePair<string, JToken>>) this).Contains(item)) {
                 return false;
+            }
 
             ((IDictionary<string, JToken>) this).Remove(item.Key);
             return true;
@@ -528,8 +498,7 @@ namespace NetDimension.Json.Linq
 
         #endregion
 
-        internal override int GetDeepHashCode()
-        {
+        internal override int GetDeepHashCode() {
             return ContentsHashCode();
         }
 
@@ -539,10 +508,8 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.
         /// </returns>
-        public IEnumerator<KeyValuePair<string, JToken>> GetEnumerator()
-        {
-            foreach (JProperty property in ChildrenTokens)
-            {
+        public IEnumerator<KeyValuePair<string, JToken>> GetEnumerator() {
+            foreach (JProperty property in ChildrenTokens) {
                 yield return new KeyValuePair<string, JToken>(property.Name, property.Value);
             }
         }
@@ -551,10 +518,10 @@ namespace NetDimension.Json.Linq
         ///     Raises the <see cref="PropertyChanged" /> event with the provided arguments.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
+        protected virtual void OnPropertyChanged(string propertyName) {
+            if (PropertyChanged != null) {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
@@ -562,10 +529,10 @@ namespace NetDimension.Json.Linq
         ///     Raises the <see cref="PropertyChanging" /> event with the provided arguments.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
-        protected virtual void OnPropertyChanging(string propertyName)
-        {
-            if (PropertyChanging != null)
+        protected virtual void OnPropertyChanging(string propertyName) {
+            if (PropertyChanging != null) {
                 PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
+            }
         }
 #endif
 
@@ -580,15 +547,12 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="T:System.ComponentModel.PropertyDescriptorCollection" /> that represents the properties for this component instance.
         /// </returns>
-        PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties()
-        {
+        PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties() {
             return ((ICustomTypeDescriptor) this).GetProperties(null);
         }
 
-        private static Type GetTokenPropertyType(JToken token)
-        {
-            if (token is JValue)
-            {
+        private static Type GetTokenPropertyType(JToken token) {
+            if (token is JValue) {
                 var v = (JValue) token;
                 return (v.Value != null) ? v.Value.GetType() : typeof (object);
             }
@@ -605,12 +569,10 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="T:System.ComponentModel.PropertyDescriptorCollection" /> that represents the filtered properties for this component instance.
         /// </returns>
-        PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties(Attribute[] attributes)
-        {
+        PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties(Attribute[] attributes) {
             var descriptors = new PropertyDescriptorCollection(null);
 
-            foreach (var propertyValue in this)
-            {
+            foreach (var propertyValue in this) {
                 descriptors.Add(new JPropertyDescriptor(propertyValue.Key, GetTokenPropertyType(propertyValue.Value)));
             }
 
@@ -623,8 +585,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="T:System.ComponentModel.AttributeCollection" /> containing the attributes for this object.
         /// </returns>
-        AttributeCollection ICustomTypeDescriptor.GetAttributes()
-        {
+        AttributeCollection ICustomTypeDescriptor.GetAttributes() {
             return AttributeCollection.Empty;
         }
 
@@ -634,8 +595,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The class name of the object, or null if the class does not have a name.
         /// </returns>
-        string ICustomTypeDescriptor.GetClassName()
-        {
+        string ICustomTypeDescriptor.GetClassName() {
             return null;
         }
 
@@ -645,8 +605,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The name of the object, or null if the object does not have a name.
         /// </returns>
-        string ICustomTypeDescriptor.GetComponentName()
-        {
+        string ICustomTypeDescriptor.GetComponentName() {
             return null;
         }
 
@@ -659,8 +618,7 @@ namespace NetDimension.Json.Linq
         ///         cref="T:System.ComponentModel.TypeConverter" />
         ///     for this object.
         /// </returns>
-        TypeConverter ICustomTypeDescriptor.GetConverter()
-        {
+        TypeConverter ICustomTypeDescriptor.GetConverter() {
             return new TypeConverter();
         }
 
@@ -670,8 +628,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="T:System.ComponentModel.EventDescriptor" /> that represents the default event for this object, or null if this object does not have events.
         /// </returns>
-        EventDescriptor ICustomTypeDescriptor.GetDefaultEvent()
-        {
+        EventDescriptor ICustomTypeDescriptor.GetDefaultEvent() {
             return null;
         }
 
@@ -681,8 +638,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="T:System.ComponentModel.PropertyDescriptor" /> that represents the default property for this object, or null if this object does not have properties.
         /// </returns>
-        PropertyDescriptor ICustomTypeDescriptor.GetDefaultProperty()
-        {
+        PropertyDescriptor ICustomTypeDescriptor.GetDefaultProperty() {
             return null;
         }
 
@@ -695,8 +651,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="T:System.Object" /> of the specified type that is the editor for this object, or null if the editor cannot be found.
         /// </returns>
-        object ICustomTypeDescriptor.GetEditor(Type editorBaseType)
-        {
+        object ICustomTypeDescriptor.GetEditor(Type editorBaseType) {
             return null;
         }
 
@@ -709,8 +664,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="T:System.ComponentModel.EventDescriptorCollection" /> that represents the filtered events for this component instance.
         /// </returns>
-        EventDescriptorCollection ICustomTypeDescriptor.GetEvents(Attribute[] attributes)
-        {
+        EventDescriptorCollection ICustomTypeDescriptor.GetEvents(Attribute[] attributes) {
             return EventDescriptorCollection.Empty;
         }
 
@@ -720,8 +674,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="T:System.ComponentModel.EventDescriptorCollection" /> that represents the events for this component instance.
         /// </returns>
-        EventDescriptorCollection ICustomTypeDescriptor.GetEvents()
-        {
+        EventDescriptorCollection ICustomTypeDescriptor.GetEvents() {
             return EventDescriptorCollection.Empty;
         }
 
@@ -734,8 +687,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="T:System.Object" /> that represents the owner of the specified property.
         /// </returns>
-        object ICustomTypeDescriptor.GetPropertyOwner(PropertyDescriptor pd)
-        {
+        object ICustomTypeDescriptor.GetPropertyOwner(PropertyDescriptor pd) {
             return null;
         }
 
@@ -751,34 +703,31 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="T:System.Dynamic.DynamicMetaObject" /> to bind this object.
         /// </returns>
-        protected override DynamicMetaObject GetMetaObject(Expression parameter)
-        {
+        protected override DynamicMetaObject GetMetaObject(Expression parameter) {
             return new DynamicProxyMetaObject<JObject>(parameter, this, new JObjectDynamicProxy(), true);
         }
 
         private class JObjectDynamicProxy : DynamicProxy<JObject>
         {
-            public override bool TryGetMember(JObject instance, GetMemberBinder binder, out object result)
-            {
+            public override bool TryGetMember(JObject instance, GetMemberBinder binder, out object result) {
                 // result can be null
                 result = instance[binder.Name];
                 return true;
             }
 
-            public override bool TrySetMember(JObject instance, SetMemberBinder binder, object value)
-            {
+            public override bool TrySetMember(JObject instance, SetMemberBinder binder, object value) {
                 var v = value as JToken;
 
                 // this can throw an error if value isn't a valid for a JValue
-                if (v == null)
+                if (v == null) {
                     v = new JValue(value);
+                }
 
                 instance[binder.Name] = v;
                 return true;
             }
 
-            public override IEnumerable<string> GetDynamicMemberNames(JObject instance)
-            {
+            public override IEnumerable<string> GetDynamicMemberNames(JObject instance) {
                 return instance.Properties().Select(p => p.Name);
             }
         }

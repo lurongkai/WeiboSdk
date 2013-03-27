@@ -14,8 +14,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="client">操作类</param>
         public AccountInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new AccountAPI(client);
         }
 
@@ -23,8 +22,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         ///     获取当前登录用户的隐私设置
         /// </summary>
         /// <returns>JSON</returns>
-        public dynamic GetPrivacy()
-        {
+        public dynamic GetPrivacy() {
             return DynamicJson.Parse(api.GetPrivacy());
         }
 
@@ -40,8 +38,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">返回的记录条数，默认为10。</param>
         /// <returns>JSON</returns>
         public dynamic SchoolList(string province = "", string city = "", string area = "", string type = "1",
-                                  string capital = "", string keyword = "", int count = 10)
-        {
+                                  string capital = "", string keyword = "", int count = 10) {
             return DynamicJson.Parse(api.SchoolList(province, city, area, type, capital, keyword, count));
         }
 
@@ -49,8 +46,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         ///     获取当前登录用户的API访问频率限制情况
         /// </summary>
         /// <returns>JSON</returns>
-        public dynamic RateLimitStatus()
-        {
+        public dynamic RateLimitStatus() {
             return DynamicJson.Parse(api.RateLimitStatus());
         }
 
@@ -58,8 +54,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         ///     OAuth授权之后，获取授权用户的UID
         /// </summary>
         /// <returns>JSON</returns>
-        public dynamic GetUID()
-        {
+        public dynamic GetUID() {
             return DynamicJson.Parse(api.GetUID());
         }
 
@@ -67,8 +62,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         ///     退出登录
         /// </summary>
         /// <returns>JSON</returns>
-        public dynamic EndSession()
-        {
+        public dynamic EndSession() {
             return DynamicJson.Parse(api.EndSession());
         }
 
@@ -77,8 +71,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="nickname">需要验证的昵称。4-20个字符，支持中英文、数字、"_"或减号。必须做URLEncode，采用UTF-8编码。 </param>
         /// <returns>JSON</returns>
-        public dynamic VerifyNickname(string nickname)
-        {
+        public dynamic VerifyNickname(string nickname) {
             return DynamicJson.Parse(api.VerifyNickname(nickname));
         }
 
@@ -88,8 +81,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="uid">需要获取消息未读数的用户UID，必须是当前登录用户。</param>
         /// <param name="callback">JSONP回调函数，用于前端调用返回JS格式的信息。 </param>
         /// <returns></returns>
-        public dynamic UnreadCount(string uid, string callback = "")
-        {
+        public dynamic UnreadCount(string uid, string callback = "") {
             return DynamicJson.Parse(api.UnreadCount(uid, callback));
         }
 
@@ -98,8 +90,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="type">需要清零未读数的消息项，status：新微博数、follower：新粉丝数、cmt：新评论数、dm：新私信数、mention_status：新提及我的微博数、mention_cmt：新提及我的评论数，一次只能操作一项。 </param>
         /// <returns>JSON</returns>
-        public dynamic SetCount(ResetCountType type)
-        {
+        public dynamic SetCount(ResetCountType type) {
             return DynamicJson.Parse(api.SetCount(type));
         }
     }

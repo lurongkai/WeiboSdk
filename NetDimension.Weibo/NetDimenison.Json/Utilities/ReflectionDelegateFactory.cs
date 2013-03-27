@@ -33,28 +33,30 @@ namespace NetDimension.Json.Utilities
 {
     internal abstract class ReflectionDelegateFactory
     {
-        public Func<T, object> CreateGet<T>(MemberInfo memberInfo)
-        {
+        public Func<T, object> CreateGet<T>(MemberInfo memberInfo) {
             var propertyInfo = memberInfo as PropertyInfo;
-            if (propertyInfo != null)
+            if (propertyInfo != null) {
                 return CreateGet<T>(propertyInfo);
+            }
 
             var fieldInfo = memberInfo as FieldInfo;
-            if (fieldInfo != null)
+            if (fieldInfo != null) {
                 return CreateGet<T>(fieldInfo);
+            }
 
             throw new Exception("Could not create getter for {0}.".FormatWith(CultureInfo.InvariantCulture, memberInfo));
         }
 
-        public Action<T, object> CreateSet<T>(MemberInfo memberInfo)
-        {
+        public Action<T, object> CreateSet<T>(MemberInfo memberInfo) {
             var propertyInfo = memberInfo as PropertyInfo;
-            if (propertyInfo != null)
+            if (propertyInfo != null) {
                 return CreateSet<T>(propertyInfo);
+            }
 
             var fieldInfo = memberInfo as FieldInfo;
-            if (fieldInfo != null)
+            if (fieldInfo != null) {
                 return CreateSet<T>(fieldInfo);
+            }
 
             throw new Exception("Could not create setter for {0}.".FormatWith(CultureInfo.InvariantCulture, memberInfo));
         }

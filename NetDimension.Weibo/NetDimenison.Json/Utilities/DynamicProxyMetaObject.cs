@@ -41,56 +41,49 @@ namespace NetDimension.Json.Utilities
         private readonly DynamicProxy<T> _proxy;
 
         internal DynamicProxyMetaObject(Expression expression, T value, DynamicProxy<T> proxy, bool dontFallbackFirst)
-            : base(expression, BindingRestrictions.Empty, value)
-        {
+            : base(expression, BindingRestrictions.Empty, value) {
             _proxy = proxy;
             _dontFallbackFirst = dontFallbackFirst;
         }
 
-        private new T Value
-        {
+        private new T Value {
             get { return (T) base.Value; }
         }
 
-        private bool IsOverridden(string method)
-        {
+        private bool IsOverridden(string method) {
             return ReflectionUtils.IsMethodOverridden(_proxy.GetType(), typeof (DynamicProxy<T>), method);
         }
 
-        public override DynamicMetaObject BindGetMember(GetMemberBinder binder)
-        {
+        public override DynamicMetaObject BindGetMember(GetMemberBinder binder) {
             return IsOverridden("TryGetMember")
                        ? CallMethodWithResult("TryGetMember", binder, NoArgs, e => binder.FallbackGetMember(this, e))
                        : base.BindGetMember(binder);
         }
 
-        public override DynamicMetaObject BindSetMember(SetMemberBinder binder, DynamicMetaObject value)
-        {
+        public override DynamicMetaObject BindSetMember(SetMemberBinder binder, DynamicMetaObject value) {
             return IsOverridden("TrySetMember")
                        ? CallMethodReturnLast("TrySetMember", binder, GetArgs(value),
                                               e => binder.FallbackSetMember(this, value, e))
                        : base.BindSetMember(binder, value);
         }
 
-        public override DynamicMetaObject BindDeleteMember(DeleteMemberBinder binder)
-        {
+        public override DynamicMetaObject BindDeleteMember(DeleteMemberBinder binder) {
             return IsOverridden("TryDeleteMember")
                        ? CallMethodNoResult("TryDeleteMember", binder, NoArgs, e => binder.FallbackDeleteMember(this, e))
                        : base.BindDeleteMember(binder);
         }
 
 
-        public override DynamicMetaObject BindConvert(ConvertBinder binder)
-        {
+        public override DynamicMetaObject BindConvert(ConvertBinder binder) {
             return IsOverridden("TryConvert")
                        ? CallMethodWithResult("TryConvert", binder, NoArgs, e => binder.FallbackConvert(this, e))
                        : base.BindConvert(binder);
         }
 
-        public override DynamicMetaObject BindInvokeMember(InvokeMemberBinder binder, DynamicMetaObject[] args)
-        {
-            if (!IsOverridden("TryInvokeMember"))
+        public override DynamicMetaObject BindInvokeMember(InvokeMemberBinder binder, DynamicMetaObject[] args) {
+            if (!IsOverridden("TryInvokeMember")) {
                 return base.BindInvokeMember(binder, args);
+            }
 
             //
             // Generate a tree like:
@@ -128,40 +121,35 @@ namespace NetDimension.Json.Utilities
         }
 
 
-        public override DynamicMetaObject BindCreateInstance(CreateInstanceBinder binder, DynamicMetaObject[] args)
-        {
+        public override DynamicMetaObject BindCreateInstance(CreateInstanceBinder binder, DynamicMetaObject[] args) {
             return IsOverridden("TryCreateInstance")
                        ? CallMethodWithResult("TryCreateInstance", binder, GetArgArray(args),
                                               e => binder.FallbackCreateInstance(this, args, e))
                        : base.BindCreateInstance(binder, args);
         }
 
-        public override DynamicMetaObject BindInvoke(InvokeBinder binder, DynamicMetaObject[] args)
-        {
+        public override DynamicMetaObject BindInvoke(InvokeBinder binder, DynamicMetaObject[] args) {
             return IsOverridden("TryInvoke")
                        ? CallMethodWithResult("TryInvoke", binder, GetArgArray(args),
                                               e => binder.FallbackInvoke(this, args, e))
                        : base.BindInvoke(binder, args);
         }
 
-        public override DynamicMetaObject BindBinaryOperation(BinaryOperationBinder binder, DynamicMetaObject arg)
-        {
+        public override DynamicMetaObject BindBinaryOperation(BinaryOperationBinder binder, DynamicMetaObject arg) {
             return IsOverridden("TryBinaryOperation")
                        ? CallMethodWithResult("TryBinaryOperation", binder, GetArgs(arg),
                                               e => binder.FallbackBinaryOperation(this, arg, e))
                        : base.BindBinaryOperation(binder, arg);
         }
 
-        public override DynamicMetaObject BindUnaryOperation(UnaryOperationBinder binder)
-        {
+        public override DynamicMetaObject BindUnaryOperation(UnaryOperationBinder binder) {
             return IsOverridden("TryUnaryOperation")
                        ? CallMethodWithResult("TryUnaryOperation", binder, NoArgs,
                                               e => binder.FallbackUnaryOperation(this, e))
                        : base.BindUnaryOperation(binder);
         }
 
-        public override DynamicMetaObject BindGetIndex(GetIndexBinder binder, DynamicMetaObject[] indexes)
-        {
+        public override DynamicMetaObject BindGetIndex(GetIndexBinder binder, DynamicMetaObject[] indexes) {
             return IsOverridden("TryGetIndex")
                        ? CallMethodWithResult("TryGetIndex", binder, GetArgArray(indexes),
                                               e => binder.FallbackGetIndex(this, indexes, e))
@@ -169,34 +157,29 @@ namespace NetDimension.Json.Utilities
         }
 
         public override DynamicMetaObject BindSetIndex(SetIndexBinder binder, DynamicMetaObject[] indexes,
-                                                       DynamicMetaObject value)
-        {
+                                                       DynamicMetaObject value) {
             return IsOverridden("TrySetIndex")
                        ? CallMethodReturnLast("TrySetIndex", binder, GetArgArray(indexes, value),
                                               e => binder.FallbackSetIndex(this, indexes, value, e))
                        : base.BindSetIndex(binder, indexes, value);
         }
 
-        public override DynamicMetaObject BindDeleteIndex(DeleteIndexBinder binder, DynamicMetaObject[] indexes)
-        {
+        public override DynamicMetaObject BindDeleteIndex(DeleteIndexBinder binder, DynamicMetaObject[] indexes) {
             return IsOverridden("TryDeleteIndex")
                        ? CallMethodNoResult("TryDeleteIndex", binder, GetArgArray(indexes),
                                             e => binder.FallbackDeleteIndex(this, indexes, e))
                        : base.BindDeleteIndex(binder, indexes);
         }
 
-        private static Expression[] GetArgs(params DynamicMetaObject[] args)
-        {
+        private static Expression[] GetArgs(params DynamicMetaObject[] args) {
             return args.Select(arg => Expression.Convert(arg.Expression, typeof (object))).ToArray();
         }
 
-        private static Expression[] GetArgArray(DynamicMetaObject[] args)
-        {
+        private static Expression[] GetArgArray(DynamicMetaObject[] args) {
             return new[] {Expression.NewArrayInit(typeof (object), GetArgs(args))};
         }
 
-        private static Expression[] GetArgArray(DynamicMetaObject[] args, DynamicMetaObject value)
-        {
+        private static Expression[] GetArgArray(DynamicMetaObject[] args, DynamicMetaObject value) {
             return new Expression[]
                 {
                     Expression.NewArrayInit(typeof (object), GetArgs(args)),
@@ -204,11 +187,11 @@ namespace NetDimension.Json.Utilities
                 };
         }
 
-        private static ConstantExpression Constant(DynamicMetaObjectBinder binder)
-        {
+        private static ConstantExpression Constant(DynamicMetaObjectBinder binder) {
             var t = binder.GetType();
-            while (!t.IsVisible())
+            while (!t.IsVisible()) {
                 t = t.BaseType();
+            }
             return Expression.Constant(binder, t);
         }
 
@@ -218,8 +201,7 @@ namespace NetDimension.Json.Utilities
         /// </summary>
         private DynamicMetaObject CallMethodWithResult(string methodName, DynamicMetaObjectBinder binder,
                                                        Expression[] args, Fallback fallback,
-                                                       Fallback fallbackInvoke = null)
-        {
+                                                       Fallback fallbackInvoke = null) {
             //
             // First, call fallback to do default binding
             // This produces either an error or a call to a .NET member
@@ -242,8 +224,7 @@ namespace NetDimension.Json.Utilities
 
         private DynamicMetaObject BuildCallMethodWithResult(string methodName, DynamicMetaObjectBinder binder,
                                                             Expression[] args, DynamicMetaObject fallbackResult,
-                                                            Fallback fallbackInvoke)
-        {
+                                                            Fallback fallbackInvoke) {
             //
             // Build a new expression like:
             // {
@@ -262,16 +243,16 @@ namespace NetDimension.Json.Utilities
             var resultMetaObject = new DynamicMetaObject(result, BindingRestrictions.Empty);
 
             // Need to add a conversion if calling TryConvert
-            if (binder.ReturnType != typeof (object))
-            {
+            if (binder.ReturnType != typeof (object)) {
                 var convert = Expression.Convert(resultMetaObject.Expression, binder.ReturnType);
                 // will always be a cast or unbox
 
                 resultMetaObject = new DynamicMetaObject(convert, resultMetaObject.Restrictions);
             }
 
-            if (fallbackInvoke != null)
+            if (fallbackInvoke != null) {
                 resultMetaObject = fallbackInvoke(resultMetaObject);
+            }
 
             var callDynamic = new DynamicMetaObject(
                 Expression.Block(
@@ -299,8 +280,7 @@ namespace NetDimension.Json.Utilities
         ///     the result.
         /// </summary>
         private DynamicMetaObject CallMethodReturnLast(string methodName, DynamicMetaObjectBinder binder,
-                                                       Expression[] args, Fallback fallback)
-        {
+                                                       Expression[] args, Fallback fallback) {
             //
             // First, call fallback to do default binding
             // This produces either an error or a call to a .NET member
@@ -356,8 +336,7 @@ namespace NetDimension.Json.Utilities
         ///     the result.
         /// </summary>
         private DynamicMetaObject CallMethodNoResult(string methodName, DynamicMetaObjectBinder binder,
-                                                     Expression[] args, Fallback fallback)
-        {
+                                                     Expression[] args, Fallback fallback) {
             //
             // First, call fallback to do default binding
             // This produces either an error or a call to a .NET member
@@ -402,15 +381,13 @@ namespace NetDimension.Json.Utilities
         ///     Returns a Restrictions object which includes our current restrictions merged
         ///     with a restriction limiting our type
         /// </summary>
-        private BindingRestrictions GetRestrictions()
-        {
+        private BindingRestrictions GetRestrictions() {
             return (Value == null && HasValue)
                        ? BindingRestrictions.GetInstanceRestriction(Expression, null)
                        : BindingRestrictions.GetTypeRestriction(Expression, LimitType);
         }
 
-        public override IEnumerable<string> GetDynamicMemberNames()
-        {
+        public override IEnumerable<string> GetDynamicMemberNames() {
             return _proxy.GetDynamicMemberNames(Value);
         }
 
@@ -423,13 +400,11 @@ namespace NetDimension.Json.Utilities
         private sealed class GetBinderAdapter : GetMemberBinder
         {
             internal GetBinderAdapter(InvokeMemberBinder binder) :
-                base(binder.Name, binder.IgnoreCase)
-            {
+                base(binder.Name, binder.IgnoreCase) {
             }
 
             public override DynamicMetaObject FallbackGetMember(DynamicMetaObject target,
-                                                                DynamicMetaObject errorSuggestion)
-            {
+                                                                DynamicMetaObject errorSuggestion) {
                 throw new NotSupportedException();
             }
         }

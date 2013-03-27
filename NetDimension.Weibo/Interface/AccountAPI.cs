@@ -5,16 +5,14 @@ namespace NetDimension.Weibo.Interface
     internal class AccountAPI : WeiboAPI
     {
         public AccountAPI(Client client)
-            : base(client)
-        {
+            : base(client) {
         }
 
         /// <summary>
         ///     获取当前登录用户的隐私设置
         /// </summary>
         /// <returns>JSON</returns>
-        public string GetPrivacy()
-        {
+        public string GetPrivacy() {
             return (Client.GetCommand("account/get_privacy"));
         }
 
@@ -30,8 +28,7 @@ namespace NetDimension.Weibo.Interface
         /// <param name="count">返回的记录条数，默认为10。</param>
         /// <returns>JSON</returns>
         public string SchoolList(string province = "", string city = "", string area = "", string type = "1",
-                                 string capital = "", string keyword = "", int count = 10)
-        {
+                                 string capital = "", string keyword = "", int count = 10) {
             var p = new List<WeiboParameter>
                 {
                     string.IsNullOrEmpty(capital)
@@ -40,18 +37,15 @@ namespace NetDimension.Weibo.Interface
                     new WeiboParameter("count", count)
                 };
 
-            if (!string.IsNullOrEmpty(province))
-            {
+            if (!string.IsNullOrEmpty(province)) {
                 p.Add(new WeiboParameter("province", province));
             }
 
-            if (!string.IsNullOrEmpty(city))
-            {
+            if (!string.IsNullOrEmpty(city)) {
                 p.Add(new WeiboParameter("city", city));
             }
 
-            if (!string.IsNullOrEmpty(area))
-            {
+            if (!string.IsNullOrEmpty(area)) {
                 p.Add(new WeiboParameter("area", area));
             }
 
@@ -63,8 +57,7 @@ namespace NetDimension.Weibo.Interface
         ///     获取当前登录用户的API访问频率限制情况
         /// </summary>
         /// <returns>JSON</returns>
-        public string RateLimitStatus()
-        {
+        public string RateLimitStatus() {
             return (Client.GetCommand("account/rate_limit_status"));
         }
 
@@ -72,8 +65,7 @@ namespace NetDimension.Weibo.Interface
         ///     OAuth授权之后，获取授权用户的UID
         /// </summary>
         /// <returns>JSON</returns>
-        public string GetUID()
-        {
+        public string GetUID() {
             return (Client.GetCommand("account/get_uid"));
         }
 
@@ -81,8 +73,7 @@ namespace NetDimension.Weibo.Interface
         ///     退出登录
         /// </summary>
         /// <returns>JSON</returns>
-        public string EndSession()
-        {
+        public string EndSession() {
             return (Client.GetCommand("account/end_session"));
         }
 
@@ -91,8 +82,7 @@ namespace NetDimension.Weibo.Interface
         /// </summary>
         /// <param name="nickname">需要验证的昵称。4-20个字符，支持中英文、数字、"_"或减号。必须做URLEncode，采用UTF-8编码。 </param>
         /// <returns>JSON</returns>
-        public string VerifyNickname(string nickname)
-        {
+        public string VerifyNickname(string nickname) {
             return (Client.GetCommand("register/verify_nickname", new WeiboParameter("nickname", nickname)));
         }
 
@@ -102,8 +92,7 @@ namespace NetDimension.Weibo.Interface
         /// <param name="uid">需要获取消息未读数的用户UID，必须是当前登录用户。</param>
         /// <param name="callback">JSONP回调函数，用于前端调用返回JS格式的信息。 </param>
         /// <returns></returns>
-        public string UnreadCount(string uid, string callback = "")
-        {
+        public string UnreadCount(string uid, string callback = "") {
             return (Client.GetCommand("https://rm.api.weibo.com/2/remind/unread_count.json",
                                       new WeiboParameter("uid", uid),
                                       new WeiboParameter("callback", callback)));
@@ -114,8 +103,7 @@ namespace NetDimension.Weibo.Interface
         /// </summary>
         /// <param name="type">需要清零未读数的消息项，status：新微博数、follower：新粉丝数、cmt：新评论数、dm：新私信数、mention_status：新提及我的微博数、mention_cmt：新提及我的评论数，一次只能操作一项。 </param>
         /// <returns>JSON</returns>
-        public string SetCount(ResetCountType type)
-        {
+        public string SetCount(ResetCountType type) {
             return
                 (Client.PostCommand("https://rm.api.weibo.com/2/remind/set_count.json", new WeiboParameter("type", type)));
         }

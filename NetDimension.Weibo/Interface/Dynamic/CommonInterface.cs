@@ -14,8 +14,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="client">操作类</param>
         public CommonInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new CommonAPI(client);
         }
 
@@ -24,8 +23,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="codes">需要查询的地址编码</param>
         /// <returns></returns>
-        public dynamic CodeToLocation(params string[] codes)
-        {
+        public dynamic CodeToLocation(params string[] codes) {
             return DynamicJson.Parse(api.CodeToLocation(codes));
         }
 
@@ -35,8 +33,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="province">省份的省份代码。</param>
         /// <param name="capital">城市的首字母，a-z，可为空代表返回全部，默认为全部。</param>
         /// <returns></returns>
-        public dynamic GetCity(string province, string capital = "")
-        {
+        public dynamic GetCity(string province, string capital = "") {
             return DynamicJson.Parse(api.GetCity(province, capital));
         }
 
@@ -46,8 +43,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="country">国家的国家代码。</param>
         /// <param name="capital">省份的首字母，a-z，可为空代表返回全部，默认为全部。 </param>
         /// <returns></returns>
-        public dynamic GetProvince(string country, string capital = "")
-        {
+        public dynamic GetProvince(string country, string capital = "") {
             return DynamicJson.Parse(api.GetProvince(country, capital));
         }
 
@@ -56,8 +52,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="capital">国家的首字母，a-z，可为空代表返回全部，默认为全部。</param>
         /// <returns></returns>
-        public dynamic GetCountry(string capital = "")
-        {
+        public dynamic GetCountry(string capital = "") {
             return DynamicJson.Parse(api.GetCountry(capital));
         }
 
@@ -65,8 +60,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         ///     获取时区配置表
         /// </summary>
         /// <returns></returns>
-        public dynamic GetTimezone()
-        {
+        public dynamic GetTimezone() {
             return DynamicJson.Parse(api.GetTimezone());
         }
     }

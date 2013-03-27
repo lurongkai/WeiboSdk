@@ -46,8 +46,7 @@ namespace NetDimension.Json.Schema
         /// <returns>
         ///     <c>true</c> if the specified <see cref="JToken" /> is valid; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsValid(this JToken source, JsonSchema schema)
-        {
+        public static bool IsValid(this JToken source, JsonSchema schema) {
             var valid = true;
             source.Validate(schema, (sender, args) => { valid = false; });
             return valid;
@@ -64,8 +63,7 @@ namespace NetDimension.Json.Schema
         /// <returns>
         ///     <c>true</c> if the specified <see cref="JToken" /> is valid; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsValid(this JToken source, JsonSchema schema, out IList<string> errorMessages)
-        {
+        public static bool IsValid(this JToken source, JsonSchema schema, out IList<string> errorMessages) {
             IList<string> errors = new List<string>();
 
             source.Validate(schema, (sender, args) => errors.Add(args.Message));
@@ -81,8 +79,7 @@ namespace NetDimension.Json.Schema
         ///     The source <see cref="JToken" /> to test.
         /// </param>
         /// <param name="schema">The schema to test with.</param>
-        public static void Validate(this JToken source, JsonSchema schema)
-        {
+        public static void Validate(this JToken source, JsonSchema schema) {
             source.Validate(schema, null);
         }
 
@@ -94,19 +91,17 @@ namespace NetDimension.Json.Schema
         /// </param>
         /// <param name="schema">The schema to test with.</param>
         /// <param name="validationEventHandler">The validation event handler.</param>
-        public static void Validate(this JToken source, JsonSchema schema, ValidationEventHandler validationEventHandler)
-        {
+        public static void Validate(this JToken source, JsonSchema schema, ValidationEventHandler validationEventHandler) {
             ValidationUtils.ArgumentNotNull(source, "source");
             ValidationUtils.ArgumentNotNull(schema, "schema");
 
-            using (var reader = new JsonValidatingReader(source.CreateReader()))
-            {
+            using (var reader = new JsonValidatingReader(source.CreateReader())) {
                 reader.Schema = schema;
-                if (validationEventHandler != null)
+                if (validationEventHandler != null) {
                     reader.ValidationEventHandler += validationEventHandler;
+                }
 
-                while (reader.Read())
-                {
+                while (reader.Read()) {
                 }
             }
         }

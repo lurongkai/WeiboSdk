@@ -26,8 +26,7 @@ namespace NetDimension.Weibo
         /// <param name="appKey">AppKey</param>
         /// <param name="appSecret">AppSecret</param>
         /// <param name="callbackUrl">指定在新浪开发平台后台中所绑定的回调地址</param>
-        public OAuth(string appKey, string appSecret, string callbackUrl = null)
-        {
+        public OAuth(string appKey, string appSecret, string callbackUrl = null) {
             AppKey = appKey;
             AppSecret = appSecret;
             AccessToken = string.Empty;
@@ -41,8 +40,7 @@ namespace NetDimension.Weibo
         /// <param name="appSecret">AppSecret</param>
         /// <param name="accessToken">已经获取的AccessToken，若Token没有过期即可通过操作类Client调用接口</param>
         /// <param name="refreshToken">目前还不知道这个参数会不会开放，保留</param>
-        public OAuth(string appKey, string appSecret, string accessToken, string refreshToken = null)
-        {
+        public OAuth(string appKey, string appSecret, string accessToken, string refreshToken = null) {
             AppKey = appKey;
             AppSecret = appSecret;
             AccessToken = accessToken;
@@ -79,8 +77,7 @@ namespace NetDimension.Weibo
         /// </summary>
         public WebProxy Proxy { get; set; }
 
-        internal string Request(string url, RequestMethod method = RequestMethod.Get, params WeiboParameter[] parameters)
-        {
+        internal string Request(string url, RequestMethod method = RequestMethod.Get, params WeiboParameter[] parameters) {
             var rawUrl = string.Empty;
             var uri = new UriBuilder(url);
             var result = string.Empty;
@@ -89,31 +86,23 @@ namespace NetDimension.Weibo
             var multi = false;
             multi = parameters.Count(p => p.IsBinaryData) > 0;
 
-            switch (method)
-            {
-                case RequestMethod.Get:
-                    {
+            switch (method) {
+                case RequestMethod.Get: {
+                    uri.Query = Utility.BuildQueryString(parameters);
+                }
+                    break;
+                case RequestMethod.Post: {
+                    if (!multi) {
                         uri.Query = Utility.BuildQueryString(parameters);
                     }
-                    break;
-                case RequestMethod.Post:
-                    {
-                        if (!multi)
-                        {
-                            uri.Query = Utility.BuildQueryString(parameters);
-                        }
-                    }
+                }
                     break;
             }
 
-            if (string.IsNullOrEmpty(AccessToken))
-            {
-                if (uri.Query.Length == 0)
-                {
+            if (string.IsNullOrEmpty(AccessToken)) {
+                if (uri.Query.Length == 0) {
                     uri.Query = "source=" + AppKey;
-                }
-                else
-                {
+                } else {
                     uri.Query += "&source=" + AppKey;
                 }
             }
@@ -122,85 +111,60 @@ namespace NetDimension.Weibo
             var http = WebRequest.Create(uri.Uri) as HttpWebRequest;
             http.ServicePoint.Expect100Continue = false;
             http.UserAgent = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0)";
-            if (Proxy != null)
-            {
-                if (Proxy.Credentials != null)
-                {
+            if (Proxy != null) {
+                if (Proxy.Credentials != null) {
                     http.UseDefaultCredentials = true;
                 }
 
                 http.Proxy = Proxy;
             }
-            if (!string.IsNullOrEmpty(AccessToken))
-            {
+            if (!string.IsNullOrEmpty(AccessToken)) {
                 http.Headers["Authorization"] = string.Format("OAuth2 {0}", AccessToken);
             }
 
-            switch (method)
-            {
-                case RequestMethod.Get:
-                    {
-                        http.Method = "GET";
-                    }
+            switch (method) {
+                case RequestMethod.Get: {
+                    http.Method = "GET";
+                }
                     break;
-                case RequestMethod.Post:
-                    {
-                        http.Method = "POST";
+                case RequestMethod.Post: {
+                    http.Method = "POST";
 
-                        if (multi)
-                        {
-                            var boundary = Utility.GetBoundary();
-                            http.ContentType = string.Format("multipart/form-data; boundary={0}", boundary);
-                            http.AllowWriteStreamBuffering = true;
-                            using (var request = http.GetRequestStream())
-                            {
-                                try
-                                {
-                                    var raw = Utility.BuildPostData(boundary, parameters);
-                                    request.Write(raw, 0, raw.Length);
-                                }
-                                finally
-                                {
-                                    request.Close();
-                                }
+                    if (multi) {
+                        var boundary = Utility.GetBoundary();
+                        http.ContentType = string.Format("multipart/form-data; boundary={0}", boundary);
+                        http.AllowWriteStreamBuffering = true;
+                        using (var request = http.GetRequestStream()) {
+                            try {
+                                var raw = Utility.BuildPostData(boundary, parameters);
+                                request.Write(raw, 0, raw.Length);
+                            } finally {
+                                request.Close();
                             }
                         }
-                        else
-                        {
-                            http.ContentType = "application/x-www-form-urlencoded";
+                    } else {
+                        http.ContentType = "application/x-www-form-urlencoded";
 
-                            using (var request = new StreamWriter(http.GetRequestStream()))
-                            {
-                                try
-                                {
-                                    request.Write(Utility.BuildQueryString(parameters));
-                                }
-                                finally
-                                {
-                                    request.Close();
-                                }
+                        using (var request = new StreamWriter(http.GetRequestStream())) {
+                            try {
+                                request.Write(Utility.BuildQueryString(parameters));
+                            } finally {
+                                request.Close();
                             }
                         }
                     }
+                }
                     break;
             }
 
-            try
-            {
-                using (var response = http.GetResponse())
-                {
-                    using (var reader = new StreamReader(response.GetResponseStream()))
-                    {
-                        try
-                        {
+            try {
+                using (var response = http.GetResponse()) {
+                    using (var reader = new StreamReader(response.GetResponseStream())) {
+                        try {
                             result = reader.ReadToEnd();
-                        }
-                        catch (WeiboException)
-                        {
+                        } catch (WeiboException) {
                             throw;
-                        }
-                        finally
-                        {
+                        } finally {
                             reader.Close();
                         }
                     }
@@ -208,13 +172,9 @@ namespace NetDimension.Weibo
 
                     response.Close();
                 }
-            }
-            catch (WebException webEx)
-            {
-                if (webEx.Response != null)
-                {
-                    using (var reader = new StreamReader(webEx.Response.GetResponseStream()))
-                    {
+            } catch (WebException webEx) {
+                if (webEx.Response != null) {
+                    using (var reader = new StreamReader(webEx.Response.GetResponseStream())) {
                         var errorInfo = reader.ReadToEnd();
 #if DEBUG
                         Debug.WriteLine(errorInfo);
@@ -225,14 +185,10 @@ namespace NetDimension.Weibo
 
                         throw new WeiboException(string.Format("{0}", error.Code), error.Message, error.Request);
                     }
-                }
-                else
-                {
+                } else {
                     throw new WeiboException(webEx.Message);
                 }
-            }
-            catch
-            {
+            } catch {
                 throw;
             }
             return result;
@@ -255,8 +211,7 @@ namespace NetDimension.Weibo
         /// </param>
         /// <returns></returns>
         public string GetAuthorizeURL(ResponseType response = ResponseType.Code, string state = null,
-                                      DisplayType display = DisplayType.Default)
-        {
+                                      DisplayType display = DisplayType.Default) {
             var config = new Dictionary<string, string>
                 {
                     {"client_id", AppKey},
@@ -275,16 +230,11 @@ namespace NetDimension.Weibo
         ///     判断AccessToken有效性
         /// </summary>
         /// <returns></returns>
-        public TokenResult VerifierAccessToken()
-        {
-            try
-            {
+        public TokenResult VerifierAccessToken() {
+            try {
                 var json = Request("https://api.weibo.com/2/account/get_uid.json", RequestMethod.Get);
-            }
-            catch (WeiboException ex)
-            {
-                switch (ex.ErrorCode)
-                {
+            } catch (WeiboException ex) {
+                switch (ex.ErrorCode) {
                     case "21314":
                         return TokenResult.TokenUsed;
                     case "21315":
@@ -301,8 +251,7 @@ namespace NetDimension.Weibo
             return TokenResult.Success;
         }
 
-        public bool ClientLogin(string passport, string password)
-        {
+        public bool ClientLogin(string passport, string password) {
             return ClientLogin(passport, password, null);
         }
 
@@ -312,8 +261,7 @@ namespace NetDimension.Weibo
         /// <param name="passport">微博账号</param>
         /// <param name="password">微博密码</param>
         /// <returns></returns>
-        public bool ClientLogin(string passport, string password, AccessToken token)
-        {
+        public bool ClientLogin(string passport, string password, AccessToken token) {
             var result = false;
             ServicePointManager.ServerCertificateValidationCallback =
                 (sender, certificate, chain, sslPolicyErrors) => { return true; };
@@ -333,68 +281,49 @@ namespace NetDimension.Weibo
             var postData = Encoding.Default.GetBytes(postBody);
             http.ContentLength = postData.Length;
 
-            using (var request = http.GetRequestStream())
-            {
-                try
-                {
+            using (var request = http.GetRequestStream()) {
+                try {
                     request.Write(postData, 0, postData.Length);
-                }
-                catch
-                {
+                } catch {
                     throw;
-                }
-                finally
-                {
+                } finally {
                     request.Close();
                 }
             }
             var code = string.Empty;
-            try
-            {
-                using (var response = http.GetResponse() as HttpWebResponse)
-                {
-                    if (response != null)
-                    {
-                        using (var reader = new StreamReader(response.GetResponseStream()))
-                        {
-                            try
-                            {
+            try {
+                using (var response = http.GetResponse() as HttpWebResponse) {
+                    if (response != null) {
+                        using (var reader = new StreamReader(response.GetResponseStream())) {
+                            try {
                                 var html = reader.ReadToEnd();
                                 var pattern1 =
                                     @"\{""access_token"":""(?<token>.{0,32})"",""remind_in"":""(?<remind>\d+)"",""expires_in"":(?<expires>\d+),""uid"":""(?<uid>\d+)""\}";
                                 var pattern2 =
                                     @"\{""access_token"":""(?<token>.{0,32})"",""remind_in"":""(?<remind>\d+)"",""expires_in"":(?<expires>\d+),""refresh_token"":""(?<refreshtoken>.{0,32})"",""uid"":""(?<uid>\d+)""\}";
                                 if (!string.IsNullOrEmpty(html) &&
-                                    (Regex.IsMatch(html, pattern1) || Regex.IsMatch(html, pattern2)))
-                                {
+                                    (Regex.IsMatch(html, pattern1) || Regex.IsMatch(html, pattern2))) {
                                     var group = Regex.IsMatch(html, "refresh_token")
                                                     ? Regex.Match(html, pattern2)
                                                     : Regex.Match(html, pattern1);
 
                                     AccessToken = group.Groups["token"].Value;
-                                    if (token != null)
-                                    {
+                                    if (token != null) {
                                         token.ExpiresIn = Convert.ToInt32(group.Groups["expires"].Value);
                                         token.Token = group.Groups["token"].Value;
                                         token.UID = group.Groups["uid"].Value;
                                     }
                                     result = true;
                                 }
-                            }
-                            catch
-                            {
-                            }
-                            finally
-                            {
+                            } catch {
+                            } finally {
                                 reader.Close();
                             }
                         }
                     }
                     response.Close();
                 }
-            }
-            catch (WebException)
-            {
+            } catch (WebException) {
                 throw;
             }
 
@@ -408,8 +337,7 @@ namespace NetDimension.Weibo
         /// </summary>
         /// <param name="code">Code</param>
         /// <returns></returns>
-        public AccessToken GetAccessTokenByAuthorizationCode(string code)
-        {
+        public AccessToken GetAccessTokenByAuthorizationCode(string code) {
             return GetAccessToken(GrantType.AuthorizationCode, new Dictionary<string, string>
                 {
                     {"code", code},
@@ -423,8 +351,7 @@ namespace NetDimension.Weibo
         /// <param name="passport">账号</param>
         /// <param name="password">密码</param>
         /// <returns></returns>
-        public AccessToken GetAccessTokenByPassword(string passport, string password)
-        {
+        public AccessToken GetAccessTokenByPassword(string passport, string password) {
             return GetAccessToken(GrantType.Password, new Dictionary<string, string>
                 {
                     {"username", passport},
@@ -437,8 +364,7 @@ namespace NetDimension.Weibo
         /// </summary>
         /// <param name="refreshToken">refresh token，目前还不知道从哪里获取这个token，未开放</param>
         /// <returns></returns>
-        public AccessToken GetAccessTokenByRefreshToken(string refreshToken)
-        {
+        public AccessToken GetAccessTokenByRefreshToken(string refreshToken) {
             return GetAccessToken(GrantType.RefreshToken, new Dictionary<string, string>
                 {
                     {"refresh_token", refreshToken}
@@ -450,11 +376,11 @@ namespace NetDimension.Weibo
         /// </summary>
         /// <param name="signedRequest">SignedRequest</param>
         /// <returns></returns>
-        public AccessToken GetAccessTokenBySignedRequest(string signedRequest)
-        {
+        public AccessToken GetAccessTokenBySignedRequest(string signedRequest) {
             var parameters = signedRequest.Split('.');
-            if (parameters.Length < 2)
+            if (parameters.Length < 2) {
                 throw new Exception("SignedRequest格式错误。");
+            }
             var encodedSig = parameters[0];
             var payload = parameters[1];
             var sha256 = new HMACSHA256(Encoding.UTF8.GetBytes(AppSecret));
@@ -473,12 +399,14 @@ namespace NetDimension.Weibo
                                          .Replace("_", "/");
 
 
-            if (encodedSig != expectedSig)
+            if (encodedSig != expectedSig) {
                 throw new WeiboException("SignedRequest签名验证失败。");
+            }
             var result = JObject.Parse(Encoding.UTF8.GetString(Convert.FromBase64String(payload)));
 
-            if (result["oauth_token"] == null)
+            if (result["oauth_token"] == null) {
                 return null; //throw new WeiboException("没有获取到授权信息，请先进行授权。");
+            }
 
             var token = new AccessToken();
             AccessToken = token.Token = result["oauth_token"].ToString();
@@ -489,48 +417,40 @@ namespace NetDimension.Weibo
             return token;
         }
 
-        internal AccessToken GetAccessToken(GrantType type, Dictionary<string, string> parameters)
-        {
+        internal AccessToken GetAccessToken(GrantType type, Dictionary<string, string> parameters) {
             var config = new List<WeiboParameter>
                 {
                     new WeiboParameter {Name = "client_id", Value = AppKey},
                     new WeiboParameter {Name = "client_secret", Value = AppSecret}
                 };
 
-            switch (type)
-            {
-                case GrantType.AuthorizationCode:
-                    {
-                        config.Add(new WeiboParameter {Name = "grant_type", Value = "authorization_code"});
-                        config.Add(new WeiboParameter {Name = "code", Value = parameters["code"]});
-                        config.Add(new WeiboParameter {Name = "redirect_uri", Value = parameters["redirect_uri"]});
-                    }
+            switch (type) {
+                case GrantType.AuthorizationCode: {
+                    config.Add(new WeiboParameter {Name = "grant_type", Value = "authorization_code"});
+                    config.Add(new WeiboParameter {Name = "code", Value = parameters["code"]});
+                    config.Add(new WeiboParameter {Name = "redirect_uri", Value = parameters["redirect_uri"]});
+                }
                     break;
-                case GrantType.Password:
-                    {
-                        config.Add(new WeiboParameter {Name = "grant_type", Value = "password"});
-                        config.Add(new WeiboParameter {Name = "username", Value = parameters["username"]});
-                        config.Add(new WeiboParameter {Name = "password", Value = parameters["password"]});
-                    }
+                case GrantType.Password: {
+                    config.Add(new WeiboParameter {Name = "grant_type", Value = "password"});
+                    config.Add(new WeiboParameter {Name = "username", Value = parameters["username"]});
+                    config.Add(new WeiboParameter {Name = "password", Value = parameters["password"]});
+                }
                     break;
-                case GrantType.RefreshToken:
-                    {
-                        config.Add(new WeiboParameter {Name = "grant_type", Value = "refresh_token"});
-                        config.Add(new WeiboParameter {Name = "refresh_token", Value = parameters["refresh_token"]});
-                    }
+                case GrantType.RefreshToken: {
+                    config.Add(new WeiboParameter {Name = "grant_type", Value = "refresh_token"});
+                    config.Add(new WeiboParameter {Name = "refresh_token", Value = parameters["refresh_token"]});
+                }
                     break;
             }
 
             var response = Request(ACCESS_TOKEN_URL, RequestMethod.Post, config.ToArray());
 
-            if (!string.IsNullOrEmpty(response))
-            {
+            if (!string.IsNullOrEmpty(response)) {
                 var token = JsonConvert.DeserializeObject<AccessToken>(response);
                 AccessToken = token.Token;
                 return token;
-            }
-            else
-            {
+            } else {
                 return null;
             }
         }

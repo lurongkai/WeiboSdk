@@ -14,8 +14,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="client">操作类</param>
         public CommentInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new CommentAPI(client);
         }
 
@@ -30,8 +29,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="filterByAuthor">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。</param>
         /// <returns>JSON</returns>
         public dynamic Show(string id, string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                            int filterByAuthor = 0)
-        {
+                            int filterByAuthor = 0) {
             return DynamicJson.Parse(api.Show(id, sinceID, maxID, count, page, filterByAuthor));
         }
 
@@ -44,8 +42,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <param name="filterBySource">来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。 </param>
         /// <returns></returns>
-        public dynamic ByMe(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterBySource = 0)
-        {
+        public dynamic ByMe(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterBySource = 0) {
             return DynamicJson.Parse(api.ByMe(sinceID, maxID, count, page, filterBySource));
         }
 
@@ -60,8 +57,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="filterBySource"></param>
         /// <returns></returns>
         public dynamic ToMe(string sinceID = "", string maxID = "", int count = 50, int page = 1, int filterByAuthor = 0,
-                            int filterBySource = 0)
-        {
+                            int filterBySource = 0) {
             return DynamicJson.Parse(api.ToMe(sinceID, maxID, count, page, filterByAuthor, filterBySource));
         }
 
@@ -73,8 +69,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">单页返回的记录条数，默认为50。 </param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns>JSON</returns>
-        public dynamic Timeline(string sinceID = "", string maxID = "", int count = 50, int page = 1)
-        {
+        public dynamic Timeline(string sinceID = "", string maxID = "", int count = 50, int page = 1) {
             return DynamicJson.Parse(api.Timeline(sinceID, maxID, count, page));
         }
 
@@ -89,8 +84,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="filterBySource">来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。</param>
         /// <returns></returns>
         public dynamic Mentions(string sinceID = "", string maxID = "", int count = 50, int page = 1,
-                                int filterByAuthor = 0, int filterBySource = 0)
-        {
+                                int filterByAuthor = 0, int filterBySource = 0) {
             return DynamicJson.Parse(api.Mentions(sinceID, maxID, count, page, filterByAuthor, filterBySource));
         }
 
@@ -99,8 +93,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="cids">需要查询的批量评论ID，最大50。</param>
         /// <returns></returns>
-        public dynamic ShowBatch(params string[] cids)
-        {
+        public dynamic ShowBatch(params string[] cids) {
             return DynamicJson.Parse(api.ShowBatch(cids));
         }
 
@@ -111,8 +104,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="comment">评论内容，必须做URLencode，内容不超过140个汉字。 </param>
         /// <param name="commentOrigin">当评论转发微博时，是否评论给原微博，0：否、1：是，默认为0。 </param>
         /// <returns></returns>
-        public dynamic Create(string id, string comment, bool commentOrigin = false)
-        {
+        public dynamic Create(string id, string comment, bool commentOrigin = false) {
             return DynamicJson.Parse(api.Create(id, comment, commentOrigin));
         }
 
@@ -121,8 +113,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="cid">要删除的评论ID，只能删除登录用户自己发布的评论。 </param>
         /// <returns></returns>
-        public dynamic Destroy(string cid)
-        {
+        public dynamic Destroy(string cid) {
             return DynamicJson.Parse(api.Destroy(cid));
         }
 
@@ -131,8 +122,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="ids">需要删除的评论ID，最多20个。 </param>
         /// <returns></returns>
-        public dynamic DestroyBatch(params string[] ids)
-        {
+        public dynamic DestroyBatch(params string[] ids) {
             return DynamicJson.Parse(api.DestroyBatch(ids));
         }
 
@@ -146,8 +136,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="commentOrigin">当评论转发微博时，是否评论给原微博，0：否、1：是，默认为0。 </param>
         /// <returns></returns>
         public dynamic Reply(string cid, string id, string comment, bool withoutMention = false,
-                             bool commentOrigin = false)
-        {
+                             bool commentOrigin = false) {
             return DynamicJson.Parse(api.Reply(cid, id, comment, withoutMention, commentOrigin));
         }
     }

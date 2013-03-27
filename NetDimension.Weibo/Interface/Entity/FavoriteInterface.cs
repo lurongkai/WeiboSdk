@@ -18,8 +18,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="client">操作类</param>
         public FavoriteInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new FavoriteAPI(client);
         }
 
@@ -29,8 +28,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count">单页返回的记录条数，默认为50。</param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public Collection Favorites(int count = 50, int page = 1)
-        {
+        public Collection Favorites(int count = 50, int page = 1) {
             return JsonConvert.DeserializeObject<Collection>(api.Favorites(count, page));
         }
 
@@ -40,8 +38,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count">单页返回的记录条数，默认为50。 </param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public IDCollection FavoriteIDs(int count = 50, int page = 1)
-        {
+        public IDCollection FavoriteIDs(int count = 50, int page = 1) {
             return JsonConvert.DeserializeObject<IDCollection>(api.FavoriteIDs(count, page));
         }
 
@@ -50,8 +47,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="id">需要查询的收藏ID。 </param>
         /// <returns></returns>
-        public Entities.favorite.Entity Show(string id)
-        {
+        public Entities.favorite.Entity Show(string id) {
             return JsonConvert.DeserializeObject<Entities.favorite.Entity>(api.Show(id));
         }
 
@@ -62,8 +58,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count">单页返回的记录条数，默认为50。</param>
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <returns></returns>
-        public Collection ByTags(string tid, int count = 50, int page = 1)
-        {
+        public Collection ByTags(string tid, int count = 50, int page = 1) {
             return JsonConvert.DeserializeObject<Collection>(api.ByTags(tid, count, page));
         }
 
@@ -73,8 +68,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count">单页返回的记录条数，默认为10。</param>
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <returns></returns>
-        public IEnumerable<TagEntity> Tags(int count = 10, int page = 1)
-        {
+        public IEnumerable<TagEntity> Tags(int count = 10, int page = 1) {
             var result = JObject.Parse(api.Tags(count, page));
 
             return JsonConvert.DeserializeObject<IEnumerable<TagEntity>>(result["tags"].ToString());
@@ -87,8 +81,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count">单页返回的记录条数，默认为50。</param>
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <returns></returns>
-        public IEnumerable<IDEntity> ByTagIDs(string tid, int count = 50, int page = 1)
-        {
+        public IEnumerable<IDEntity> ByTagIDs(string tid, int count = 50, int page = 1) {
             var result = JObject.Parse(api.ByTagIDs(tid, count, page));
             return JsonConvert.DeserializeObject<IEnumerable<IDEntity>>(result["favorites"].ToString());
         }
@@ -98,8 +91,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="id">要收藏的微博ID。</param>
         /// <returns></returns>
-        public Entities.favorite.Entity Create(string id)
-        {
+        public Entities.favorite.Entity Create(string id) {
             return JsonConvert.DeserializeObject<Entities.favorite.Entity>(api.Create(id));
         }
 
@@ -108,8 +100,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="id">要取消收藏的微博ID。</param>
         /// <returns></returns>
-        public Entities.favorite.Entity Destroy(string id)
-        {
+        public Entities.favorite.Entity Destroy(string id) {
             return JsonConvert.DeserializeObject<Entities.favorite.Entity>(api.Destroy(id));
         }
 
@@ -118,8 +109,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="ids">要取消收藏的收藏ID最多不超过10个。 </param>
         /// <returns></returns>
-        public bool DestroyBatch(params string[] ids)
-        {
+        public bool DestroyBatch(params string[] ids) {
             return Convert.ToBoolean(JObject.Parse(api.DestroyBatch(ids))["result"]);
         }
 
@@ -129,8 +119,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="id">需要更新的收藏ID。</param>
         /// <param name="tags">需要更新的标签内容，最多不超过2条。</param>
         /// <returns></returns>
-        public Entities.favorite.Entity UpdateTags(string id, params string[] tags)
-        {
+        public Entities.favorite.Entity UpdateTags(string id, params string[] tags) {
             return JsonConvert.DeserializeObject<Entities.favorite.Entity>(api.UpdateTags(id, tags));
         }
 
@@ -140,8 +129,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="tid">需要更新的标签ID</param>
         /// <param name="tag">需要更新的标签内容</param>
         /// <returns></returns>
-        public TagEntity UpdateTagsBatch(string tid, string tag)
-        {
+        public TagEntity UpdateTagsBatch(string tid, string tag) {
             return JsonConvert.DeserializeObject<TagEntity>(api.UpdateTagsBatch(tid, tag));
         }
 
@@ -150,8 +138,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="tid">需要删除的标签ID</param>
         /// <returns></returns>
-        public bool DestroyTags(string[] tid)
-        {
+        public bool DestroyTags(string[] tid) {
             return Convert.ToBoolean(JObject.Parse(api.DestroyTags(tid)));
         }
     }

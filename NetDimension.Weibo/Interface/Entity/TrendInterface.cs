@@ -18,8 +18,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="client">操作类</param>
         public TrendInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new TrendAPI(client);
         }
 
@@ -30,8 +29,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public IEnumerable<Trend> Trends(string uid, int count = 10, int page = 1)
-        {
+        public IEnumerable<Trend> Trends(string uid, int count = 10, int page = 1) {
             return JsonConvert.DeserializeObject<IEnumerable<Trend>>(api.Trends(uid, count, page));
         }
 
@@ -40,8 +38,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="trendName"></param>
         /// <returns></returns>
-        public IsFollow IsFollow(string trendName)
-        {
+        public IsFollow IsFollow(string trendName) {
             return JsonConvert.DeserializeObject<IsFollow>(api.IsFollow(trendName));
         }
 
@@ -50,29 +47,23 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
         /// <returns></returns>
-        public HotTrends Hourly(bool baseApp = false)
-        {
+        public HotTrends Hourly(bool baseApp = false) {
             var json = JObject.Parse(api.Hourly(baseApp));
 
             var result = new HotTrends();
 
             result.AsOf = json["as_of"].ToString();
             result.Trends = new Dictionary<string, List<Keyword>>();
-            foreach (JProperty x in json["trends"])
-            {
+            foreach (JProperty x in json["trends"]) {
                 var name = x.Name;
                 List<Keyword> list = null;
-                if (result.Trends.ContainsKey(name))
-                {
+                if (result.Trends.ContainsKey(name)) {
                     list = result.Trends[name];
-                }
-                else
-                {
+                } else {
                     list = result.Trends[name] = new List<Keyword>();
                 }
 
-                foreach (JObject item in x.Value)
-                {
+                foreach (JObject item in x.Value) {
                     list.Add(new Keyword
                         {
                             Name = string.Format("{0}", item["name"]),
@@ -91,29 +82,23 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
         /// <returns></returns>
-        public HotTrends Daily(bool baseApp = false)
-        {
+        public HotTrends Daily(bool baseApp = false) {
             var json = JObject.Parse(api.Daily(baseApp));
 
             var result = new HotTrends();
 
             result.AsOf = json["as_of"].ToString();
             result.Trends = new Dictionary<string, List<Keyword>>();
-            foreach (JProperty x in json["trends"])
-            {
+            foreach (JProperty x in json["trends"]) {
                 var name = x.Name;
                 List<Keyword> list = null;
-                if (result.Trends.ContainsKey(name))
-                {
+                if (result.Trends.ContainsKey(name)) {
                     list = result.Trends[name];
-                }
-                else
-                {
+                } else {
                     list = result.Trends[name] = new List<Keyword>();
                 }
 
-                foreach (JObject item in x.Value)
-                {
+                foreach (JObject item in x.Value) {
                     list.Add(new Keyword
                         {
                             Name = string.Format("{0}", item["name"]),
@@ -132,29 +117,23 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
         /// <returns></returns>
-        public HotTrends Weekly(bool baseApp = false)
-        {
+        public HotTrends Weekly(bool baseApp = false) {
             var json = JObject.Parse(api.Weekly(baseApp));
 
             var result = new HotTrends();
 
             result.AsOf = json["as_of"].ToString();
             result.Trends = new Dictionary<string, List<Keyword>>();
-            foreach (JProperty x in json["trends"])
-            {
+            foreach (JProperty x in json["trends"]) {
                 var name = x.Name;
                 List<Keyword> list = null;
-                if (result.Trends.ContainsKey(name))
-                {
+                if (result.Trends.ContainsKey(name)) {
                     list = result.Trends[name];
-                }
-                else
-                {
+                } else {
                     list = result.Trends[name] = new List<Keyword>();
                 }
 
-                foreach (JObject item in x.Value)
-                {
+                foreach (JObject item in x.Value) {
                     list.Add(new Keyword
                         {
                             Name = string.Format("{0}", item["name"]),
@@ -173,8 +152,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="trendName"></param>
         /// <returns></returns>
-        public string Follow(string trendName)
-        {
+        public string Follow(string trendName) {
             return JObject.Parse(api.Follow(trendName))["topicid"].ToString();
         }
 
@@ -183,8 +161,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool Destroy(string id)
-        {
+        public bool Destroy(string id) {
             return Convert.ToBoolean(JObject.Parse(api.Destroy(id))["result"].ToString());
         }
     }

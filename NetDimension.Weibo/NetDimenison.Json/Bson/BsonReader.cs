@@ -47,81 +47,23 @@ namespace NetDimension.Json.Bson
 
         private readonly BinaryReader _reader;
         private readonly List<ContainerContext> _stack;
+        private BsonReaderState _bsonReaderState;
 
         private byte[] _byteBuffer;
         private char[] _charBuffer;
 
-        private BsonType _currentElementType;
-        private BsonReaderState _bsonReaderState;
         private ContainerContext _currentContext;
+        private BsonType _currentElementType;
 
-        private bool _readRootValueAsArray;
         private bool _jsonNet35BinaryCompatibility;
-
-        private enum BsonReaderState
-        {
-            Normal,
-            ReferenceStart,
-            ReferenceRef,
-            ReferenceId,
-            CodeWScopeStart,
-            CodeWScopeCode,
-            CodeWScopeScope,
-            CodeWScopeScopeObject,
-            CodeWScopeScopeEnd
-        }
-
-        private class ContainerContext
-        {
-            public readonly BsonType Type;
-            public int Length;
-            public int Position;
-
-            public ContainerContext(BsonType type)
-            {
-                Type = type;
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether binary data reading should compatible with incorrect Json.NET 3.5 written binary.
-        /// </summary>
-        /// <value>
-        ///     <c>true</c> if binary data reading will be compatible with incorrect Json.NET 3.5 written binary; otherwise, <c>false</c>.
-        /// </value>
-        public bool JsonNet35BinaryCompatibility
-        {
-            get { return _jsonNet35BinaryCompatibility; }
-            set { _jsonNet35BinaryCompatibility = value; }
-        }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether the root object will be read as a JSON array.
-        /// </summary>
-        /// <value>
-        ///     <c>true</c> if the root object will be read as a JSON array; otherwise, <c>false</c>.
-        /// </value>
-        public bool ReadRootValueAsArray
-        {
-            get { return _readRootValueAsArray; }
-            set { _readRootValueAsArray = value; }
-        }
-
-        /// <summary>
-        ///     Gets or sets the <see cref="DateTimeKind" /> used when reading <see cref="DateTime" /> values from BSON.
-        /// </summary>
-        /// <value>
-        ///     The <see cref="DateTimeKind" /> used when reading <see cref="DateTime" /> values from BSON.
-        /// </value>
-        public DateTimeKind DateTimeKindHandling { get; set; }
+        private bool _readRootValueAsArray;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BsonReader" /> class.
         /// </summary>
         /// <param name="stream">The stream.</param>
         public BsonReader(Stream stream)
-            : this(stream, false, DateTimeKind.Local)
-        {
+            : this(stream, false, DateTimeKind.Local) {
         }
 
         /// <summary>
@@ -129,8 +71,7 @@ namespace NetDimension.Json.Bson
         /// </summary>
         /// <param name="reader">The reader.</param>
         public BsonReader(BinaryReader reader)
-            : this(reader, false, DateTimeKind.Local)
-        {
+            : this(reader, false, DateTimeKind.Local) {
         }
 
         /// <summary>
@@ -143,8 +84,7 @@ namespace NetDimension.Json.Bson
         /// <param name="dateTimeKindHandling">
         ///     The <see cref="DateTimeKind" /> used when reading <see cref="DateTime" /> values from BSON.
         /// </param>
-        public BsonReader(Stream stream, bool readRootValueAsArray, DateTimeKind dateTimeKindHandling)
-        {
+        public BsonReader(Stream stream, bool readRootValueAsArray, DateTimeKind dateTimeKindHandling) {
             ValidationUtils.ArgumentNotNull(stream, "stream");
             _reader = new BinaryReader(stream);
             _stack = new List<ContainerContext>();
@@ -162,8 +102,7 @@ namespace NetDimension.Json.Bson
         /// <param name="dateTimeKindHandling">
         ///     The <see cref="DateTimeKind" /> used when reading <see cref="DateTime" /> values from BSON.
         /// </param>
-        public BsonReader(BinaryReader reader, bool readRootValueAsArray, DateTimeKind dateTimeKindHandling)
-        {
+        public BsonReader(BinaryReader reader, bool readRootValueAsArray, DateTimeKind dateTimeKindHandling) {
             ValidationUtils.ArgumentNotNull(reader, "reader");
             _reader = reader;
             _stack = new List<ContainerContext>();
@@ -171,8 +110,37 @@ namespace NetDimension.Json.Bson
             DateTimeKindHandling = dateTimeKindHandling;
         }
 
-        private string ReadElement()
-        {
+        /// <summary>
+        ///     Gets or sets a value indicating whether binary data reading should compatible with incorrect Json.NET 3.5 written binary.
+        /// </summary>
+        /// <value>
+        ///     <c>true</c> if binary data reading will be compatible with incorrect Json.NET 3.5 written binary; otherwise, <c>false</c>.
+        /// </value>
+        public bool JsonNet35BinaryCompatibility {
+            get { return _jsonNet35BinaryCompatibility; }
+            set { _jsonNet35BinaryCompatibility = value; }
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether the root object will be read as a JSON array.
+        /// </summary>
+        /// <value>
+        ///     <c>true</c> if the root object will be read as a JSON array; otherwise, <c>false</c>.
+        /// </value>
+        public bool ReadRootValueAsArray {
+            get { return _readRootValueAsArray; }
+            set { _readRootValueAsArray = value; }
+        }
+
+        /// <summary>
+        ///     Gets or sets the <see cref="DateTimeKind" /> used when reading <see cref="DateTime" /> values from BSON.
+        /// </summary>
+        /// <value>
+        ///     The <see cref="DateTimeKind" /> used when reading <see cref="DateTime" /> values from BSON.
+        /// </value>
+        public DateTimeKind DateTimeKindHandling { get; set; }
+
+        private string ReadElement() {
             _currentElementType = ReadType();
             var elementName = ReadString();
             return elementName;
@@ -184,8 +152,7 @@ namespace NetDimension.Json.Bson
         /// <returns>
         ///     A <see cref="T:Byte[]" /> or a null reference if the next JSON token is null. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override byte[] ReadAsBytes()
-        {
+        public override byte[] ReadAsBytes() {
             return ReadAsBytesInternal();
         }
 
@@ -195,8 +162,7 @@ namespace NetDimension.Json.Bson
         /// <returns>
         ///     A <see cref="Nullable{Decimal}" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override decimal? ReadAsDecimal()
-        {
+        public override decimal? ReadAsDecimal() {
             return ReadAsDecimalInternal();
         }
 
@@ -206,8 +172,7 @@ namespace NetDimension.Json.Bson
         /// <returns>
         ///     A <see cref="Nullable{Int32}" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override int? ReadAsInt32()
-        {
+        public override int? ReadAsInt32() {
             return ReadAsInt32Internal();
         }
 
@@ -217,8 +182,7 @@ namespace NetDimension.Json.Bson
         /// <returns>
         ///     A <see cref="String" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override string ReadAsString()
-        {
+        public override string ReadAsString() {
             return ReadAsStringInternal();
         }
 
@@ -228,8 +192,7 @@ namespace NetDimension.Json.Bson
         /// <returns>
         ///     A <see cref="String" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override DateTime? ReadAsDateTime()
-        {
+        public override DateTime? ReadAsDateTime() {
             return ReadAsDateTimeInternal();
         }
 
@@ -239,8 +202,7 @@ namespace NetDimension.Json.Bson
         /// <returns>
         ///     A <see cref="Nullable{DateTimeOffset}" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override DateTimeOffset? ReadAsDateTimeOffset()
-        {
+        public override DateTimeOffset? ReadAsDateTimeOffset() {
             return ReadAsDateTimeOffsetInternal();
         }
 
@@ -250,21 +212,17 @@ namespace NetDimension.Json.Bson
         /// <returns>
         ///     true if the next token was read successfully; false if there are no more tokens to read.
         /// </returns>
-        public override bool Read()
-        {
+        public override bool Read() {
             _readType = Json.ReadType.Read;
 
             return ReadInternal();
         }
 
-        internal override bool ReadInternal()
-        {
-            try
-            {
+        internal override bool ReadInternal() {
+            try {
                 bool success;
 
-                switch (_bsonReaderState)
-                {
+                switch (_bsonReaderState) {
                     case BsonReaderState.Normal:
                         success = ReadNormal();
                         break;
@@ -286,16 +244,13 @@ namespace NetDimension.Json.Bson
                                                              CultureInfo.InvariantCulture, _bsonReaderState));
                 }
 
-                if (!success)
-                {
+                if (!success) {
                     SetToken(JsonToken.None);
                     return false;
                 }
 
                 return true;
-            }
-            catch (EndOfStreamException)
-            {
+            } catch (EndOfStreamException) {
                 SetToken(JsonToken.None);
                 return false;
             }
@@ -304,22 +259,20 @@ namespace NetDimension.Json.Bson
         /// <summary>
         ///     Changes the <see cref="JsonReader.State" /> to Closed.
         /// </summary>
-        public override void Close()
-        {
+        public override void Close() {
             base.Close();
 
-            if (CloseInput && _reader != null)
+            if (CloseInput && _reader != null) {
 #if !(NETFX_CORE || PORTABLE)
                 _reader.Close();
+            }
 #else
         _reader.Dispose();
 #endif
         }
 
-        private bool ReadCodeWScope()
-        {
-            switch (_bsonReaderState)
-            {
+        private bool ReadCodeWScope() {
+            switch (_bsonReaderState) {
                 case BsonReaderState.CodeWScopeStart:
                     SetToken(JsonToken.PropertyName, "$code");
                     _bsonReaderState = BsonReaderState.CodeWScopeCode;
@@ -332,13 +285,10 @@ namespace NetDimension.Json.Bson
                     _bsonReaderState = BsonReaderState.CodeWScopeScope;
                     return true;
                 case BsonReaderState.CodeWScopeScope:
-                    if (CurrentState == State.PostValue)
-                    {
+                    if (CurrentState == State.PostValue) {
                         SetToken(JsonToken.PropertyName, "$scope");
                         return true;
-                    }
-                    else
-                    {
+                    } else {
                         SetToken(JsonToken.StartObject);
                         _bsonReaderState = BsonReaderState.CodeWScopeScopeObject;
 
@@ -350,8 +300,9 @@ namespace NetDimension.Json.Bson
                     }
                 case BsonReaderState.CodeWScopeScopeObject:
                     var result = ReadNormal();
-                    if (result && TokenType == JsonToken.EndObject)
+                    if (result && TokenType == JsonToken.EndObject) {
                         _bsonReaderState = BsonReaderState.CodeWScopeScopeEnd;
+                    }
 
                     return result;
                 case BsonReaderState.CodeWScopeScopeEnd:
@@ -363,123 +314,99 @@ namespace NetDimension.Json.Bson
             }
         }
 
-        private bool ReadReference()
-        {
-            switch (CurrentState)
-            {
-                case State.ObjectStart:
-                    {
-                        SetToken(JsonToken.PropertyName, "$ref");
-                        _bsonReaderState = BsonReaderState.ReferenceRef;
+        private bool ReadReference() {
+            switch (CurrentState) {
+                case State.ObjectStart: {
+                    SetToken(JsonToken.PropertyName, "$ref");
+                    _bsonReaderState = BsonReaderState.ReferenceRef;
+                    return true;
+                }
+                case State.Property: {
+                    if (_bsonReaderState == BsonReaderState.ReferenceRef) {
+                        SetToken(JsonToken.String, ReadLengthString());
                         return true;
+                    } else if (_bsonReaderState == BsonReaderState.ReferenceId) {
+                        SetToken(JsonToken.Bytes, ReadBytes(12));
+                        return true;
+                    } else {
+                        throw JsonReaderException.Create(this,
+                                                         "Unexpected state when reading BSON reference: " +
+                                                         _bsonReaderState);
                     }
-                case State.Property:
-                    {
-                        if (_bsonReaderState == BsonReaderState.ReferenceRef)
-                        {
-                            SetToken(JsonToken.String, ReadLengthString());
-                            return true;
-                        }
-                        else if (_bsonReaderState == BsonReaderState.ReferenceId)
-                        {
-                            SetToken(JsonToken.Bytes, ReadBytes(12));
-                            return true;
-                        }
-                        else
-                        {
-                            throw JsonReaderException.Create(this,
-                                                             "Unexpected state when reading BSON reference: " +
-                                                             _bsonReaderState);
-                        }
+                }
+                case State.PostValue: {
+                    if (_bsonReaderState == BsonReaderState.ReferenceRef) {
+                        SetToken(JsonToken.PropertyName, "$id");
+                        _bsonReaderState = BsonReaderState.ReferenceId;
+                        return true;
+                    } else if (_bsonReaderState == BsonReaderState.ReferenceId) {
+                        SetToken(JsonToken.EndObject);
+                        _bsonReaderState = BsonReaderState.Normal;
+                        return true;
+                    } else {
+                        throw JsonReaderException.Create(this,
+                                                         "Unexpected state when reading BSON reference: " +
+                                                         _bsonReaderState);
                     }
-                case State.PostValue:
-                    {
-                        if (_bsonReaderState == BsonReaderState.ReferenceRef)
-                        {
-                            SetToken(JsonToken.PropertyName, "$id");
-                            _bsonReaderState = BsonReaderState.ReferenceId;
-                            return true;
-                        }
-                        else if (_bsonReaderState == BsonReaderState.ReferenceId)
-                        {
-                            SetToken(JsonToken.EndObject);
-                            _bsonReaderState = BsonReaderState.Normal;
-                            return true;
-                        }
-                        else
-                        {
-                            throw JsonReaderException.Create(this,
-                                                             "Unexpected state when reading BSON reference: " +
-                                                             _bsonReaderState);
-                        }
-                    }
+                }
                 default:
                     throw JsonReaderException.Create(this,
                                                      "Unexpected state when reading BSON reference: " + CurrentState);
             }
         }
 
-        private bool ReadNormal()
-        {
-            switch (CurrentState)
-            {
-                case State.Start:
-                    {
-                        var token = (!_readRootValueAsArray) ? JsonToken.StartObject : JsonToken.StartArray;
-                        var type = (!_readRootValueAsArray) ? BsonType.Object : BsonType.Array;
+        private bool ReadNormal() {
+            switch (CurrentState) {
+                case State.Start: {
+                    var token = (!_readRootValueAsArray) ? JsonToken.StartObject : JsonToken.StartArray;
+                    var type = (!_readRootValueAsArray) ? BsonType.Object : BsonType.Array;
 
-                        SetToken(token);
-                        var newContext = new ContainerContext(type);
-                        PushContext(newContext);
-                        newContext.Length = ReadInt32();
-                        return true;
-                    }
+                    SetToken(token);
+                    var newContext = new ContainerContext(type);
+                    PushContext(newContext);
+                    newContext.Length = ReadInt32();
+                    return true;
+                }
                 case State.Complete:
                 case State.Closed:
                     return false;
-                case State.Property:
-                    {
-                        ReadType(_currentElementType);
-                        return true;
-                    }
+                case State.Property: {
+                    ReadType(_currentElementType);
+                    return true;
+                }
                 case State.ObjectStart:
                 case State.ArrayStart:
                 case State.PostValue:
                     var context = _currentContext;
-                    if (context == null)
+                    if (context == null) {
                         return false;
+                    }
 
                     var lengthMinusEnd = context.Length - 1;
 
-                    if (context.Position < lengthMinusEnd)
-                    {
-                        if (context.Type == BsonType.Array)
-                        {
+                    if (context.Position < lengthMinusEnd) {
+                        if (context.Type == BsonType.Array) {
                             ReadElement();
                             ReadType(_currentElementType);
                             return true;
-                        }
-                        else
-                        {
+                        } else {
                             SetToken(JsonToken.PropertyName, ReadElement());
                             return true;
                         }
-                    }
-                    else if (context.Position == lengthMinusEnd)
-                    {
-                        if (ReadByte() != 0)
+                    } else if (context.Position == lengthMinusEnd) {
+                        if (ReadByte() != 0) {
                             throw JsonReaderException.Create(this, "Unexpected end of object byte value.");
+                        }
 
                         PopContext();
-                        if (_currentContext != null)
+                        if (_currentContext != null) {
                             MovePosition(context.Length);
+                        }
 
                         var endToken = (context.Type == BsonType.Object) ? JsonToken.EndObject : JsonToken.EndArray;
                         SetToken(endToken);
                         return true;
-                    }
-                    else
-                    {
+                    } else {
                         throw JsonReaderException.Create(this, "Read past end of current container context.");
                     }
                 case State.ConstructorStart:
@@ -497,31 +424,27 @@ namespace NetDimension.Json.Bson
             return false;
         }
 
-        private void PopContext()
-        {
+        private void PopContext() {
             _stack.RemoveAt(_stack.Count - 1);
-            if (_stack.Count == 0)
+            if (_stack.Count == 0) {
                 _currentContext = null;
-            else
+            } else {
                 _currentContext = _stack[_stack.Count - 1];
+            }
         }
 
-        private void PushContext(ContainerContext newContext)
-        {
+        private void PushContext(ContainerContext newContext) {
             _stack.Add(newContext);
             _currentContext = newContext;
         }
 
-        private byte ReadByte()
-        {
+        private byte ReadByte() {
             MovePosition(1);
             return _reader.ReadByte();
         }
 
-        private void ReadType(BsonType type)
-        {
-            switch (type)
-            {
+        private void ReadType(BsonType type) {
+            switch (type) {
                 case BsonType.Number:
                     SetToken(JsonToken.Float, ReadDouble());
                     break;
@@ -529,24 +452,22 @@ namespace NetDimension.Json.Bson
                 case BsonType.Symbol:
                     SetToken(JsonToken.String, ReadLengthString());
                     break;
-                case BsonType.Object:
-                    {
-                        SetToken(JsonToken.StartObject);
+                case BsonType.Object: {
+                    SetToken(JsonToken.StartObject);
 
-                        var newContext = new ContainerContext(BsonType.Object);
-                        PushContext(newContext);
-                        newContext.Length = ReadInt32();
-                        break;
-                    }
-                case BsonType.Array:
-                    {
-                        SetToken(JsonToken.StartArray);
+                    var newContext = new ContainerContext(BsonType.Object);
+                    PushContext(newContext);
+                    newContext.Length = ReadInt32();
+                    break;
+                }
+                case BsonType.Array: {
+                    SetToken(JsonToken.StartArray);
 
-                        var newContext = new ContainerContext(BsonType.Array);
-                        PushContext(newContext);
-                        newContext.Length = ReadInt32();
-                        break;
-                    }
+                    var newContext = new ContainerContext(BsonType.Array);
+                    PushContext(newContext);
+                    newContext.Length = ReadInt32();
+                    break;
+                }
                 case BsonType.Binary:
                     SetToken(JsonToken.Bytes, ReadBinary());
                     break;
@@ -566,8 +487,7 @@ namespace NetDimension.Json.Bson
                     var utcDateTime = JsonConvert.ConvertJavaScriptTicksToDateTime(ticks);
 
                     DateTime dateTime;
-                    switch (DateTimeKindHandling)
-                    {
+                    switch (DateTimeKindHandling) {
                         case DateTimeKind.Unspecified:
                             dateTime = DateTime.SpecifyKind(utcDateTime, DateTimeKind.Unspecified);
                             break;
@@ -614,16 +534,14 @@ namespace NetDimension.Json.Bson
             }
         }
 
-        private byte[] ReadBinary()
-        {
+        private byte[] ReadBinary() {
             var dataLength = ReadInt32();
 
             var binaryType = (BsonBinaryType) ReadByte();
 
 #pragma warning disable 612,618
             // the old binary type has the data length repeated in the data for some reason
-            if (binaryType == BsonBinaryType.Data && !_jsonNet35BinaryCompatibility)
-            {
+            if (binaryType == BsonBinaryType.Data && !_jsonNet35BinaryCompatibility) {
                 dataLength = ReadInt32();
             }
 #pragma warning restore 612,618
@@ -631,8 +549,7 @@ namespace NetDimension.Json.Bson
             return ReadBytes(dataLength);
         }
 
-        private string ReadString()
-        {
+        private string ReadString() {
             EnsureBuffers();
 
             StringBuilder builder = null;
@@ -640,49 +557,41 @@ namespace NetDimension.Json.Bson
             var totalBytesRead = 0;
             // used in case of left over multibyte characters in the buffer
             var offset = 0;
-            do
-            {
+            do {
                 var count = offset;
                 byte b;
-                while (count < MaxCharBytesSize && (b = _reader.ReadByte()) > 0)
-                {
+                while (count < MaxCharBytesSize && (b = _reader.ReadByte()) > 0) {
                     _byteBuffer[count++] = b;
                 }
                 var byteCount = count - offset;
                 totalBytesRead += byteCount;
 
-                if (count < MaxCharBytesSize && builder == null)
-                {
+                if (count < MaxCharBytesSize && builder == null) {
                     // pref optimization to avoid reading into a string builder
                     // if string is smaller than the buffer then return it directly
                     var length = Encoding.UTF8.GetChars(_byteBuffer, 0, byteCount, _charBuffer, 0);
 
                     MovePosition(totalBytesRead + 1);
                     return new string(_charBuffer, 0, length);
-                }
-                else
-                {
+                } else {
                     // calculate the index of the end of the last full character in the buffer
                     var lastFullCharStop = GetLastFullCharStop(count - 1);
 
                     var charCount = Encoding.UTF8.GetChars(_byteBuffer, 0, lastFullCharStop + 1, _charBuffer, 0);
 
-                    if (builder == null)
+                    if (builder == null) {
                         builder = new StringBuilder(MaxCharBytesSize*2);
+                    }
 
                     builder.Append(_charBuffer, 0, charCount);
 
-                    if (lastFullCharStop < byteCount - 1)
-                    {
+                    if (lastFullCharStop < byteCount - 1) {
                         offset = byteCount - lastFullCharStop - 1;
                         // copy left over multi byte characters to beginning of buffer for next iteration
                         Array.Copy(_byteBuffer, lastFullCharStop + 1, _byteBuffer, 0, offset);
-                    }
-                    else
-                    {
+                    } else {
                         // reached end of string
-                        if (count < MaxCharBytesSize)
-                        {
+                        if (count < MaxCharBytesSize) {
                             MovePosition(totalBytesRead + 1);
                             return builder.ToString();
                         }
@@ -693,8 +602,7 @@ namespace NetDimension.Json.Bson
             } while (true);
         }
 
-        private string ReadLengthString()
-        {
+        private string ReadLengthString() {
             var length = ReadInt32();
 
             MovePosition(length);
@@ -705,10 +613,10 @@ namespace NetDimension.Json.Bson
             return s;
         }
 
-        private string GetString(int length)
-        {
-            if (length == 0)
+        private string GetString(int length) {
+            if (length == 0) {
                 return string.Empty;
+            }
 
             EnsureBuffers();
 
@@ -718,16 +626,16 @@ namespace NetDimension.Json.Bson
 
             // used in case of left over multibyte characters in the buffer
             var offset = 0;
-            do
-            {
+            do {
                 var count = ((length - totalBytesRead) > MaxCharBytesSize - offset)
                                 ? MaxCharBytesSize - offset
                                 : length - totalBytesRead;
 
                 var byteCount = _reader.Read(_byteBuffer, offset, count);
 
-                if (byteCount == 0)
+                if (byteCount == 0) {
                     throw new EndOfStreamException("Unable to read beyond the end of the stream.");
+                }
 
                 totalBytesRead += byteCount;
 
@@ -735,31 +643,26 @@ namespace NetDimension.Json.Bson
                 // Below, byteCount is how many bytes are in the _byteBuffer.
                 byteCount += offset;
 
-                if (byteCount == length)
-                {
+                if (byteCount == length) {
                     // pref optimization to avoid reading into a string builder
                     // first iteration and all bytes read then return string directly
                     var charCount = Encoding.UTF8.GetChars(_byteBuffer, 0, byteCount, _charBuffer, 0);
                     return new string(_charBuffer, 0, charCount);
-                }
-                else
-                {
+                } else {
                     var lastFullCharStop = GetLastFullCharStop(byteCount - 1);
 
-                    if (builder == null)
+                    if (builder == null) {
                         builder = new StringBuilder(length);
+                    }
 
                     var charCount = Encoding.UTF8.GetChars(_byteBuffer, 0, lastFullCharStop + 1, _charBuffer, 0);
                     builder.Append(_charBuffer, 0, charCount);
 
-                    if (lastFullCharStop < byteCount - 1)
-                    {
+                    if (lastFullCharStop < byteCount - 1) {
                         offset = byteCount - lastFullCharStop - 1;
                         // copy left over multi byte characters to beginning of buffer for next iteration
                         Array.Copy(_byteBuffer, lastFullCharStop + 1, _byteBuffer, 0, offset);
-                    }
-                    else
-                    {
+                    } else {
                         offset = 0;
                     }
                 }
@@ -768,94 +671,106 @@ namespace NetDimension.Json.Bson
             return builder.ToString();
         }
 
-        private int GetLastFullCharStop(int start)
-        {
+        private int GetLastFullCharStop(int start) {
             var lookbackPos = start;
             var bis = 0;
-            while (lookbackPos >= 0)
-            {
+            while (lookbackPos >= 0) {
                 bis = BytesInSequence(_byteBuffer[lookbackPos]);
-                if (bis == 0)
-                {
+                if (bis == 0) {
                     lookbackPos--;
                     continue;
-                }
-                else if (bis == 1)
-                {
+                } else if (bis == 1) {
                     break;
-                }
-                else
-                {
+                } else {
                     lookbackPos--;
                     break;
                 }
             }
-            if (bis == start - lookbackPos)
-            {
+            if (bis == start - lookbackPos) {
                 //Full character.
                 return start;
-            }
-            else
-            {
+            } else {
                 return lookbackPos;
             }
         }
 
-        private int BytesInSequence(byte b)
-        {
-            if (b <= SeqRange1[1]) return 1;
-            if (b >= SeqRange2[0] && b <= SeqRange2[1]) return 2;
-            if (b >= SeqRange3[0] && b <= SeqRange3[1]) return 3;
-            if (b >= SeqRange4[0] && b <= SeqRange4[1]) return 4;
+        private int BytesInSequence(byte b) {
+            if (b <= SeqRange1[1]) {
+                return 1;
+            }
+            if (b >= SeqRange2[0] && b <= SeqRange2[1]) {
+                return 2;
+            }
+            if (b >= SeqRange3[0] && b <= SeqRange3[1]) {
+                return 3;
+            }
+            if (b >= SeqRange4[0] && b <= SeqRange4[1]) {
+                return 4;
+            }
             return 0;
         }
 
-        private void EnsureBuffers()
-        {
-            if (_byteBuffer == null)
-            {
+        private void EnsureBuffers() {
+            if (_byteBuffer == null) {
                 _byteBuffer = new byte[MaxCharBytesSize];
             }
-            if (_charBuffer == null)
-            {
+            if (_charBuffer == null) {
                 var charBufferSize = Encoding.UTF8.GetMaxCharCount(MaxCharBytesSize);
                 _charBuffer = new char[charBufferSize];
             }
         }
 
-        private double ReadDouble()
-        {
+        private double ReadDouble() {
             MovePosition(8);
             return _reader.ReadDouble();
         }
 
-        private int ReadInt32()
-        {
+        private int ReadInt32() {
             MovePosition(4);
             return _reader.ReadInt32();
         }
 
-        private long ReadInt64()
-        {
+        private long ReadInt64() {
             MovePosition(8);
             return _reader.ReadInt64();
         }
 
-        private BsonType ReadType()
-        {
+        private BsonType ReadType() {
             MovePosition(1);
             return (BsonType) _reader.ReadSByte();
         }
 
-        private void MovePosition(int count)
-        {
+        private void MovePosition(int count) {
             _currentContext.Position += count;
         }
 
-        private byte[] ReadBytes(int count)
-        {
+        private byte[] ReadBytes(int count) {
             MovePosition(count);
             return _reader.ReadBytes(count);
+        }
+
+        private enum BsonReaderState
+        {
+            Normal,
+            ReferenceStart,
+            ReferenceRef,
+            ReferenceId,
+            CodeWScopeStart,
+            CodeWScopeCode,
+            CodeWScopeScope,
+            CodeWScopeScopeObject,
+            CodeWScopeScopeEnd
+        }
+
+        private class ContainerContext
+        {
+            public readonly BsonType Type;
+            public int Length;
+            public int Position;
+
+            public ContainerContext(BsonType type) {
+                Type = type;
+            }
         }
     }
 }

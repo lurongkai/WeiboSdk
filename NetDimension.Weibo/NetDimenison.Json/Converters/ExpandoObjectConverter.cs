@@ -46,8 +46,7 @@ namespace NetDimension.Json.Converters
         /// <value>
         ///     <c>true</c> if this <see cref="JsonConverter" /> can write JSON; otherwise, <c>false</c>.
         /// </value>
-        public override bool CanWrite
-        {
+        public override bool CanWrite {
             get { return false; }
         }
 
@@ -59,8 +58,7 @@ namespace NetDimension.Json.Converters
         /// </param>
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             // can write is set to false
         }
 
@@ -75,28 +73,26 @@ namespace NetDimension.Json.Converters
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-                                        JsonSerializer serializer)
-        {
+                                        JsonSerializer serializer) {
             return ReadValue(reader);
         }
 
-        private object ReadValue(JsonReader reader)
-        {
-            while (reader.TokenType == JsonToken.Comment)
-            {
-                if (!reader.Read())
+        private object ReadValue(JsonReader reader) {
+            while (reader.TokenType == JsonToken.Comment) {
+                if (!reader.Read()) {
                     throw JsonSerializationException.Create(reader, "Unexpected end when reading ExpandoObject.");
+                }
             }
 
-            switch (reader.TokenType)
-            {
+            switch (reader.TokenType) {
                 case JsonToken.StartObject:
                     return ReadObject(reader);
                 case JsonToken.StartArray:
                     return ReadList(reader);
                 default:
-                    if (JsonReader.IsPrimitiveToken(reader.TokenType))
+                    if (JsonReader.IsPrimitiveToken(reader.TokenType)) {
                         return reader.Value;
+                    }
 
                     throw JsonSerializationException.Create(reader,
                                                             "Unexpected token when converting ExpandoObject: {0}"
@@ -105,14 +101,11 @@ namespace NetDimension.Json.Converters
             }
         }
 
-        private object ReadList(JsonReader reader)
-        {
+        private object ReadList(JsonReader reader) {
             IList<object> list = new List<object>();
 
-            while (reader.Read())
-            {
-                switch (reader.TokenType)
-                {
+            while (reader.Read()) {
+                switch (reader.TokenType) {
                     case JsonToken.Comment:
                         break;
                     default:
@@ -128,19 +121,17 @@ namespace NetDimension.Json.Converters
             throw JsonSerializationException.Create(reader, "Unexpected end when reading ExpandoObject.");
         }
 
-        private object ReadObject(JsonReader reader)
-        {
+        private object ReadObject(JsonReader reader) {
             IDictionary<string, object> expandoObject = new ExpandoObject();
 
-            while (reader.Read())
-            {
-                switch (reader.TokenType)
-                {
+            while (reader.Read()) {
+                switch (reader.TokenType) {
                     case JsonToken.PropertyName:
                         var propertyName = reader.Value.ToString();
 
-                        if (!reader.Read())
+                        if (!reader.Read()) {
                             throw JsonSerializationException.Create(reader, "Unexpected end when reading ExpandoObject.");
+                        }
 
                         var v = ReadValue(reader);
 
@@ -163,8 +154,7 @@ namespace NetDimension.Json.Converters
         /// <returns>
         ///     <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
         /// </returns>
-        public override bool CanConvert(Type objectType)
-        {
+        public override bool CanConvert(Type objectType) {
             return (objectType == typeof (ExpandoObject));
         }
     }

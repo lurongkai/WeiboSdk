@@ -3,8 +3,7 @@
     internal class TagAPI : WeiboAPI
     {
         public TagAPI(Client client)
-            : base(client)
-        {
+            : base(client) {
         }
 
         /// <summary>
@@ -14,8 +13,7 @@
         /// <param name="count">单页返回的记录条数，默认为20。</param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public string Tags(string uid, int count = 20, int page = 1)
-        {
+        public string Tags(string uid, int count = 20, int page = 1) {
             return (Client.GetCommand("tags",
                                       new WeiboParameter("uid", uid),
                                       new WeiboParameter("count", count),
@@ -27,8 +25,7 @@
         /// </summary>
         /// <param name="uids">要获取标签的用户ID。最大20，逗号分隔。 </param>
         /// <returns></returns>
-        public string TagsBatch(params string[] uids)
-        {
+        public string TagsBatch(params string[] uids) {
             return (Client.GetCommand("tags/tags_batch",
                                       new WeiboParameter("uids", string.Join(",", uids))));
         }
@@ -38,8 +35,7 @@
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        public string Suggestions(int count = 10)
-        {
+        public string Suggestions(int count = 10) {
             return (Client.GetCommand("tags/suggestions", new WeiboParameter("count", count)));
         }
 
@@ -48,8 +44,7 @@
         /// </summary>
         /// <param name="tags">要创建的一组标签，每个标签的长度不可超过7个汉字，14个半角字符。 </param>
         /// <returns></returns>
-        public string Create(params string[] tags)
-        {
+        public string Create(params string[] tags) {
             return (Client.PostCommand("tags/create",
                                        new WeiboParameter("tags", string.Join(",", tags))));
         }
@@ -59,8 +54,7 @@
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public string Destroy(string id)
-        {
+        public string Destroy(string id) {
             return (Client.PostCommand("tags/destroy",
                                        new WeiboParameter("tag_id", id)));
         }
@@ -70,8 +64,7 @@
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public string DestroyBatch(params string[] ids)
-        {
+        public string DestroyBatch(params string[] ids) {
             return (Client.PostCommand("tags/destroy_batch",
                                        new WeiboParameter("ids", string.Join(",", ids))));
         }

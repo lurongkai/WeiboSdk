@@ -44,8 +44,7 @@ namespace NetDimension.Json.Converters
         /// </param>
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             var t = value.GetType();
             var keyProperty = t.GetProperty("Key");
             var valueProperty = t.GetProperty("Value");
@@ -69,14 +68,13 @@ namespace NetDimension.Json.Converters
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-                                        JsonSerializer serializer)
-        {
+                                        JsonSerializer serializer) {
             var isNullable = ReflectionUtils.IsNullableType(objectType);
 
-            if (reader.TokenType == JsonToken.Null)
-            {
-                if (!isNullable)
+            if (reader.TokenType == JsonToken.Null) {
+                if (!isNullable) {
                     throw JsonSerializationException.Create(reader, "Cannot convert null value to KeyValuePair.");
+                }
 
                 return null;
             }
@@ -94,10 +92,8 @@ namespace NetDimension.Json.Converters
 
             reader.Read();
 
-            while (reader.TokenType == JsonToken.PropertyName)
-            {
-                switch (reader.Value.ToString())
-                {
+            while (reader.TokenType == JsonToken.PropertyName) {
+                switch (reader.Value.ToString()) {
                     case "Key":
                         reader.Read();
                         key = serializer.Deserialize(reader, keyType);
@@ -124,14 +120,14 @@ namespace NetDimension.Json.Converters
         /// <returns>
         ///     <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
         /// </returns>
-        public override bool CanConvert(Type objectType)
-        {
+        public override bool CanConvert(Type objectType) {
             var t = (ReflectionUtils.IsNullableType(objectType))
                         ? Nullable.GetUnderlyingType(objectType)
                         : objectType;
 
-            if (t.IsValueType() && t.IsGenericType())
+            if (t.IsValueType() && t.IsGenericType()) {
                 return (t.GetGenericTypeDefinition() == typeof (KeyValuePair<,>));
+            }
 
             return false;
         }

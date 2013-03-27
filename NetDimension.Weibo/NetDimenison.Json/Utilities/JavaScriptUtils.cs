@@ -32,29 +32,27 @@ namespace NetDimension.Json.Utilities
     internal static class JavaScriptUtils
     {
         public static void WriteEscapedJavaScriptString(TextWriter writer, string s, char delimiter,
-                                                        bool appendDelimiters)
-        {
+                                                        bool appendDelimiters) {
             // leading delimiter
-            if (appendDelimiters)
+            if (appendDelimiters) {
                 writer.Write(delimiter);
+            }
 
-            if (s != null)
-            {
+            if (s != null) {
                 char[] chars = null;
                 var lastWritePosition = 0;
 
-                for (var i = 0; i < s.Length; i++)
-                {
+                for (var i = 0; i < s.Length; i++) {
                     var c = s[i];
 
                     // don't escape standard text/numbers except '\' and the text delimiter
-                    if (c >= ' ' && c < 128 && c != '\\' && c != delimiter)
+                    if (c >= ' ' && c < 128 && c != '\\' && c != delimiter) {
                         continue;
+                    }
 
                     string escapedValue;
 
-                    switch (c)
-                    {
+                    switch (c) {
                         case '\t':
                             escapedValue = @"\t";
                             break;
@@ -95,13 +93,14 @@ namespace NetDimension.Json.Utilities
                             break;
                     }
 
-                    if (escapedValue == null)
+                    if (escapedValue == null) {
                         continue;
+                    }
 
-                    if (i > lastWritePosition)
-                    {
-                        if (chars == null)
+                    if (i > lastWritePosition) {
+                        if (chars == null) {
                             chars = s.ToCharArray();
+                        }
 
                         // write unchanged chars before writing escaped text
                         writer.Write(chars, lastWritePosition, i - lastWritePosition);
@@ -111,15 +110,13 @@ namespace NetDimension.Json.Utilities
                     writer.Write(escapedValue);
                 }
 
-                if (lastWritePosition == 0)
-                {
+                if (lastWritePosition == 0) {
                     // no escaped text, write entire string
                     writer.Write(s);
-                }
-                else
-                {
-                    if (chars == null)
+                } else {
+                    if (chars == null) {
                         chars = s.ToCharArray();
+                    }
 
                     // write remaining text
                     writer.Write(chars, lastWritePosition, s.Length - lastWritePosition);
@@ -127,19 +124,17 @@ namespace NetDimension.Json.Utilities
             }
 
             // trailing delimiter
-            if (appendDelimiters)
+            if (appendDelimiters) {
                 writer.Write(delimiter);
+            }
         }
 
-        public static string ToEscapedJavaScriptString(string value)
-        {
+        public static string ToEscapedJavaScriptString(string value) {
             return ToEscapedJavaScriptString(value, '"', true);
         }
 
-        public static string ToEscapedJavaScriptString(string value, char delimiter, bool appendDelimiters)
-        {
-            using (var w = StringUtils.CreateStringWriter(StringUtils.GetLength(value) ?? 16))
-            {
+        public static string ToEscapedJavaScriptString(string value, char delimiter, bool appendDelimiters) {
+            using (var w = StringUtils.CreateStringWriter(StringUtils.GetLength(value) ?? 16)) {
                 WriteEscapedJavaScriptString(w, value, delimiter, appendDelimiters);
                 return w.ToString();
             }

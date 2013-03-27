@@ -42,8 +42,7 @@ namespace NetDimension.Json.Linq
         ///     A <see cref="JRaw" /> object to copy from.
         /// </param>
         public JRaw(JRaw other)
-            : base(other)
-        {
+            : base(other) {
         }
 
         /// <summary>
@@ -51,8 +50,7 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="rawJson">The raw json.</param>
         public JRaw(object rawJson)
-            : base(rawJson, JTokenType.Raw)
-        {
+            : base(rawJson, JTokenType.Raw) {
         }
 
         /// <summary>
@@ -62,19 +60,17 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An instance of <see cref="JRaw" /> with the content of the reader's current token.
         /// </returns>
-        public static JRaw Create(JsonReader reader)
-        {
-            using (var sw = new StringWriter(CultureInfo.InvariantCulture))
-            using (var jsonWriter = new JsonTextWriter(sw))
-            {
-                jsonWriter.WriteToken(reader);
+        public static JRaw Create(JsonReader reader) {
+            using (var sw = new StringWriter(CultureInfo.InvariantCulture)) {
+                using (var jsonWriter = new JsonTextWriter(sw)) {
+                    jsonWriter.WriteToken(reader);
 
-                return new JRaw(sw.ToString());
+                    return new JRaw(sw.ToString());
+                }
             }
         }
 
-        internal override JToken CloneToken()
-        {
+        internal override JToken CloneToken() {
             return new JRaw(this);
         }
     }

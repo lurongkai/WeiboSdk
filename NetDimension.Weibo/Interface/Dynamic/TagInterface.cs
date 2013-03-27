@@ -14,8 +14,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="client">操作类</param>
         public TagInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new TagAPI(client);
         }
 
@@ -26,8 +25,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">单页返回的记录条数，默认为20。</param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public dynamic Tags(string uid, int count = 20, int page = 1)
-        {
+        public dynamic Tags(string uid, int count = 20, int page = 1) {
             return DynamicJson.Parse(api.Tags(uid, count, page));
         }
 
@@ -36,8 +34,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="uids">要获取标签的用户ID。最大20，逗号分隔。 </param>
         /// <returns></returns>
-        public dynamic TagsBatch(params string[] uids)
-        {
+        public dynamic TagsBatch(params string[] uids) {
             return DynamicJson.Parse(api.TagsBatch(uids));
         }
 
@@ -46,8 +43,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        public dynamic Suggestions(int count = 10)
-        {
+        public dynamic Suggestions(int count = 10) {
             return DynamicJson.Parse(api.Suggestions(count));
         }
 
@@ -56,8 +52,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="tags">要创建的一组标签，每个标签的长度不可超过7个汉字，14个半角字符。 </param>
         /// <returns></returns>
-        public dynamic Create(params string[] tags)
-        {
+        public dynamic Create(params string[] tags) {
             return DynamicJson.Parse(api.Create(tags));
         }
 
@@ -66,8 +61,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public dynamic Destroy(string id)
-        {
+        public dynamic Destroy(string id) {
             return DynamicJson.Parse(api.Destroy(id));
         }
 
@@ -76,8 +70,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public dynamic DestroyBatch(params string[] ids)
-        {
+        public dynamic DestroyBatch(params string[] ids) {
             return DynamicJson.Parse(api.DestroyBatch(ids));
         }
     }
