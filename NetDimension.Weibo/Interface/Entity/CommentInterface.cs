@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NetDimension.Json;
+using Newtonsoft.Json;
 using NetDimension.Weibo.Entities.comment;
 
 namespace NetDimension.Weibo.Interface.Entity

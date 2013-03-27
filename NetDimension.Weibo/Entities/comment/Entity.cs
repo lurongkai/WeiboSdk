@@ -1,4 +1,4 @@
-﻿using NetDimension.Json;
+﻿using Newtonsoft.Json;
 
 namespace NetDimension.Weibo.Entities.comment
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using NetDimension.Json;
-using NetDimension.Json.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NetDimension.Weibo.Entities.trend;
 
 namespace NetDimension.Weibo.Interface.Entity
