@@ -47,8 +47,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Initializes a new instance of the <see cref="JsonWriterException" /> class.
         /// </summary>
-        public JsonWriterException()
-        {
+        public JsonWriterException() {
         }
 
         /// <summary>
@@ -57,8 +56,7 @@ namespace NetDimension.Json
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         public JsonWriterException(string message)
-            : base(message)
-        {
+            : base(message) {
         }
 
         /// <summary>
@@ -68,8 +66,7 @@ namespace NetDimension.Json
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
         public JsonWriterException(string message, Exception innerException)
-            : base(message, innerException)
-        {
+            : base(message, innerException) {
         }
 
 #if !(WINDOWS_PHONE || SILVERLIGHT || NETFX_CORE || PORTABLE)
@@ -89,24 +86,20 @@ namespace NetDimension.Json
         ///     The class name is null or <see cref="P:System.Exception.HResult" /> is zero (0).
         /// </exception>
         public JsonWriterException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
+            : base(info, context) {
         }
 #endif
 
         internal JsonWriterException(string message, Exception innerException, string path)
-            : base(message, innerException)
-        {
+            : base(message, innerException) {
             Path = path;
         }
 
-        internal static JsonWriterException Create(JsonWriter writer, string message, Exception ex)
-        {
+        internal static JsonWriterException Create(JsonWriter writer, string message, Exception ex) {
             return Create(writer.ContainerPath, message, ex);
         }
 
-        internal static JsonWriterException Create(string path, string message, Exception ex)
-        {
+        internal static JsonWriterException Create(string path, string message, Exception ex) {
             message = FormatExceptionMessage(null, path, message);
 
             return new JsonWriterException(message, ex, path);

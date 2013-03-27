@@ -3,8 +3,7 @@
     internal class CommonAPI : WeiboAPI
     {
         public CommonAPI(Client client)
-            : base(client)
-        {
+            : base(client) {
         }
 
         /// <summary>
@@ -12,8 +11,7 @@
         /// </summary>
         /// <param name="codes">需要查询的地址编码</param>
         /// <returns></returns>
-        public string CodeToLocation(params string[] codes)
-        {
+        public string CodeToLocation(params string[] codes) {
             return (Client.GetCommand("common/code_to_location", new WeiboParameter("codes", string.Join(",", codes))));
         }
 
@@ -23,8 +21,7 @@
         /// <param name="province">省份的省份代码。</param>
         /// <param name="capital">城市的首字母，a-z，可为空代表返回全部，默认为全部。</param>
         /// <returns></returns>
-        public string GetCity(string province, string capital = "")
-        {
+        public string GetCity(string province, string capital = "") {
             return (Client.GetCommand("common/get_city",
                                       new WeiboParameter("province", province),
                                       new WeiboParameter("capital", capital)));
@@ -36,8 +33,7 @@
         /// <param name="country">国家的国家代码。</param>
         /// <param name="capital">省份的首字母，a-z，可为空代表返回全部，默认为全部。 </param>
         /// <returns></returns>
-        public string GetProvince(string country, string capital = "")
-        {
+        public string GetProvince(string country, string capital = "") {
             return (Client.GetCommand("common/get_province",
                                       new WeiboParameter("country", country),
                                       new WeiboParameter("capital", capital)));
@@ -48,8 +44,7 @@
         /// </summary>
         /// <param name="capital">国家的首字母，a-z，可为空代表返回全部，默认为全部。</param>
         /// <returns></returns>
-        public string GetCountry(string capital = "")
-        {
+        public string GetCountry(string capital = "") {
             return (Client.GetCommand("common/get_country",
                                       new WeiboParameter("capital", capital)));
         }
@@ -58,8 +53,7 @@
         ///     获取时区配置表
         /// </summary>
         /// <returns></returns>
-        public string GetTimezone()
-        {
+        public string GetTimezone() {
             return (Client.GetCommand("common/get_timezone"));
         }
     }

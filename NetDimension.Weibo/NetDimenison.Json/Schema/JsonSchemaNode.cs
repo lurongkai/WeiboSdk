@@ -29,18 +29,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-
-#endif
 
 namespace NetDimension.Json.Schema
 {
     internal class JsonSchemaNode
     {
-        public JsonSchemaNode(JsonSchema schema)
-        {
+        public JsonSchemaNode(JsonSchema schema) {
             Schemas = new ReadOnlyCollection<JsonSchema>(new[] {schema});
             Properties = new Dictionary<string, JsonSchemaNode>();
             PatternProperties = new Dictionary<string, JsonSchemaNode>();
@@ -49,8 +43,7 @@ namespace NetDimension.Json.Schema
             Id = GetId(Schemas);
         }
 
-        private JsonSchemaNode(JsonSchemaNode source, JsonSchema schema)
-        {
+        private JsonSchemaNode(JsonSchemaNode source, JsonSchema schema) {
             Schemas = new ReadOnlyCollection<JsonSchema>(source.Schemas.Union(new[] {schema}).ToList());
             Properties = new Dictionary<string, JsonSchemaNode>(source.Properties);
             PatternProperties = new Dictionary<string, JsonSchemaNode>(source.PatternProperties);
@@ -67,13 +60,11 @@ namespace NetDimension.Json.Schema
         public List<JsonSchemaNode> Items { get; private set; }
         public JsonSchemaNode AdditionalProperties { get; set; }
 
-        public JsonSchemaNode Combine(JsonSchema schema)
-        {
+        public JsonSchemaNode Combine(JsonSchema schema) {
             return new JsonSchemaNode(this, schema);
         }
 
-        public static string GetId(IEnumerable<JsonSchema> schemata)
-        {
+        public static string GetId(IEnumerable<JsonSchema> schemata) {
             return string.Join("-",
                                schemata.Select(s => s.InternalId).OrderBy(id => id, StringComparer.Ordinal).ToArray());
         }

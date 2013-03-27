@@ -43,13 +43,11 @@ namespace NetDimension.Json.Serialization
         private readonly ThreadSafeStore<TypeNameKey, Type> _typeCache =
             new ThreadSafeStore<TypeNameKey, Type>(GetTypeFromTypeNameKey);
 
-        private static Type GetTypeFromTypeNameKey(TypeNameKey typeNameKey)
-        {
+        private static Type GetTypeFromTypeNameKey(TypeNameKey typeNameKey) {
             var assemblyName = typeNameKey.AssemblyName;
             var typeName = typeNameKey.TypeName;
 
-            if (assemblyName != null)
-            {
+            if (assemblyName != null) {
                 Assembly assembly;
 
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
@@ -64,52 +62,21 @@ namespace NetDimension.Json.Serialization
         assembly = Assembly.Load(assemblyName);
 #endif
 
-                if (assembly == null)
+                if (assembly == null) {
                     throw new JsonSerializationException(
                         "Could not load assembly '{0}'.".FormatWith(CultureInfo.InvariantCulture, assemblyName));
+                }
 
                 var type = assembly.GetType(typeName);
-                if (type == null)
+                if (type == null) {
                     throw new JsonSerializationException(
                         "Could not find type '{0}' in assembly '{1}'.".FormatWith(CultureInfo.InvariantCulture, typeName,
                                                                                   assembly.FullName));
+                }
 
                 return type;
-            }
-            else
-            {
+            } else {
                 return Type.GetType(typeName);
-            }
-        }
-
-        internal struct TypeNameKey : IEquatable<TypeNameKey>
-        {
-            internal readonly string AssemblyName;
-            internal readonly string TypeName;
-
-            public TypeNameKey(string assemblyName, string typeName)
-            {
-                AssemblyName = assemblyName;
-                TypeName = typeName;
-            }
-
-            public bool Equals(TypeNameKey other)
-            {
-                return (AssemblyName == other.AssemblyName && TypeName == other.TypeName);
-            }
-
-            public override int GetHashCode()
-            {
-                return ((AssemblyName != null) ? AssemblyName.GetHashCode() : 0) ^
-                       ((TypeName != null) ? TypeName.GetHashCode() : 0);
-            }
-
-            public override bool Equals(object obj)
-            {
-                if (!(obj is TypeNameKey))
-                    return false;
-
-                return Equals((TypeNameKey) obj);
             }
         }
 
@@ -125,12 +92,10 @@ namespace NetDimension.Json.Serialization
         /// <returns>
         ///     The type of the object the formatter creates a new instance of.
         /// </returns>
-        public override Type BindToType(string assemblyName, string typeName)
-        {
+        public override Type BindToType(string assemblyName, string typeName) {
             return _typeCache.Get(new TypeNameKey(assemblyName, typeName));
         }
 
-#if !(NET35 || NET20)
         /// <summary>
         ///     When overridden in a derived class, controls the binding of a serialized object to a type.
         /// </summary>
@@ -141,8 +106,7 @@ namespace NetDimension.Json.Serialization
         /// <param name="typeName">
         ///     Specifies the <see cref="T:System.Type" /> name of the serialized object.
         /// </param>
-        public override void BindToName(Type serializedType, out string assemblyName, out string typeName)
-        {
+        public override void BindToName(Type serializedType, out string assemblyName, out string typeName) {
 #if NETFX_CORE
       assemblyName = serializedType.GetTypeInfo().Assembly.FullName;
       typeName = serializedType.FullName;
@@ -154,6 +118,33 @@ namespace NetDimension.Json.Serialization
       typeName = serializedType.AssemblyQualifiedName;
 #endif
         }
-#endif
+
+        internal struct TypeNameKey : IEquatable<TypeNameKey>
+        {
+            internal readonly string AssemblyName;
+            internal readonly string TypeName;
+
+            public TypeNameKey(string assemblyName, string typeName) {
+                AssemblyName = assemblyName;
+                TypeName = typeName;
+            }
+
+            public bool Equals(TypeNameKey other) {
+                return (AssemblyName == other.AssemblyName && TypeName == other.TypeName);
+            }
+
+            public override int GetHashCode() {
+                return ((AssemblyName != null) ? AssemblyName.GetHashCode() : 0) ^
+                       ((TypeName != null) ? TypeName.GetHashCode() : 0);
+            }
+
+            public override bool Equals(object obj) {
+                if (!(obj is TypeNameKey)) {
+                    return false;
+                }
+
+                return Equals((TypeNameKey) obj);
+            }
+        }
     }
 }

@@ -30,9 +30,7 @@ using System.ComponentModel;
 using System.Data.SqlTypes;
 using System.Globalization;
 using NetDimension.Json.Serialization;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#endif
+
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
 
 #endif
@@ -126,8 +124,7 @@ namespace NetDimension.Json.Utilities
 
     internal static class ConvertUtils
     {
-        public static TypeCode GetTypeCode(this IConvertible convertible)
-        {
+        public static TypeCode GetTypeCode(this IConvertible convertible) {
 #if !NETFX_CORE
             return convertible.GetTypeCode();
 #else
@@ -135,8 +132,7 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static TypeCode GetTypeCode(object o)
-        {
+        public static TypeCode GetTypeCode(object o) {
 #if !(NETFX_CORE || PORTABLE)
             return System.Convert.GetTypeCode(o);
 #else
@@ -144,8 +140,7 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static TypeCode GetTypeCode(Type t)
-        {
+        public static TypeCode GetTypeCode(Type t) {
 #if !NETFX_CORE
             return Type.GetTypeCode(t);
 #else
@@ -186,8 +181,7 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static IConvertible ToConvertible(object o)
-        {
+        public static IConvertible ToConvertible(object o) {
 #if !NETFX_CORE
             return o as IConvertible;
 #else
@@ -198,8 +192,7 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static bool IsConvertible(object o)
-        {
+        public static bool IsConvertible(object o) {
 #if !NETFX_CORE
             return o is IConvertible;
 #else
@@ -212,8 +205,7 @@ namespace NetDimension.Json.Utilities
 #endif
         }
 
-        public static bool IsConvertible(Type t)
-        {
+        public static bool IsConvertible(Type t) {
 #if !NETFX_CORE
             return typeof (IConvertible).IsAssignableFrom(t);
 #else
@@ -228,36 +220,31 @@ namespace NetDimension.Json.Utilities
             private readonly Type _initialType;
             private readonly Type _targetType;
 
-            public TypeConvertKey(Type initialType, Type targetType)
-            {
+            public TypeConvertKey(Type initialType, Type targetType) {
                 _initialType = initialType;
                 _targetType = targetType;
             }
 
-            public Type InitialType
-            {
+            public Type InitialType {
                 get { return _initialType; }
             }
 
-            public Type TargetType
-            {
+            public Type TargetType {
                 get { return _targetType; }
             }
 
-            public bool Equals(TypeConvertKey other)
-            {
+            public bool Equals(TypeConvertKey other) {
                 return (_initialType == other._initialType && _targetType == other._targetType);
             }
 
-            public override int GetHashCode()
-            {
+            public override int GetHashCode() {
                 return _initialType.GetHashCode() ^ _targetType.GetHashCode();
             }
 
-            public override bool Equals(object obj)
-            {
-                if (!(obj is TypeConvertKey))
+            public override bool Equals(object obj) {
+                if (!(obj is TypeConvertKey)) {
                     return false;
+                }
 
                 return Equals((TypeConvertKey) obj);
             }
@@ -266,14 +253,15 @@ namespace NetDimension.Json.Utilities
         private static readonly ThreadSafeStore<TypeConvertKey, Func<object, object>> CastConverters =
             new ThreadSafeStore<TypeConvertKey, Func<object, object>>(CreateCastConverter);
 
-        private static Func<object, object> CreateCastConverter(TypeConvertKey t)
-        {
+        private static Func<object, object> CreateCastConverter(TypeConvertKey t) {
             var castMethodInfo = t.TargetType.GetMethod("op_Implicit", new[] {t.InitialType});
-            if (castMethodInfo == null)
+            if (castMethodInfo == null) {
                 castMethodInfo = t.TargetType.GetMethod("op_Explicit", new[] {t.InitialType});
+            }
 
-            if (castMethodInfo == null)
+            if (castMethodInfo == null) {
                 return null;
+            }
 
             var call = JsonTypeReflector.ReflectionDelegateFactory.CreateMethodCall<object>(castMethodInfo);
 
@@ -289,55 +277,59 @@ namespace NetDimension.Json.Utilities
         /// <param name="culture">The culture to use when converting.</param>
         /// <param name="targetType">The type to convert the value to.</param>
         /// <returns>The converted type.</returns>
-        public static object Convert(object initialValue, CultureInfo culture, Type targetType)
-        {
-            if (initialValue == null)
+        public static object Convert(object initialValue, CultureInfo culture, Type targetType) {
+            if (initialValue == null) {
                 throw new ArgumentNullException("initialValue");
+            }
 
-            if (ReflectionUtils.IsNullableType(targetType))
+            if (ReflectionUtils.IsNullableType(targetType)) {
                 targetType = Nullable.GetUnderlyingType(targetType);
+            }
 
             var initialType = initialValue.GetType();
 
-            if (targetType == initialType)
+            if (targetType == initialType) {
                 return initialValue;
+            }
 
             // use Convert.ChangeType if both types are IConvertible
-            if (IsConvertible(initialValue) && IsConvertible(targetType))
-            {
-                if (targetType.IsEnum())
-                {
-                    if (initialValue is string)
+            if (IsConvertible(initialValue) && IsConvertible(targetType)) {
+                if (targetType.IsEnum()) {
+                    if (initialValue is string) {
                         return Enum.Parse(targetType, initialValue.ToString(), true);
-                    else if (IsInteger(initialValue))
+                    } else if (IsInteger(initialValue)) {
                         return Enum.ToObject(targetType, initialValue);
+                    }
                 }
 
                 return System.Convert.ChangeType(initialValue, targetType, culture);
             }
 
-            if (initialValue is string && typeof (Type).IsAssignableFrom(targetType))
+            if (initialValue is string && typeof (Type).IsAssignableFrom(targetType)) {
                 return Type.GetType((string) initialValue, true);
+            }
 
-            if (targetType.IsInterface() || targetType.IsGenericTypeDefinition() || targetType.IsAbstract())
+            if (targetType.IsInterface() || targetType.IsGenericTypeDefinition() || targetType.IsAbstract()) {
                 throw new ArgumentException(
                     "Target type {0} is not a value type or a non-abstract class.".FormatWith(
                         CultureInfo.InvariantCulture, targetType), "targetType");
+            }
 
-#if !PocketPC && !NET20
-            if (initialValue is DateTime && targetType == typeof (DateTimeOffset))
+            if (initialValue is DateTime && targetType == typeof (DateTimeOffset)) {
                 return new DateTimeOffset((DateTime) initialValue);
-#endif
+            }
 
-            if (initialValue is string)
-            {
-                if (targetType == typeof (Guid))
+            if (initialValue is string) {
+                if (targetType == typeof (Guid)) {
                     return new Guid((string) initialValue);
-                if (targetType == typeof (Uri))
+                }
+                if (targetType == typeof (Uri)) {
                     return new Uri((string) initialValue, UriKind.RelativeOrAbsolute);
-                if (targetType == typeof (TimeSpan))
-#if !(NET35 || NET20 || SILVERLIGHT || PORTABLE)
+                }
+                if (targetType == typeof (TimeSpan)) {
+#if !(SILVERLIGHT || PORTABLE)
                     return TimeSpan.Parse((string) initialValue, CultureInfo.InvariantCulture);
+                }
 #else
           return TimeSpan.Parse((string)initialValue);
 #endif
@@ -347,8 +339,7 @@ namespace NetDimension.Json.Utilities
             // see if source or target types have a TypeConverter that converts between the two
             var toConverter = GetConverter(initialType);
 
-            if (toConverter != null && toConverter.CanConvertTo(targetType))
-            {
+            if (toConverter != null && toConverter.CanConvertTo(targetType)) {
 #if !SILVERLIGHT
                 return toConverter.ConvertTo(null, culture, initialValue, targetType);
 #else
@@ -358,8 +349,7 @@ namespace NetDimension.Json.Utilities
 
             var fromConverter = GetConverter(targetType);
 
-            if (fromConverter != null && fromConverter.CanConvertFrom(initialType))
-            {
+            if (fromConverter != null && fromConverter.CanConvertFrom(initialType)) {
 #if !SILVERLIGHT
                 return fromConverter.ConvertFrom(null, culture, initialValue);
 #else
@@ -369,10 +359,10 @@ namespace NetDimension.Json.Utilities
 #endif
 #if !(NETFX_CORE || PORTABLE)
             // handle DBNull and INullable
-            if (initialValue == DBNull.Value)
-            {
-                if (ReflectionUtils.IsNullable(targetType))
+            if (initialValue == DBNull.Value) {
+                if (ReflectionUtils.IsNullable(targetType)) {
                     return EnsureTypeAssignable(null, initialType, targetType);
+                }
 
                 throw new Exception(
                     "Can not convert null {0} into non-nullable {1}.".FormatWith(CultureInfo.InvariantCulture,
@@ -380,8 +370,9 @@ namespace NetDimension.Json.Utilities
             }
 #endif
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
-            if (initialValue is INullable)
+            if (initialValue is INullable) {
                 return EnsureTypeAssignable(ToValue((INullable) initialValue), initialType, targetType);
+            }
 #endif
 
             throw new InvalidOperationException(
@@ -405,8 +396,7 @@ namespace NetDimension.Json.Utilities
         ///     <c>true</c> if <c>initialValue</c> was converted successfully; otherwise, <c>false</c>.
         /// </returns>
         public static bool TryConvert(object initialValue, CultureInfo culture, Type targetType,
-                                      out object convertedValue)
-        {
+                                      out object convertedValue) {
             return MiscellaneousUtils.TryAction(delegate { return Convert(initialValue, culture, targetType); },
                                                 out convertedValue);
         }
@@ -426,41 +416,42 @@ namespace NetDimension.Json.Utilities
         ///     The converted type. If conversion was unsuccessful, the initial value
         ///     is returned if assignable to the target type.
         /// </returns>
-        public static object ConvertOrCast(object initialValue, CultureInfo culture, Type targetType)
-        {
+        public static object ConvertOrCast(object initialValue, CultureInfo culture, Type targetType) {
             object convertedValue;
 
-            if (targetType == typeof (object))
+            if (targetType == typeof (object)) {
                 return initialValue;
+            }
 
-            if (initialValue == null && ReflectionUtils.IsNullable(targetType))
+            if (initialValue == null && ReflectionUtils.IsNullable(targetType)) {
                 return null;
+            }
 
-            if (TryConvert(initialValue, culture, targetType, out convertedValue))
+            if (TryConvert(initialValue, culture, targetType, out convertedValue)) {
                 return convertedValue;
+            }
 
             return EnsureTypeAssignable(initialValue, ReflectionUtils.GetObjectType(initialValue), targetType);
         }
 
         #endregion
 
-        private static object EnsureTypeAssignable(object value, Type initialType, Type targetType)
-        {
+        private static object EnsureTypeAssignable(object value, Type initialType, Type targetType) {
             var valueType = (value != null) ? value.GetType() : null;
 
-            if (value != null)
-            {
-                if (targetType.IsAssignableFrom(valueType))
+            if (value != null) {
+                if (targetType.IsAssignableFrom(valueType)) {
                     return value;
+                }
 
                 var castConverter = CastConverters.Get(new TypeConvertKey(valueType, targetType));
-                if (castConverter != null)
+                if (castConverter != null) {
                     return castConverter(value);
-            }
-            else
-            {
-                if (ReflectionUtils.IsNullable(targetType))
+                }
+            } else {
+                if (ReflectionUtils.IsNullable(targetType)) {
                     return null;
+                }
             }
 
             throw new ArgumentException(
@@ -471,20 +462,20 @@ namespace NetDimension.Json.Utilities
         }
 
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
-        public static object ToValue(INullable nullableValue)
-        {
-            if (nullableValue == null)
+        public static object ToValue(INullable nullableValue) {
+            if (nullableValue == null) {
                 return null;
-            else if (nullableValue is SqlInt32)
+            } else if (nullableValue is SqlInt32) {
                 return ToValue((SqlInt32) nullableValue);
-            else if (nullableValue is SqlInt64)
+            } else if (nullableValue is SqlInt64) {
                 return ToValue((SqlInt64) nullableValue);
-            else if (nullableValue is SqlBoolean)
+            } else if (nullableValue is SqlBoolean) {
                 return ToValue((SqlBoolean) nullableValue);
-            else if (nullableValue is SqlString)
+            } else if (nullableValue is SqlString) {
                 return ToValue((SqlString) nullableValue);
-            else if (nullableValue is SqlDateTime)
+            } else if (nullableValue is SqlDateTime) {
                 return ToValue((SqlDateTime) nullableValue);
+            }
 
             throw new ArgumentException("Unsupported INullable type: {0}".FormatWith(CultureInfo.InvariantCulture,
                                                                                      nullableValue.GetType()));
@@ -492,16 +483,13 @@ namespace NetDimension.Json.Utilities
 #endif
 
 #if !(NETFX_CORE || PORTABLE)
-        internal static TypeConverter GetConverter(Type t)
-        {
+        internal static TypeConverter GetConverter(Type t) {
             return JsonTypeReflector.GetTypeConverter(t);
         }
 #endif
 
-        public static bool IsInteger(object value)
-        {
-            switch (GetTypeCode(value))
-            {
+        public static bool IsInteger(object value) {
+            switch (GetTypeCode(value)) {
                 case TypeCode.SByte:
                 case TypeCode.Byte:
                 case TypeCode.Int16:

@@ -71,19 +71,18 @@ namespace NetDimension.Json
         /// <summary>
         ///     Gets or sets the <see cref="IReferenceResolver" /> used by the serializer when resolving references.
         /// </summary>
-        public virtual IReferenceResolver ReferenceResolver
-        {
-            get
-            {
-                if (_referenceResolver == null)
+        public virtual IReferenceResolver ReferenceResolver {
+            get {
+                if (_referenceResolver == null) {
                     _referenceResolver = new DefaultReferenceResolver();
+                }
 
                 return _referenceResolver;
             }
-            set
-            {
-                if (value == null)
+            set {
+                if (value == null) {
                     throw new ArgumentNullException("value", "Reference resolver cannot be null.");
+                }
 
                 _referenceResolver = value;
             }
@@ -92,13 +91,12 @@ namespace NetDimension.Json
         /// <summary>
         ///     Gets or sets the <see cref="SerializationBinder" /> used by the serializer when resolving type names.
         /// </summary>
-        public virtual SerializationBinder Binder
-        {
+        public virtual SerializationBinder Binder {
             get { return _binder; }
-            set
-            {
-                if (value == null)
+            set {
+                if (value == null) {
                     throw new ArgumentNullException("value", "Serialization binder cannot be null.");
+                }
 
                 _binder = value;
             }
@@ -107,13 +105,12 @@ namespace NetDimension.Json
         /// <summary>
         ///     Gets or sets how type name writing and reading is handled by the serializer.
         /// </summary>
-        public virtual TypeNameHandling TypeNameHandling
-        {
+        public virtual TypeNameHandling TypeNameHandling {
             get { return _typeNameHandling; }
-            set
-            {
-                if (value < TypeNameHandling.None || value > TypeNameHandling.Auto)
+            set {
+                if (value < TypeNameHandling.None || value > TypeNameHandling.Auto) {
                     throw new ArgumentOutOfRangeException("value");
+                }
 
                 _typeNameHandling = value;
             }
@@ -123,13 +120,12 @@ namespace NetDimension.Json
         ///     Gets or sets how a type name assembly is written and resolved by the serializer.
         /// </summary>
         /// <value>The type name assembly format.</value>
-        public virtual FormatterAssemblyStyle TypeNameAssemblyFormat
-        {
+        public virtual FormatterAssemblyStyle TypeNameAssemblyFormat {
             get { return _typeNameAssemblyFormat; }
-            set
-            {
-                if (value < FormatterAssemblyStyle.Simple || value > FormatterAssemblyStyle.Full)
+            set {
+                if (value < FormatterAssemblyStyle.Simple || value > FormatterAssemblyStyle.Full) {
                     throw new ArgumentOutOfRangeException("value");
+                }
 
                 _typeNameAssemblyFormat = value;
             }
@@ -138,13 +134,12 @@ namespace NetDimension.Json
         /// <summary>
         ///     Gets or sets how object references are preserved by the serializer.
         /// </summary>
-        public virtual PreserveReferencesHandling PreserveReferencesHandling
-        {
+        public virtual PreserveReferencesHandling PreserveReferencesHandling {
             get { return _preserveReferencesHandling; }
-            set
-            {
-                if (value < PreserveReferencesHandling.None || value > PreserveReferencesHandling.All)
+            set {
+                if (value < PreserveReferencesHandling.None || value > PreserveReferencesHandling.All) {
                     throw new ArgumentOutOfRangeException("value");
+                }
 
                 _preserveReferencesHandling = value;
             }
@@ -153,13 +148,12 @@ namespace NetDimension.Json
         /// <summary>
         ///     Get or set how reference loops (e.g. a class referencing itself) is handled.
         /// </summary>
-        public virtual ReferenceLoopHandling ReferenceLoopHandling
-        {
+        public virtual ReferenceLoopHandling ReferenceLoopHandling {
             get { return _referenceLoopHandling; }
-            set
-            {
-                if (value < ReferenceLoopHandling.Error || value > ReferenceLoopHandling.Serialize)
+            set {
+                if (value < ReferenceLoopHandling.Error || value > ReferenceLoopHandling.Serialize) {
                     throw new ArgumentOutOfRangeException("value");
+                }
 
                 _referenceLoopHandling = value;
             }
@@ -168,13 +162,12 @@ namespace NetDimension.Json
         /// <summary>
         ///     Get or set how missing members (e.g. JSON contains a property that isn't a member on the object) are handled during deserialization.
         /// </summary>
-        public virtual MissingMemberHandling MissingMemberHandling
-        {
+        public virtual MissingMemberHandling MissingMemberHandling {
             get { return _missingMemberHandling; }
-            set
-            {
-                if (value < MissingMemberHandling.Ignore || value > MissingMemberHandling.Error)
+            set {
+                if (value < MissingMemberHandling.Ignore || value > MissingMemberHandling.Error) {
                     throw new ArgumentOutOfRangeException("value");
+                }
 
                 _missingMemberHandling = value;
             }
@@ -183,13 +176,12 @@ namespace NetDimension.Json
         /// <summary>
         ///     Get or set how null values are handled during serialization and deserialization.
         /// </summary>
-        public virtual NullValueHandling NullValueHandling
-        {
+        public virtual NullValueHandling NullValueHandling {
             get { return _nullValueHandling; }
-            set
-            {
-                if (value < NullValueHandling.Include || value > NullValueHandling.Ignore)
+            set {
+                if (value < NullValueHandling.Include || value > NullValueHandling.Ignore) {
                     throw new ArgumentOutOfRangeException("value");
+                }
 
                 _nullValueHandling = value;
             }
@@ -198,13 +190,12 @@ namespace NetDimension.Json
         /// <summary>
         ///     Get or set how null default are handled during serialization and deserialization.
         /// </summary>
-        public virtual DefaultValueHandling DefaultValueHandling
-        {
+        public virtual DefaultValueHandling DefaultValueHandling {
             get { return _defaultValueHandling; }
-            set
-            {
-                if (value < DefaultValueHandling.Include || value > DefaultValueHandling.IgnoreAndPopulate)
+            set {
+                if (value < DefaultValueHandling.Include || value > DefaultValueHandling.IgnoreAndPopulate) {
                     throw new ArgumentOutOfRangeException("value");
+                }
 
                 _defaultValueHandling = value;
             }
@@ -214,13 +205,12 @@ namespace NetDimension.Json
         ///     Gets or sets how objects are created during deserialization.
         /// </summary>
         /// <value>The object creation handling.</value>
-        public virtual ObjectCreationHandling ObjectCreationHandling
-        {
+        public virtual ObjectCreationHandling ObjectCreationHandling {
             get { return _objectCreationHandling; }
-            set
-            {
-                if (value < ObjectCreationHandling.Auto || value > ObjectCreationHandling.Replace)
+            set {
+                if (value < ObjectCreationHandling.Auto || value > ObjectCreationHandling.Replace) {
                     throw new ArgumentOutOfRangeException("value");
+                }
 
                 _objectCreationHandling = value;
             }
@@ -230,13 +220,12 @@ namespace NetDimension.Json
         ///     Gets or sets how constructors are used during deserialization.
         /// </summary>
         /// <value>The constructor handling.</value>
-        public virtual ConstructorHandling ConstructorHandling
-        {
+        public virtual ConstructorHandling ConstructorHandling {
             get { return _constructorHandling; }
-            set
-            {
-                if (value < ConstructorHandling.Default || value > ConstructorHandling.AllowNonPublicDefaultConstructor)
+            set {
+                if (value < ConstructorHandling.Default || value > ConstructorHandling.AllowNonPublicDefaultConstructor) {
                     throw new ArgumentOutOfRangeException("value");
+                }
 
                 _constructorHandling = value;
             }
@@ -248,12 +237,11 @@ namespace NetDimension.Json
         /// <value>
         ///     Collection <see cref="JsonConverter" /> that will be used during serialization.
         /// </value>
-        public virtual JsonConverterCollection Converters
-        {
-            get
-            {
-                if (_converters == null)
+        public virtual JsonConverterCollection Converters {
+            get {
+                if (_converters == null) {
                     _converters = new JsonConverterCollection();
+                }
 
                 return _converters;
             }
@@ -263,12 +251,11 @@ namespace NetDimension.Json
         ///     Gets or sets the contract resolver used by the serializer when
         ///     serializing .NET objects to JSON and vice versa.
         /// </summary>
-        public virtual IContractResolver ContractResolver
-        {
-            get
-            {
-                if (_contractResolver == null)
+        public virtual IContractResolver ContractResolver {
+            get {
+                if (_contractResolver == null) {
                     _contractResolver = DefaultContractResolver.Instance;
+                }
 
                 return _contractResolver;
             }
@@ -279,8 +266,7 @@ namespace NetDimension.Json
         ///     Gets or sets the <see cref="StreamingContext" /> used by the serializer when invoking serialization callback methods.
         /// </summary>
         /// <value>The context.</value>
-        public virtual StreamingContext Context
-        {
+        public virtual StreamingContext Context {
             get { return _context; }
             set { _context = value; }
         }
@@ -288,8 +274,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Indicates how JSON text output is formatted.
         /// </summary>
-        public virtual Formatting Formatting
-        {
+        public virtual Formatting Formatting {
             get { return _formatting ?? JsonSerializerSettings.DefaultFormatting; }
             set { _formatting = value; }
         }
@@ -297,8 +282,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Get or set how dates are written to JSON text.
         /// </summary>
-        public virtual DateFormatHandling DateFormatHandling
-        {
+        public virtual DateFormatHandling DateFormatHandling {
             get { return _dateFormatHandling ?? JsonSerializerSettings.DefaultDateFormatHandling; }
             set { _dateFormatHandling = value; }
         }
@@ -306,8 +290,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Get or set how <see cref="DateTime" /> time zones are handling during serialization and deserialization.
         /// </summary>
-        public virtual DateTimeZoneHandling DateTimeZoneHandling
-        {
+        public virtual DateTimeZoneHandling DateTimeZoneHandling {
             get { return _dateTimeZoneHandling ?? JsonSerializerSettings.DefaultDateTimeZoneHandling; }
             set { _dateTimeZoneHandling = value; }
         }
@@ -315,8 +298,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Get or set how date formatted strings, e.g. "\/Date(1198908717056)\/" and "2012-03-21T05:40Z", are parsed when reading JSON.
         /// </summary>
-        public virtual DateParseHandling DateParseHandling
-        {
+        public virtual DateParseHandling DateParseHandling {
             get { return _dateParseHandling ?? JsonSerializerSettings.DefaultDateParseHandling; }
             set { _dateParseHandling = value; }
         }
@@ -324,8 +306,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Gets or sets the culture used when reading JSON. Defaults to <see cref="CultureInfo.InvariantCulture" />.
         /// </summary>
-        public virtual CultureInfo Culture
-        {
+        public virtual CultureInfo Culture {
             get { return _culture ?? JsonSerializerSettings.DefaultCulture; }
             set { _culture = value; }
         }
@@ -336,13 +317,12 @@ namespace NetDimension.Json
         ///         cref="JsonReaderException" />
         ///     .
         /// </summary>
-        public virtual int? MaxDepth
-        {
+        public virtual int? MaxDepth {
             get { return _maxDepth; }
-            set
-            {
-                if (value <= 0)
+            set {
+                if (value <= 0) {
                     throw new ArgumentException("Value must be positive.", "value");
+                }
 
                 _maxDepth = value;
                 _maxDepthSet = true;
@@ -355,8 +335,7 @@ namespace NetDimension.Json
         /// <value>
         ///     <c>true</c> if there will be a check for additional JSON content after deserializing an object; otherwise, <c>false</c>.
         /// </value>
-        public virtual bool CheckAdditionalContent
-        {
+        public virtual bool CheckAdditionalContent {
             get { return _checkAdditionalContent ?? JsonSerializerSettings.DefaultCheckAdditionalContent; }
             set { _checkAdditionalContent = value; }
         }
@@ -366,8 +345,7 @@ namespace NetDimension.Json
         /// </summary>
         public virtual event EventHandler<ErrorEventArgs> Error;
 
-        internal bool IsCheckAdditionalContentSet()
-        {
+        internal bool IsCheckAdditionalContentSet() {
             return (_checkAdditionalContent != null);
         }
 
@@ -376,8 +354,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Initializes a new instance of the <see cref="JsonSerializer" /> class.
         /// </summary>
-        public JsonSerializer()
-        {
+        public JsonSerializer() {
             _referenceLoopHandling = JsonSerializerSettings.DefaultReferenceLoopHandling;
             _missingMemberHandling = JsonSerializerSettings.DefaultMissingMemberHandling;
             _nullValueHandling = JsonSerializerSettings.DefaultNullValueHandling;
@@ -399,14 +376,13 @@ namespace NetDimension.Json
         /// <returns>
         ///     A new <see cref="JsonSerializer" /> instance using the specified <see cref="JsonSerializerSettings" />.
         /// </returns>
-        public static JsonSerializer Create(JsonSerializerSettings settings)
-        {
+        public static JsonSerializer Create(JsonSerializerSettings settings) {
             var jsonSerializer = new JsonSerializer();
 
-            if (settings != null)
-            {
-                if (!CollectionUtils.IsNullOrEmpty(settings.Converters))
+            if (settings != null) {
+                if (!CollectionUtils.IsNullOrEmpty(settings.Converters)) {
                     jsonSerializer.Converters.AddRange(settings.Converters);
+                }
 
                 // serializer specific
                 jsonSerializer.TypeNameHandling = settings.TypeNameHandling;
@@ -431,15 +407,19 @@ namespace NetDimension.Json
                 jsonSerializer._maxDepth = settings._maxDepth;
                 jsonSerializer._maxDepthSet = settings._maxDepthSet;
 
-                if (settings.Error != null)
+                if (settings.Error != null) {
                     jsonSerializer.Error += settings.Error;
+                }
 
-                if (settings.ContractResolver != null)
+                if (settings.ContractResolver != null) {
                     jsonSerializer.ContractResolver = settings.ContractResolver;
-                if (settings.ReferenceResolver != null)
+                }
+                if (settings.ReferenceResolver != null) {
                     jsonSerializer.ReferenceResolver = settings.ReferenceResolver;
-                if (settings.Binder != null)
+                }
+                if (settings.Binder != null) {
                     jsonSerializer.Binder = settings.Binder;
+                }
             }
 
             return jsonSerializer;
@@ -452,8 +432,7 @@ namespace NetDimension.Json
         ///     The <see cref="TextReader" /> that contains the JSON structure to reader values from.
         /// </param>
         /// <param name="target">The target object to populate values onto.</param>
-        public void Populate(TextReader reader, object target)
-        {
+        public void Populate(TextReader reader, object target) {
             Populate(new JsonTextReader(reader), target);
         }
 
@@ -464,13 +443,11 @@ namespace NetDimension.Json
         ///     The <see cref="JsonReader" /> that contains the JSON structure to reader values from.
         /// </param>
         /// <param name="target">The target object to populate values onto.</param>
-        public void Populate(JsonReader reader, object target)
-        {
+        public void Populate(JsonReader reader, object target) {
             PopulateInternal(reader, target);
         }
 
-        internal virtual void PopulateInternal(JsonReader reader, object target)
-        {
+        internal virtual void PopulateInternal(JsonReader reader, object target) {
             ValidationUtils.ArgumentNotNull(reader, "reader");
             ValidationUtils.ArgumentNotNull(target, "target");
 
@@ -487,8 +464,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     The <see cref="Object" /> being deserialized.
         /// </returns>
-        public object Deserialize(JsonReader reader)
-        {
+        public object Deserialize(JsonReader reader) {
             return Deserialize(reader, null);
         }
 
@@ -505,8 +481,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     The instance of <paramref name="objectType" /> being deserialized.
         /// </returns>
-        public object Deserialize(TextReader reader, Type objectType)
-        {
+        public object Deserialize(TextReader reader, Type objectType) {
             return Deserialize(new JsonTextReader(reader), objectType);
         }
 
@@ -521,8 +496,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     The instance of <typeparamref name="T" /> being deserialized.
         /// </returns>
-        public T Deserialize<T>(JsonReader reader)
-        {
+        public T Deserialize<T>(JsonReader reader) {
             return (T) Deserialize(reader, typeof (T));
         }
 
@@ -539,37 +513,31 @@ namespace NetDimension.Json
         /// <returns>
         ///     The instance of <paramref name="objectType" /> being deserialized.
         /// </returns>
-        public object Deserialize(JsonReader reader, Type objectType)
-        {
+        public object Deserialize(JsonReader reader, Type objectType) {
             return DeserializeInternal(reader, objectType);
         }
 
-        internal virtual object DeserializeInternal(JsonReader reader, Type objectType)
-        {
+        internal virtual object DeserializeInternal(JsonReader reader, Type objectType) {
             ValidationUtils.ArgumentNotNull(reader, "reader");
 
             // set serialization options onto reader
             CultureInfo previousCulture = null;
-            if (_culture != null && reader.Culture != _culture)
-            {
+            if (_culture != null && reader.Culture != _culture) {
                 previousCulture = reader.Culture;
                 reader.Culture = _culture;
             }
             DateTimeZoneHandling? previousDateTimeZoneHandling = null;
-            if (_dateTimeZoneHandling != null && reader.DateTimeZoneHandling != _dateTimeZoneHandling)
-            {
+            if (_dateTimeZoneHandling != null && reader.DateTimeZoneHandling != _dateTimeZoneHandling) {
                 previousDateTimeZoneHandling = reader.DateTimeZoneHandling;
                 reader.DateTimeZoneHandling = _dateTimeZoneHandling.Value;
             }
             DateParseHandling? previousDateParseHandling = null;
-            if (_dateParseHandling != null && reader.DateTimeZoneHandling != _dateTimeZoneHandling)
-            {
+            if (_dateParseHandling != null && reader.DateTimeZoneHandling != _dateTimeZoneHandling) {
                 previousDateParseHandling = reader.DateParseHandling;
                 reader.DateParseHandling = _dateParseHandling.Value;
             }
             int? previousMaxDepth = null;
-            if (_maxDepthSet && reader.MaxDepth != _maxDepth)
-            {
+            if (_maxDepthSet && reader.MaxDepth != _maxDepth) {
                 previousMaxDepth = reader.MaxDepth;
                 reader.MaxDepth = _maxDepth;
             }
@@ -578,14 +546,18 @@ namespace NetDimension.Json
             var value = serializerReader.Deserialize(reader, objectType, CheckAdditionalContent);
 
             // reset reader back to previous options
-            if (previousCulture != null)
+            if (previousCulture != null) {
                 reader.Culture = previousCulture;
-            if (previousDateTimeZoneHandling != null)
+            }
+            if (previousDateTimeZoneHandling != null) {
                 reader.DateTimeZoneHandling = previousDateTimeZoneHandling.Value;
-            if (previousDateParseHandling != null)
+            }
+            if (previousDateParseHandling != null) {
                 reader.DateParseHandling = previousDateParseHandling.Value;
-            if (_maxDepthSet)
+            }
+            if (_maxDepthSet) {
                 reader.MaxDepth = previousMaxDepth;
+            }
 
             return value;
         }
@@ -600,8 +572,7 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Object" /> to serialize.
         /// </param>
-        public void Serialize(TextWriter textWriter, object value)
-        {
+        public void Serialize(TextWriter textWriter, object value) {
             Serialize(new JsonTextWriter(textWriter), value);
         }
 
@@ -615,31 +586,26 @@ namespace NetDimension.Json
         /// <param name="value">
         ///     The <see cref="Object" /> to serialize.
         /// </param>
-        public void Serialize(JsonWriter jsonWriter, object value)
-        {
+        public void Serialize(JsonWriter jsonWriter, object value) {
             SerializeInternal(jsonWriter, value);
         }
 
-        internal virtual void SerializeInternal(JsonWriter jsonWriter, object value)
-        {
+        internal virtual void SerializeInternal(JsonWriter jsonWriter, object value) {
             ValidationUtils.ArgumentNotNull(jsonWriter, "jsonWriter");
 
             // set serialization options onto writer
             Formatting? previousFormatting = null;
-            if (_formatting != null && jsonWriter.Formatting != _formatting)
-            {
+            if (_formatting != null && jsonWriter.Formatting != _formatting) {
                 previousFormatting = jsonWriter.Formatting;
                 jsonWriter.Formatting = _formatting.Value;
             }
             DateFormatHandling? previousDateFormatHandling = null;
-            if (_dateFormatHandling != null && jsonWriter.DateFormatHandling != _dateFormatHandling)
-            {
+            if (_dateFormatHandling != null && jsonWriter.DateFormatHandling != _dateFormatHandling) {
                 previousDateFormatHandling = jsonWriter.DateFormatHandling;
                 jsonWriter.DateFormatHandling = _dateFormatHandling.Value;
             }
             DateTimeZoneHandling? previousDateTimeZoneHandling = null;
-            if (_dateTimeZoneHandling != null && jsonWriter.DateTimeZoneHandling != _dateTimeZoneHandling)
-            {
+            if (_dateTimeZoneHandling != null && jsonWriter.DateTimeZoneHandling != _dateTimeZoneHandling) {
                 previousDateTimeZoneHandling = jsonWriter.DateTimeZoneHandling;
                 jsonWriter.DateTimeZoneHandling = _dateTimeZoneHandling.Value;
             }
@@ -648,44 +614,44 @@ namespace NetDimension.Json
             serializerWriter.Serialize(jsonWriter, value);
 
             // reset writer back to previous options
-            if (previousFormatting != null)
+            if (previousFormatting != null) {
                 jsonWriter.Formatting = previousFormatting.Value;
-            if (previousDateFormatHandling != null)
+            }
+            if (previousDateFormatHandling != null) {
                 jsonWriter.DateFormatHandling = previousDateFormatHandling.Value;
-            if (previousDateTimeZoneHandling != null)
+            }
+            if (previousDateTimeZoneHandling != null) {
                 jsonWriter.DateTimeZoneHandling = previousDateTimeZoneHandling.Value;
+            }
         }
 
-        internal JsonConverter GetMatchingConverter(Type type)
-        {
+        internal JsonConverter GetMatchingConverter(Type type) {
             return GetMatchingConverter(_converters, type);
         }
 
-        internal static JsonConverter GetMatchingConverter(IList<JsonConverter> converters, Type objectType)
-        {
+        internal static JsonConverter GetMatchingConverter(IList<JsonConverter> converters, Type objectType) {
 #if DEBUG
             ValidationUtils.ArgumentNotNull(objectType, "objectType");
 #endif
 
-            if (converters != null)
-            {
-                for (var i = 0; i < converters.Count; i++)
-                {
+            if (converters != null) {
+                for (var i = 0; i < converters.Count; i++) {
                     var converter = converters[i];
 
-                    if (converter.CanConvert(objectType))
+                    if (converter.CanConvert(objectType)) {
                         return converter;
+                    }
                 }
             }
 
             return null;
         }
 
-        internal void OnError(ErrorEventArgs e)
-        {
+        internal void OnError(ErrorEventArgs e) {
             var error = Error;
-            if (error != null)
+            if (error != null) {
                 error(this, e);
+            }
         }
     }
 }

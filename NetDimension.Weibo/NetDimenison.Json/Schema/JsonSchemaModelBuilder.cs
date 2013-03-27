@@ -27,11 +27,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-
-#endif
 
 namespace NetDimension.Json.Schema
 {
@@ -44,8 +39,7 @@ namespace NetDimension.Json.Schema
 
         private JsonSchemaNodeCollection _nodes = new JsonSchemaNodeCollection();
 
-        public JsonSchemaModel Build(JsonSchema schema)
-        {
+        public JsonSchemaModel Build(JsonSchema schema) {
             _nodes = new JsonSchemaNodeCollection();
             _node = AddSchema(null, schema);
 
@@ -55,23 +49,21 @@ namespace NetDimension.Json.Schema
             return model;
         }
 
-        public JsonSchemaNode AddSchema(JsonSchemaNode existingNode, JsonSchema schema)
-        {
+        public JsonSchemaNode AddSchema(JsonSchemaNode existingNode, JsonSchema schema) {
             string newId;
-            if (existingNode != null)
-            {
-                if (existingNode.Schemas.Contains(schema))
+            if (existingNode != null) {
+                if (existingNode.Schemas.Contains(schema)) {
                     return existingNode;
+                }
 
                 newId = JsonSchemaNode.GetId(existingNode.Schemas.Union(new[] {schema}));
-            }
-            else
-            {
+            } else {
                 newId = JsonSchemaNode.GetId(new[] {schema});
             }
 
-            if (_nodes.Contains(newId))
+            if (_nodes.Contains(newId)) {
                 return _nodes[newId];
+            }
 
             var currentNode = (existingNode != null)
                                   ? existingNode.Combine(schema)
@@ -83,97 +75,89 @@ namespace NetDimension.Json.Schema
 
             AddProperties(schema.PatternProperties, currentNode.PatternProperties);
 
-            if (schema.Items != null)
-            {
-                for (var i = 0; i < schema.Items.Count; i++)
-                {
+            if (schema.Items != null) {
+                for (var i = 0; i < schema.Items.Count; i++) {
                     AddItem(currentNode, i, schema.Items[i]);
                 }
             }
 
-            if (schema.AdditionalProperties != null)
+            if (schema.AdditionalProperties != null) {
                 AddAdditionalProperties(currentNode, schema.AdditionalProperties);
+            }
 
-            if (schema.Extends != null)
+            if (schema.Extends != null) {
                 currentNode = AddSchema(currentNode, schema.Extends);
+            }
 
             return currentNode;
         }
 
-        public void AddProperties(IDictionary<string, JsonSchema> source, IDictionary<string, JsonSchemaNode> target)
-        {
-            if (source != null)
-            {
-                foreach (var property in source)
-                {
+        public void AddProperties(IDictionary<string, JsonSchema> source, IDictionary<string, JsonSchemaNode> target) {
+            if (source != null) {
+                foreach (var property in source) {
                     AddProperty(target, property.Key, property.Value);
                 }
             }
         }
 
-        public void AddProperty(IDictionary<string, JsonSchemaNode> target, string propertyName, JsonSchema schema)
-        {
+        public void AddProperty(IDictionary<string, JsonSchemaNode> target, string propertyName, JsonSchema schema) {
             JsonSchemaNode propertyNode;
             target.TryGetValue(propertyName, out propertyNode);
 
             target[propertyName] = AddSchema(propertyNode, schema);
         }
 
-        public void AddItem(JsonSchemaNode parentNode, int index, JsonSchema schema)
-        {
+        public void AddItem(JsonSchemaNode parentNode, int index, JsonSchema schema) {
             var existingItemNode = (parentNode.Items.Count > index)
                                        ? parentNode.Items[index]
                                        : null;
 
             var newItemNode = AddSchema(existingItemNode, schema);
 
-            if (!(parentNode.Items.Count > index))
-            {
+            if (!(parentNode.Items.Count > index)) {
                 parentNode.Items.Add(newItemNode);
-            }
-            else
-            {
+            } else {
                 parentNode.Items[index] = newItemNode;
             }
         }
 
-        public void AddAdditionalProperties(JsonSchemaNode parentNode, JsonSchema schema)
-        {
+        public void AddAdditionalProperties(JsonSchemaNode parentNode, JsonSchema schema) {
             parentNode.AdditionalProperties = AddSchema(parentNode.AdditionalProperties, schema);
         }
 
-        private JsonSchemaModel BuildNodeModel(JsonSchemaNode node)
-        {
+        private JsonSchemaModel BuildNodeModel(JsonSchemaNode node) {
             JsonSchemaModel model;
-            if (_nodeModels.TryGetValue(node, out model))
+            if (_nodeModels.TryGetValue(node, out model)) {
                 return model;
+            }
 
             model = JsonSchemaModel.Create(node.Schemas);
             _nodeModels[node] = model;
 
-            foreach (var property in node.Properties)
-            {
-                if (model.Properties == null)
+            foreach (var property in node.Properties) {
+                if (model.Properties == null) {
                     model.Properties = new Dictionary<string, JsonSchemaModel>();
+                }
 
                 model.Properties[property.Key] = BuildNodeModel(property.Value);
             }
-            foreach (var property in node.PatternProperties)
-            {
-                if (model.PatternProperties == null)
+            foreach (var property in node.PatternProperties) {
+                if (model.PatternProperties == null) {
                     model.PatternProperties = new Dictionary<string, JsonSchemaModel>();
+                }
 
                 model.PatternProperties[property.Key] = BuildNodeModel(property.Value);
             }
-            foreach (var t in node.Items)
-            {
-                if (model.Items == null)
+            foreach (var t in node.Items) {
+                if (model.Items == null) {
                     model.Items = new List<JsonSchemaModel>();
+                }
 
                 model.Items.Add(BuildNodeModel(t));
             }
-            if (node.AdditionalProperties != null)
+            if (node.AdditionalProperties != null) {
                 model.AdditionalProperties = BuildNodeModel(node.AdditionalProperties);
+            }
 
             return model;
         }

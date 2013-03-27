@@ -41,9 +41,7 @@ namespace NetDimension.Json
         ReadAsString,
         ReadAsDecimal,
         ReadAsDateTime,
-#if !NET20
         ReadAsDateTimeOffset
-#endif
     }
 
     /// <summary>
@@ -54,13 +52,13 @@ namespace NetDimension.Json
         private const char UnicodeReplacementChar = '\uFFFD';
 
         private readonly TextReader _reader;
+        private StringBuffer _buffer;
+        private int _charPos;
         private char[] _chars;
         private int _charsUsed;
-        private int _charPos;
-        private int _lineStartPos;
-        private int _lineNumber;
         private bool _isEndOfFile;
-        private StringBuffer _buffer;
+        private int _lineNumber;
+        private int _lineStartPos;
         private StringReference _stringReference;
 
         /// <summary>
@@ -69,91 +67,107 @@ namespace NetDimension.Json
         /// <param name="reader">
         ///     The <c>TextReader</c> containing the XML data to read.
         /// </param>
-        public JsonTextReader(TextReader reader)
-        {
-            if (reader == null)
+        public JsonTextReader(TextReader reader) {
+            if (reader == null) {
                 throw new ArgumentNullException("reader");
+            }
 
             _reader = reader;
             _lineNumber = 1;
             _chars = new char[4097];
         }
 
-        internal void SetCharBuffer(char[] chars)
-        {
+        /// <summary>
+        ///     Gets a value indicating whether the class can return line information.
+        /// </summary>
+        /// <returns>
+        ///     <c>true</c> if LineNumber and LinePosition can be provided; otherwise, <c>false</c>.
+        /// </returns>
+        public bool HasLineInfo() {
+            return true;
+        }
+
+        /// <summary>
+        ///     Gets the current line number.
+        /// </summary>
+        /// <value>
+        ///     The current line number or 0 if no line information is available (for example, HasLineInfo returns false).
+        /// </value>
+        public int LineNumber {
+            get {
+                if (CurrentState == State.Start && LinePosition == 0) {
+                    return 0;
+                }
+
+                return _lineNumber;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the current line position.
+        /// </summary>
+        /// <value>
+        ///     The current line position or 0 if no line information is available (for example, HasLineInfo returns false).
+        /// </value>
+        public int LinePosition {
+            get { return _charPos - _lineStartPos; }
+        }
+
+        internal void SetCharBuffer(char[] chars) {
             _chars = chars;
         }
 
-        private StringBuffer GetBuffer()
-        {
-            if (_buffer == null)
-            {
+        private StringBuffer GetBuffer() {
+            if (_buffer == null) {
                 _buffer = new StringBuffer(4096);
-            }
-            else
-            {
+            } else {
                 _buffer.Position = 0;
             }
 
             return _buffer;
         }
 
-        private void OnNewLine(int pos)
-        {
+        private void OnNewLine(int pos) {
             _lineNumber++;
             _lineStartPos = pos - 1;
         }
 
-        private void ParseString(char quote)
-        {
+        private void ParseString(char quote) {
             _charPos++;
 
             ShiftBufferIfNeeded();
             ReadStringIntoBuffer(quote);
 
-            if (_readType == ReadType.ReadAsBytes)
-            {
+            if (_readType == ReadType.ReadAsBytes) {
                 byte[] data;
-                if (_stringReference.Length == 0)
-                {
+                if (_stringReference.Length == 0) {
                     data = new byte[0];
-                }
-                else
-                {
+                } else {
                     data = Convert.FromBase64CharArray(_stringReference.Chars, _stringReference.StartIndex,
                                                        _stringReference.Length);
                 }
 
                 SetToken(JsonToken.Bytes, data);
-            }
-            else if (_readType == ReadType.ReadAsString)
-            {
+            } else if (_readType == ReadType.ReadAsString) {
                 var text = _stringReference.ToString();
 
                 SetToken(JsonToken.String, text);
                 QuoteChar = quote;
-            }
-            else
-            {
+            } else {
                 var text = _stringReference.ToString();
 
-                if (_dateParseHandling != DateParseHandling.None)
-                {
-                    if (text.Length > 0)
-                    {
-                        if (text[0] == '/')
-                        {
+                if (_dateParseHandling != DateParseHandling.None) {
+                    if (text.Length > 0) {
+                        if (text[0] == '/') {
                             if (text.StartsWith("/Date(", StringComparison.Ordinal) &&
-                                text.EndsWith(")/", StringComparison.Ordinal))
-                            {
+                                text.EndsWith(")/", StringComparison.Ordinal)) {
                                 ParseDateMicrosoft(text);
                                 return;
                             }
-                        }
-                        else if (char.IsDigit(text[0]) && text.Length >= 19 && text.Length <= 40)
-                        {
-                            if (ParseDateIso(text))
+                        } else if (char.IsDigit(text[0]) && text.Length >= 19 && text.Length <= 40) {
+                            if (ParseDateIso(text)) {
                                 return;
+                            }
                         }
                     }
                 }
@@ -163,29 +177,21 @@ namespace NetDimension.Json
             }
         }
 
-        private bool ParseDateIso(string text)
-        {
+        private bool ParseDateIso(string text) {
             const string isoDateFormat = "yyyy-MM-ddTHH:mm:ss.FFFFFFFK";
 
-#if !NET20
             if (_readType == ReadType.ReadAsDateTimeOffset ||
-                (_readType == ReadType.Read && _dateParseHandling == DateParseHandling.DateTimeOffset))
-            {
+                (_readType == ReadType.Read && _dateParseHandling == DateParseHandling.DateTimeOffset)) {
                 DateTimeOffset dateTimeOffset;
                 if (DateTimeOffset.TryParseExact(text, isoDateFormat, CultureInfo.InvariantCulture,
-                                                 DateTimeStyles.RoundtripKind, out dateTimeOffset))
-                {
+                                                 DateTimeStyles.RoundtripKind, out dateTimeOffset)) {
                     SetToken(JsonToken.Date, dateTimeOffset);
                     return true;
                 }
-            }
-            else
-#endif
-            {
+            } else {
                 DateTime dateTime;
                 if (DateTime.TryParseExact(text, isoDateFormat, CultureInfo.InvariantCulture,
-                                           DateTimeStyles.RoundtripKind, out dateTime))
-                {
+                                           DateTimeStyles.RoundtripKind, out dateTime)) {
                     dateTime = JsonConvert.EnsureDateTime(dateTime, DateTimeZoneHandling);
 
                     SetToken(JsonToken.Date, dateTime);
@@ -196,20 +202,19 @@ namespace NetDimension.Json
             return false;
         }
 
-        private void ParseDateMicrosoft(string text)
-        {
+        private void ParseDateMicrosoft(string text) {
             var value = text.Substring(6, text.Length - 8);
             var kind = DateTimeKind.Utc;
 
             var index = value.IndexOf('+', 1);
 
-            if (index == -1)
+            if (index == -1) {
                 index = value.IndexOf('-', 1);
+            }
 
             var offset = TimeSpan.Zero;
 
-            if (index != -1)
-            {
+            if (index != -1) {
                 kind = DateTimeKind.Local;
                 offset = ReadOffset(value.Substring(index));
                 value = value.Substring(0, index);
@@ -219,19 +224,13 @@ namespace NetDimension.Json
 
             var utcDateTime = JsonConvert.ConvertJavaScriptTicksToDateTime(javaScriptTicks);
 
-#if !NET20
             if (_readType == ReadType.ReadAsDateTimeOffset ||
-                (_readType == ReadType.Read && _dateParseHandling == DateParseHandling.DateTimeOffset))
-            {
+                (_readType == ReadType.Read && _dateParseHandling == DateParseHandling.DateTimeOffset)) {
                 SetToken(JsonToken.Date, new DateTimeOffset(utcDateTime.Add(offset).Ticks, offset));
-            }
-            else
-#endif
-            {
+            } else {
                 DateTime dateTime;
 
-                switch (kind)
-                {
+                switch (kind) {
                     case DateTimeKind.Unspecified:
                         dateTime = DateTime.SpecifyKind(utcDateTime.ToLocalTime(), DateTimeKind.Unspecified);
                         break;
@@ -249,23 +248,21 @@ namespace NetDimension.Json
             }
         }
 
-        private static void BlockCopyChars(char[] src, int srcOffset, char[] dst, int dstOffset, int count)
-        {
+        private static void BlockCopyChars(char[] src, int srcOffset, char[] dst, int dstOffset, int count) {
             const int charByteCount = 2;
 
             Buffer.BlockCopy(src, srcOffset*charByteCount, dst, dstOffset*charByteCount, count*charByteCount);
         }
 
-        private void ShiftBufferIfNeeded()
-        {
+        private void ShiftBufferIfNeeded() {
             // once in the last 10% of the buffer shift the remainling content to the start to avoid
             // unnessesarly increasing the buffer size when reading numbers/strings
             var length = _chars.Length;
-            if (length - _charPos <= length*0.1)
-            {
+            if (length - _charPos <= length*0.1) {
                 var count = _charsUsed - _charPos;
-                if (count > 0)
+                if (count > 0) {
                     BlockCopyChars(_chars, _charPos, _chars, 0, count);
+                }
 
                 _lineStartPos -= _charPos;
                 _charPos = 0;
@@ -274,21 +271,18 @@ namespace NetDimension.Json
             }
         }
 
-        private int ReadData(bool append)
-        {
+        private int ReadData(bool append) {
             return ReadData(append, 0);
         }
 
-        private int ReadData(bool append, int charsRequired)
-        {
-            if (_isEndOfFile)
+        private int ReadData(bool append, int charsRequired) {
+            if (_isEndOfFile) {
                 return 0;
+            }
 
             // char buffer is full
-            if (_charsUsed + charsRequired >= _chars.Length - 1)
-            {
-                if (append)
-                {
+            if (_charsUsed + charsRequired >= _chars.Length - 1) {
+                if (append) {
                     // copy to new array either double the size of the current or big enough to fit required content
                     var newArrayLength = Math.Max(_chars.Length*2, _charsUsed + charsRequired + 1);
 
@@ -298,26 +292,23 @@ namespace NetDimension.Json
                     BlockCopyChars(_chars, 0, dst, 0, _chars.Length);
 
                     _chars = dst;
-                }
-                else
-                {
+                } else {
                     var remainingCharCount = _charsUsed - _charPos;
 
-                    if (remainingCharCount + charsRequired + 1 >= _chars.Length)
-                    {
+                    if (remainingCharCount + charsRequired + 1 >= _chars.Length) {
                         // the remaining count plus the required is bigger than the current buffer size
                         var dst = new char[remainingCharCount + charsRequired + 1];
 
-                        if (remainingCharCount > 0)
+                        if (remainingCharCount > 0) {
                             BlockCopyChars(_chars, _charPos, dst, 0, remainingCharCount);
+                        }
 
                         _chars = dst;
-                    }
-                    else
-                    {
+                    } else {
                         // copy any remaining data to the beginning of the buffer if needed and reset positions
-                        if (remainingCharCount > 0)
+                        if (remainingCharCount > 0) {
                             BlockCopyChars(_chars, _charPos, _chars, 0, remainingCharCount);
+                        }
                     }
 
                     _lineStartPos -= _charPos;
@@ -332,25 +323,26 @@ namespace NetDimension.Json
 
             _charsUsed += charsRead;
 
-            if (charsRead == 0)
+            if (charsRead == 0) {
                 _isEndOfFile = true;
+            }
 
             _chars[_charsUsed] = '\0';
             return charsRead;
         }
 
-        private bool EnsureChars(int relativePosition, bool append)
-        {
-            if (_charPos + relativePosition >= _charsUsed)
+        private bool EnsureChars(int relativePosition, bool append) {
+            if (_charPos + relativePosition >= _charsUsed) {
                 return ReadChars(relativePosition, append);
+            }
 
             return true;
         }
 
-        private bool ReadChars(int relativePosition, bool append)
-        {
-            if (_isEndOfFile)
+        private bool ReadChars(int relativePosition, bool append) {
+            if (_isEndOfFile) {
                 return false;
+            }
 
             var charsRequired = _charPos + relativePosition - _charsUsed + 1;
 
@@ -358,34 +350,36 @@ namespace NetDimension.Json
 
             // it is possible that the TextReader doesn't return all data at once
             // repeat read until the required text is returned or the reader is out of content
-            do
-            {
+            do {
                 var charsRead = ReadData(append, charsRequired - totalCharsRead);
 
                 // no more content
-                if (charsRead == 0)
+                if (charsRead == 0) {
                     break;
+                }
 
                 totalCharsRead += charsRead;
             } while (totalCharsRead < charsRequired);
 
-            if (totalCharsRead < charsRequired)
+            if (totalCharsRead < charsRequired) {
                 return false;
+            }
             return true;
         }
 
-        private static TimeSpan ReadOffset(string offsetText)
-        {
+        private static TimeSpan ReadOffset(string offsetText) {
             var negative = (offsetText[0] == '-');
 
             var hours = int.Parse(offsetText.Substring(1, 2), NumberStyles.Integer, CultureInfo.InvariantCulture);
             var minutes = 0;
-            if (offsetText.Length >= 5)
+            if (offsetText.Length >= 5) {
                 minutes = int.Parse(offsetText.Substring(3, 2), NumberStyles.Integer, CultureInfo.InvariantCulture);
+            }
 
             var offset = TimeSpan.FromHours(hours) + TimeSpan.FromMinutes(minutes);
-            if (negative)
+            if (negative) {
                 offset = offset.Negate();
+            }
 
             return offset;
         }
@@ -397,11 +391,9 @@ namespace NetDimension.Json
         ///     true if the next token was read successfully; false if there are no more tokens to read.
         /// </returns>
         [DebuggerStepThrough]
-        public override bool Read()
-        {
+        public override bool Read() {
             _readType = ReadType.Read;
-            if (!ReadInternal())
-            {
+            if (!ReadInternal()) {
                 SetToken(JsonToken.None);
                 return false;
             }
@@ -415,8 +407,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A <see cref="T:Byte[]" /> or a null reference if the next JSON token is null. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override byte[] ReadAsBytes()
-        {
+        public override byte[] ReadAsBytes() {
             return ReadAsBytesInternal();
         }
 
@@ -426,8 +417,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A <see cref="Nullable{Decimal}" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override decimal? ReadAsDecimal()
-        {
+        public override decimal? ReadAsDecimal() {
             return ReadAsDecimalInternal();
         }
 
@@ -437,8 +427,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A <see cref="Nullable{Int32}" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override int? ReadAsInt32()
-        {
+        public override int? ReadAsInt32() {
             return ReadAsInt32Internal();
         }
 
@@ -448,8 +437,7 @@ namespace NetDimension.Json
         /// <returns>
         ///     A <see cref="String" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override string ReadAsString()
-        {
+        public override string ReadAsString() {
             return ReadAsStringInternal();
         }
 
@@ -459,30 +447,23 @@ namespace NetDimension.Json
         /// <returns>
         ///     A <see cref="String" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override DateTime? ReadAsDateTime()
-        {
+        public override DateTime? ReadAsDateTime() {
             return ReadAsDateTimeInternal();
         }
 
-#if !NET20
         /// <summary>
         ///     Reads the next JSON token from the stream as a <see cref="Nullable{DateTimeOffset}" />.
         /// </summary>
         /// <returns>
         ///     A <see cref="DateTimeOffset" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
-        public override DateTimeOffset? ReadAsDateTimeOffset()
-        {
+        public override DateTimeOffset? ReadAsDateTimeOffset() {
             return ReadAsDateTimeOffsetInternal();
         }
-#endif
 
-        internal override bool ReadInternal()
-        {
-            while (true)
-            {
-                switch (_currentState)
-                {
+        internal override bool ReadInternal() {
+            while (true) {
+                switch (_currentState) {
                     case State.Start:
                     case State.Property:
                     case State.Array:
@@ -498,24 +479,20 @@ namespace NetDimension.Json
                     case State.PostValue:
                         // returns true if it hits
                         // end of object or array
-                        if (ParsePostValue())
+                        if (ParsePostValue()) {
                             return true;
+                        }
                         break;
                     case State.Finished:
-                        if (EnsureChars(0, false))
-                        {
+                        if (EnsureChars(0, false)) {
                             EatWhitespace(false);
-                            if (_isEndOfFile)
-                            {
+                            if (_isEndOfFile) {
                                 return false;
                             }
-                            if (_chars[_charPos] == '/')
-                            {
+                            if (_chars[_charPos] == '/') {
                                 ParseComment();
                                 return true;
-                            }
-                            else
-                            {
+                            } else {
                                 throw JsonReaderException.Create(this,
                                                                  "Additional text encountered after finished reading JSON content: {0}."
                                                                      .FormatWith(CultureInfo.InvariantCulture,
@@ -535,24 +512,19 @@ namespace NetDimension.Json
             }
         }
 
-        private void ReadStringIntoBuffer(char quote)
-        {
+        private void ReadStringIntoBuffer(char quote) {
             var charPos = _charPos;
             var initialPosition = _charPos;
             var lastWritePosition = _charPos;
             StringBuffer buffer = null;
 
-            while (true)
-            {
-                switch (_chars[charPos++])
-                {
+            while (true) {
+                switch (_chars[charPos++]) {
                     case '\0':
-                        if (_charsUsed == charPos - 1)
-                        {
+                        if (_charsUsed == charPos - 1) {
                             charPos--;
 
-                            if (ReadData(true) == 0)
-                            {
+                            if (ReadData(true) == 0) {
                                 _charPos = charPos;
                                 throw JsonReaderException.Create(this,
                                                                  "Unterminated string. Expected delimiter: {0}."
@@ -562,8 +534,7 @@ namespace NetDimension.Json
                         break;
                     case '\\':
                         _charPos = charPos;
-                        if (!EnsureChars(0, true))
-                        {
+                        if (!EnsureChars(0, true)) {
                             _charPos = charPos;
                             throw JsonReaderException.Create(this,
                                                              "Unterminated string. Expected delimiter: {0}.".FormatWith(
@@ -577,8 +548,7 @@ namespace NetDimension.Json
 
                         char writeChar;
 
-                        switch (currentChar)
-                        {
+                        switch (currentChar) {
                             case 'b':
                                 charPos++;
                                 writeChar = '\b';
@@ -614,53 +584,42 @@ namespace NetDimension.Json
                                 _charPos = charPos;
                                 writeChar = ParseUnicode();
 
-                                if (StringUtils.IsLowSurrogate(writeChar))
-                                {
+                                if (StringUtils.IsLowSurrogate(writeChar)) {
                                     // low surrogate with no preceding high surrogate; this char is replaced
                                     writeChar = UnicodeReplacementChar;
-                                }
-                                else if (StringUtils.IsHighSurrogate(writeChar))
-                                {
+                                } else if (StringUtils.IsHighSurrogate(writeChar)) {
                                     bool anotherHighSurrogate;
 
                                     // loop for handling situations where there are multiple consecutive high surrogates
-                                    do
-                                    {
+                                    do {
                                         anotherHighSurrogate = false;
 
                                         // potential start of a surrogate pair
                                         if (EnsureChars(2, true) && _chars[_charPos] == '\\' &&
-                                            _chars[_charPos + 1] == 'u')
-                                        {
+                                            _chars[_charPos + 1] == 'u') {
                                             var highSurrogate = writeChar;
 
                                             _charPos += 2;
                                             writeChar = ParseUnicode();
 
-                                            if (StringUtils.IsLowSurrogate(writeChar))
-                                            {
+                                            if (StringUtils.IsLowSurrogate(writeChar)) {
                                                 // a valid surrogate pair!
-                                            }
-                                            else if (StringUtils.IsHighSurrogate(writeChar))
-                                            {
+                                            } else if (StringUtils.IsHighSurrogate(writeChar)) {
                                                 // another high surrogate; replace current and start check over
                                                 highSurrogate = UnicodeReplacementChar;
                                                 anotherHighSurrogate = true;
-                                            }
-                                            else
-                                            {
+                                            } else {
                                                 // high surrogate not followed by low surrogate; original char is replaced
                                                 highSurrogate = UnicodeReplacementChar;
                                             }
 
-                                            if (buffer == null)
+                                            if (buffer == null) {
                                                 buffer = GetBuffer();
+                                            }
 
                                             WriteCharToBuffer(buffer, highSurrogate, lastWritePosition, escapeStartPos);
                                             lastWritePosition = _charPos;
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             // there are not enough remaining chars for the low surrogate or is not follow by unicode sequence
                                             // replace high surrogate and continue on as usual
                                             writeChar = UnicodeReplacementChar;
@@ -678,8 +637,9 @@ namespace NetDimension.Json
                                                                      CultureInfo.InvariantCulture, @"\" + currentChar));
                         }
 
-                        if (buffer == null)
+                        if (buffer == null) {
                             buffer = GetBuffer();
+                        }
 
                         WriteCharToBuffer(buffer, writeChar, lastWritePosition, escapeStartPos);
 
@@ -697,22 +657,20 @@ namespace NetDimension.Json
                         break;
                     case '"':
                     case '\'':
-                        if (_chars[charPos - 1] == quote)
-                        {
+                        if (_chars[charPos - 1] == quote) {
                             charPos--;
 
-                            if (initialPosition == lastWritePosition)
-                            {
+                            if (initialPosition == lastWritePosition) {
                                 _stringReference = new StringReference(_chars, initialPosition,
                                                                        charPos - initialPosition);
-                            }
-                            else
-                            {
-                                if (buffer == null)
+                            } else {
+                                if (buffer == null) {
                                     buffer = GetBuffer();
+                                }
 
-                                if (charPos > lastWritePosition)
+                                if (charPos > lastWritePosition) {
                                     buffer.Append(_chars, lastWritePosition, charPos - lastWritePosition);
+                                }
 
                                 _stringReference = new StringReference(buffer.GetInternalBuffer(), 0, buffer.Position);
                             }
@@ -726,50 +684,41 @@ namespace NetDimension.Json
             }
         }
 
-        private void WriteCharToBuffer(StringBuffer buffer, char writeChar, int lastWritePosition, int writeToPosition)
-        {
-            if (writeToPosition > lastWritePosition)
-            {
+        private void WriteCharToBuffer(StringBuffer buffer, char writeChar, int lastWritePosition, int writeToPosition) {
+            if (writeToPosition > lastWritePosition) {
                 buffer.Append(_chars, lastWritePosition, writeToPosition - lastWritePosition);
             }
 
             buffer.Append(writeChar);
         }
 
-        private char ParseUnicode()
-        {
+        private char ParseUnicode() {
             char writeChar;
-            if (EnsureChars(4, true))
-            {
+            if (EnsureChars(4, true)) {
                 var hexValues = new string(_chars, _charPos, 4);
                 var hexChar =
                     Convert.ToChar(int.Parse(hexValues, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo));
                 writeChar = hexChar;
 
                 _charPos += 4;
-            }
-            else
-            {
+            } else {
                 throw JsonReaderException.Create(this, "Unexpected end while parsing unicode character.");
             }
             return writeChar;
         }
 
-        private void ReadNumberIntoBuffer()
-        {
+        private void ReadNumberIntoBuffer() {
             var charPos = _charPos;
 
-            while (true)
-            {
-                switch (_chars[charPos++])
-                {
+            while (true) {
+                switch (_chars[charPos++]) {
                     case '\0':
-                        if (_charsUsed == charPos - 1)
-                        {
+                        if (_charsUsed == charPos - 1) {
                             charPos--;
                             _charPos = charPos;
-                            if (ReadData(true) == 0)
+                            if (ReadData(true) == 0) {
                                 return;
+                            }
                         }
                         break;
                     case '-':
@@ -807,33 +756,26 @@ namespace NetDimension.Json
             }
         }
 
-        private void ClearRecentString()
-        {
-            if (_buffer != null)
+        private void ClearRecentString() {
+            if (_buffer != null) {
                 _buffer.Position = 0;
+            }
 
             _stringReference = new StringReference();
         }
 
-        private bool ParsePostValue()
-        {
-            while (true)
-            {
+        private bool ParsePostValue() {
+            while (true) {
                 var currentChar = _chars[_charPos];
 
-                switch (currentChar)
-                {
+                switch (currentChar) {
                     case '\0':
-                        if (_charsUsed == _charPos)
-                        {
-                            if (ReadData(false) == 0)
-                            {
+                        if (_charsUsed == _charPos) {
+                            if (ReadData(false) == 0) {
                                 _currentState = State.Finished;
                                 return false;
                             }
-                        }
-                        else
-                        {
+                        } else {
                             _charPos++;
                         }
                         break;
@@ -870,13 +812,10 @@ namespace NetDimension.Json
                         ProcessLineFeed();
                         break;
                     default:
-                        if (char.IsWhiteSpace(currentChar))
-                        {
+                        if (char.IsWhiteSpace(currentChar)) {
                             // eat
                             _charPos++;
-                        }
-                        else
-                        {
+                        } else {
                             throw JsonReaderException.Create(this,
                                                              "After parsing a value an unexpected character was encountered: {0}."
                                                                  .FormatWith(CultureInfo.InvariantCulture, currentChar));
@@ -886,22 +825,17 @@ namespace NetDimension.Json
             }
         }
 
-        private bool ParseObject()
-        {
-            while (true)
-            {
+        private bool ParseObject() {
+            while (true) {
                 var currentChar = _chars[_charPos];
 
-                switch (currentChar)
-                {
+                switch (currentChar) {
                     case '\0':
-                        if (_charsUsed == _charPos)
-                        {
-                            if (ReadData(false) == 0)
+                        if (_charsUsed == _charPos) {
+                            if (ReadData(false) == 0) {
                                 return false;
-                        }
-                        else
-                        {
+                            }
+                        } else {
                             _charPos++;
                         }
                         break;
@@ -924,13 +858,10 @@ namespace NetDimension.Json
                         _charPos++;
                         break;
                     default:
-                        if (char.IsWhiteSpace(currentChar))
-                        {
+                        if (char.IsWhiteSpace(currentChar)) {
                             // eat
                             _charPos++;
-                        }
-                        else
-                        {
+                        } else {
                             return ParseProperty();
                         }
                         break;
@@ -938,26 +869,20 @@ namespace NetDimension.Json
             }
         }
 
-        private bool ParseProperty()
-        {
+        private bool ParseProperty() {
             var firstChar = _chars[_charPos];
             char quoteChar;
 
-            if (firstChar == '"' || firstChar == '\'')
-            {
+            if (firstChar == '"' || firstChar == '\'') {
                 _charPos++;
                 quoteChar = firstChar;
                 ShiftBufferIfNeeded();
                 ReadStringIntoBuffer(quoteChar);
-            }
-            else if (ValidIdentifierChar(firstChar))
-            {
+            } else if (ValidIdentifierChar(firstChar)) {
                 quoteChar = '\0';
                 ShiftBufferIfNeeded();
                 ParseUnquotedProperty();
-            }
-            else
-            {
+            } else {
                 throw JsonReaderException.Create(this,
                                                  "Invalid property identifier character: {0}.".FormatWith(
                                                      CultureInfo.InvariantCulture, _chars[_charPos]));
@@ -967,10 +892,11 @@ namespace NetDimension.Json
 
             EatWhitespace(false);
 
-            if (_chars[_charPos] != ':')
+            if (_chars[_charPos] != ':') {
                 throw JsonReaderException.Create(this,
                                                  "Invalid character after parsing property name. Expected ':' but got: {0}."
                                                      .FormatWith(CultureInfo.InvariantCulture, _chars[_charPos]));
+            }
 
             _charPos++;
 
@@ -981,26 +907,22 @@ namespace NetDimension.Json
             return true;
         }
 
-        private bool ValidIdentifierChar(char value)
-        {
+        private bool ValidIdentifierChar(char value) {
             return (char.IsLetterOrDigit(value) || value == '_' || value == '$');
         }
 
-        private void ParseUnquotedProperty()
-        {
+        private void ParseUnquotedProperty() {
             var initialPosition = _charPos;
 
             // parse unquoted property name until whitespace or colon
-            while (true)
-            {
-                switch (_chars[_charPos])
-                {
+            while (true) {
+                switch (_chars[_charPos]) {
                     case '\0':
-                        if (_charsUsed == _charPos)
-                        {
-                            if (ReadData(true) == 0)
+                        if (_charsUsed == _charPos) {
+                            if (ReadData(true) == 0) {
                                 throw JsonReaderException.Create(this,
                                                                  "Unexpected end while parsing unquoted property name.");
+                            }
 
                             break;
                         }
@@ -1010,13 +932,10 @@ namespace NetDimension.Json
                     default:
                         var currentChar = _chars[_charPos];
 
-                        if (ValidIdentifierChar(currentChar))
-                        {
+                        if (ValidIdentifierChar(currentChar)) {
                             _charPos++;
                             break;
-                        }
-                        else if (char.IsWhiteSpace(currentChar) || currentChar == ':')
-                        {
+                        } else if (char.IsWhiteSpace(currentChar) || currentChar == ':') {
                             _stringReference = new StringReference(_chars, initialPosition, _charPos - initialPosition);
                             return;
                         }
@@ -1028,22 +947,17 @@ namespace NetDimension.Json
             }
         }
 
-        private bool ParseValue()
-        {
-            while (true)
-            {
+        private bool ParseValue() {
+            while (true) {
                 var currentChar = _chars[_charPos];
 
-                switch (currentChar)
-                {
+                switch (currentChar) {
                     case '\0':
-                        if (_charsUsed == _charPos)
-                        {
-                            if (ReadData(false) == 0)
+                        if (_charsUsed == _charPos) {
+                            if (ReadData(false) == 0) {
                                 return false;
-                        }
-                        else
-                        {
+                            }
+                        } else {
                             _charPos++;
                         }
                         break;
@@ -1058,22 +972,20 @@ namespace NetDimension.Json
                         ParseFalse();
                         return true;
                     case 'n':
-                        if (EnsureChars(1, true))
-                        {
+                        if (EnsureChars(1, true)) {
                             var next = _chars[_charPos + 1];
 
-                            if (next == 'u')
+                            if (next == 'u') {
                                 ParseNull();
-                            else if (next == 'e')
+                            } else if (next == 'e') {
                                 ParseConstructor();
-                            else
+                            } else {
                                 throw JsonReaderException.Create(this,
                                                                  "Unexpected character encountered while parsing value: {0}."
                                                                      .FormatWith(CultureInfo.InvariantCulture,
                                                                                  _chars[_charPos]));
-                        }
-                        else
-                        {
+                            }
+                        } else {
                             throw JsonReaderException.Create(this, "Unexpected end.");
                         }
                         return true;
@@ -1084,10 +996,11 @@ namespace NetDimension.Json
                         ParseNumberPositiveInfinity();
                         return true;
                     case '-':
-                        if (EnsureChars(1, true) && _chars[_charPos + 1] == 'I')
+                        if (EnsureChars(1, true) && _chars[_charPos + 1] == 'I') {
                             ParseNumberNegativeInfinity();
-                        else
+                        } else {
                             ParseNumber();
+                        }
                         return true;
                     case '/':
                         ParseComment();
@@ -1128,19 +1041,14 @@ namespace NetDimension.Json
                         _charPos++;
                         break;
                     default:
-                        if (char.IsWhiteSpace(currentChar))
-                        {
+                        if (char.IsWhiteSpace(currentChar)) {
                             // eat
                             _charPos++;
                             break;
-                        }
-                        else if (char.IsNumber(currentChar) || currentChar == '-' || currentChar == '.')
-                        {
+                        } else if (char.IsNumber(currentChar) || currentChar == '-' || currentChar == '.') {
                             ParseNumber();
                             return true;
-                        }
-                        else
-                        {
+                        } else {
                             throw JsonReaderException.Create(this,
                                                              "Unexpected character encountered while parsing value: {0}."
                                                                  .FormatWith(CultureInfo.InvariantCulture, currentChar));
@@ -1149,40 +1057,34 @@ namespace NetDimension.Json
             }
         }
 
-        private void ProcessLineFeed()
-        {
+        private void ProcessLineFeed() {
             _charPos++;
             OnNewLine(_charPos);
         }
 
-        private void ProcessCarriageReturn(bool append)
-        {
+        private void ProcessCarriageReturn(bool append) {
             _charPos++;
 
-            if (EnsureChars(1, append) && _chars[_charPos] == StringUtils.LineFeed)
+            if (EnsureChars(1, append) && _chars[_charPos] == StringUtils.LineFeed) {
                 _charPos++;
+            }
 
             OnNewLine(_charPos);
         }
 
-        private bool EatWhitespace(bool oneOrMore)
-        {
+        private bool EatWhitespace(bool oneOrMore) {
             var finished = false;
             var ateWhitespace = false;
-            while (!finished)
-            {
+            while (!finished) {
                 var currentChar = _chars[_charPos];
 
-                switch (currentChar)
-                {
+                switch (currentChar) {
                     case '\0':
-                        if (_charsUsed == _charPos)
-                        {
-                            if (ReadData(false) == 0)
+                        if (_charsUsed == _charPos) {
+                            if (ReadData(false) == 0) {
                                 finished = true;
-                        }
-                        else
-                        {
+                            }
+                        } else {
                             _charPos++;
                         }
                         break;
@@ -1193,13 +1095,10 @@ namespace NetDimension.Json
                         ProcessLineFeed();
                         break;
                     default:
-                        if (currentChar == ' ' || char.IsWhiteSpace(currentChar))
-                        {
+                        if (currentChar == ' ' || char.IsWhiteSpace(currentChar)) {
                             ateWhitespace = true;
                             _charPos++;
-                        }
-                        else
-                        {
+                        } else {
                             finished = true;
                         }
                         break;
@@ -1209,61 +1108,43 @@ namespace NetDimension.Json
             return (!oneOrMore || ateWhitespace);
         }
 
-        private void ParseConstructor()
-        {
-            if (MatchValueWithTrailingSeperator("new"))
-            {
+        private void ParseConstructor() {
+            if (MatchValueWithTrailingSeperator("new")) {
                 EatWhitespace(false);
 
                 var initialPosition = _charPos;
                 int endPosition;
 
-                while (true)
-                {
+                while (true) {
                     var currentChar = _chars[_charPos];
-                    if (currentChar == '\0')
-                    {
-                        if (_charsUsed == _charPos)
-                        {
-                            if (ReadData(true) == 0)
+                    if (currentChar == '\0') {
+                        if (_charsUsed == _charPos) {
+                            if (ReadData(true) == 0) {
                                 throw JsonReaderException.Create(this, "Unexpected end while parsing constructor.");
-                        }
-                        else
-                        {
+                            }
+                        } else {
                             endPosition = _charPos;
                             _charPos++;
                             break;
                         }
-                    }
-                    else if (char.IsLetterOrDigit(currentChar))
-                    {
+                    } else if (char.IsLetterOrDigit(currentChar)) {
                         _charPos++;
-                    }
-                    else if (currentChar == StringUtils.CarriageReturn)
-                    {
+                    } else if (currentChar == StringUtils.CarriageReturn) {
                         endPosition = _charPos;
                         ProcessCarriageReturn(true);
                         break;
-                    }
-                    else if (currentChar == StringUtils.LineFeed)
-                    {
+                    } else if (currentChar == StringUtils.LineFeed) {
                         endPosition = _charPos;
                         ProcessLineFeed();
                         break;
-                    }
-                    else if (char.IsWhiteSpace(currentChar))
-                    {
+                    } else if (char.IsWhiteSpace(currentChar)) {
                         endPosition = _charPos;
                         _charPos++;
                         break;
-                    }
-                    else if (currentChar == '(')
-                    {
+                    } else if (currentChar == '(') {
                         endPosition = _charPos;
                         break;
-                    }
-                    else
-                    {
+                    } else {
                         throw JsonReaderException.Create(this,
                                                          "Unexpected character while parsing constructor: {0}."
                                                              .FormatWith(CultureInfo.InvariantCulture, currentChar));
@@ -1275,10 +1156,11 @@ namespace NetDimension.Json
 
                 EatWhitespace(false);
 
-                if (_chars[_charPos] != '(')
+                if (_chars[_charPos] != '(') {
                     throw JsonReaderException.Create(this,
                                                      "Unexpected character while parsing constructor: {0}.".FormatWith(
                                                          CultureInfo.InvariantCulture, _chars[_charPos]));
+                }
 
                 _charPos++;
 
@@ -1288,8 +1170,7 @@ namespace NetDimension.Json
             }
         }
 
-        private void ParseNumber()
-        {
+        private void ParseNumber() {
             ShiftBufferIfNeeded();
 
             var firstChar = _chars[_charPos];
@@ -1308,15 +1189,11 @@ namespace NetDimension.Json
                              && _stringReference.Chars[_stringReference.StartIndex + 1] != 'e'
                              && _stringReference.Chars[_stringReference.StartIndex + 1] != 'E');
 
-            if (_readType == ReadType.ReadAsInt32)
-            {
-                if (singleDigit)
-                {
+            if (_readType == ReadType.ReadAsInt32) {
+                if (singleDigit) {
                     // digit char values start at 48
                     numberValue = firstChar - 48;
-                }
-                else if (nonBase10)
-                {
+                } else if (nonBase10) {
                     var number = _stringReference.ToString();
 
                     // decimal.Parse doesn't support parsing hexadecimal values
@@ -1325,25 +1202,18 @@ namespace NetDimension.Json
                                       : Convert.ToInt32(number, 8);
 
                     numberValue = integer;
-                }
-                else
-                {
+                } else {
                     var number = _stringReference.ToString();
 
                     numberValue = Convert.ToInt32(number, CultureInfo.InvariantCulture);
                 }
 
                 numberType = JsonToken.Integer;
-            }
-            else if (_readType == ReadType.ReadAsDecimal)
-            {
-                if (singleDigit)
-                {
+            } else if (_readType == ReadType.ReadAsDecimal) {
+                if (singleDigit) {
                     // digit char values start at 48
                     numberValue = (decimal) firstChar - 48;
-                }
-                else if (nonBase10)
-                {
+                } else if (nonBase10) {
                     var number = _stringReference.ToString();
 
                     // decimal.Parse doesn't support parsing hexadecimal values
@@ -1352,9 +1222,7 @@ namespace NetDimension.Json
                                       : Convert.ToInt64(number, 8);
 
                     numberValue = Convert.ToDecimal(integer);
-                }
-                else
-                {
+                } else {
                     var number = _stringReference.ToString();
 
                     numberValue = decimal.Parse(number, NumberStyles.Number | NumberStyles.AllowExponent,
@@ -1362,42 +1230,29 @@ namespace NetDimension.Json
                 }
 
                 numberType = JsonToken.Float;
-            }
-            else
-            {
-                if (singleDigit)
-                {
+            } else {
+                if (singleDigit) {
                     // digit char values start at 48
                     numberValue = (long) firstChar - 48;
                     numberType = JsonToken.Integer;
-                }
-                else if (nonBase10)
-                {
+                } else if (nonBase10) {
                     var number = _stringReference.ToString();
 
                     numberValue = number.StartsWith("0x", StringComparison.OrdinalIgnoreCase)
                                       ? Convert.ToInt64(number, 16)
                                       : Convert.ToInt64(number, 8);
                     numberType = JsonToken.Integer;
-                }
-                else
-                {
+                } else {
                     var number = _stringReference.ToString();
 
                     // it's faster to do 3 indexof with single characters than an indexofany
-                    if (number.IndexOf('.') != -1 || number.IndexOf('E') != -1 || number.IndexOf('e') != -1)
-                    {
+                    if (number.IndexOf('.') != -1 || number.IndexOf('E') != -1 || number.IndexOf('e') != -1) {
                         numberValue = Convert.ToDouble(number, CultureInfo.InvariantCulture);
                         numberType = JsonToken.Float;
-                    }
-                    else
-                    {
-                        try
-                        {
+                    } else {
+                        try {
                             numberValue = Convert.ToInt64(number, CultureInfo.InvariantCulture);
-                        }
-                        catch (OverflowException ex)
-                        {
+                        } catch (OverflowException ex) {
                             throw JsonReaderException.Create(this,
                                                              "JSON integer {0} is too large or small for an Int64."
                                                                  .FormatWith(CultureInfo.InvariantCulture, number), ex);
@@ -1413,44 +1268,38 @@ namespace NetDimension.Json
             SetToken(numberType, numberValue);
         }
 
-        private void ParseComment()
-        {
+        private void ParseComment() {
             // should have already parsed / character before reaching this method
             _charPos++;
 
-            if (!EnsureChars(1, false) || _chars[_charPos] != '*')
+            if (!EnsureChars(1, false) || _chars[_charPos] != '*') {
                 throw JsonReaderException.Create(this,
                                                  "Error parsing comment. Expected: *, got {0}.".FormatWith(
                                                      CultureInfo.InvariantCulture, _chars[_charPos]));
-            else
+            } else {
                 _charPos++;
+            }
 
             var initialPosition = _charPos;
 
             var commentFinished = false;
 
-            while (!commentFinished)
-            {
-                switch (_chars[_charPos])
-                {
+            while (!commentFinished) {
+                switch (_chars[_charPos]) {
                     case '\0':
-                        if (_charsUsed == _charPos)
-                        {
-                            if (ReadData(true) == 0)
+                        if (_charsUsed == _charPos) {
+                            if (ReadData(true) == 0) {
                                 throw JsonReaderException.Create(this, "Unexpected end while parsing comment.");
-                        }
-                        else
-                        {
+                            }
+                        } else {
                             _charPos++;
                         }
                         break;
                     case '*':
                         _charPos++;
 
-                        if (EnsureChars(0, true))
-                        {
-                            if (_chars[_charPos] == '/')
-                            {
+                        if (EnsureChars(0, true)) {
+                            if (_chars[_charPos] == '/') {
                                 _stringReference = new StringReference(_chars, initialPosition,
                                                                        _charPos - initialPosition - 1);
 
@@ -1476,15 +1325,13 @@ namespace NetDimension.Json
             ClearRecentString();
         }
 
-        private bool MatchValue(string value)
-        {
-            if (!EnsureChars(value.Length - 1, true))
+        private bool MatchValue(string value) {
+            if (!EnsureChars(value.Length - 1, true)) {
                 return false;
+            }
 
-            for (var i = 0; i < value.Length; i++)
-            {
-                if (_chars[_charPos + i] != value[i])
-                {
+            for (var i = 0; i < value.Length; i++) {
+                if (_chars[_charPos + i] != value[i]) {
                     return false;
                 }
             }
@@ -1494,37 +1341,38 @@ namespace NetDimension.Json
             return true;
         }
 
-        private bool MatchValueWithTrailingSeperator(string value)
-        {
+        private bool MatchValueWithTrailingSeperator(string value) {
             // will match value and then move to the next character, checking that it is a seperator character
             var match = MatchValue(value);
 
-            if (!match)
+            if (!match) {
                 return false;
+            }
 
-            if (!EnsureChars(0, false))
+            if (!EnsureChars(0, false)) {
                 return true;
+            }
 
             return IsSeperator(_chars[_charPos]) || _chars[_charPos] == '\0';
         }
 
-        private bool IsSeperator(char c)
-        {
-            switch (c)
-            {
+        private bool IsSeperator(char c) {
+            switch (c) {
                 case '}':
                 case ']':
                 case ',':
                     return true;
                 case '/':
                     // check next character to see if start of a comment
-                    if (!EnsureChars(1, false))
+                    if (!EnsureChars(1, false)) {
                         return false;
+                    }
 
                     return (_chars[_charPos + 1] == '*');
                 case ')':
-                    if (CurrentState == State.Constructor || CurrentState == State.ConstructorStart)
+                    if (CurrentState == State.Constructor || CurrentState == State.ConstructorStart) {
                         return true;
+                    }
                     break;
                 case ' ':
                 case StringUtils.Tab:
@@ -1532,97 +1380,70 @@ namespace NetDimension.Json
                 case StringUtils.CarriageReturn:
                     return true;
                 default:
-                    if (char.IsWhiteSpace(c))
+                    if (char.IsWhiteSpace(c)) {
                         return true;
+                    }
                     break;
             }
 
             return false;
         }
 
-        private void ParseTrue()
-        {
+        private void ParseTrue() {
             // check characters equal 'true'
             // and that it is followed by either a seperator character
             // or the text ends
-            if (MatchValueWithTrailingSeperator(JsonConvert.True))
-            {
+            if (MatchValueWithTrailingSeperator(JsonConvert.True)) {
                 SetToken(JsonToken.Boolean, true);
-            }
-            else
-            {
+            } else {
                 throw JsonReaderException.Create(this, "Error parsing boolean value.");
             }
         }
 
-        private void ParseNull()
-        {
-            if (MatchValueWithTrailingSeperator(JsonConvert.Null))
-            {
+        private void ParseNull() {
+            if (MatchValueWithTrailingSeperator(JsonConvert.Null)) {
                 SetToken(JsonToken.Null);
-            }
-            else
-            {
+            } else {
                 throw JsonReaderException.Create(this, "Error parsing null value.");
             }
         }
 
-        private void ParseUndefined()
-        {
-            if (MatchValueWithTrailingSeperator(JsonConvert.Undefined))
-            {
+        private void ParseUndefined() {
+            if (MatchValueWithTrailingSeperator(JsonConvert.Undefined)) {
                 SetToken(JsonToken.Undefined);
-            }
-            else
-            {
+            } else {
                 throw JsonReaderException.Create(this, "Error parsing undefined value.");
             }
         }
 
-        private void ParseFalse()
-        {
-            if (MatchValueWithTrailingSeperator(JsonConvert.False))
-            {
+        private void ParseFalse() {
+            if (MatchValueWithTrailingSeperator(JsonConvert.False)) {
                 SetToken(JsonToken.Boolean, false);
-            }
-            else
-            {
+            } else {
                 throw JsonReaderException.Create(this, "Error parsing boolean value.");
             }
         }
 
-        private void ParseNumberNegativeInfinity()
-        {
-            if (MatchValueWithTrailingSeperator(JsonConvert.NegativeInfinity))
-            {
+        private void ParseNumberNegativeInfinity() {
+            if (MatchValueWithTrailingSeperator(JsonConvert.NegativeInfinity)) {
                 SetToken(JsonToken.Float, double.NegativeInfinity);
-            }
-            else
-            {
+            } else {
                 throw JsonReaderException.Create(this, "Error parsing negative infinity value.");
             }
         }
 
-        private void ParseNumberPositiveInfinity()
-        {
-            if (MatchValueWithTrailingSeperator(JsonConvert.PositiveInfinity))
-            {
+        private void ParseNumberPositiveInfinity() {
+            if (MatchValueWithTrailingSeperator(JsonConvert.PositiveInfinity)) {
                 SetToken(JsonToken.Float, double.PositiveInfinity);
-            }
-            else
-            {
+            } else {
                 throw JsonReaderException.Create(this, "Error parsing positive infinity value.");
             }
         }
 
-        private void ParseNumberNaN()
-        {
-            if (MatchValueWithTrailingSeperator(JsonConvert.NaN))
-            {
+        private void ParseNumberNaN() {
+            if (MatchValueWithTrailingSeperator(JsonConvert.NaN)) {
                 SetToken(JsonToken.Float, double.NaN);
-            }
-            else
-            {
+            } else {
                 throw JsonReaderException.Create(this, "Error parsing NaN value.");
             }
         }
@@ -1630,58 +1451,20 @@ namespace NetDimension.Json
         /// <summary>
         ///     Changes the state to closed.
         /// </summary>
-        public override void Close()
-        {
+        public override void Close() {
             base.Close();
 
-            if (CloseInput && _reader != null)
+            if (CloseInput && _reader != null) {
 #if !(NETFX_CORE || PORTABLE)
                 _reader.Close();
+            }
 #else
         _reader.Dispose();
 #endif
 
-            if (_buffer != null)
+            if (_buffer != null) {
                 _buffer.Clear();
-        }
-
-        /// <summary>
-        ///     Gets a value indicating whether the class can return line information.
-        /// </summary>
-        /// <returns>
-        ///     <c>true</c> if LineNumber and LinePosition can be provided; otherwise, <c>false</c>.
-        /// </returns>
-        public bool HasLineInfo()
-        {
-            return true;
-        }
-
-        /// <summary>
-        ///     Gets the current line number.
-        /// </summary>
-        /// <value>
-        ///     The current line number or 0 if no line information is available (for example, HasLineInfo returns false).
-        /// </value>
-        public int LineNumber
-        {
-            get
-            {
-                if (CurrentState == State.Start && LinePosition == 0)
-                    return 0;
-
-                return _lineNumber;
             }
-        }
-
-        /// <summary>
-        ///     Gets the current line position.
-        /// </summary>
-        /// <value>
-        ///     The current line position or 0 if no line information is available (for example, HasLineInfo returns false).
-        /// </value>
-        public int LinePosition
-        {
-            get { return _charPos - _lineStartPos; }
         }
     }
 }

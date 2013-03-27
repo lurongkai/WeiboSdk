@@ -44,18 +44,12 @@ namespace NetDimension.Json.Converters
         /// </param>
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            if (value == null)
-            {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
+            if (value == null) {
                 writer.WriteNull();
-            }
-            else if (value is Version)
-            {
+            } else if (value is Version) {
                 writer.WriteValue(value.ToString());
-            }
-            else
-            {
+            } else {
                 throw new JsonSerializationException("Expected Version object value");
             }
         }
@@ -71,30 +65,20 @@ namespace NetDimension.Json.Converters
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-                                        JsonSerializer serializer)
-        {
-            if (reader.TokenType == JsonToken.Null)
-            {
+                                        JsonSerializer serializer) {
+            if (reader.TokenType == JsonToken.Null) {
                 return null;
-            }
-            else
-            {
-                if (reader.TokenType == JsonToken.String)
-                {
-                    try
-                    {
+            } else {
+                if (reader.TokenType == JsonToken.String) {
+                    try {
                         var v = new Version((string) reader.Value);
                         return v;
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                         throw JsonSerializationException.Create(reader,
                                                                 "Error parsing version string: {0}".FormatWith(
                                                                     CultureInfo.InvariantCulture, reader.Value), ex);
                     }
-                }
-                else
-                {
+                } else {
                     throw JsonSerializationException.Create(reader,
                                                             "Unexpected token or value when parsing version. Token: {0}, Value: {1}"
                                                                 .FormatWith(CultureInfo.InvariantCulture,
@@ -110,8 +94,7 @@ namespace NetDimension.Json.Converters
         /// <returns>
         ///     <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
         /// </returns>
-        public override bool CanConvert(Type objectType)
-        {
+        public override bool CanConvert(Type objectType) {
             return objectType == typeof (Version);
         }
     }

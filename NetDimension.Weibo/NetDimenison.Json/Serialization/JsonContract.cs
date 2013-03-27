@@ -44,7 +44,7 @@ namespace NetDimension.Json.Serialization
         Primitive,
         String,
         Dictionary,
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
         Dynamic,
 #endif
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
@@ -58,11 +58,42 @@ namespace NetDimension.Json.Serialization
     /// </summary>
     public abstract class JsonContract
     {
-        internal bool IsNullable;
-        internal bool IsConvertable;
-        internal Type NonNullableUnderlyingType;
-        internal ReadType InternalReadType;
         internal JsonContractType ContractType;
+        internal ReadType InternalReadType;
+        internal bool IsConvertable;
+        internal bool IsNullable;
+        internal Type NonNullableUnderlyingType;
+
+        internal JsonContract(Type underlyingType) {
+            ValidationUtils.ArgumentNotNull(underlyingType, "underlyingType");
+
+            UnderlyingType = underlyingType;
+
+            IsNullable = ReflectionUtils.IsNullable(underlyingType);
+            NonNullableUnderlyingType = (IsNullable && ReflectionUtils.IsNullableType(underlyingType))
+                                            ? Nullable.GetUnderlyingType(underlyingType)
+                                            : underlyingType;
+
+            CreatedType = NonNullableUnderlyingType;
+
+            IsConvertable = ConvertUtils.IsConvertible(NonNullableUnderlyingType);
+
+            if (NonNullableUnderlyingType == typeof (byte[])) {
+                InternalReadType = ReadType.ReadAsBytes;
+            } else if (NonNullableUnderlyingType == typeof (int)) {
+                InternalReadType = ReadType.ReadAsInt32;
+            } else if (NonNullableUnderlyingType == typeof (decimal)) {
+                InternalReadType = ReadType.ReadAsDecimal;
+            } else if (NonNullableUnderlyingType == typeof (string)) {
+                InternalReadType = ReadType.ReadAsString;
+            } else if (NonNullableUnderlyingType == typeof (DateTime)) {
+                InternalReadType = ReadType.ReadAsDateTime;
+            } else if (NonNullableUnderlyingType == typeof (DateTimeOffset)) {
+                InternalReadType = ReadType.ReadAsDateTimeOffset;
+            } else {
+                InternalReadType = ReadType.Read;
+            }
+        }
 
         /// <summary>
         ///     Gets the underlying type for the contract.
@@ -92,7 +123,6 @@ namespace NetDimension.Json.Serialization
         // checked for after passed in converters and attribute specified converters
         internal JsonConverter InternalConverter { get; set; }
 
-#if !PocketPC
         /// <summary>
         ///     Gets or sets the method called immediately after deserialization of the object.
         /// </summary>
@@ -116,7 +146,6 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <value>The method called before serialization of the object.</value>
         public MethodInfo OnSerializing { get; set; }
-#endif
 
         /// <summary>
         ///     Gets or sets the default creator method used to create the object.
@@ -138,88 +167,33 @@ namespace NetDimension.Json.Serialization
         /// <value>The method called when an error is thrown during the serialization of the object.</value>
         public MethodInfo OnError { get; set; }
 
-        internal void InvokeOnSerializing(object o, StreamingContext context)
-        {
-#if !PocketPC
-            if (OnSerializing != null)
+        internal void InvokeOnSerializing(object o, StreamingContext context) {
+            if (OnSerializing != null) {
                 OnSerializing.Invoke(o, new object[] {context});
-#endif
+            }
         }
 
-        internal void InvokeOnSerialized(object o, StreamingContext context)
-        {
-#if !PocketPC
-            if (OnSerialized != null)
+        internal void InvokeOnSerialized(object o, StreamingContext context) {
+            if (OnSerialized != null) {
                 OnSerialized.Invoke(o, new object[] {context});
-#endif
+            }
         }
 
-        internal void InvokeOnDeserializing(object o, StreamingContext context)
-        {
-#if !PocketPC
-            if (OnDeserializing != null)
+        internal void InvokeOnDeserializing(object o, StreamingContext context) {
+            if (OnDeserializing != null) {
                 OnDeserializing.Invoke(o, new object[] {context});
-#endif
+            }
         }
 
-        internal void InvokeOnDeserialized(object o, StreamingContext context)
-        {
-#if !PocketPC
-            if (OnDeserialized != null)
+        internal void InvokeOnDeserialized(object o, StreamingContext context) {
+            if (OnDeserialized != null) {
                 OnDeserialized.Invoke(o, new object[] {context});
-#endif
+            }
         }
 
-        internal void InvokeOnError(object o, StreamingContext context, ErrorContext errorContext)
-        {
-            if (OnError != null)
+        internal void InvokeOnError(object o, StreamingContext context, ErrorContext errorContext) {
+            if (OnError != null) {
                 OnError.Invoke(o, new object[] {context, errorContext});
-        }
-
-        internal JsonContract(Type underlyingType)
-        {
-            ValidationUtils.ArgumentNotNull(underlyingType, "underlyingType");
-
-            UnderlyingType = underlyingType;
-
-            IsNullable = ReflectionUtils.IsNullable(underlyingType);
-            NonNullableUnderlyingType = (IsNullable && ReflectionUtils.IsNullableType(underlyingType))
-                                            ? Nullable.GetUnderlyingType(underlyingType)
-                                            : underlyingType;
-
-            CreatedType = NonNullableUnderlyingType;
-
-            IsConvertable = ConvertUtils.IsConvertible(NonNullableUnderlyingType);
-
-            if (NonNullableUnderlyingType == typeof (byte[]))
-            {
-                InternalReadType = ReadType.ReadAsBytes;
-            }
-            else if (NonNullableUnderlyingType == typeof (int))
-            {
-                InternalReadType = ReadType.ReadAsInt32;
-            }
-            else if (NonNullableUnderlyingType == typeof (decimal))
-            {
-                InternalReadType = ReadType.ReadAsDecimal;
-            }
-            else if (NonNullableUnderlyingType == typeof (string))
-            {
-                InternalReadType = ReadType.ReadAsString;
-            }
-            else if (NonNullableUnderlyingType == typeof (DateTime))
-            {
-                InternalReadType = ReadType.ReadAsDateTime;
-            }
-#if !NET20
-            else if (NonNullableUnderlyingType == typeof (DateTimeOffset))
-            {
-                InternalReadType = ReadType.ReadAsDateTimeOffset;
-            }
-#endif
-            else
-            {
-                InternalReadType = ReadType.Read;
             }
         }
     }

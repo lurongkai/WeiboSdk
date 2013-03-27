@@ -39,11 +39,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.40.0.0")]
 [assembly: AssemblyFileVersion("1.40.0.0")]
 #endif
-#if NET35
-[assembly: AssemblyVersion("1.35.0.0")]
-[assembly: AssemblyFileVersion("1.35.0.0")]
-#endif
-#if NET20
-[assembly: AssemblyVersion("1.20.0.0")]
-[assembly: AssemblyFileVersion("1.20.0.0")]
-#endif

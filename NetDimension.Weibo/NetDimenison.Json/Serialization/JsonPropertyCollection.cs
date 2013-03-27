@@ -44,8 +44,7 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="type">The type.</param>
         public JsonPropertyCollection(Type type)
-            : base(StringComparer.Ordinal)
-        {
+            : base(StringComparer.Ordinal) {
             ValidationUtils.ArgumentNotNull(type, "type");
             _type = type;
         }
@@ -55,8 +54,7 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="item">The element from which to extract the key.</param>
         /// <returns>The key for the specified element.</returns>
-        protected override string GetKeyForItem(JsonProperty item)
-        {
+        protected override string GetKeyForItem(JsonProperty item) {
             return item.PropertyName;
         }
 
@@ -64,43 +62,39 @@ namespace NetDimension.Json.Serialization
         ///     Adds a <see cref="JsonProperty" /> object.
         /// </summary>
         /// <param name="property">The property to add to the collection.</param>
-        public void AddProperty(JsonProperty property)
-        {
-            if (Contains(property.PropertyName))
-            {
+        public void AddProperty(JsonProperty property) {
+            if (Contains(property.PropertyName)) {
                 // don't overwrite existing property with ignored property
-                if (property.Ignored)
+                if (property.Ignored) {
                     return;
+                }
 
                 var existingProperty = this[property.PropertyName];
                 var duplicateProperty = true;
 
-                if (existingProperty.Ignored)
-                {
+                if (existingProperty.Ignored) {
                     // remove ignored property so it can be replaced in collection
                     Remove(existingProperty);
                     duplicateProperty = false;
                 }
 
-                if (property.DeclaringType != null && existingProperty.DeclaringType != null)
-                {
-                    if (property.DeclaringType.IsSubclassOf(existingProperty.DeclaringType))
-                    {
+                if (property.DeclaringType != null && existingProperty.DeclaringType != null) {
+                    if (property.DeclaringType.IsSubclassOf(existingProperty.DeclaringType)) {
                         // current property is on a derived class and hides the existing
                         Remove(existingProperty);
                         duplicateProperty = false;
                     }
-                    if (existingProperty.DeclaringType.IsSubclassOf(property.DeclaringType))
-                    {
+                    if (existingProperty.DeclaringType.IsSubclassOf(property.DeclaringType)) {
                         // current property is hidden by the existing so don't add it
                         return;
                     }
                 }
 
-                if (duplicateProperty)
+                if (duplicateProperty) {
                     throw new JsonSerializationException(
                         "A member with the name '{0}' already exists on '{1}'. Use the JsonPropertyAttribute to specify another name."
                             .FormatWith(CultureInfo.InvariantCulture, property.PropertyName, _type));
+                }
             }
 
             Add(property);
@@ -113,19 +107,17 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns>A matching property if found.</returns>
-        public JsonProperty GetClosestMatchProperty(string propertyName)
-        {
+        public JsonProperty GetClosestMatchProperty(string propertyName) {
             var property = GetProperty(propertyName, StringComparison.Ordinal);
-            if (property == null)
+            if (property == null) {
                 property = GetProperty(propertyName, StringComparison.OrdinalIgnoreCase);
+            }
 
             return property;
         }
 
-        private bool TryGetValue(string key, out JsonProperty item)
-        {
-            if (Dictionary == null)
-            {
+        private bool TryGetValue(string key, out JsonProperty item) {
+            if (Dictionary == null) {
                 item = default(JsonProperty);
                 return false;
             }
@@ -140,22 +132,19 @@ namespace NetDimension.Json.Serialization
         /// <param name="propertyName">The name of the property to get.</param>
         /// <param name="comparisonType">Type property name string comparison.</param>
         /// <returns>A matching property if found.</returns>
-        public JsonProperty GetProperty(string propertyName, StringComparison comparisonType)
-        {
+        public JsonProperty GetProperty(string propertyName, StringComparison comparisonType) {
             // KeyedCollection has an ordinal comparer
-            if (comparisonType == StringComparison.Ordinal)
-            {
+            if (comparisonType == StringComparison.Ordinal) {
                 JsonProperty property;
-                if (TryGetValue(propertyName, out property))
+                if (TryGetValue(propertyName, out property)) {
                     return property;
+                }
 
                 return null;
             }
 
-            foreach (var property in this)
-            {
-                if (string.Equals(propertyName, property.PropertyName, comparisonType))
-                {
+            foreach (var property in this) {
+                if (string.Equals(propertyName, property.PropertyName, comparisonType)) {
                     return property;
                 }
             }

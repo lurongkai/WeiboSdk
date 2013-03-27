@@ -40,8 +40,7 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="underlyingType">The underlying type for the contract.</param>
         public JsonISerializableContract(Type underlyingType)
-            : base(underlyingType)
-        {
+            : base(underlyingType) {
             ContractType = JsonContractType.Serializable;
         }
 

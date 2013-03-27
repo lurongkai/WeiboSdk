@@ -14,8 +14,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="client">操作类</param>
         public FriendshipInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new FriendshipAPI(client);
         }
 
@@ -27,8 +26,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">单页返回的记录条数，默认为50，最大不超过200。</param>
         /// <param name="cursor">返回结果的游标，下一页用返回值里的next_cursor，上一页用previous_cursor，默认为0。</param>
         /// <returns></returns>
-        public dynamic Friends(string uid = "", string screenName = "", int count = 50, int cursor = 0)
-        {
+        public dynamic Friends(string uid = "", string screenName = "", int count = 50, int cursor = 0) {
             return DynamicJson.Parse(api.Friends(uid, screenName, count, cursor));
         }
 
@@ -40,8 +38,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">单页返回的记录条数，默认为500，最大不超过5000。 </param>
         /// <param name="cursor">返回结果的游标，下一页用返回值里的next_cursor，上一页用previous_cursor，默认为0。</param>
         /// <returns></returns>
-        public dynamic FriendIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0)
-        {
+        public dynamic FriendIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0) {
             return DynamicJson.Parse(api.FriendIDs(uid, screenName, count, cursor));
         }
 
@@ -53,8 +50,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">单页返回的记录条数，默认为50。 </param>
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <returns></returns>
-        public dynamic FriendsInCommon(string uid = "", string suid = "", int count = 50, int page = 1)
-        {
+        public dynamic FriendsInCommon(string uid = "", string suid = "", int count = 50, int page = 1) {
             return DynamicJson.Parse(api.FriendsInCommon(uid, suid, count, page));
         }
 
@@ -66,8 +62,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <param name="sort">排序类型，0：按关注时间最近排序，默认为0。</param>
         /// <returns></returns>
-        public dynamic FriendsOnBilateral(string uid, int count = 50, int page = 1, bool sort = false)
-        {
+        public dynamic FriendsOnBilateral(string uid, int count = 50, int page = 1, bool sort = false) {
             return DynamicJson.Parse(api.FriendsOnBilateral(uid, count, page, sort));
         }
 
@@ -79,8 +74,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <param name="sort">排序类型，0：按关注时间最近排序，默认为0。 </param>
         /// <returns></returns>
-        public dynamic FriendsOnBilateralIDs(string uid, int count = 50, int page = 1, bool sort = false)
-        {
+        public dynamic FriendsOnBilateralIDs(string uid, int count = 50, int page = 1, bool sort = false) {
             return DynamicJson.Parse(api.FriendsOnBilateralIDs(uid, count, page, sort));
         }
 
@@ -94,8 +88,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="trimStatus">返回值中user字段中的status字段开关，0：返回完整status字段、1：status字段仅返回status_id，默认为1。 </param>
         /// <returns></returns>
         public dynamic Followers(string uid = "", string screenName = "", int count = 50, int cursor = 0,
-                                 bool trimStatus = true)
-        {
+                                 bool trimStatus = true) {
             return DynamicJson.Parse(api.Followers(uid, screenName, count, cursor, trimStatus));
         }
 
@@ -107,8 +100,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">单页返回的记录条数，默认为500，最大不超过5000。</param>
         /// <param name="cursor">返回结果的游标，下一页用返回值里的next_cursor，上一页用previous_cursor，默认为0。 </param>
         /// <returns></returns>
-        public dynamic FollowerIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0)
-        {
+        public dynamic FollowerIDs(string uid = "", string screenName = "", int count = 50, int cursor = 0) {
             return DynamicJson.Parse(api.FollowerIDs(uid, screenName, count, cursor));
         }
 
@@ -118,8 +110,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="uid">需要查询的用户UID。 </param>
         /// <param name="count">返回的记录条数，默认为20，最大不超过200。 </param>
         /// <returns></returns>
-        public dynamic FollowersInActive(string uid, int count = 20)
-        {
+        public dynamic FollowersInActive(string uid, int count = 20) {
             return DynamicJson.Parse(api.FollowersInActive(uid, count));
         }
 
@@ -130,8 +121,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">单页返回的记录条数，默认为50。 </param>
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <returns></returns>
-        public dynamic FriendsChain(string uid, int count = 50, int page = 1)
-        {
+        public dynamic FriendsChain(string uid, int count = 50, int page = 1) {
             return DynamicJson.Parse(api.FriendsChain(uid, count, page));
         }
 
@@ -144,8 +134,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="targetScreenName">目标用户的微博昵称。 </param>
         /// <returns></returns>
         public dynamic Show(string sourceID = "", string sourceScreenName = "", string targetID = "",
-                            string targetScreenName = "")
-        {
+                            string targetScreenName = "") {
             return DynamicJson.Parse(api.Show(sourceID, sourceScreenName, targetID, targetScreenName));
         }
 
@@ -155,8 +144,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="uid">需要关注的用户ID。</param>
         /// <param name="screenName">需要关注的用户昵称。 </param>
         /// <returns></returns>
-        public dynamic Create(string uid = "", string screenName = "")
-        {
+        public dynamic Create(string uid = "", string screenName = "") {
             return DynamicJson.Parse(api.Create(uid, screenName));
         }
 
@@ -166,8 +154,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="uid">需要取消关注的用户ID。</param>
         /// <param name="screenName">需要取消关注的用户昵称。 </param>
         /// <returns></returns>
-        public dynamic Destroy(string uid = "", string screenName = "")
-        {
+        public dynamic Destroy(string uid = "", string screenName = "") {
             return DynamicJson.Parse(api.Destroy(uid, screenName));
         }
 
@@ -177,8 +164,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="uid">需要修改备注信息的用户UID。 </param>
         /// <param name="remark">备注信息</param>
         /// <returns></returns>
-        public dynamic UpdateRemark(string uid, string remark)
-        {
+        public dynamic UpdateRemark(string uid, string remark) {
             return DynamicJson.Parse(api.UpdateRemark(uid, remark));
         }
     }

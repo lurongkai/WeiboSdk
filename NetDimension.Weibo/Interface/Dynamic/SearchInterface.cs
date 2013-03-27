@@ -14,8 +14,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="client">操作类</param>
         public SearchInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new SearchAPI(client);
         }
 
@@ -25,8 +24,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="q">搜索的关键字</param>
         /// <param name="count">返回的记录条数，默认为10</param>
         /// <returns></returns>
-        public dynamic Users(string q, int count = 10)
-        {
+        public dynamic Users(string q, int count = 10) {
             return DynamicJson.Parse(api.Users(q, count));
         }
 
@@ -36,8 +34,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="q">搜索的关键字</param>
         /// <param name="count">返回的记录条数，默认为10</param>
         /// <returns></returns>
-        public dynamic Statuses(string q, int count = 10)
-        {
+        public dynamic Statuses(string q, int count = 10) {
             return DynamicJson.Parse(api.Statuses(q, count));
         }
 
@@ -48,8 +45,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">返回的记录条数，默认为10。 </param>
         /// <param name="type">学校类型，0：全部、1：大学、2：高中、3：中专技校、4：初中、5：小学，默认为0。 </param>
         /// <returns></returns>
-        public dynamic Schools(string q, int count = 10, int type = 0)
-        {
+        public dynamic Schools(string q, int count = 10, int type = 0) {
             return DynamicJson.Parse(api.Schools(q, count, type));
         }
 
@@ -59,8 +55,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="q">搜索的关键字</param>
         /// <param name="count">返回的记录条数，默认为10</param>
         /// <returns></returns>
-        public dynamic Companies(string q, int count = 10)
-        {
+        public dynamic Companies(string q, int count = 10) {
             return DynamicJson.Parse(api.Companies(q, count));
         }
 
@@ -70,8 +65,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="q">搜索的关键字</param>
         /// <param name="count">返回的记录条数，默认为10</param>
         /// <returns></returns>
-        public dynamic Apps(string q, int count = 10)
-        {
+        public dynamic Apps(string q, int count = 10) {
             return DynamicJson.Parse(api.Apps(q, count));
         }
 
@@ -83,8 +77,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="type">联想类型，0：关注、1：粉丝。</param>
         /// <param name="range">联想范围，0：只联想关注人、1：只联想关注人的备注、2：全部，默认为2。</param>
         /// <returns></returns>
-        public dynamic AtUsers(string q, int count = 10, int type = 0, int range = 2)
-        {
+        public dynamic AtUsers(string q, int count = 10, int type = 0, int range = 2) {
             return DynamicJson.Parse(api.AtUsers(q, count, type, range));
         }
 
@@ -95,8 +88,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">单页返回的记录条数，默认为10，最大为50。 </param>
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <returns></returns>
-        public dynamic Topics(string q, int count = 10, int page = 1)
-        {
+        public dynamic Topics(string q, int count = 10, int page = 1) {
             return DynamicJson.Parse(api.Topics(q, count, page));
         }
     }

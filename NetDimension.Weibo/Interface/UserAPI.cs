@@ -3,8 +3,7 @@
     internal class UserAPI : WeiboAPI
     {
         public UserAPI(Client client)
-            : base(client)
-        {
+            : base(client) {
         }
 
         /// <summary>
@@ -13,8 +12,7 @@
         /// <param name="uid">需要查询的用户ID。 </param>
         /// <param name="screenName">需要查询的用户昵称。 </param>
         /// <returns></returns>
-        public string Show(string uid = "", string screenName = "")
-        {
+        public string Show(string uid = "", string screenName = "") {
             return (Client.GetCommand("users/show",
                                       string.IsNullOrEmpty(uid)
                                           ? new WeiboParameter("screen_name", screenName)
@@ -26,8 +24,7 @@
         /// </summary>
         /// <param name="domain">需要查询的个性化域名。 </param>
         /// <returns></returns>
-        public string ShowByDomain(string domain)
-        {
+        public string ShowByDomain(string domain) {
             return (Client.GetCommand("users/domain_show", new WeiboParameter("domain", domain)));
         }
 
@@ -36,8 +33,7 @@
         /// </summary>
         /// <param name="uids"></param>
         /// <returns></returns>
-        public string Counts(params string[] uids)
-        {
+        public string Counts(params string[] uids) {
             return (Client.GetCommand("users/counts", new WeiboParameter("uids", string.Join(",", uids))));
         }
     }

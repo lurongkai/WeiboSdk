@@ -41,23 +41,19 @@ namespace NetDimension.Json.Bson
     {
         private readonly List<BsonProperty> _children = new List<BsonProperty>();
 
-        public override BsonType Type
-        {
+        public override BsonType Type {
             get { return BsonType.Object; }
         }
 
-        public IEnumerator<BsonProperty> GetEnumerator()
-        {
+        public IEnumerator<BsonProperty> GetEnumerator() {
             return _children.GetEnumerator();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
+        IEnumerator IEnumerable.GetEnumerator() {
             return GetEnumerator();
         }
 
-        public void Add(string name, BsonToken token)
-        {
+        public void Add(string name, BsonToken token) {
             _children.Add(new BsonProperty {Name = new BsonString(name, false), Value = token});
             token.Parent = this;
         }
@@ -67,23 +63,19 @@ namespace NetDimension.Json.Bson
     {
         private readonly List<BsonToken> _children = new List<BsonToken>();
 
-        public override BsonType Type
-        {
+        public override BsonType Type {
             get { return BsonType.Array; }
         }
 
-        public IEnumerator<BsonToken> GetEnumerator()
-        {
+        public IEnumerator<BsonToken> GetEnumerator() {
             return _children.GetEnumerator();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
+        IEnumerator IEnumerable.GetEnumerator() {
             return GetEnumerator();
         }
 
-        public void Add(BsonToken token)
-        {
+        public void Add(BsonToken token) {
             _children.Add(token);
             token.Parent = this;
         }
@@ -94,19 +86,16 @@ namespace NetDimension.Json.Bson
         private readonly BsonType _type;
         private readonly object _value;
 
-        public BsonValue(object value, BsonType type)
-        {
+        public BsonValue(object value, BsonType type) {
             _value = value;
             _type = type;
         }
 
-        public object Value
-        {
+        public object Value {
             get { return _value; }
         }
 
-        public override BsonType Type
-        {
+        public override BsonType Type {
             get { return _type; }
         }
     }
@@ -114,8 +103,7 @@ namespace NetDimension.Json.Bson
     internal class BsonString : BsonValue
     {
         public BsonString(object value, bool includeLength)
-            : base(value, BsonType.String)
-        {
+            : base(value, BsonType.String) {
             IncludeLength = includeLength;
         }
 
@@ -125,8 +113,7 @@ namespace NetDimension.Json.Bson
 
     internal class BsonRegex : BsonToken
     {
-        public BsonRegex(string pattern, string options)
-        {
+        public BsonRegex(string pattern, string options) {
             Pattern = new BsonString(pattern, false);
             Options = new BsonString(options, false);
         }
@@ -134,8 +121,7 @@ namespace NetDimension.Json.Bson
         public BsonString Pattern { get; set; }
         public BsonString Options { get; set; }
 
-        public override BsonType Type
-        {
+        public override BsonType Type {
             get { return BsonType.Regex; }
         }
     }

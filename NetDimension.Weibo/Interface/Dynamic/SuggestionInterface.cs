@@ -14,8 +14,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="client">操作类</param>
         public SuggestionInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new SuggestionAPI(client);
         }
 
@@ -24,8 +23,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
-        public dynamic HotUsers(HotUserCatagory category = HotUserCatagory.@default)
-        {
+        public dynamic HotUsers(HotUserCatagory category = HotUserCatagory.@default) {
             return DynamicJson.Parse(api.HotUsers(category));
         }
 
@@ -35,8 +33,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public dynamic MayInterestedUsers(int count = 10, int page = 1)
-        {
+        public dynamic MayInterestedUsers(int count = 10, int page = 1) {
             return DynamicJson.Parse(api.MayInterestedUsers(count, page));
         }
 
@@ -46,8 +43,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="content"></param>
         /// <param name="num"></param>
         /// <returns></returns>
-        public dynamic UsersByStatus(string content, int num = 10)
-        {
+        public dynamic UsersByStatus(string content, int num = 10) {
             return DynamicJson.Parse(api.UsersByStatus(content, num));
         }
 
@@ -59,8 +55,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">单页返回的记录条数，默认为20。 </param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public dynamic HotStatuses(int type = 1, bool isPic = false, int count = 20, int page = 1)
-        {
+        public dynamic HotStatuses(int type = 1, bool isPic = false, int count = 20, int page = 1) {
             return DynamicJson.Parse(api.HotStatuses(type, isPic, count, page));
         }
 
@@ -71,8 +66,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">单页返回的记录条数，默认为50。</param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public dynamic ReorderStatuses(int section, int count = 50, int page = 1)
-        {
+        public dynamic ReorderStatuses(int section, int count = 50, int page = 1) {
             return DynamicJson.Parse(api.ReorderStatuses(section, count, page));
         }
 
@@ -83,8 +77,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count">单页返回的记录条数，默认为50。</param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public dynamic ReorderStatusIDs(int section, int count = 50, int page = 1)
-        {
+        public dynamic ReorderStatusIDs(int section, int count = 50, int page = 1) {
             return DynamicJson.Parse(api.ReorderStatusIDs(section, count, page));
         }
 
@@ -94,8 +87,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public dynamic HotFavorites(int count = 20, int page = 1)
-        {
+        public dynamic HotFavorites(int count = 20, int page = 1) {
             return DynamicJson.Parse(api.HotFavorites(count, page));
         }
 
@@ -104,8 +96,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="uid">不感兴趣的用户的UID。 </param>
         /// <returns></returns>
-        public dynamic NotInterestedUsers(string uid)
-        {
+        public dynamic NotInterestedUsers(string uid) {
             return DynamicJson.Parse(api.NotInterestedUsers(uid));
         }
     }

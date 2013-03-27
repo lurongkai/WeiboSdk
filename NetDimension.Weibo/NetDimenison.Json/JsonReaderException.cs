@@ -59,8 +59,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Initializes a new instance of the <see cref="JsonReaderException" /> class.
         /// </summary>
-        public JsonReaderException()
-        {
+        public JsonReaderException() {
         }
 
         /// <summary>
@@ -69,8 +68,7 @@ namespace NetDimension.Json
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         public JsonReaderException(string message)
-            : base(message)
-        {
+            : base(message) {
         }
 
         /// <summary>
@@ -80,8 +78,7 @@ namespace NetDimension.Json
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
         public JsonReaderException(string message, Exception innerException)
-            : base(message, innerException)
-        {
+            : base(message, innerException) {
         }
 
 #if !(WINDOWS_PHONE || SILVERLIGHT || NETFX_CORE || PORTABLE)
@@ -101,43 +98,35 @@ namespace NetDimension.Json
         ///     The class name is null or <see cref="P:System.Exception.HResult" /> is zero (0).
         /// </exception>
         public JsonReaderException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
+            : base(info, context) {
         }
 #endif
 
         internal JsonReaderException(string message, Exception innerException, string path, int lineNumber,
                                      int linePosition)
-            : base(message, innerException)
-        {
+            : base(message, innerException) {
             Path = path;
             LineNumber = lineNumber;
             LinePosition = linePosition;
         }
 
-        internal static JsonReaderException Create(JsonReader reader, string message)
-        {
+        internal static JsonReaderException Create(JsonReader reader, string message) {
             return Create(reader, message, null);
         }
 
-        internal static JsonReaderException Create(JsonReader reader, string message, Exception ex)
-        {
+        internal static JsonReaderException Create(JsonReader reader, string message, Exception ex) {
             return Create(reader as IJsonLineInfo, reader.Path, message, ex);
         }
 
-        internal static JsonReaderException Create(IJsonLineInfo lineInfo, string path, string message, Exception ex)
-        {
+        internal static JsonReaderException Create(IJsonLineInfo lineInfo, string path, string message, Exception ex) {
             message = FormatExceptionMessage(lineInfo, path, message);
 
             int lineNumber;
             int linePosition;
-            if (lineInfo != null && lineInfo.HasLineInfo())
-            {
+            if (lineInfo != null && lineInfo.HasLineInfo()) {
                 lineNumber = lineInfo.LineNumber;
                 linePosition = lineInfo.LinePosition;
-            }
-            else
-            {
+            } else {
                 lineNumber = 0;
                 linePosition = 0;
             }

@@ -8,15 +8,13 @@ namespace NetDimension.Weibo
     /// <typeparam name="T">返回值类型</typeparam>
     public class AsyncCallback<T>
     {
-        internal AsyncCallback(T result)
-        {
+        internal AsyncCallback(T result) {
             Data = result;
             IsSuccess = true;
             Error = null;
         }
 
-        internal AsyncCallback(Exception ex, bool success)
-        {
+        internal AsyncCallback(Exception ex, bool success) {
             IsSuccess = success;
             Error = ex;
         }

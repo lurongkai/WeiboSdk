@@ -11,8 +11,7 @@ namespace NetDimension.Weibo.Interface
         ///     构造函数
         /// </summary>
         /// <param name="client">操作器</param>
-        public DynamicInterfaces(Client client)
-        {
+        public DynamicInterfaces(Client client) {
             Account = new AccountInterface(client);
             Comments = new CommentInterface(client);
             Common = new CommonInterface(client);

@@ -14,8 +14,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="client">操作类</param>
         public ShortUrlInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new ShortUrlAPI(client);
         }
 
@@ -24,8 +23,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="url_short">需要取得点击数的短链接</param>
         /// <returns></returns>
-        public dynamic Clicks(string url_short)
-        {
+        public dynamic Clicks(string url_short) {
             return DynamicJson.Parse(api.Clicks(url_short));
         }
 
@@ -34,8 +32,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="url_short">需要取得点击来源的短链接</param>
         /// <returns></returns>
-        public dynamic Referers(string url_short)
-        {
+        public dynamic Referers(string url_short) {
             return DynamicJson.Parse(api.Referers(url_short));
         }
 
@@ -44,8 +41,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="url_short">需要取得点击地区的短链接</param>
         /// <returns></returns>
-        public dynamic Locations(string url_short)
-        {
+        public dynamic Locations(string url_short) {
             return DynamicJson.Parse(api.Locations(url_short));
         }
 
@@ -54,8 +50,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="url_short">需要获取富内容信息的短链接</param>
         /// <returns></returns>
-        public dynamic Info(params string[] url_short)
-        {
+        public dynamic Info(params string[] url_short) {
             return DynamicJson.Parse(api.Info(url_short));
         }
 
@@ -64,8 +59,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="url_long">需要转换的长链接，需要URLencoded，最多不超过20个。 </param>
         /// <returns></returns>
-        public dynamic Shorten(params string[] url_long)
-        {
+        public dynamic Shorten(params string[] url_long) {
             return DynamicJson.Parse(api.Shorten(url_long));
         }
 
@@ -74,8 +68,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="url_short">需要还原的短链接，需要URLencoded，最多不超过20个 </param>
         /// <returns></returns>
-        public dynamic Expand(params string[] url_short)
-        {
+        public dynamic Expand(params string[] url_short) {
             return DynamicJson.Parse(api.Expand(url_short));
         }
 
@@ -85,8 +78,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="url_short">需要取得分享数的短链接</param>
         /// <returns></returns>
-        public dynamic ShareCounts(string[] url_short)
-        {
+        public dynamic ShareCounts(string[] url_short) {
             return DynamicJson.Parse(api.ShareCounts(url_short));
         }
 
@@ -100,8 +92,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="page">可选参数，每次返回的最大记录数（即页面大小），不大于200 </param>
         /// <returns></returns>
         public dynamic ShareStatuses(string urlShort, string sinceID = "", string maxID = "", int count = 20,
-                                     int page = 1)
-        {
+                                     int page = 1) {
             return DynamicJson.Parse(api.ShareStatuses(urlShort, sinceID, maxID, count, page));
         }
 
@@ -110,8 +101,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="url_short">需要取得评论数的短链接</param>
         /// <returns></returns>
-        public dynamic CommentCounts(string[] url_short)
-        {
+        public dynamic CommentCounts(string[] url_short) {
             return DynamicJson.Parse(api.CommentCounts(url_short));
         }
 
@@ -125,8 +115,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="page">可选参数，返回结果的页序号，有分页限制</param>
         /// <returns></returns>
         public dynamic CommentComments(string urlShort, string sinceID = "", string maxID = "", int count = 20,
-                                       int page = 1)
-        {
+                                       int page = 1) {
             return DynamicJson.Parse(api.CommentComments(urlShort, sinceID, maxID, count, page));
         }
     }

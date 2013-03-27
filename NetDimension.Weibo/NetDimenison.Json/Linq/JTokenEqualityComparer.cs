@@ -46,8 +46,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     true if the specified objects are equal; otherwise, false.
         /// </returns>
-        public bool Equals(JToken x, JToken y)
-        {
+        public bool Equals(JToken x, JToken y) {
             return JToken.DeepEquals(x, y);
         }
 
@@ -61,10 +60,10 @@ namespace NetDimension.Json.Linq
         /// <exception cref="T:System.ArgumentNullException">
         ///     The type of <paramref name="obj" /> is a reference type and <paramref name="obj" /> is null.
         /// </exception>
-        public int GetHashCode(JToken obj)
-        {
-            if (obj == null)
+        public int GetHashCode(JToken obj) {
+            if (obj == null) {
                 return 0;
+            }
 
             return obj.GetDeepHashCode();
         }

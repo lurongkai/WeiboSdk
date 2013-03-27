@@ -37,154 +37,145 @@ namespace NetDimension.Json.Linq
 
         private Dictionary<string, JToken> _dictionary;
 
-        public JToken this[string key]
-        {
-            get
-            {
-                if (key == null)
+        public JToken this[string key] {
+            get {
+                if (key == null) {
                     throw new ArgumentNullException("key");
+                }
 
-                if (_dictionary != null)
+                if (_dictionary != null) {
                     return _dictionary[key];
+                }
 
                 throw new KeyNotFoundException();
             }
         }
 
-        public ICollection<string> Keys
-        {
-            get
-            {
+        public ICollection<string> Keys {
+            get {
                 EnsureDictionary();
                 return _dictionary.Keys;
             }
         }
 
-        public ICollection<JToken> Values
-        {
-            get
-            {
+        public ICollection<JToken> Values {
+            get {
                 EnsureDictionary();
                 return _dictionary.Values;
             }
         }
 
-        private void AddKey(string key, JToken item)
-        {
+        private void AddKey(string key, JToken item) {
             EnsureDictionary();
             _dictionary[key] = item;
         }
 
-        protected void ChangeItemKey(JToken item, string newKey)
-        {
-            if (!ContainsItem(item))
+        protected void ChangeItemKey(JToken item, string newKey) {
+            if (!ContainsItem(item)) {
                 throw new ArgumentException("The specified item does not exist in this KeyedCollection.");
+            }
 
             var keyForItem = GetKeyForItem(item);
-            if (!Comparer.Equals(keyForItem, newKey))
-            {
-                if (newKey != null)
+            if (!Comparer.Equals(keyForItem, newKey)) {
+                if (newKey != null) {
                     AddKey(newKey, item);
+                }
 
-                if (keyForItem != null)
+                if (keyForItem != null) {
                     RemoveKey(keyForItem);
+                }
             }
         }
 
-        protected override void ClearItems()
-        {
+        protected override void ClearItems() {
             base.ClearItems();
 
-            if (_dictionary != null)
+            if (_dictionary != null) {
                 _dictionary.Clear();
+            }
         }
 
-        public bool Contains(string key)
-        {
-            if (key == null)
+        public bool Contains(string key) {
+            if (key == null) {
                 throw new ArgumentNullException("key");
+            }
 
-            if (_dictionary != null)
+            if (_dictionary != null) {
                 return _dictionary.ContainsKey(key);
+            }
 
             return false;
         }
 
-        private bool ContainsItem(JToken item)
-        {
-            if (_dictionary == null)
+        private bool ContainsItem(JToken item) {
+            if (_dictionary == null) {
                 return false;
+            }
 
             var key = GetKeyForItem(item);
             JToken value;
             return _dictionary.TryGetValue(key, out value);
         }
 
-        private void EnsureDictionary()
-        {
-            if (_dictionary == null)
+        private void EnsureDictionary() {
+            if (_dictionary == null) {
                 _dictionary = new Dictionary<string, JToken>(Comparer);
+            }
         }
 
-        private string GetKeyForItem(JToken item)
-        {
+        private string GetKeyForItem(JToken item) {
             return ((JProperty) item).Name;
         }
 
-        protected override void InsertItem(int index, JToken item)
-        {
+        protected override void InsertItem(int index, JToken item) {
             AddKey(GetKeyForItem(item), item);
             base.InsertItem(index, item);
         }
 
-        public bool Remove(string key)
-        {
-            if (key == null)
+        public bool Remove(string key) {
+            if (key == null) {
                 throw new ArgumentNullException("key");
+            }
 
-            if (_dictionary != null)
+            if (_dictionary != null) {
                 return _dictionary.ContainsKey(key) && Remove(_dictionary[key]);
+            }
 
             return false;
         }
 
-        protected override void RemoveItem(int index)
-        {
+        protected override void RemoveItem(int index) {
             var keyForItem = GetKeyForItem(Items[index]);
             RemoveKey(keyForItem);
             base.RemoveItem(index);
         }
 
-        private void RemoveKey(string key)
-        {
-            if (_dictionary != null)
+        private void RemoveKey(string key) {
+            if (_dictionary != null) {
                 _dictionary.Remove(key);
+            }
         }
 
-        protected override void SetItem(int index, JToken item)
-        {
+        protected override void SetItem(int index, JToken item) {
             var keyForItem = GetKeyForItem(item);
             var keyAtIndex = GetKeyForItem(Items[index]);
 
-            if (Comparer.Equals(keyAtIndex, keyForItem))
-            {
-                if (_dictionary != null)
+            if (Comparer.Equals(keyAtIndex, keyForItem)) {
+                if (_dictionary != null) {
                     _dictionary[keyForItem] = item;
-            }
-            else
-            {
+                }
+            } else {
                 AddKey(keyForItem, item);
 
-                if (keyAtIndex != null)
+                if (keyAtIndex != null) {
                     RemoveKey(keyAtIndex);
+                }
             }
             base.SetItem(index, item);
         }
 
-        public bool TryGetValue(string key, out JToken value)
-        {
-            if (_dictionary == null)
-            {
+        public bool TryGetValue(string key, out JToken value) {
+            if (_dictionary == null) {
                 value = null;
                 return false;
             }
@@ -192,30 +183,32 @@ namespace NetDimension.Json.Linq
             return _dictionary.TryGetValue(key, out value);
         }
 
-        public bool Compare(JPropertyKeyedCollection other)
-        {
-            if (this == other)
+        public bool Compare(JPropertyKeyedCollection other) {
+            if (this == other) {
                 return true;
+            }
 
             // dictionaries in JavaScript aren't ordered
             // ignore order when comparing properties
             var d1 = _dictionary;
             var d2 = other._dictionary;
 
-            if (d1.Count != d2.Count)
+            if (d1.Count != d2.Count) {
                 return false;
+            }
 
-            foreach (var keyAndProperty in d1)
-            {
+            foreach (var keyAndProperty in d1) {
                 JToken secondValue;
-                if (!d2.TryGetValue(keyAndProperty.Key, out secondValue))
+                if (!d2.TryGetValue(keyAndProperty.Key, out secondValue)) {
                     return false;
+                }
 
                 var p1 = (JProperty) keyAndProperty.Value;
                 var p2 = (JProperty) secondValue;
 
-                if (!p1.Value.DeepEquals(p2.Value))
+                if (!p1.Value.DeepEquals(p2.Value)) {
                     return false;
+                }
             }
 
             return true;

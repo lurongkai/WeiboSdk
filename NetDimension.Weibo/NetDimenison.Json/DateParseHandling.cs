@@ -41,7 +41,7 @@ namespace NetDimension.Json
         ///     Date formatted strings, e.g. "\/Date(1198908717056)\/" and "2012-03-21T05:40Z", are parsed to <see cref="DateTime" />.
         /// </summary>
         DateTime,
-#if !NET20
+
         /// <summary>
         ///     Date formatted strings, e.g. "\/Date(1198908717056)\/" and "2012-03-21T05:40Z", are parsed to
         ///     <see
@@ -49,6 +49,5 @@ namespace NetDimension.Json
         ///     .
         /// </summary>
         DateTimeOffset
-#endif
     }
 }

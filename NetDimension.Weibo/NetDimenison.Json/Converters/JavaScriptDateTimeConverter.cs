@@ -44,26 +44,18 @@ namespace NetDimension.Json.Converters
         /// </param>
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             long ticks;
 
-            if (value is DateTime)
-            {
+            if (value is DateTime) {
                 var dateTime = (DateTime) value;
                 var utcDateTime = dateTime.ToUniversalTime();
                 ticks = JsonConvert.ConvertDateTimeToJavaScriptTicks(utcDateTime);
-            }
-#if !PocketPC && !NET20
-            else if (value is DateTimeOffset)
-            {
+            } else if (value is DateTimeOffset) {
                 var dateTimeOffset = (DateTimeOffset) value;
                 var utcDateTimeOffset = dateTimeOffset.ToUniversalTime();
                 ticks = JsonConvert.ConvertDateTimeToJavaScriptTicks(utcDateTimeOffset.UtcDateTime);
-            }
-#endif
-            else
-            {
+            } else {
                 throw new JsonSerializationException("Expected date object value.");
             }
 
@@ -83,35 +75,36 @@ namespace NetDimension.Json.Converters
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-                                        JsonSerializer serializer)
-        {
+                                        JsonSerializer serializer) {
             var t = (ReflectionUtils.IsNullableType(objectType))
                         ? Nullable.GetUnderlyingType(objectType)
                         : objectType;
 
-            if (reader.TokenType == JsonToken.Null)
-            {
-                if (!ReflectionUtils.IsNullable(objectType))
+            if (reader.TokenType == JsonToken.Null) {
+                if (!ReflectionUtils.IsNullable(objectType)) {
                     throw JsonSerializationException.Create(reader,
                                                             "Cannot convert null value to {0}.".FormatWith(
                                                                 CultureInfo.InvariantCulture, objectType));
+                }
 
                 return null;
             }
 
             if (reader.TokenType != JsonToken.StartConstructor ||
-                !string.Equals(reader.Value.ToString(), "Date", StringComparison.Ordinal))
+                !string.Equals(reader.Value.ToString(), "Date", StringComparison.Ordinal)) {
                 throw JsonSerializationException.Create(reader,
                                                         "Unexpected token or value when parsing date. Token: {0}, Value: {1}"
                                                             .FormatWith(CultureInfo.InvariantCulture, reader.TokenType,
                                                                         reader.Value));
+            }
 
             reader.Read();
 
-            if (reader.TokenType != JsonToken.Integer)
+            if (reader.TokenType != JsonToken.Integer) {
                 throw JsonSerializationException.Create(reader,
                                                         "Unexpected token parsing date. Expected Integer, got {0}."
                                                             .FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
+            }
 
             var ticks = (long) reader.Value;
 
@@ -119,15 +112,15 @@ namespace NetDimension.Json.Converters
 
             reader.Read();
 
-            if (reader.TokenType != JsonToken.EndConstructor)
+            if (reader.TokenType != JsonToken.EndConstructor) {
                 throw JsonSerializationException.Create(reader,
                                                         "Unexpected token parsing date. Expected EndConstructor, got {0}."
                                                             .FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
+            }
 
-#if !PocketPC && !NET20
-            if (t == typeof (DateTimeOffset))
+            if (t == typeof (DateTimeOffset)) {
                 return new DateTimeOffset(d);
-#endif
+            }
 
             return d;
         }

@@ -30,11 +30,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using NetDimension.Json.Utilities;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-
-#endif
 
 namespace NetDimension.Json.Linq
 {
@@ -55,8 +50,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="IEnumerable{T}" /> of <see cref="JToken" /> that contains the ancestors of every node in the source collection.
         /// </returns>
-        public static IJEnumerable<JToken> Ancestors<T>(this IEnumerable<T> source) where T : JToken
-        {
+        public static IJEnumerable<JToken> Ancestors<T>(this IEnumerable<T> source) where T : JToken {
             ValidationUtils.ArgumentNotNull(source, "source");
 
             return source.SelectMany(j => j.Ancestors()).AsJEnumerable();
@@ -82,8 +76,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="IEnumerable{T}" /> of <see cref="JToken" /> that contains the descendants of every node in the source collection.
         /// </returns>
-        public static IJEnumerable<JToken> Descendants<T>(this IEnumerable<T> source) where T : JContainer
-        {
+        public static IJEnumerable<JToken> Descendants<T>(this IEnumerable<T> source) where T : JContainer {
             ValidationUtils.ArgumentNotNull(source, "source");
 
             return source.SelectMany(j => j.Descendants()).AsJEnumerable();
@@ -106,8 +99,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="IEnumerable{T}" /> of <see cref="JProperty" /> that contains the properties of every object in the source collection.
         /// </returns>
-        public static IJEnumerable<JProperty> Properties(this IEnumerable<JObject> source)
-        {
+        public static IJEnumerable<JProperty> Properties(this IEnumerable<JObject> source) {
             ValidationUtils.ArgumentNotNull(source, "source");
 
             return source.SelectMany(d => d.Properties()).AsJEnumerable();
@@ -123,8 +115,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="IEnumerable{T}" /> of <see cref="JToken" /> that contains the values of every node in the source collection with the given key.
         /// </returns>
-        public static IJEnumerable<JToken> Values(this IEnumerable<JToken> source, object key)
-        {
+        public static IJEnumerable<JToken> Values(this IEnumerable<JToken> source, object key) {
             return Values<JToken, JToken>(source, key).AsJEnumerable();
         }
 
@@ -137,8 +128,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="IEnumerable{T}" /> of <see cref="JToken" /> that contains the values of every node in the source collection.
         /// </returns>
-        public static IJEnumerable<JToken> Values(this IEnumerable<JToken> source)
-        {
+        public static IJEnumerable<JToken> Values(this IEnumerable<JToken> source) {
             return source.Values(null);
         }
 
@@ -153,8 +143,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="IEnumerable{T}" /> that contains the converted values of every node in the source collection with the given key.
         /// </returns>
-        public static IEnumerable<U> Values<U>(this IEnumerable<JToken> source, object key)
-        {
+        public static IEnumerable<U> Values<U>(this IEnumerable<JToken> source, object key) {
             return Values<JToken, U>(source, key);
         }
 
@@ -168,8 +157,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="IEnumerable{T}" /> that contains the converted values of every node in the source collection.
         /// </returns>
-        public static IEnumerable<U> Values<U>(this IEnumerable<JToken> source)
-        {
+        public static IEnumerable<U> Values<U>(this IEnumerable<JToken> source) {
             return Values<JToken, U>(source, null);
         }
 
@@ -181,8 +169,7 @@ namespace NetDimension.Json.Linq
         ///     A <see cref="JToken" /> cast as a <see cref="IEnumerable{T}" /> of <see cref="JToken" />.
         /// </param>
         /// <returns>A converted value.</returns>
-        public static U Value<U>(this IEnumerable<JToken> value)
-        {
+        public static U Value<U>(this IEnumerable<JToken> value) {
             return value.Value<JToken, U>();
         }
 
@@ -195,43 +182,35 @@ namespace NetDimension.Json.Linq
         ///     A <see cref="JToken" /> cast as a <see cref="IEnumerable{T}" /> of <see cref="JToken" />.
         /// </param>
         /// <returns>A converted value.</returns>
-        public static U Value<T, U>(this IEnumerable<T> value) where T : JToken
-        {
+        public static U Value<T, U>(this IEnumerable<T> value) where T : JToken {
             ValidationUtils.ArgumentNotNull(value, "source");
 
             var token = value as JToken;
-            if (token == null)
+            if (token == null) {
                 throw new ArgumentException("Source value must be a JToken.");
+            }
 
             return token.Convert<JToken, U>();
         }
 
 
-        internal static IEnumerable<U> Values<T, U>(this IEnumerable<T> source, object key) where T : JToken
-        {
+        internal static IEnumerable<U> Values<T, U>(this IEnumerable<T> source, object key) where T : JToken {
             ValidationUtils.ArgumentNotNull(source, "source");
 
-            foreach (JToken token in source)
-            {
-                if (key == null)
-                {
-                    if (token is JValue)
-                    {
+            foreach (JToken token in source) {
+                if (key == null) {
+                    if (token is JValue) {
                         yield return Convert<JValue, U>((JValue) token);
-                    }
-                    else
-                    {
-                        foreach (var t in token.Children())
-                        {
+                    } else {
+                        foreach (var t in token.Children()) {
                             yield return t.Convert<JToken, U>();
                         }
                     }
-                }
-                else
-                {
+                } else {
                     var value = token[key];
-                    if (value != null)
+                    if (value != null) {
                         yield return value.Convert<JToken, U>();
+                    }
                 }
             }
 
@@ -258,8 +237,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="IEnumerable{T}" /> of <see cref="JToken" /> that contains the values of every node in the source collection.
         /// </returns>
-        public static IJEnumerable<JToken> Children<T>(this IEnumerable<T> source) where T : JToken
-        {
+        public static IJEnumerable<JToken> Children<T>(this IEnumerable<T> source) where T : JToken {
             return Children<T, JToken>(source).AsJEnumerable();
         }
 
@@ -274,51 +252,47 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="IEnumerable{T}" /> that contains the converted values of every node in the source collection.
         /// </returns>
-        public static IEnumerable<U> Children<T, U>(this IEnumerable<T> source) where T : JToken
-        {
+        public static IEnumerable<U> Children<T, U>(this IEnumerable<T> source) where T : JToken {
             ValidationUtils.ArgumentNotNull(source, "source");
 
             return source.SelectMany(c => c.Children()).Convert<JToken, U>();
         }
 
-        internal static IEnumerable<U> Convert<T, U>(this IEnumerable<T> source) where T : JToken
-        {
+        internal static IEnumerable<U> Convert<T, U>(this IEnumerable<T> source) where T : JToken {
             ValidationUtils.ArgumentNotNull(source, "source");
 
-            foreach (var token in source)
-            {
+            foreach (var token in source) {
                 yield return Convert<JToken, U>(token);
             }
         }
 
-        internal static U Convert<T, U>(this T token) where T : JToken
-        {
-            if (token == null)
+        internal static U Convert<T, U>(this T token) where T : JToken {
+            if (token == null) {
                 return default(U);
+            }
 
             if (token is U
                 // don't want to cast JValue to its interfaces, want to get the internal value
-                && typeof (U) != typeof (IComparable) && typeof (U) != typeof (IFormattable))
-            {
+                && typeof (U) != typeof (IComparable) && typeof (U) != typeof (IFormattable)) {
                 // HACK
                 return (U) (object) token;
-            }
-            else
-            {
+            } else {
                 var value = token as JValue;
-                if (value == null)
+                if (value == null) {
                     throw new InvalidCastException("Cannot cast {0} to {1}.".FormatWith(CultureInfo.InvariantCulture,
                                                                                         token.GetType(), typeof (T)));
+                }
 
-                if (value.Value is U)
+                if (value.Value is U) {
                     return (U) value.Value;
+                }
 
                 var targetType = typeof (U);
 
-                if (ReflectionUtils.IsNullableType(targetType))
-                {
-                    if (value.Value == null)
+                if (ReflectionUtils.IsNullableType(targetType)) {
+                    if (value.Value == null) {
                         return default(U);
+                    }
 
                     targetType = Nullable.GetUnderlyingType(targetType);
                 }
@@ -339,8 +313,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The input typed as <see cref="IJEnumerable{T}" />.
         /// </returns>
-        public static IJEnumerable<JToken> AsJEnumerable(this IEnumerable<JToken> source)
-        {
+        public static IJEnumerable<JToken> AsJEnumerable(this IEnumerable<JToken> source) {
             return source.AsJEnumerable<JToken>();
         }
 
@@ -354,14 +327,14 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The input typed as <see cref="IJEnumerable{T}" />.
         /// </returns>
-        public static IJEnumerable<T> AsJEnumerable<T>(this IEnumerable<T> source) where T : JToken
-        {
-            if (source == null)
+        public static IJEnumerable<T> AsJEnumerable<T>(this IEnumerable<T> source) where T : JToken {
+            if (source == null) {
                 return null;
-            else if (source is IJEnumerable<T>)
+            } else if (source is IJEnumerable<T>) {
                 return (IJEnumerable<T>) source;
-            else
+            } else {
                 return new JEnumerable<T>(source);
+            }
         }
     }
 }

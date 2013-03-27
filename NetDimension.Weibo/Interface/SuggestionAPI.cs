@@ -3,8 +3,7 @@
     internal class SuggestionAPI : WeiboAPI
     {
         public SuggestionAPI(Client client)
-            : base(client)
-        {
+            : base(client) {
         }
 
         /// <summary>
@@ -12,8 +11,7 @@
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
-        public string HotUsers(HotUserCatagory category = HotUserCatagory.@default)
-        {
+        public string HotUsers(HotUserCatagory category = HotUserCatagory.@default) {
             return (Client.GetCommand("suggestions/users/hot",
                                       new WeiboParameter("category", category)));
         }
@@ -24,8 +22,7 @@
         /// <param name="count"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public string MayInterestedUsers(int count = 10, int page = 1)
-        {
+        public string MayInterestedUsers(int count = 10, int page = 1) {
             return (Client.GetCommand("suggestions/users/may_interested",
                                       new WeiboParameter("count", count),
                                       new WeiboParameter("page", page)));
@@ -37,8 +34,7 @@
         /// <param name="content"></param>
         /// <param name="num"></param>
         /// <returns></returns>
-        public string UsersByStatus(string content, int num = 10)
-        {
+        public string UsersByStatus(string content, int num = 10) {
             return (Client.GetCommand("suggestions/users/by_status",
                                       new WeiboParameter("content", content),
                                       new WeiboParameter("num", num)));
@@ -52,8 +48,7 @@
         /// <param name="count">单页返回的记录条数，默认为20。 </param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public string HotStatuses(int type = 1, bool isPic = false, int count = 20, int page = 1)
-        {
+        public string HotStatuses(int type = 1, bool isPic = false, int count = 20, int page = 1) {
             return (Client.GetCommand("suggestions/statuses/hot",
                                       new WeiboParameter("type", type),
                                       new WeiboParameter("isPic", isPic),
@@ -68,8 +63,7 @@
         /// <param name="count">单页返回的记录条数，默认为50。</param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public string ReorderStatuses(int section, int count = 50, int page = 1)
-        {
+        public string ReorderStatuses(int section, int count = 50, int page = 1) {
             return (Client.GetCommand("suggestions/statuses/reorder",
                                       new WeiboParameter("section", section),
                                       new WeiboParameter("count", count),
@@ -83,8 +77,7 @@
         /// <param name="count">单页返回的记录条数，默认为50。</param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public string ReorderStatusIDs(int section, int count = 50, int page = 1)
-        {
+        public string ReorderStatusIDs(int section, int count = 50, int page = 1) {
             return (Client.GetCommand("suggestions/statuses/reorder/ids",
                                       new WeiboParameter("section", section),
                                       new WeiboParameter("count", count),
@@ -97,8 +90,7 @@
         /// <param name="count"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public string HotFavorites(int count = 20, int page = 1)
-        {
+        public string HotFavorites(int count = 20, int page = 1) {
             return (Client.GetCommand("suggestions/favorites/hot",
                                       new WeiboParameter("count", count),
                                       new WeiboParameter("page", page)));
@@ -109,8 +101,7 @@
         /// </summary>
         /// <param name="uid">不感兴趣的用户的UID。 </param>
         /// <returns></returns>
-        public string NotInterestedUsers(string uid)
-        {
+        public string NotInterestedUsers(string uid) {
             return (Client.PostCommand("suggestions/users/not_interested",
                                        new WeiboParameter("uid", uid)));
         }

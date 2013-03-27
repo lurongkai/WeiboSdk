@@ -45,16 +45,14 @@ namespace NetDimension.Json
         /// <summary>
         ///     Initializes a new instance of the <see cref="JsonContainerAttribute" /> class.
         /// </summary>
-        protected JsonContainerAttribute()
-        {
+        protected JsonContainerAttribute() {
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="JsonContainerAttribute" /> class with the specified container Id.
         /// </summary>
         /// <param name="id">The container Id.</param>
-        protected JsonContainerAttribute(string id)
-        {
+        protected JsonContainerAttribute(string id) {
             Id = id;
         }
 
@@ -88,8 +86,7 @@ namespace NetDimension.Json
         /// <value>
         ///     <c>true</c> to keep object reference; otherwise, <c>false</c>. The default is <c>false</c>.
         /// </value>
-        public bool IsReference
-        {
+        public bool IsReference {
             get { return _isReference ?? default(bool); }
             set { _isReference = value; }
         }
@@ -100,8 +97,7 @@ namespace NetDimension.Json
         /// <value>
         ///     <c>true</c> to keep collection's items object references; otherwise, <c>false</c>. The default is <c>false</c>.
         /// </value>
-        public bool ItemIsReference
-        {
+        public bool ItemIsReference {
             get { return _itemIsReference ?? default(bool); }
             set { _itemIsReference = value; }
         }
@@ -110,8 +106,7 @@ namespace NetDimension.Json
         ///     Gets or sets the reference loop handling used when serializing the collection's items.
         /// </summary>
         /// <value>The reference loop handling.</value>
-        public ReferenceLoopHandling ItemReferenceLoopHandling
-        {
+        public ReferenceLoopHandling ItemReferenceLoopHandling {
             get { return _itemReferenceLoopHandling ?? default(ReferenceLoopHandling); }
             set { _itemReferenceLoopHandling = value; }
         }
@@ -120,8 +115,7 @@ namespace NetDimension.Json
         ///     Gets or sets the type name handling used when serializing the collection's items.
         /// </summary>
         /// <value>The type name handling.</value>
-        public TypeNameHandling ItemTypeNameHandling
-        {
+        public TypeNameHandling ItemTypeNameHandling {
             get { return _itemTypeNameHandling ?? default(TypeNameHandling); }
             set { _itemTypeNameHandling = value; }
         }

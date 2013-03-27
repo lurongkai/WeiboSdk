@@ -27,10 +27,6 @@
 
 using System;
 
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#endif
-
 namespace NetDimension.Json.Serialization
 {
     /// <summary>
@@ -130,8 +126,7 @@ namespace NetDimension.Json.Serialization
         /// <value>
         ///     A value indicating whether this <see cref="JsonProperty" /> is required.
         /// </value>
-        public Required Required
-        {
+        public Required Required {
             get { return _required ?? Required.Default; }
             set { _required = value; }
         }
@@ -222,8 +217,7 @@ namespace NetDimension.Json.Serialization
         /// <returns>
         ///     A <see cref="String" /> that represents this instance.
         /// </returns>
-        public override string ToString()
-        {
+        public override string ToString() {
             return PropertyName;
         }
     }

@@ -32,17 +32,12 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-#endif
 
 namespace NetDimension.Json.Utilities
 {
     internal static class CollectionUtils
     {
-        public static IEnumerable<T> CastValid<T>(this IEnumerable enumerable)
-        {
+        public static IEnumerable<T> CastValid<T>(this IEnumerable enumerable) {
             ValidationUtils.ArgumentNotNull(enumerable, "enumerable");
 
             return enumerable.Cast<object>().Where(o => o is T).Cast<T>();
@@ -55,10 +50,8 @@ namespace NetDimension.Json.Utilities
         /// <returns>
         ///     <c>true</c> if the collection is null or empty; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsNullOrEmpty<T>(ICollection<T> collection)
-        {
-            if (collection != null)
-            {
+        public static bool IsNullOrEmpty<T>(ICollection<T> collection) {
+            if (collection != null) {
                 return (collection.Count == 0);
             }
             return true;
@@ -69,57 +62,54 @@ namespace NetDimension.Json.Utilities
         /// </summary>
         /// <param name="initial">The list to add to.</param>
         /// <param name="collection">The collection of elements to add.</param>
-        public static void AddRange<T>(this IList<T> initial, IEnumerable<T> collection)
-        {
-            if (initial == null)
+        public static void AddRange<T>(this IList<T> initial, IEnumerable<T> collection) {
+            if (initial == null) {
                 throw new ArgumentNullException("initial");
+            }
 
-            if (collection == null)
+            if (collection == null) {
                 return;
+            }
 
-            foreach (var value in collection)
-            {
+            foreach (var value in collection) {
                 initial.Add(value);
             }
         }
 
-        public static void AddRange(this IList initial, IEnumerable collection)
-        {
+        public static void AddRange(this IList initial, IEnumerable collection) {
             ValidationUtils.ArgumentNotNull(initial, "initial");
 
             var wrapper = new ListWrapper<object>(initial);
             wrapper.AddRange(collection.Cast<object>());
         }
 
-        public static IList CreateGenericList(Type listType)
-        {
+        public static IList CreateGenericList(Type listType) {
             ValidationUtils.ArgumentNotNull(listType, "listType");
 
             return (IList) ReflectionUtils.CreateGeneric(typeof (List<>), listType);
         }
 
-        public static bool IsDictionaryType(Type type)
-        {
+        public static bool IsDictionaryType(Type type) {
             ValidationUtils.ArgumentNotNull(type, "type");
 
 #if !NETFX_CORE
-            if (typeof (IDictionary).IsAssignableFrom(type))
+            if (typeof (IDictionary).IsAssignableFrom(type)) {
                 return true;
+            }
 #endif
-            if (ReflectionUtils.ImplementsGenericDefinition(type, typeof (IDictionary<,>)))
+            if (ReflectionUtils.ImplementsGenericDefinition(type, typeof (IDictionary<,>))) {
                 return true;
+            }
 
             return false;
         }
 
-        public static IWrappedCollection CreateCollectionWrapper(object list)
-        {
+        public static IWrappedCollection CreateCollectionWrapper(object list) {
             ValidationUtils.ArgumentNotNull(list, "list");
 
             Type collectionDefinition;
             if (ReflectionUtils.ImplementsGenericDefinition(list.GetType(), typeof (ICollection<>),
-                                                            out collectionDefinition))
-            {
+                                                            out collectionDefinition)) {
                 var collectionItemType = ReflectionUtils.GetCollectionItemType(collectionDefinition);
 
                 // Activator.CreateInstance throws AmbiguousMatchException. Manually invoke constructor
@@ -133,27 +123,21 @@ namespace NetDimension.Json.Utilities
                     (IWrappedCollection)
                     ReflectionUtils.CreateGeneric(typeof (CollectionWrapper<>), new[] {collectionItemType},
                                                   instanceCreator, list);
-            }
-            else if (list is IList)
-            {
+            } else if (list is IList) {
                 return new CollectionWrapper<object>((IList) list);
-            }
-            else
-            {
+            } else {
                 throw new ArgumentException(
                     "Can not create ListWrapper for type {0}.".FormatWith(CultureInfo.InvariantCulture, list.GetType()),
                     "list");
             }
         }
 
-        public static IWrappedDictionary CreateDictionaryWrapper(object dictionary)
-        {
+        public static IWrappedDictionary CreateDictionaryWrapper(object dictionary) {
             ValidationUtils.ArgumentNotNull(dictionary, "dictionary");
 
             Type dictionaryDefinition;
             if (ReflectionUtils.ImplementsGenericDefinition(dictionary.GetType(), typeof (IDictionary<,>),
-                                                            out dictionaryDefinition))
-            {
+                                                            out dictionaryDefinition)) {
                 var dictionaryKeyType = ReflectionUtils.GetDictionaryKeyType(dictionaryDefinition);
                 var dictionaryValueType = ReflectionUtils.GetDictionaryValueType(dictionaryDefinition);
 
@@ -171,113 +155,101 @@ namespace NetDimension.Json.Utilities
                                                   dictionary);
             }
 #if !NETFX_CORE
-            else if (dictionary is IDictionary)
-            {
+            else if (dictionary is IDictionary) {
                 return new DictionaryWrapper<object, object>((IDictionary) dictionary);
             }
 #endif
-            else
-            {
+            else {
                 throw new ArgumentException(
                     "Can not create DictionaryWrapper for type {0}.".FormatWith(CultureInfo.InvariantCulture,
                                                                                 dictionary.GetType()), "dictionary");
             }
         }
 
-        public static IList CreateList(Type listType, out bool isReadOnlyOrFixedSize)
-        {
+        public static IList CreateList(Type listType, out bool isReadOnlyOrFixedSize) {
             ValidationUtils.ArgumentNotNull(listType, "listType");
 
             IList list;
             Type collectionType;
             isReadOnlyOrFixedSize = false;
 
-            if (listType.IsArray)
-            {
+            if (listType.IsArray) {
                 // have to use an arraylist when creating array
                 // there is no way to know the size until it is finised
                 list = new List<object>();
                 isReadOnlyOrFixedSize = true;
-            }
-            else if (ReflectionUtils.InheritsGenericDefinition(listType, typeof (ReadOnlyCollection<>),
-                                                               out collectionType))
-            {
+            } else if (ReflectionUtils.InheritsGenericDefinition(listType, typeof (ReadOnlyCollection<>),
+                                                                 out collectionType)) {
                 var readOnlyCollectionContentsType = collectionType.GetGenericArguments()[0];
                 var genericEnumerable = ReflectionUtils.MakeGenericType(typeof (IEnumerable<>),
                                                                         readOnlyCollectionContentsType);
                 var suitableConstructor = false;
 
-                foreach (var constructor in listType.GetConstructors())
-                {
+                foreach (var constructor in listType.GetConstructors()) {
                     IList<ParameterInfo> parameters = constructor.GetParameters();
 
-                    if (parameters.Count == 1)
-                    {
-                        if (genericEnumerable.IsAssignableFrom(parameters[0].ParameterType))
-                        {
+                    if (parameters.Count == 1) {
+                        if (genericEnumerable.IsAssignableFrom(parameters[0].ParameterType)) {
                             suitableConstructor = true;
                             break;
                         }
                     }
                 }
 
-                if (!suitableConstructor)
+                if (!suitableConstructor) {
                     throw new Exception(
                         "Read-only type {0} does not have a public constructor that takes a type that implements {1}."
                             .FormatWith(CultureInfo.InvariantCulture, listType, genericEnumerable));
+                }
 
                 // can't add or modify a readonly list
                 // use List<T> and convert once populated
                 list = CreateGenericList(readOnlyCollectionContentsType);
                 isReadOnlyOrFixedSize = true;
-            }
-            else if (typeof (IList).IsAssignableFrom(listType))
-            {
-                if (ReflectionUtils.IsInstantiatableType(listType))
+            } else if (typeof (IList).IsAssignableFrom(listType)) {
+                if (ReflectionUtils.IsInstantiatableType(listType)) {
                     list = (IList) Activator.CreateInstance(listType);
-                else if (listType == typeof (IList))
+                } else if (listType == typeof (IList)) {
                     list = new List<object>();
-                else
+                } else {
                     list = null;
-            }
-            else if (ReflectionUtils.ImplementsGenericDefinition(listType, typeof (ICollection<>)))
-            {
-                if (ReflectionUtils.IsInstantiatableType(listType))
+                }
+            } else if (ReflectionUtils.ImplementsGenericDefinition(listType, typeof (ICollection<>))) {
+                if (ReflectionUtils.IsInstantiatableType(listType)) {
                     list = CreateCollectionWrapper(Activator.CreateInstance(listType));
-                else
+                } else {
                     list = null;
-            }
-            else
-            {
+                }
+            } else {
                 list = null;
             }
 
-            if (list == null)
+            if (list == null) {
                 throw new InvalidOperationException(
                     "Cannot create and populate list type {0}.".FormatWith(CultureInfo.InvariantCulture, listType));
+            }
 
             return list;
         }
 
-        public static Array ToArray(Array initial, Type type)
-        {
-            if (type == null)
+        public static Array ToArray(Array initial, Type type) {
+            if (type == null) {
                 throw new ArgumentNullException("type");
+            }
 
             var destinationArray = Array.CreateInstance(type, initial.Length);
             Array.Copy(initial, 0, destinationArray, 0, initial.Length);
             return destinationArray;
         }
 
-        public static bool AddDistinct<T>(this IList<T> list, T value)
-        {
+        public static bool AddDistinct<T>(this IList<T> list, T value) {
             return list.AddDistinct(value, EqualityComparer<T>.Default);
         }
 
-        public static bool AddDistinct<T>(this IList<T> list, T value, IEqualityComparer<T> comparer)
-        {
-            if (list.ContainsValue(value, comparer))
+        public static bool AddDistinct<T>(this IList<T> list, T value, IEqualityComparer<T> comparer) {
+            if (list.ContainsValue(value, comparer)) {
                 return false;
+            }
 
             list.Add(value);
             return true;
@@ -285,42 +257,41 @@ namespace NetDimension.Json.Utilities
 
         // this is here because LINQ Bridge doesn't support Contains with IEqualityComparer<T>
         public static bool ContainsValue<TSource>(this IEnumerable<TSource> source, TSource value,
-                                                  IEqualityComparer<TSource> comparer)
-        {
-            if (comparer == null)
+                                                  IEqualityComparer<TSource> comparer) {
+            if (comparer == null) {
                 comparer = EqualityComparer<TSource>.Default;
+            }
 
-            if (source == null)
+            if (source == null) {
                 throw new ArgumentNullException("source");
+            }
 
-            foreach (var local in source)
-            {
-                if (comparer.Equals(local, value))
+            foreach (var local in source) {
+                if (comparer.Equals(local, value)) {
                     return true;
+                }
             }
 
             return false;
         }
 
-        public static bool AddRangeDistinct<T>(this IList<T> list, IEnumerable<T> values, IEqualityComparer<T> comparer)
-        {
+        public static bool AddRangeDistinct<T>(this IList<T> list, IEnumerable<T> values, IEqualityComparer<T> comparer) {
             var allAdded = true;
-            foreach (var value in values)
-            {
-                if (!list.AddDistinct(value, comparer))
+            foreach (var value in values) {
+                if (!list.AddDistinct(value, comparer)) {
                     allAdded = false;
+                }
             }
 
             return allAdded;
         }
 
-        public static int IndexOf<T>(this IEnumerable<T> collection, Func<T, bool> predicate)
-        {
+        public static int IndexOf<T>(this IEnumerable<T> collection, Func<T, bool> predicate) {
             var index = 0;
-            foreach (var value in collection)
-            {
-                if (predicate(value))
+            foreach (var value in collection) {
+                if (predicate(value)) {
                     return index;
+                }
 
                 index++;
             }
@@ -337,13 +308,10 @@ namespace NetDimension.Json.Utilities
         /// <param name="comparer">An equality comparer to compare values.</param>
         /// <returns>The zero-based index of the first occurrence of value within the entire sequence, if found; otherwise, ?.</returns>
         public static int IndexOf<TSource>(this IEnumerable<TSource> list, TSource value,
-                                           IEqualityComparer<TSource> comparer)
-        {
+                                           IEqualityComparer<TSource> comparer) {
             var index = 0;
-            foreach (var item in list)
-            {
-                if (comparer.Equals(item, value))
-                {
+            foreach (var item in list) {
+                if (comparer.Equals(item, value)) {
                     return index;
                 }
                 index++;

@@ -5,8 +5,7 @@
     /// </summary>
     public class InterfaceSelector
     {
-        internal InterfaceSelector(Client client)
-        {
+        internal InterfaceSelector(Client client) {
             Dynamic = new DynamicInterfaces(client);
             Entity = new EntityInterfaces(client);
         }

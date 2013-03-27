@@ -38,8 +38,7 @@ namespace NetDimension.Json.Linq
 
         private int _currentIndex;
 
-        public JPath(string expression)
-        {
+        public JPath(string expression) {
             ValidationUtils.ArgumentNotNull(expression, "expression");
             _expression = expression;
             Parts = new List<object>();
@@ -49,21 +48,17 @@ namespace NetDimension.Json.Linq
 
         public List<object> Parts { get; private set; }
 
-        private void ParseMain()
-        {
+        private void ParseMain() {
             var currentPartStartIndex = _currentIndex;
             var followingIndexer = false;
 
-            while (_currentIndex < _expression.Length)
-            {
+            while (_currentIndex < _expression.Length) {
                 var currentChar = _expression[_currentIndex];
 
-                switch (currentChar)
-                {
+                switch (currentChar) {
                     case '[':
                     case '(':
-                        if (_currentIndex > currentPartStartIndex)
-                        {
+                        if (_currentIndex > currentPartStartIndex) {
                             var member = _expression.Substring(currentPartStartIndex,
                                                                _currentIndex - currentPartStartIndex);
                             Parts.Add(member);
@@ -77,8 +72,7 @@ namespace NetDimension.Json.Linq
                     case ')':
                         throw new JsonException("Unexpected character while parsing path: " + currentChar);
                     case '.':
-                        if (_currentIndex > currentPartStartIndex)
-                        {
+                        if (_currentIndex > currentPartStartIndex) {
                             var member = _expression.Substring(currentPartStartIndex,
                                                                _currentIndex - currentPartStartIndex);
                             Parts.Add(member);
@@ -87,23 +81,22 @@ namespace NetDimension.Json.Linq
                         followingIndexer = false;
                         break;
                     default:
-                        if (followingIndexer)
+                        if (followingIndexer) {
                             throw new JsonException("Unexpected character following indexer: " + currentChar);
+                        }
                         break;
                 }
 
                 _currentIndex++;
             }
 
-            if (_currentIndex > currentPartStartIndex)
-            {
+            if (_currentIndex > currentPartStartIndex) {
                 var member = _expression.Substring(currentPartStartIndex, _currentIndex - currentPartStartIndex);
                 Parts.Add(member);
             }
         }
 
-        private void ParseIndexer(char indexerOpenChar)
-        {
+        private void ParseIndexer(char indexerOpenChar) {
             _currentIndex++;
 
             var indexerCloseChar = (indexerOpenChar == '[') ? ']' : ')';
@@ -111,106 +104,92 @@ namespace NetDimension.Json.Linq
             var indexerLength = 0;
             var indexerClosed = false;
 
-            while (_currentIndex < _expression.Length)
-            {
+            while (_currentIndex < _expression.Length) {
                 var currentCharacter = _expression[_currentIndex];
-                if (char.IsDigit(currentCharacter))
-                {
+                if (char.IsDigit(currentCharacter)) {
                     indexerLength++;
-                }
-                else if (currentCharacter == indexerCloseChar)
-                {
+                } else if (currentCharacter == indexerCloseChar) {
                     indexerClosed = true;
                     break;
-                }
-                else
-                {
+                } else {
                     throw new JsonException("Unexpected character while parsing path indexer: " + currentCharacter);
                 }
 
                 _currentIndex++;
             }
 
-            if (!indexerClosed)
+            if (!indexerClosed) {
                 throw new JsonException("Path ended with open indexer. Expected " + indexerCloseChar);
+            }
 
-            if (indexerLength == 0)
+            if (indexerLength == 0) {
                 throw new JsonException("Empty path indexer.");
+            }
 
             var indexer = _expression.Substring(indexerStart, indexerLength);
             Parts.Add(Convert.ToInt32(indexer, CultureInfo.InvariantCulture));
         }
 
-        internal JToken Evaluate(JToken root, bool errorWhenNoMatch)
-        {
+        internal JToken Evaluate(JToken root, bool errorWhenNoMatch) {
             var current = root;
 
-            foreach (var part in Parts)
-            {
+            foreach (var part in Parts) {
                 var propertyName = part as string;
-                if (propertyName != null)
-                {
+                if (propertyName != null) {
                     var o = current as JObject;
-                    if (o != null)
-                    {
+                    if (o != null) {
                         current = o[propertyName];
 
-                        if (current == null && errorWhenNoMatch)
+                        if (current == null && errorWhenNoMatch) {
                             throw new JsonException(
                                 "Property '{0}' does not exist on JObject.".FormatWith(CultureInfo.InvariantCulture,
                                                                                        propertyName));
-                    }
-                    else
-                    {
-                        if (errorWhenNoMatch)
+                        }
+                    } else {
+                        if (errorWhenNoMatch) {
                             throw new JsonException(
                                 "Property '{0}' not valid on {1}.".FormatWith(CultureInfo.InvariantCulture, propertyName,
                                                                               current.GetType().Name));
+                        }
 
                         return null;
                     }
-                }
-                else
-                {
+                } else {
                     var index = (int) part;
 
                     var a = current as JArray;
                     var c = current as JConstructor;
 
-                    if (a != null)
-                    {
-                        if (a.Count <= index)
-                        {
-                            if (errorWhenNoMatch)
+                    if (a != null) {
+                        if (a.Count <= index) {
+                            if (errorWhenNoMatch) {
                                 throw new IndexOutOfRangeException(
                                     "Index {0} outside the bounds of JArray.".FormatWith(CultureInfo.InvariantCulture,
                                                                                          index));
+                            }
 
                             return null;
                         }
 
                         current = a[index];
-                    }
-                    else if (c != null)
-                    {
-                        if (c.Count <= index)
-                        {
-                            if (errorWhenNoMatch)
+                    } else if (c != null) {
+                        if (c.Count <= index) {
+                            if (errorWhenNoMatch) {
                                 throw new IndexOutOfRangeException(
                                     "Index {0} outside the bounds of JConstructor.".FormatWith(
                                         CultureInfo.InvariantCulture, index));
+                            }
 
                             return null;
                         }
 
                         current = c[index];
-                    }
-                    else
-                    {
-                        if (errorWhenNoMatch)
+                    } else {
+                        if (errorWhenNoMatch) {
                             throw new JsonException(
                                 "Index {0} not valid on {1}.".FormatWith(CultureInfo.InvariantCulture, index,
                                                                          current.GetType().Name));
+                        }
 
                         return null;
                     }

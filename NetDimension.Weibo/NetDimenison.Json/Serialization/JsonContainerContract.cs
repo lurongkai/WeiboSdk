@@ -27,11 +27,6 @@
 
 using System;
 using NetDimension.Json.Utilities;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-
-#endif
 
 namespace NetDimension.Json.Serialization
 {
@@ -48,15 +43,14 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="underlyingType">The underlying type for the contract.</param>
         internal JsonContainerContract(Type underlyingType)
-            : base(underlyingType)
-        {
+            : base(underlyingType) {
             var jsonContainerAttribute = JsonTypeReflector.GetJsonContainerAttribute(underlyingType);
 
-            if (jsonContainerAttribute != null)
-            {
-                if (jsonContainerAttribute.ItemConverterType != null)
+            if (jsonContainerAttribute != null) {
+                if (jsonContainerAttribute.ItemConverterType != null) {
                     ItemConverter =
                         JsonConverterAttribute.CreateJsonConverterInstance(jsonContainerAttribute.ItemConverterType);
+                }
 
                 ItemIsReference = jsonContainerAttribute._itemIsReference;
                 ItemReferenceLoopHandling = jsonContainerAttribute._itemReferenceLoopHandling;
@@ -65,26 +59,20 @@ namespace NetDimension.Json.Serialization
         }
 
         // will be null for containers that don't have an item type (e.g. IList) or for complex objects
-        internal JsonContract ItemContract
-        {
+        internal JsonContract ItemContract {
             get { return _itemContract; }
-            set
-            {
+            set {
                 _itemContract = value;
-                if (_itemContract != null)
-                {
+                if (_itemContract != null) {
                     _finalItemContract = (_itemContract.UnderlyingType.IsSealed()) ? _itemContract : null;
-                }
-                else
-                {
+                } else {
                     _finalItemContract = null;
                 }
             }
         }
 
         // the final (i.e. can't be inherited from like a sealed class or valuetype) item contract
-        internal JsonContract FinalItemContract
-        {
+        internal JsonContract FinalItemContract {
             get { return _finalItemContract; }
         }
 

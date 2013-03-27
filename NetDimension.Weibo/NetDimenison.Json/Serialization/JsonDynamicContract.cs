@@ -25,7 +25,7 @@
 
 #endregion
 
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
 using System;
 
 namespace NetDimension.Json.Serialization
@@ -40,8 +40,7 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="underlyingType">The underlying type for the contract.</param>
         public JsonDynamicContract(Type underlyingType)
-            : base(underlyingType)
-        {
+            : base(underlyingType) {
             ContractType = JsonContractType.Dynamic;
 
             Properties = new JsonPropertyCollection(UnderlyingType);

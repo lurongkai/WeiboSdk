@@ -29,10 +29,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NetDimension.Json.Utilities;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-#endif
 
 namespace NetDimension.Json.Linq
 {
@@ -53,8 +49,7 @@ namespace NetDimension.Json.Linq
         ///     Initializes a new instance of the <see cref="JEnumerable{T}" /> struct.
         /// </summary>
         /// <param name="enumerable">The enumerable.</param>
-        public JEnumerable(IEnumerable<T> enumerable)
-        {
+        public JEnumerable(IEnumerable<T> enumerable) {
             ValidationUtils.ArgumentNotNull(enumerable, "enumerable");
 
             _enumerable = enumerable;
@@ -66,8 +61,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.
         /// </returns>
-        public IEnumerator<T> GetEnumerator()
-        {
+        public IEnumerator<T> GetEnumerator() {
             return _enumerable.GetEnumerator();
         }
 
@@ -77,8 +71,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.
         /// </returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
+        IEnumerator IEnumerable.GetEnumerator() {
             return GetEnumerator();
         }
 
@@ -86,8 +79,7 @@ namespace NetDimension.Json.Linq
         ///     Gets the <see cref="IJEnumerable{JToken}" /> with the specified key.
         /// </summary>
         /// <value></value>
-        public IJEnumerable<JToken> this[object key]
-        {
+        public IJEnumerable<JToken> this[object key] {
             get { return new JEnumerable<JToken>(_enumerable.Values<T, JToken>(key)); }
         }
 
@@ -100,10 +92,10 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object obj)
-        {
-            if (obj is JEnumerable<T>)
+        public override bool Equals(object obj) {
+            if (obj is JEnumerable<T>) {
                 return _enumerable.Equals(((JEnumerable<T>) obj)._enumerable);
+            }
 
             return false;
         }
@@ -114,8 +106,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
-        public override int GetHashCode()
-        {
+        public override int GetHashCode() {
             return _enumerable.GetHashCode();
         }
     }

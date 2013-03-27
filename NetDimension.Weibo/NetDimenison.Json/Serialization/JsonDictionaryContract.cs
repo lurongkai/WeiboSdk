@@ -30,10 +30,6 @@ using System.Collections;
 using System.Collections.Generic;
 using NetDimension.Json.Utilities;
 
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#endif
-
 namespace NetDimension.Json.Serialization
 {
     /// <summary>
@@ -51,36 +47,31 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="underlyingType">The underlying type for the contract.</param>
         public JsonDictionaryContract(Type underlyingType)
-            : base(underlyingType)
-        {
+            : base(underlyingType) {
             ContractType = JsonContractType.Dictionary;
 
             Type keyType;
             Type valueType;
             if (ReflectionUtils.ImplementsGenericDefinition(underlyingType, typeof (IDictionary<,>),
-                                                            out _genericCollectionDefinitionType))
-            {
+                                                            out _genericCollectionDefinitionType)) {
                 keyType = _genericCollectionDefinitionType.GetGenericArguments()[0];
                 valueType = _genericCollectionDefinitionType.GetGenericArguments()[1];
-            }
-            else
-            {
+            } else {
                 ReflectionUtils.GetDictionaryKeyValueTypes(UnderlyingType, out keyType, out valueType);
             }
 
             DictionaryKeyType = keyType;
             DictionaryValueType = valueType;
 
-            if (DictionaryValueType != null)
+            if (DictionaryValueType != null) {
                 _isDictionaryValueTypeNullableType = ReflectionUtils.IsNullableType(DictionaryValueType);
+            }
 
-            if (IsTypeGenericDictionaryInterface(UnderlyingType))
-            {
+            if (IsTypeGenericDictionaryInterface(UnderlyingType)) {
                 CreatedType = ReflectionUtils.MakeGenericType(typeof (Dictionary<,>), keyType, valueType);
             }
 #if !NETFX_CORE
-            else if (UnderlyingType == typeof (IDictionary))
-            {
+            else if (UnderlyingType == typeof (IDictionary)) {
                 CreatedType = typeof (Dictionary<object, object>);
             }
 #endif
@@ -110,15 +101,14 @@ namespace NetDimension.Json.Serialization
 
         internal JsonContract KeyContract { get; set; }
 
-        internal IWrappedDictionary CreateWrapper(object dictionary)
-        {
+        internal IWrappedDictionary CreateWrapper(object dictionary) {
 #if !(NETFX_CORE)
-            if (dictionary is IDictionary && (DictionaryValueType == null || !_isDictionaryValueTypeNullableType))
+            if (dictionary is IDictionary && (DictionaryValueType == null || !_isDictionaryValueTypeNullableType)) {
                 return new DictionaryWrapper<object, object>((IDictionary) dictionary);
+            }
 #endif
 
-            if (_genericWrapperCreator == null)
-            {
+            if (_genericWrapperCreator == null) {
                 _genericWrapperType = ReflectionUtils.MakeGenericType(typeof (DictionaryWrapper<,>), DictionaryKeyType,
                                                                       DictionaryValueType);
 
@@ -131,10 +121,10 @@ namespace NetDimension.Json.Serialization
             return (IWrappedDictionary) _genericWrapperCreator(null, dictionary);
         }
 
-        private bool IsTypeGenericDictionaryInterface(Type type)
-        {
-            if (!type.IsGenericType())
+        private bool IsTypeGenericDictionaryInterface(Type type) {
+            if (!type.IsGenericType()) {
                 return false;
+            }
 
             var genericDefinition = type.GetGenericTypeDefinition();
 

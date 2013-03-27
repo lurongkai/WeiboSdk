@@ -3,8 +3,7 @@
     internal class TrendAPI : WeiboAPI
     {
         public TrendAPI(Client client)
-            : base(client)
-        {
+            : base(client) {
         }
 
         /// <summary>
@@ -14,8 +13,7 @@
         /// <param name="count"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public string Trends(string uid, int count = 10, int page = 1)
-        {
+        public string Trends(string uid, int count = 10, int page = 1) {
             return (Client.GetCommand("trends",
                                       new WeiboParameter("uid", uid),
                                       new WeiboParameter("count", count),
@@ -27,8 +25,7 @@
         /// </summary>
         /// <param name="trendName"></param>
         /// <returns></returns>
-        public string IsFollow(string trendName)
-        {
+        public string IsFollow(string trendName) {
             return (Client.GetCommand("trends/is_follow",
                                       new WeiboParameter("trend_name", trendName)));
         }
@@ -38,8 +35,7 @@
         /// </summary>
         /// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
         /// <returns></returns>
-        public string Hourly(bool baseApp = false)
-        {
+        public string Hourly(bool baseApp = false) {
             return (Client.GetCommand("trends/hourly",
                                       new WeiboParameter("base_app", baseApp)));
         }
@@ -49,8 +45,7 @@
         /// </summary>
         /// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
         /// <returns></returns>
-        public string Daily(bool baseApp = false)
-        {
+        public string Daily(bool baseApp = false) {
             return (Client.GetCommand("trends/daily",
                                       new WeiboParameter("base_app", baseApp)));
         }
@@ -60,8 +55,7 @@
         /// </summary>
         /// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
         /// <returns></returns>
-        public string Weekly(bool baseApp = false)
-        {
+        public string Weekly(bool baseApp = false) {
             return (Client.GetCommand("trends/weekly",
                                       new WeiboParameter("base_app", baseApp)));
         }
@@ -71,8 +65,7 @@
         /// </summary>
         /// <param name="trendName"></param>
         /// <returns></returns>
-        public string Follow(string trendName)
-        {
+        public string Follow(string trendName) {
             return (Client.PostCommand("trends/follow",
                                        new WeiboParameter("trend_name", trendName)));
         }
@@ -82,8 +75,7 @@
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public string Destroy(string id)
-        {
+        public string Destroy(string id) {
             return (Client.PostCommand("trends/destroy",
                                        new WeiboParameter("trend_id", id)));
         }

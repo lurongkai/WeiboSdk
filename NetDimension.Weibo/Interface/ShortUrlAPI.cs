@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
+
 namespace NetDimension.Weibo.Interface
 {
     internal class ShortUrlAPI : WeiboAPI
     {
         public ShortUrlAPI(Client client)
-            : base(client)
-        {
+            : base(client) {
         }
 
         /// <summary>
@@ -13,8 +13,7 @@ namespace NetDimension.Weibo.Interface
         /// </summary>
         /// <param name="url_short">需要取得点击数的短链接</param>
         /// <returns></returns>
-        public string Clicks(string url_short)
-        {
+        public string Clicks(string url_short) {
             return (Client.GetCommand("short_url/clicks", new WeiboParameter("url_short", url_short)));
         }
 
@@ -23,8 +22,7 @@ namespace NetDimension.Weibo.Interface
         /// </summary>
         /// <param name="url_short">需要取得点击来源的短链接</param>
         /// <returns></returns>
-        public string Referers(string url_short)
-        {
+        public string Referers(string url_short) {
             return (Client.GetCommand("short_url/referers", new WeiboParameter("url_short", url_short)));
         }
 
@@ -33,8 +31,7 @@ namespace NetDimension.Weibo.Interface
         /// </summary>
         /// <param name="url_short">需要取得点击地区的短链接</param>
         /// <returns></returns>
-        public string Locations(string url_short)
-        {
+        public string Locations(string url_short) {
             return (Client.GetCommand("short_url/locations", new WeiboParameter("url_short", url_short)));
         }
 
@@ -43,12 +40,10 @@ namespace NetDimension.Weibo.Interface
         /// </summary>
         /// <param name="url_short">需要获取富内容信息的短链接</param>
         /// <returns></returns>
-        public string Info(params string[] url_short)
-        {
+        public string Info(params string[] url_short) {
             var parameters = new List<WeiboParameter>();
 
-            foreach (var u in url_short)
-            {
+            foreach (var u in url_short) {
                 parameters.Add(new WeiboParameter("url_short", u));
             }
 
@@ -60,12 +55,10 @@ namespace NetDimension.Weibo.Interface
         /// </summary>
         /// <param name="url_long">需要转换的长链接，需要URLencoded，最多不超过20个。 </param>
         /// <returns></returns>
-        public string Shorten(params string[] url_long)
-        {
+        public string Shorten(params string[] url_long) {
             var parameters = new List<WeiboParameter>();
 
-            foreach (var u in url_long)
-            {
+            foreach (var u in url_long) {
                 parameters.Add(new WeiboParameter("url_long", u));
             }
             return (Client.GetCommand("short_url/shorten", parameters.ToArray()));
@@ -76,12 +69,10 @@ namespace NetDimension.Weibo.Interface
         /// </summary>
         /// <param name="url_short">需要还原的短链接，需要URLencoded，最多不超过20个 </param>
         /// <returns></returns>
-        public string Expand(params string[] url_short)
-        {
+        public string Expand(params string[] url_short) {
             var parameters = new List<WeiboParameter>();
 
-            foreach (var u in url_short)
-            {
+            foreach (var u in url_short) {
                 parameters.Add(new WeiboParameter("url_short", u));
             }
             return (Client.GetCommand("short_url/expand", parameters.ToArray()));
@@ -93,12 +84,10 @@ namespace NetDimension.Weibo.Interface
         /// </summary>
         /// <param name="url_short">需要取得分享数的短链接</param>
         /// <returns></returns>
-        public string ShareCounts(string[] url_short)
-        {
+        public string ShareCounts(string[] url_short) {
             var parameters = new List<WeiboParameter>();
 
-            foreach (var u in url_short)
-            {
+            foreach (var u in url_short) {
                 parameters.Add(new WeiboParameter("url_short", u));
             }
 
@@ -115,15 +104,16 @@ namespace NetDimension.Weibo.Interface
         /// <param name="page">可选参数，每次返回的最大记录数（即页面大小），不大于200 </param>
         /// <returns></returns>
         public string ShareStatuses(string urlShort, string sinceID = "", string maxID = "", int count = 20,
-                                    int page = 1)
-        {
+                                    int page = 1) {
             var parameters = new List<WeiboParameter>();
             parameters.Add(new WeiboParameter("url_short", urlShort));
 
-            if (!string.IsNullOrEmpty(sinceID))
+            if (!string.IsNullOrEmpty(sinceID)) {
                 parameters.Add(new WeiboParameter("since_id", sinceID));
-            if (!string.IsNullOrEmpty(maxID))
+            }
+            if (!string.IsNullOrEmpty(maxID)) {
                 parameters.Add(new WeiboParameter("max_id", maxID));
+            }
 
             parameters.Add(new WeiboParameter("count", count));
             parameters.Add(new WeiboParameter("page", page));
@@ -136,12 +126,10 @@ namespace NetDimension.Weibo.Interface
         /// </summary>
         /// <param name="url_short">需要取得评论数的短链接</param>
         /// <returns></returns>
-        public string CommentCounts(string[] url_short)
-        {
+        public string CommentCounts(string[] url_short) {
             var parameters = new List<WeiboParameter>();
 
-            foreach (var u in url_short)
-            {
+            foreach (var u in url_short) {
                 parameters.Add(new WeiboParameter("url_short", u));
             }
             return (Client.GetCommand("short_url/comment/counts", parameters.ToArray()));
@@ -157,15 +145,16 @@ namespace NetDimension.Weibo.Interface
         /// <param name="page">可选参数，返回结果的页序号，有分页限制</param>
         /// <returns></returns>
         public string CommentComments(string urlShort, string sinceID = "", string maxID = "", int count = 20,
-                                      int page = 1)
-        {
+                                      int page = 1) {
             var parameters = new List<WeiboParameter>();
             parameters.Add(new WeiboParameter("url_short", urlShort));
 
-            if (!string.IsNullOrEmpty(sinceID))
+            if (!string.IsNullOrEmpty(sinceID)) {
                 parameters.Add(new WeiboParameter("since_id", sinceID));
-            if (!string.IsNullOrEmpty(maxID))
+            }
+            if (!string.IsNullOrEmpty(maxID)) {
                 parameters.Add(new WeiboParameter("max_id", maxID));
+            }
 
             parameters.Add(new WeiboParameter("count", count));
             parameters.Add(new WeiboParameter("page", page));

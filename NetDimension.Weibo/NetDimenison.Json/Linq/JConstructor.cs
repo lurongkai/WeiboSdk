@@ -43,8 +43,7 @@ namespace NetDimension.Json.Linq
         /// <summary>
         ///     Initializes a new instance of the <see cref="JConstructor" /> class.
         /// </summary>
-        public JConstructor()
-        {
+        public JConstructor() {
         }
 
         /// <summary>
@@ -54,8 +53,7 @@ namespace NetDimension.Json.Linq
         ///     A <see cref="JConstructor" /> object to copy from.
         /// </param>
         public JConstructor(JConstructor other)
-            : base(other)
-        {
+            : base(other) {
             _name = other.Name;
         }
 
@@ -65,8 +63,7 @@ namespace NetDimension.Json.Linq
         /// <param name="name">The constructor name.</param>
         /// <param name="content">The contents of the constructor.</param>
         public JConstructor(string name, params object[] content)
-            : this(name, (object) content)
-        {
+            : this(name, (object) content) {
         }
 
         /// <summary>
@@ -75,8 +72,7 @@ namespace NetDimension.Json.Linq
         /// <param name="name">The constructor name.</param>
         /// <param name="content">The contents of the constructor.</param>
         public JConstructor(string name, object content)
-            : this(name)
-        {
+            : this(name) {
             Add(content);
         }
 
@@ -84,8 +80,7 @@ namespace NetDimension.Json.Linq
         ///     Initializes a new instance of the <see cref="JConstructor" /> class with the specified name.
         /// </summary>
         /// <param name="name">The constructor name.</param>
-        public JConstructor(string name)
-        {
+        public JConstructor(string name) {
             ValidationUtils.ArgumentNotNullOrEmpty(name, "name");
 
             _name = name;
@@ -95,8 +90,7 @@ namespace NetDimension.Json.Linq
         ///     Gets the container's children tokens.
         /// </summary>
         /// <value>The container's children tokens.</value>
-        protected override IList<JToken> ChildrenTokens
-        {
+        protected override IList<JToken> ChildrenTokens {
             get { return _values; }
         }
 
@@ -104,8 +98,7 @@ namespace NetDimension.Json.Linq
         ///     Gets or sets the name of this constructor.
         /// </summary>
         /// <value>The constructor name.</value>
-        public string Name
-        {
+        public string Name {
             get { return _name; }
             set { _name = value; }
         }
@@ -114,8 +107,7 @@ namespace NetDimension.Json.Linq
         ///     Gets the node type for this <see cref="JToken" />.
         /// </summary>
         /// <value>The type.</value>
-        public override JTokenType Type
-        {
+        public override JTokenType Type {
             get { return JTokenType.Constructor; }
         }
 
@@ -125,40 +117,37 @@ namespace NetDimension.Json.Linq
         /// <value>
         ///     The <see cref="JToken" /> with the specified key.
         /// </value>
-        public override JToken this[object key]
-        {
-            get
-            {
+        public override JToken this[object key] {
+            get {
                 ValidationUtils.ArgumentNotNull(key, "o");
 
-                if (!(key is int))
+                if (!(key is int)) {
                     throw new ArgumentException(
                         "Accessed JConstructor values with invalid key value: {0}. Argument position index expected."
                             .FormatWith(CultureInfo.InvariantCulture, MiscellaneousUtils.ToString(key)));
+                }
 
                 return GetItem((int) key);
             }
-            set
-            {
+            set {
                 ValidationUtils.ArgumentNotNull(key, "o");
 
-                if (!(key is int))
+                if (!(key is int)) {
                     throw new ArgumentException(
                         "Set JConstructor values with invalid key value: {0}. Argument position index expected."
                             .FormatWith(CultureInfo.InvariantCulture, MiscellaneousUtils.ToString(key)));
+                }
 
                 SetItem((int) key, value);
             }
         }
 
-        internal override bool DeepEquals(JToken node)
-        {
+        internal override bool DeepEquals(JToken node) {
             var c = node as JConstructor;
             return (c != null && _name == c.Name && ContentsEqual(c));
         }
 
-        internal override JToken CloneToken()
-        {
+        internal override JToken CloneToken() {
             return new JConstructor(this);
         }
 
@@ -171,20 +160,17 @@ namespace NetDimension.Json.Linq
         /// <param name="converters">
         ///     A collection of <see cref="JsonConverter" /> which will be used when writing the token.
         /// </param>
-        public override void WriteTo(JsonWriter writer, params JsonConverter[] converters)
-        {
+        public override void WriteTo(JsonWriter writer, params JsonConverter[] converters) {
             writer.WriteStartConstructor(_name);
 
-            foreach (var token in Children())
-            {
+            foreach (var token in Children()) {
                 token.WriteTo(writer, converters);
             }
 
             writer.WriteEndConstructor();
         }
 
-        internal override int GetDeepHashCode()
-        {
+        internal override int GetDeepHashCode() {
             return _name.GetHashCode() ^ ContentsHashCode();
         }
 
@@ -197,18 +183,18 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JConstructor" /> that contains the JSON that was read from the specified <see cref="JsonReader" />.
         /// </returns>
-        public new static JConstructor Load(JsonReader reader)
-        {
-            if (reader.TokenType == JsonToken.None)
-            {
-                if (!reader.Read())
+        public new static JConstructor Load(JsonReader reader) {
+            if (reader.TokenType == JsonToken.None) {
+                if (!reader.Read()) {
                     throw JsonReaderException.Create(reader, "Error reading JConstructor from JsonReader.");
+                }
             }
 
-            if (reader.TokenType != JsonToken.StartConstructor)
+            if (reader.TokenType != JsonToken.StartConstructor) {
                 throw JsonReaderException.Create(reader,
                                                  "Error reading JConstructor from JsonReader. Current JsonReader item is not a constructor: {0}"
                                                      .FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
+            }
 
             var c = new JConstructor((string) reader.Value);
             c.SetLineInfo(reader as IJsonLineInfo);

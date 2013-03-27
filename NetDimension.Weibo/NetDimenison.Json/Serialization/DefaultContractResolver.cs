@@ -40,19 +40,15 @@ using System.Runtime.Serialization;
 using NetDimension.Json.Converters;
 using NetDimension.Json.Linq;
 using NetDimension.Json.Utilities;
-#if !(NET35 || NET20 || SILVERLIGHT || WINDOWS_PHONE || PORTABLE)
+
+#if !(SILVERLIGHT || WINDOWS_PHONE || PORTABLE)
 #endif
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
 #endif
 #if !(NETFX_CORE || PORTABLE)
 #endif
 #if NETFX_CORE || PORTABLE
 using ICustomAttributeProvider = NetDimension.Json.Utilities.CustomAttributeProvider;
-#endif
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-
 #endif
 
 namespace NetDimension.Json.Serialization
@@ -62,26 +58,23 @@ namespace NetDimension.Json.Serialization
         private readonly Type _contractType;
         private readonly Type _resolverType;
 
-        public ResolverContractKey(Type resolverType, Type contractType)
-        {
+        public ResolverContractKey(Type resolverType, Type contractType) {
             _resolverType = resolverType;
             _contractType = contractType;
         }
 
-        public bool Equals(ResolverContractKey other)
-        {
+        public bool Equals(ResolverContractKey other) {
             return (_resolverType == other._resolverType && _contractType == other._contractType);
         }
 
-        public override int GetHashCode()
-        {
+        public override int GetHashCode() {
             return _resolverType.GetHashCode() ^ _contractType.GetHashCode();
         }
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ResolverContractKey))
+        public override bool Equals(object obj) {
+            if (!(obj is ResolverContractKey)) {
                 return false;
+            }
 
             return Equals((ResolverContractKey) obj);
         }
@@ -94,17 +87,16 @@ namespace NetDimension.Json.Serialization
     {
         private static readonly IContractResolver _instance = new DefaultContractResolver(true);
 
-        internal static IContractResolver Instance
-        {
+        internal static IContractResolver Instance {
             get { return _instance; }
         }
 
         private static readonly IList<JsonConverter> BuiltInConverters = new List<JsonConverter>
             {
-#if !(SILVERLIGHT || NET20 || NETFX_CORE || PORTABLE)
+#if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
                 new EntityKeyMemberConverter(),
 #endif
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
                 new ExpandoObjectConverter(),
 #endif
 #if (!(SILVERLIGHT || PORTABLE) || WINDOWS_PHONE)
@@ -132,8 +124,7 @@ namespace NetDimension.Json.Serialization
         /// <value>
         ///     <c>true</c> if using dynamic code generation; otherwise, <c>false</c>.
         /// </value>
-        public bool DynamicCodeGeneration
-        {
+        public bool DynamicCodeGeneration {
             get { return JsonTypeReflector.DynamicCodeGeneration; }
         }
 
@@ -177,8 +168,7 @@ namespace NetDimension.Json.Serialization
         ///     Initializes a new instance of the <see cref="DefaultContractResolver" /> class.
         /// </summary>
         public DefaultContractResolver()
-            : this(false)
-        {
+            : this(false) {
         }
 
         /// <summary>
@@ -190,8 +180,7 @@ namespace NetDimension.Json.Serialization
         ///     behavior if different instances of the resolver are suppose to produce different results. When set to false it is highly
         ///     recommended to reuse <see cref="DefaultContractResolver" /> instances with the <see cref="JsonSerializer" />.
         /// </param>
-        public DefaultContractResolver(bool shareCache)
-        {
+        public DefaultContractResolver(bool shareCache) {
 #if !NETFX_CORE
             DefaultMembersSearchFlags = BindingFlags.Public | BindingFlags.Instance;
 #endif
@@ -202,20 +191,20 @@ namespace NetDimension.Json.Serialization
             _sharedCache = shareCache;
         }
 
-        private Dictionary<ResolverContractKey, JsonContract> GetCache()
-        {
-            if (_sharedCache)
+        private Dictionary<ResolverContractKey, JsonContract> GetCache() {
+            if (_sharedCache) {
                 return _sharedContractCache;
-            else
+            } else {
                 return _instanceContractCache;
+            }
         }
 
-        private void UpdateCache(Dictionary<ResolverContractKey, JsonContract> cache)
-        {
-            if (_sharedCache)
+        private void UpdateCache(Dictionary<ResolverContractKey, JsonContract> cache) {
+            if (_sharedCache) {
                 _sharedContractCache = cache;
-            else
+            } else {
                 _instanceContractCache = cache;
+            }
         }
 
         /// <summary>
@@ -223,21 +212,19 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="type">The type to resolve a contract for.</param>
         /// <returns>The contract for a given type.</returns>
-        public virtual JsonContract ResolveContract(Type type)
-        {
-            if (type == null)
+        public virtual JsonContract ResolveContract(Type type) {
+            if (type == null) {
                 throw new ArgumentNullException("type");
+            }
 
             JsonContract contract;
             var key = new ResolverContractKey(GetType(), type);
             var cache = GetCache();
-            if (cache == null || !cache.TryGetValue(key, out contract))
-            {
+            if (cache == null || !cache.TryGetValue(key, out contract)) {
                 contract = CreateContract(type);
 
                 // avoid the possibility of modifying the cache dictionary while another thread is accessing it
-                lock (_typeContractCacheLock)
-                {
+                lock (_typeContractCacheLock) {
                     cache = GetCache();
                     var updatedCache =
                         (cache != null)
@@ -257,8 +244,7 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="objectType">The type to get serializable members for.</param>
         /// <returns>The serializable members for the type.</returns>
-        protected virtual List<MemberInfo> GetSerializableMembers(Type objectType)
-        {
+        protected virtual List<MemberInfo> GetSerializableMembers(Type objectType) {
             bool ignoreSerializableAttribute;
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
             ignoreSerializableAttribute = IgnoreSerializableAttribute;
@@ -277,77 +263,65 @@ namespace NetDimension.Json.Serialization
 
             var serializableMembers = new List<MemberInfo>();
 
-            if (memberSerialization != MemberSerialization.Fields)
-            {
-#if !PocketPC && !NET20
+            if (memberSerialization != MemberSerialization.Fields) {
                 var dataContractAttribute = JsonTypeReflector.GetDataContractAttribute(objectType);
-#endif
-
                 var defaultMembers = ReflectionUtils.GetFieldsAndProperties(objectType, DefaultMembersSearchFlags)
                                                     .Where(m => !ReflectionUtils.IsIndexedProperty(m)).ToList();
 
-                foreach (var member in allMembers)
-                {
+                foreach (var member in allMembers) {
                     // exclude members that are compiler generated if set
                     if (SerializeCompilerGeneratedMembers ||
-                        !member.IsDefined(typeof (CompilerGeneratedAttribute), true))
-                    {
-                        if (defaultMembers.Contains(member))
-                        {
+                        !member.IsDefined(typeof (CompilerGeneratedAttribute), true)) {
+                        if (defaultMembers.Contains(member)) {
                             // add all members that are found by default member search
                             serializableMembers.Add(member);
-                        }
-                        else
-                        {
+                        } else {
                             // add members that are explicitly marked with JsonProperty/DataMember attribute
                             // or are a field if serializing just fields
                             if (
                                 JsonTypeReflector.GetAttribute<JsonPropertyAttribute>(
-                                    member.GetCustomAttributeProvider()) != null)
+                                    member.GetCustomAttributeProvider()) != null) {
                                 serializableMembers.Add(member);
-#if !PocketPC && !NET20
-                            else if (dataContractAttribute != null &&
-                                     JsonTypeReflector.GetAttribute<DataMemberAttribute>(
-                                         member.GetCustomAttributeProvider()) != null)
+                            } else if (dataContractAttribute != null &&
+                                       JsonTypeReflector.GetAttribute<DataMemberAttribute>(
+                                           member.GetCustomAttributeProvider()) != null) {
                                 serializableMembers.Add(member);
-#endif
-                            else if (memberSerialization == MemberSerialization.Fields &&
-                                     member.MemberType() == MemberTypes.Field)
+                            } else if (memberSerialization == MemberSerialization.Fields &&
+                                       member.MemberType() == MemberTypes.Field) {
                                 serializableMembers.Add(member);
+                            }
                         }
                     }
                 }
 
-#if !PocketPC && !SILVERLIGHT && !NET20
+#if !SILVERLIGHT
                 Type match;
                 // don't include EntityKey on entities objects... this is a bit hacky
-                if (objectType.AssignableToTypeName("System.Data.Objects.DataClasses.EntityObject", out match))
+                if (objectType.AssignableToTypeName("System.Data.Objects.DataClasses.EntityObject", out match)) {
                     serializableMembers = serializableMembers.Where(ShouldSerializeEntityMember).ToList();
+                }
 #endif
-            }
-            else
-            {
+            } else {
                 // serialize all fields
-                foreach (var member in allMembers)
-                {
-                    if (member.MemberType() == MemberTypes.Field)
+                foreach (var member in allMembers) {
+                    if (member.MemberType() == MemberTypes.Field) {
                         serializableMembers.Add(member);
+                    }
                 }
             }
 
             return serializableMembers;
         }
 
-#if !PocketPC && !SILVERLIGHT && !NET20
-        private bool ShouldSerializeEntityMember(MemberInfo memberInfo)
-        {
+#if !SILVERLIGHT
+        private bool ShouldSerializeEntityMember(MemberInfo memberInfo) {
             var propertyInfo = memberInfo as PropertyInfo;
-            if (propertyInfo != null)
-            {
+            if (propertyInfo != null) {
                 if (propertyInfo.PropertyType.IsGenericType() &&
                     propertyInfo.PropertyType.GetGenericTypeDefinition().FullName ==
-                    "System.Data.Objects.DataClasses.EntityReference`1")
+                    "System.Data.Objects.DataClasses.EntityReference`1") {
                     return false;
+                }
             }
 
             return true;
@@ -361,8 +335,7 @@ namespace NetDimension.Json.Serialization
         /// <returns>
         ///     A <see cref="JsonObjectContract" /> for the given type.
         /// </returns>
-        protected virtual JsonObjectContract CreateObjectContract(Type objectType)
-        {
+        protected virtual JsonObjectContract CreateObjectContract(Type objectType) {
             var contract = new JsonObjectContract(objectType);
             InitializeContract(contract);
 
@@ -380,27 +353,23 @@ namespace NetDimension.Json.Serialization
                                                           contract.MemberSerialization));
 
             var attribute = JsonTypeReflector.GetJsonObjectAttribute(contract.NonNullableUnderlyingType);
-            if (attribute != null)
+            if (attribute != null) {
                 contract.ItemRequired = attribute._itemRequired;
+            }
 
             // check if a JsonConstructorAttribute has been defined and use that
             if (
                 contract.NonNullableUnderlyingType.GetConstructors(BindingFlags.Instance | BindingFlags.Public |
                                                                    BindingFlags.NonPublic)
-                        .Any(c => c.IsDefined(typeof (JsonConstructorAttribute), true)))
-            {
+                        .Any(c => c.IsDefined(typeof (JsonConstructorAttribute), true))) {
                 var constructor = GetAttributeConstructor(contract.NonNullableUnderlyingType);
-                if (constructor != null)
-                {
+                if (constructor != null) {
                     contract.OverrideConstructor = constructor;
                     contract.ConstructorParameters.AddRange(CreateConstructorParameters(constructor, contract.Properties));
                 }
-            }
-            else if (contract.DefaultCreator == null || contract.DefaultCreatorNonPublic)
-            {
+            } else if (contract.DefaultCreator == null || contract.DefaultCreatorNonPublic) {
                 var constructor = GetParametrizedConstructor(contract.NonNullableUnderlyingType);
-                if (constructor != null)
-                {
+                if (constructor != null) {
                     contract.ParametrizedConstructor = constructor;
                     contract.ConstructorParameters.AddRange(CreateConstructorParameters(constructor, contract.Properties));
                 }
@@ -408,30 +377,30 @@ namespace NetDimension.Json.Serialization
             return contract;
         }
 
-        private ConstructorInfo GetAttributeConstructor(Type objectType)
-        {
+        private ConstructorInfo GetAttributeConstructor(Type objectType) {
             IList<ConstructorInfo> markedConstructors =
                 objectType.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                           .Where(c => c.IsDefined(typeof (JsonConstructorAttribute), true))
                           .ToList();
 
-            if (markedConstructors.Count > 1)
+            if (markedConstructors.Count > 1) {
                 throw new JsonException("Multiple constructors with the JsonConstructorAttribute.");
-            else if (markedConstructors.Count == 1)
+            } else if (markedConstructors.Count == 1) {
                 return markedConstructors[0];
+            }
 
             return null;
         }
 
-        private ConstructorInfo GetParametrizedConstructor(Type objectType)
-        {
+        private ConstructorInfo GetParametrizedConstructor(Type objectType) {
             IList<ConstructorInfo> constructors =
                 objectType.GetConstructors(BindingFlags.Public | BindingFlags.Instance).ToList();
 
-            if (constructors.Count == 1)
+            if (constructors.Count == 1) {
                 return constructors[0];
-            else
+            } else {
                 return null;
+            }
         }
 
         /// <summary>
@@ -443,23 +412,21 @@ namespace NetDimension.Json.Serialization
         ///     Properties for the given <see cref="ConstructorInfo" />.
         /// </returns>
         protected virtual IList<JsonProperty> CreateConstructorParameters(ConstructorInfo constructor,
-                                                                          JsonPropertyCollection memberProperties)
-        {
+                                                                          JsonPropertyCollection memberProperties) {
             var constructorParameters = constructor.GetParameters();
 
             var parameterCollection = new JsonPropertyCollection(constructor.DeclaringType);
 
-            foreach (var parameterInfo in constructorParameters)
-            {
+            foreach (var parameterInfo in constructorParameters) {
                 var matchingMemberProperty = memberProperties.GetClosestMatchProperty(parameterInfo.Name);
                 // type must match as well as name
-                if (matchingMemberProperty != null && matchingMemberProperty.PropertyType != parameterInfo.ParameterType)
+                if (matchingMemberProperty != null && matchingMemberProperty.PropertyType != parameterInfo.ParameterType) {
                     matchingMemberProperty = null;
+                }
 
                 var property = CreatePropertyFromConstructorParameter(matchingMemberProperty, parameterInfo);
 
-                if (property != null)
-                {
+                if (property != null) {
                     parameterCollection.AddProperty(property);
                 }
             }
@@ -476,8 +443,7 @@ namespace NetDimension.Json.Serialization
         ///     A created <see cref="JsonProperty" /> for the given <see cref="ParameterInfo" />.
         /// </returns>
         protected virtual JsonProperty CreatePropertyFromConstructorParameter(JsonProperty matchingMemberProperty,
-                                                                              ParameterInfo parameterInfo)
-        {
+                                                                              ParameterInfo parameterInfo) {
             var property = new JsonProperty();
             property.PropertyType = parameterInfo.ParameterType;
 
@@ -491,8 +457,7 @@ namespace NetDimension.Json.Serialization
             property.Writable = true;
 
             // "inherit" values from matching member property if unset on parameter
-            if (matchingMemberProperty != null)
-            {
+            if (matchingMemberProperty != null) {
                 property.PropertyName = (property.PropertyName != parameterInfo.Name)
                                             ? property.PropertyName
                                             : matchingMemberProperty.PropertyName;
@@ -519,37 +484,28 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="objectType">Type of the object.</param>
         /// <returns></returns>
-        protected virtual JsonConverter ResolveContractConverter(Type objectType)
-        {
+        protected virtual JsonConverter ResolveContractConverter(Type objectType) {
             return JsonTypeReflector.GetJsonConverter(objectType.GetCustomAttributeProvider(), objectType);
         }
 
-        private Func<object> GetDefaultCreator(Type createdType)
-        {
+        private Func<object> GetDefaultCreator(Type createdType) {
             return JsonTypeReflector.ReflectionDelegateFactory.CreateDefaultConstructor<object>(createdType);
         }
 
-#if !PocketPC && !NET20
         [SuppressMessage("Microsoft.Portability", "CA1903:UseOnlyApiFromTargetedFramework",
             MessageId = "System.Runtime.Serialization.DataContractAttribute.#get_IsReference()")]
-#endif
-        private void InitializeContract(JsonContract contract)
-        {
+        private void InitializeContract(JsonContract contract) {
             var containerAttribute = JsonTypeReflector.GetJsonContainerAttribute(contract.NonNullableUnderlyingType);
-            if (containerAttribute != null)
-            {
+            if (containerAttribute != null) {
                 contract.IsReference = containerAttribute._isReference;
-            }
-#if !PocketPC && !NET20
-            else
-            {
+            } else {
                 var dataContractAttribute =
                     JsonTypeReflector.GetDataContractAttribute(contract.NonNullableUnderlyingType);
                 // doesn't have a null value
-                if (dataContractAttribute != null && dataContractAttribute.IsReference)
+                if (dataContractAttribute != null && dataContractAttribute.IsReference) {
                     contract.IsReference = true;
+                }
             }
-#endif
 
             contract.Converter = ResolveContractConverter(contract.NonNullableUnderlyingType);
 
@@ -558,8 +514,7 @@ namespace NetDimension.Json.Serialization
                                                                              contract.NonNullableUnderlyingType);
 
             if (ReflectionUtils.HasDefaultConstructor(contract.CreatedType, true)
-                || contract.CreatedType.IsValueType())
-            {
+                || contract.CreatedType.IsValueType()) {
                 contract.DefaultCreator = GetDefaultCreator(contract.CreatedType);
 
                 contract.DefaultCreatorNonPublic = (!contract.CreatedType.IsValueType() &&
@@ -569,10 +524,10 @@ namespace NetDimension.Json.Serialization
             ResolveCallbackMethods(contract, contract.NonNullableUnderlyingType);
         }
 
-        private void ResolveCallbackMethods(JsonContract contract, Type t)
-        {
-            if (t.BaseType() != null)
+        private void ResolveCallbackMethods(JsonContract contract, Type t) {
+            if (t.BaseType() != null) {
                 ResolveCallbackMethods(contract, t.BaseType());
+            }
 
             MethodInfo onSerializing;
             MethodInfo onSerialized;
@@ -583,8 +538,7 @@ namespace NetDimension.Json.Serialization
             GetCallbackMethodsForType(t, out onSerializing, out onSerialized, out onDeserializing, out onDeserialized,
                                       out onError);
 
-            if (onSerializing != null)
-            {
+            if (onSerializing != null) {
 #if NETFX_CORE
         if (!t.IsGenericType() || (t.GetGenericTypeDefinition() != typeof(ConcurrentDictionary<,>)))
           contract.OnSerializing = onSerializing;
@@ -593,31 +547,33 @@ namespace NetDimension.Json.Serialization
 #endif
             }
 
-            if (onSerialized != null)
+            if (onSerialized != null) {
                 contract.OnSerialized = onSerialized;
+            }
 
-            if (onDeserializing != null)
+            if (onDeserializing != null) {
                 contract.OnDeserializing = onDeserializing;
+            }
 
-            if (onDeserialized != null)
-            {
+            if (onDeserialized != null) {
                 // ConcurrentDictionary throws an error here so don't use its OnDeserialized - http://json.codeplex.com/discussions/257093
-#if !(NET35 || NET20 || SILVERLIGHT || WINDOWS_PHONE || PORTABLE)
-                if (!t.IsGenericType() || (t.GetGenericTypeDefinition() != typeof (ConcurrentDictionary<,>)))
+#if !(SILVERLIGHT || WINDOWS_PHONE || PORTABLE)
+                if (!t.IsGenericType() || (t.GetGenericTypeDefinition() != typeof (ConcurrentDictionary<,>))) {
                     contract.OnDeserialized = onDeserialized;
+                }
 #else
         contract.OnDeserialized = onDeserialized;
 #endif
             }
 
-            if (onError != null)
+            if (onError != null) {
                 contract.OnError = onError;
+            }
         }
 
         private void GetCallbackMethodsForType(Type type, out MethodInfo onSerializing, out MethodInfo onSerialized,
                                                out MethodInfo onDeserializing, out MethodInfo onDeserialized,
-                                               out MethodInfo onError)
-        {
+                                               out MethodInfo onError) {
             onSerializing = null;
             onSerialized = null;
             onDeserializing = null;
@@ -627,38 +583,33 @@ namespace NetDimension.Json.Serialization
             foreach (
                 var method in
                     type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance |
-                                    BindingFlags.DeclaredOnly))
-            {
+                                    BindingFlags.DeclaredOnly)) {
                 // compact framework errors when getting parameters for a generic method
                 // lame, but generic methods should not be callbacks anyway
-                if (method.ContainsGenericParameters)
+                if (method.ContainsGenericParameters) {
                     continue;
+                }
 
                 Type prevAttributeType = null;
                 var parameters = method.GetParameters();
 
                 if (IsValidCallback(method, parameters, typeof (OnSerializingAttribute), onSerializing,
-                                    ref prevAttributeType))
-                {
+                                    ref prevAttributeType)) {
                     onSerializing = method;
                 }
                 if (IsValidCallback(method, parameters, typeof (OnSerializedAttribute), onSerialized,
-                                    ref prevAttributeType))
-                {
+                                    ref prevAttributeType)) {
                     onSerialized = method;
                 }
                 if (IsValidCallback(method, parameters, typeof (OnDeserializingAttribute), onDeserializing,
-                                    ref prevAttributeType))
-                {
+                                    ref prevAttributeType)) {
                     onDeserializing = method;
                 }
                 if (IsValidCallback(method, parameters, typeof (OnDeserializedAttribute), onDeserialized,
-                                    ref prevAttributeType))
-                {
+                                    ref prevAttributeType)) {
                     onDeserialized = method;
                 }
-                if (IsValidCallback(method, parameters, typeof (OnErrorAttribute), onError, ref prevAttributeType))
-                {
+                if (IsValidCallback(method, parameters, typeof (OnErrorAttribute), onError, ref prevAttributeType)) {
                     onError = method;
                 }
             }
@@ -671,8 +622,7 @@ namespace NetDimension.Json.Serialization
         /// <returns>
         ///     A <see cref="JsonDictionaryContract" /> for the given type.
         /// </returns>
-        protected virtual JsonDictionaryContract CreateDictionaryContract(Type objectType)
-        {
+        protected virtual JsonDictionaryContract CreateDictionaryContract(Type objectType) {
             var contract = new JsonDictionaryContract(objectType);
             InitializeContract(contract);
 
@@ -688,8 +638,7 @@ namespace NetDimension.Json.Serialization
         /// <returns>
         ///     A <see cref="JsonArrayContract" /> for the given type.
         /// </returns>
-        protected virtual JsonArrayContract CreateArrayContract(Type objectType)
-        {
+        protected virtual JsonArrayContract CreateArrayContract(Type objectType) {
             var contract = new JsonArrayContract(objectType);
             InitializeContract(contract);
 
@@ -703,8 +652,7 @@ namespace NetDimension.Json.Serialization
         /// <returns>
         ///     A <see cref="JsonPrimitiveContract" /> for the given type.
         /// </returns>
-        protected virtual JsonPrimitiveContract CreatePrimitiveContract(Type objectType)
-        {
+        protected virtual JsonPrimitiveContract CreatePrimitiveContract(Type objectType) {
             var contract = new JsonPrimitiveContract(objectType);
             InitializeContract(contract);
 
@@ -718,8 +666,7 @@ namespace NetDimension.Json.Serialization
         /// <returns>
         ///     A <see cref="JsonLinqContract" /> for the given type.
         /// </returns>
-        protected virtual JsonLinqContract CreateLinqContract(Type objectType)
-        {
+        protected virtual JsonLinqContract CreateLinqContract(Type objectType) {
             var contract = new JsonLinqContract(objectType);
             InitializeContract(contract);
 
@@ -734,8 +681,7 @@ namespace NetDimension.Json.Serialization
         /// <returns>
         ///     A <see cref="JsonISerializableContract" /> for the given type.
         /// </returns>
-        protected virtual JsonISerializableContract CreateISerializableContract(Type objectType)
-        {
+        protected virtual JsonISerializableContract CreateISerializableContract(Type objectType) {
             var contract = new JsonISerializableContract(objectType);
             InitializeContract(contract);
 
@@ -743,8 +689,7 @@ namespace NetDimension.Json.Serialization
                 contract.NonNullableUnderlyingType.GetConstructor(
                     BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null,
                     new[] {typeof (SerializationInfo), typeof (StreamingContext)}, null);
-            if (constructorInfo != null)
-            {
+            if (constructorInfo != null) {
                 var methodCall = JsonTypeReflector.ReflectionDelegateFactory.CreateMethodCall<object>(constructorInfo);
 
                 contract.ISerializableCreator = (args => methodCall(null, args));
@@ -754,7 +699,7 @@ namespace NetDimension.Json.Serialization
         }
 #endif
 
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
         /// <summary>
         ///     Creates a <see cref="JsonDynamicContract" /> for the given type.
         /// </summary>
@@ -762,8 +707,7 @@ namespace NetDimension.Json.Serialization
         /// <returns>
         ///     A <see cref="JsonDynamicContract" /> for the given type.
         /// </returns>
-        protected virtual JsonDynamicContract CreateDynamicContract(Type objectType)
-        {
+        protected virtual JsonDynamicContract CreateDynamicContract(Type objectType) {
             var contract = new JsonDynamicContract(objectType);
             InitializeContract(contract);
 
@@ -781,8 +725,7 @@ namespace NetDimension.Json.Serialization
         /// <returns>
         ///     A <see cref="JsonStringContract" /> for the given type.
         /// </returns>
-        protected virtual JsonStringContract CreateStringContract(Type objectType)
-        {
+        protected virtual JsonStringContract CreateStringContract(Type objectType) {
             var contract = new JsonStringContract(objectType);
             InitializeContract(contract);
 
@@ -796,49 +739,57 @@ namespace NetDimension.Json.Serialization
         /// <returns>
         ///     A <see cref="JsonContract" /> for the given type.
         /// </returns>
-        protected virtual JsonContract CreateContract(Type objectType)
-        {
+        protected virtual JsonContract CreateContract(Type objectType) {
             var t = ReflectionUtils.EnsureNotNullableType(objectType);
 
-            if (JsonConvert.IsJsonPrimitiveType(t))
+            if (JsonConvert.IsJsonPrimitiveType(t)) {
                 return CreatePrimitiveContract(objectType);
+            }
 
-            if (JsonTypeReflector.GetJsonObjectAttribute(t) != null)
+            if (JsonTypeReflector.GetJsonObjectAttribute(t) != null) {
                 return CreateObjectContract(objectType);
+            }
 
-            if (JsonTypeReflector.GetJsonArrayAttribute(t) != null)
+            if (JsonTypeReflector.GetJsonArrayAttribute(t) != null) {
                 return CreateArrayContract(objectType);
+            }
 
-            if (JsonTypeReflector.GetJsonDictionaryAttribute(t) != null)
+            if (JsonTypeReflector.GetJsonDictionaryAttribute(t) != null) {
                 return CreateDictionaryContract(objectType);
+            }
 
-            if (t == typeof (JToken) || t.IsSubclassOf(typeof (JToken)))
+            if (t == typeof (JToken) || t.IsSubclassOf(typeof (JToken))) {
                 return CreateLinqContract(objectType);
+            }
 
-            if (CollectionUtils.IsDictionaryType(t))
+            if (CollectionUtils.IsDictionaryType(t)) {
                 return CreateDictionaryContract(objectType);
+            }
 
-            if (typeof (IEnumerable).IsAssignableFrom(t))
+            if (typeof (IEnumerable).IsAssignableFrom(t)) {
                 return CreateArrayContract(objectType);
+            }
 
-            if (CanConvertToString(t))
+            if (CanConvertToString(t)) {
                 return CreateStringContract(objectType);
+            }
 
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
-            if (!IgnoreSerializableInterface && typeof (ISerializable).IsAssignableFrom(t))
+            if (!IgnoreSerializableInterface && typeof (ISerializable).IsAssignableFrom(t)) {
                 return CreateISerializableContract(objectType);
+            }
 #endif
 
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
-            if (typeof (IDynamicMetaObjectProvider).IsAssignableFrom(t))
+#if !(WINDOWS_PHONE || PORTABLE)
+            if (typeof (IDynamicMetaObjectProvider).IsAssignableFrom(t)) {
                 return CreateDynamicContract(objectType);
+            }
 #endif
 
             return CreateObjectContract(objectType);
         }
 
-        internal static bool CanConvertToString(Type type)
-        {
+        internal static bool CanConvertToString(Type type) {
 #if !(NETFX_CORE || PORTABLE)
             var converter = ConvertUtils.GetConverter(type);
 
@@ -848,17 +799,18 @@ namespace NetDimension.Json.Serialization
                 && !(converter is ComponentConverter)
                 && !(converter is ReferenceConverter)
 #endif
-                && converter.GetType() != typeof (TypeConverter))
-            {
-                if (converter.CanConvertTo(typeof (string)))
+                && converter.GetType() != typeof (TypeConverter)) {
+                if (converter.CanConvertTo(typeof (string))) {
                     return true;
+                }
             }
 #endif
 
-            if (type == typeof (Type) || type.IsSubclassOf(typeof (Type)))
+            if (type == typeof (Type) || type.IsSubclassOf(typeof (Type))) {
                 return true;
+            }
 
-#if SILVERLIGHT || PocketPC
+#if SILVERLIGHT
       if (type == typeof(Guid) || type == typeof(Uri) || type == typeof(TimeSpan))
         return true;
 #endif
@@ -867,51 +819,54 @@ namespace NetDimension.Json.Serialization
         }
 
         private static bool IsValidCallback(MethodInfo method, ParameterInfo[] parameters, Type attributeType,
-                                            MethodInfo currentCallback, ref Type prevAttributeType)
-        {
-            if (!method.IsDefined(attributeType, false))
+                                            MethodInfo currentCallback, ref Type prevAttributeType) {
+            if (!method.IsDefined(attributeType, false)) {
                 return false;
+            }
 
-            if (currentCallback != null)
+            if (currentCallback != null) {
                 throw new JsonException(
                     "Invalid attribute. Both '{0}' and '{1}' in type '{2}' have '{3}'.".FormatWith(
                         CultureInfo.InvariantCulture, method, currentCallback, GetClrTypeFullName(method.DeclaringType),
                         attributeType));
+            }
 
-            if (prevAttributeType != null)
+            if (prevAttributeType != null) {
                 throw new JsonException(
                     "Invalid Callback. Method '{3}' in type '{2}' has both '{0}' and '{1}'.".FormatWith(
                         CultureInfo.InvariantCulture, prevAttributeType, attributeType,
                         GetClrTypeFullName(method.DeclaringType), method));
+            }
 
-            if (method.IsVirtual)
+            if (method.IsVirtual) {
                 throw new JsonException(
                     "Virtual Method '{0}' of type '{1}' cannot be marked with '{2}' attribute.".FormatWith(
                         CultureInfo.InvariantCulture, method, GetClrTypeFullName(method.DeclaringType), attributeType));
+            }
 
-            if (method.ReturnType != typeof (void))
+            if (method.ReturnType != typeof (void)) {
                 throw new JsonException(
                     "Serialization Callback '{1}' in type '{0}' must return void.".FormatWith(
                         CultureInfo.InvariantCulture, GetClrTypeFullName(method.DeclaringType), method));
+            }
 
-            if (attributeType == typeof (OnErrorAttribute))
-            {
+            if (attributeType == typeof (OnErrorAttribute)) {
                 if (parameters == null || parameters.Length != 2 ||
                     parameters[0].ParameterType != typeof (StreamingContext) ||
-                    parameters[1].ParameterType != typeof (ErrorContext))
+                    parameters[1].ParameterType != typeof (ErrorContext)) {
                     throw new JsonException(
                         "Serialization Error Callback '{1}' in type '{0}' must have two parameters of type '{2}' and '{3}'."
                             .FormatWith(CultureInfo.InvariantCulture, GetClrTypeFullName(method.DeclaringType), method,
                                         typeof (StreamingContext), typeof (ErrorContext)));
-            }
-            else
-            {
+                }
+            } else {
                 if (parameters == null || parameters.Length != 1 ||
-                    parameters[0].ParameterType != typeof (StreamingContext))
+                    parameters[0].ParameterType != typeof (StreamingContext)) {
                     throw new JsonException(
                         "Serialization Callback '{1}' in type '{0}' must have a single parameter of type '{2}'."
                             .FormatWith(CultureInfo.InvariantCulture, GetClrTypeFullName(method.DeclaringType), method,
                                         typeof (StreamingContext)));
+                }
             }
 
             prevAttributeType = attributeType;
@@ -919,10 +874,10 @@ namespace NetDimension.Json.Serialization
             return true;
         }
 
-        internal static string GetClrTypeFullName(Type type)
-        {
-            if (type.IsGenericTypeDefinition() || !type.ContainsGenericParameters())
+        internal static string GetClrTypeFullName(Type type) {
+            if (type.IsGenericTypeDefinition() || !type.ContainsGenericParameters()) {
                 return type.FullName;
+            }
 
             return string.Format(CultureInfo.InvariantCulture, "{0}.{1}", new object[] {type.Namespace, type.Name});
         }
@@ -936,20 +891,20 @@ namespace NetDimension.Json.Serialization
         /// <returns>
         ///     Properties for the given <see cref="JsonContract" />.
         /// </returns>
-        protected virtual IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
-        {
+        protected virtual IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization) {
             var members = GetSerializableMembers(type);
-            if (members == null)
+            if (members == null) {
                 throw new JsonSerializationException("Null collection of seralizable members returned.");
+            }
 
             var properties = new JsonPropertyCollection(type);
 
-            foreach (var member in members)
-            {
+            foreach (var member in members) {
                 var property = CreateProperty(member, memberSerialization);
 
-                if (property != null)
+                if (property != null) {
                     properties.AddProperty(property);
+                }
             }
 
             IList<JsonProperty> orderedProperties = properties.OrderBy(p => p.Order ?? -1).ToList();
@@ -963,16 +918,16 @@ namespace NetDimension.Json.Serialization
         /// <returns>
         ///     The <see cref="IValueProvider" /> used by the serializer to get and set values from a member.
         /// </returns>
-        protected virtual IValueProvider CreateMemberValueProvider(MemberInfo member)
-        {
+        protected virtual IValueProvider CreateMemberValueProvider(MemberInfo member) {
             // warning - this method use to cause errors with Intellitrace. Retest in VS Ultimate after changes
             IValueProvider valueProvider;
 
 #if !(SILVERLIGHT || PORTABLE || NETFX_CORE)
-            if (DynamicCodeGeneration)
+            if (DynamicCodeGeneration) {
                 valueProvider = new DynamicValueProvider(member);
-            else
+            } else {
                 valueProvider = new ReflectionValueProvider(member);
+            }
 #else
       valueProvider = new ReflectionValueProvider(member);
 #endif
@@ -992,8 +947,7 @@ namespace NetDimension.Json.Serialization
         /// <returns>
         ///     A created <see cref="JsonProperty" /> for the given <see cref="MemberInfo" />.
         /// </returns>
-        protected virtual JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
-        {
+        protected virtual JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization) {
             var property = new JsonProperty();
             property.PropertyType = ReflectionUtils.GetMemberUnderlyingType(member);
             property.DeclaringType = member.DeclaringType;
@@ -1017,11 +971,9 @@ namespace NetDimension.Json.Serialization
         private void SetPropertySettingsFromAttributes(JsonProperty property, ICustomAttributeProvider attributeProvider,
                                                        string name, Type declaringType,
                                                        MemberSerialization memberSerialization,
-                                                       out bool allowNonPublicAccess, out bool hasExplicitAttribute)
-        {
+                                                       out bool allowNonPublicAccess, out bool hasExplicitAttribute) {
             hasExplicitAttribute = false;
 
-#if !PocketPC && !NET20
             var dataContractAttribute = JsonTypeReflector.GetDataContractAttribute(declaringType);
 
             MemberInfo memberInfo = null;
@@ -1032,66 +984,56 @@ namespace NetDimension.Json.Serialization
 #endif
 
             DataMemberAttribute dataMemberAttribute;
-            if (dataContractAttribute != null && memberInfo != null)
+            if (dataContractAttribute != null && memberInfo != null) {
                 dataMemberAttribute = JsonTypeReflector.GetDataMemberAttribute(memberInfo);
-            else
+            } else {
                 dataMemberAttribute = null;
-#endif
+            }
 
             var propertyAttribute = JsonTypeReflector.GetAttribute<JsonPropertyAttribute>(attributeProvider);
-            if (propertyAttribute != null)
+            if (propertyAttribute != null) {
                 hasExplicitAttribute = true;
+            }
 
             string mappedName;
-            if (propertyAttribute != null && propertyAttribute.PropertyName != null)
+            if (propertyAttribute != null && propertyAttribute.PropertyName != null) {
                 mappedName = propertyAttribute.PropertyName;
-#if !PocketPC && !NET20
-            else if (dataMemberAttribute != null && dataMemberAttribute.Name != null)
+            } else if (dataMemberAttribute != null && dataMemberAttribute.Name != null) {
                 mappedName = dataMemberAttribute.Name;
-#endif
-            else
+            } else {
                 mappedName = name;
+            }
 
             property.PropertyName = ResolvePropertyName(mappedName);
             property.UnderlyingName = name;
 
             var hasMemberAttribute = false;
-            if (propertyAttribute != null)
-            {
+            if (propertyAttribute != null) {
                 property._required = propertyAttribute._required;
                 property.Order = propertyAttribute._order;
                 hasMemberAttribute = true;
-            }
-#if !PocketPC && !NET20
-            else if (dataMemberAttribute != null)
-            {
+            } else if (dataMemberAttribute != null) {
                 property._required = (dataMemberAttribute.IsRequired) ? Required.AllowNull : Required.Default;
                 property.Order = (dataMemberAttribute.Order != -1) ? (int?) dataMemberAttribute.Order : null;
                 hasMemberAttribute = true;
             }
-#endif
 
             var hasJsonIgnoreAttribute =
                 JsonTypeReflector.GetAttribute<JsonIgnoreAttribute>(attributeProvider) != null
-#if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
+#if !(SILVERLIGHT || NETFX_CORE)
                 || JsonTypeReflector.GetAttribute<NonSerializedAttribute>(attributeProvider) != null
 #endif
                 ;
 
-            if (memberSerialization != MemberSerialization.OptIn)
-            {
+            if (memberSerialization != MemberSerialization.OptIn) {
                 var hasIgnoreDataMemberAttribute = false;
 
-#if !(NET20 || NET35)
                 hasIgnoreDataMemberAttribute =
                     (JsonTypeReflector.GetAttribute<IgnoreDataMemberAttribute>(attributeProvider) != null);
-#endif
 
                 // ignored if it has JsonIgnore or NonSerialized or IgnoreDataMember attributes
                 property.Ignored = (hasJsonIgnoreAttribute || hasIgnoreDataMemberAttribute);
-            }
-            else
-            {
+            } else {
                 // ignored if it has JsonIgnore/NonSerialized or does not have DataMember or JsonProperty attributes
                 property.Ignored = (hasJsonIgnoreAttribute || !hasMemberAttribute);
             }
@@ -1126,30 +1068,29 @@ namespace NetDimension.Json.Serialization
             property.ItemTypeNameHandling = (propertyAttribute != null) ? propertyAttribute._itemTypeNameHandling : null;
 
             allowNonPublicAccess = false;
-            if ((DefaultMembersSearchFlags & BindingFlags.NonPublic) == BindingFlags.NonPublic)
+            if ((DefaultMembersSearchFlags & BindingFlags.NonPublic) == BindingFlags.NonPublic) {
                 allowNonPublicAccess = true;
-            if (propertyAttribute != null)
+            }
+            if (propertyAttribute != null) {
                 allowNonPublicAccess = true;
-            if (memberSerialization == MemberSerialization.Fields)
+            }
+            if (memberSerialization == MemberSerialization.Fields) {
                 allowNonPublicAccess = true;
-
-#if !PocketPC && !NET20
-            if (dataMemberAttribute != null)
-            {
+            }
+            if (dataMemberAttribute != null) {
                 allowNonPublicAccess = true;
                 hasExplicitAttribute = true;
             }
-#endif
         }
 
-        private Predicate<object> CreateShouldSerializeTest(MemberInfo member)
-        {
+        private Predicate<object> CreateShouldSerializeTest(MemberInfo member) {
             var shouldSerializeMethod =
                 member.DeclaringType.GetMethod(JsonTypeReflector.ShouldSerializePrefix + member.Name,
                                                ReflectionUtils.EmptyTypes);
 
-            if (shouldSerializeMethod == null || shouldSerializeMethod.ReturnType != typeof (bool))
+            if (shouldSerializeMethod == null || shouldSerializeMethod.ReturnType != typeof (bool)) {
                 return null;
+            }
 
             var shouldSerializeCall =
                 JsonTypeReflector.ReflectionDelegateFactory.CreateMethodCall<object>(shouldSerializeMethod);
@@ -1157,15 +1098,14 @@ namespace NetDimension.Json.Serialization
             return o => (bool) shouldSerializeCall(o);
         }
 
-        private void SetIsSpecifiedActions(JsonProperty property, MemberInfo member, bool allowNonPublicAccess)
-        {
+        private void SetIsSpecifiedActions(JsonProperty property, MemberInfo member, bool allowNonPublicAccess) {
             MemberInfo specifiedMember =
                 member.DeclaringType.GetProperty(member.Name + JsonTypeReflector.SpecifiedPostfix);
-            if (specifiedMember == null)
+            if (specifiedMember == null) {
                 specifiedMember = member.DeclaringType.GetField(member.Name + JsonTypeReflector.SpecifiedPostfix);
+            }
 
-            if (specifiedMember == null || ReflectionUtils.GetMemberUnderlyingType(specifiedMember) != typeof (bool))
-            {
+            if (specifiedMember == null || ReflectionUtils.GetMemberUnderlyingType(specifiedMember) != typeof (bool)) {
                 return;
             }
 
@@ -1173,8 +1113,9 @@ namespace NetDimension.Json.Serialization
 
             property.GetIsSpecified = o => (bool) specifiedPropertyGet(o);
 
-            if (ReflectionUtils.CanSetMemberValue(specifiedMember, allowNonPublicAccess, false))
+            if (ReflectionUtils.CanSetMemberValue(specifiedMember, allowNonPublicAccess, false)) {
                 property.SetIsSpecified = JsonTypeReflector.ReflectionDelegateFactory.CreateSet<object>(specifiedMember);
+            }
         }
 
         /// <summary>
@@ -1182,8 +1123,7 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns>Name of the property.</returns>
-        protected internal virtual string ResolvePropertyName(string propertyName)
-        {
+        protected internal virtual string ResolvePropertyName(string propertyName) {
             return propertyName;
         }
 
@@ -1192,8 +1132,7 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns>Name of the property.</returns>
-        public string GetResolvedPropertyName(string propertyName)
-        {
+        public string GetResolvedPropertyName(string propertyName) {
             // this is a new method rather than changing the visibility of ResolvePropertyName to avoid
             // a breaking change for anyone who has overidden the method
             return ResolvePropertyName(propertyName);

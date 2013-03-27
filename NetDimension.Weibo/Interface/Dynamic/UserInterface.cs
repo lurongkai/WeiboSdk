@@ -14,8 +14,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="client">操作类实例</param>
         public UserInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new UserAPI(client);
         }
 
@@ -25,8 +24,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="uid">需要查询的用户ID。 </param>
         /// <param name="screenName">需要查询的用户昵称。 </param>
         /// <returns></returns>
-        public dynamic Show(string uid = "", string screenName = "")
-        {
+        public dynamic Show(string uid = "", string screenName = "") {
             return DynamicJson.Parse(api.Show(uid, screenName));
         }
 
@@ -35,8 +33,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="domain">需要查询的个性化域名。 </param>
         /// <returns></returns>
-        public dynamic ShowByDomain(string domain)
-        {
+        public dynamic ShowByDomain(string domain) {
             return DynamicJson.Parse(api.ShowByDomain(domain));
         }
 
@@ -45,8 +42,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="uids"></param>
         /// <returns></returns>
-        public dynamic Counts(params string[] uids)
-        {
+        public dynamic Counts(params string[] uids) {
             return DynamicJson.Parse(api.Counts(uids));
         }
     }

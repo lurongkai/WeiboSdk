@@ -45,24 +45,22 @@ namespace NetDimension.Json.Converters
         /// </param>
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             var regex = (Regex) value;
 
             var bsonWriter = writer as BsonWriter;
-            if (bsonWriter != null)
+            if (bsonWriter != null) {
                 WriteBson(bsonWriter, regex);
-            else
+            } else {
                 WriteJson(writer, regex);
+            }
         }
 
-        private bool HasFlag(RegexOptions options, RegexOptions flag)
-        {
+        private bool HasFlag(RegexOptions options, RegexOptions flag) {
             return ((options & flag) == flag);
         }
 
-        private void WriteBson(BsonWriter writer, Regex regex)
-        {
+        private void WriteBson(BsonWriter writer, Regex regex) {
             // Regular expression - The first cstring is the regex pattern, the second
             // is the regex options string. Options are identified by characters, which 
             // must be stored in alphabetical order. Valid options are 'i' for case 
@@ -72,25 +70,28 @@ namespace NetDimension.Json.Converters
 
             string options = null;
 
-            if (HasFlag(regex.Options, RegexOptions.IgnoreCase))
+            if (HasFlag(regex.Options, RegexOptions.IgnoreCase)) {
                 options += "i";
+            }
 
-            if (HasFlag(regex.Options, RegexOptions.Multiline))
+            if (HasFlag(regex.Options, RegexOptions.Multiline)) {
                 options += "m";
+            }
 
-            if (HasFlag(regex.Options, RegexOptions.Singleline))
+            if (HasFlag(regex.Options, RegexOptions.Singleline)) {
                 options += "s";
+            }
 
             options += "u";
 
-            if (HasFlag(regex.Options, RegexOptions.ExplicitCapture))
+            if (HasFlag(regex.Options, RegexOptions.ExplicitCapture)) {
                 options += "x";
+            }
 
             writer.WriteRegex(regex.ToString(), options);
         }
 
-        private void WriteJson(JsonWriter writer, Regex regex)
-        {
+        private void WriteJson(JsonWriter writer, Regex regex) {
             writer.WriteStartObject();
             writer.WritePropertyName("Pattern");
             writer.WriteValue(regex.ToString());
@@ -110,18 +111,17 @@ namespace NetDimension.Json.Converters
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-                                        JsonSerializer serializer)
-        {
+                                        JsonSerializer serializer) {
             var bsonReader = reader as BsonReader;
 
-            if (bsonReader != null)
+            if (bsonReader != null) {
                 return ReadBson(bsonReader);
-            else
+            } else {
                 return ReadJson(reader);
+            }
         }
 
-        private object ReadBson(BsonReader reader)
-        {
+        private object ReadBson(BsonReader reader) {
             var regexText = (string) reader.Value;
             var patternOptionDelimiterIndex = regexText.LastIndexOf('/');
 
@@ -129,10 +129,8 @@ namespace NetDimension.Json.Converters
             var optionsText = regexText.Substring(patternOptionDelimiterIndex + 1);
 
             var options = RegexOptions.None;
-            foreach (var c in optionsText)
-            {
-                switch (c)
-                {
+            foreach (var c in optionsText) {
+                switch (c) {
                     case 'i':
                         options |= RegexOptions.IgnoreCase;
                         break;
@@ -151,8 +149,7 @@ namespace NetDimension.Json.Converters
             return new Regex(patternText, options);
         }
 
-        private Regex ReadJson(JsonReader reader)
-        {
+        private Regex ReadJson(JsonReader reader) {
             reader.Read();
             reader.Read();
             var pattern = (string) reader.Value;
@@ -173,8 +170,7 @@ namespace NetDimension.Json.Converters
         /// <returns>
         ///     <c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
         /// </returns>
-        public override bool CanConvert(Type objectType)
-        {
+        public override bool CanConvert(Type objectType) {
             return (objectType == typeof (Regex));
         }
     }

@@ -3,8 +3,7 @@
     internal class SearchAPI : WeiboAPI
     {
         public SearchAPI(Client client)
-            : base(client)
-        {
+            : base(client) {
         }
 
         /// <summary>
@@ -13,8 +12,7 @@
         /// <param name="q">搜索的关键字</param>
         /// <param name="count">返回的记录条数，默认为10</param>
         /// <returns></returns>
-        public string Users(string q, int count = 10)
-        {
+        public string Users(string q, int count = 10) {
             return (Client.GetCommand("search/suggestions/users",
                                       new WeiboParameter("q", q),
                                       new WeiboParameter("count", count)));
@@ -26,8 +24,7 @@
         /// <param name="q">搜索的关键字</param>
         /// <param name="count">返回的记录条数，默认为10</param>
         /// <returns></returns>
-        public string Statuses(string q, int count = 10)
-        {
+        public string Statuses(string q, int count = 10) {
             return (Client.GetCommand("search/suggestions/statuses",
                                       new WeiboParameter("q", q),
                                       new WeiboParameter("count", count)));
@@ -40,8 +37,7 @@
         /// <param name="count">返回的记录条数，默认为10。 </param>
         /// <param name="type">学校类型，0：全部、1：大学、2：高中、3：中专技校、4：初中、5：小学，默认为0。 </param>
         /// <returns></returns>
-        public string Schools(string q, int count = 10, int type = 0)
-        {
+        public string Schools(string q, int count = 10, int type = 0) {
             return (Client.GetCommand("search/suggestions/schools",
                                       new WeiboParameter("q", q),
                                       new WeiboParameter("count", count),
@@ -54,8 +50,7 @@
         /// <param name="q">搜索的关键字</param>
         /// <param name="count">返回的记录条数，默认为10</param>
         /// <returns></returns>
-        public string Companies(string q, int count = 10)
-        {
+        public string Companies(string q, int count = 10) {
             return (Client.GetCommand("search/suggestions/companies",
                                       new WeiboParameter("q", q),
                                       new WeiboParameter("count", count)));
@@ -67,8 +62,7 @@
         /// <param name="q">搜索的关键字</param>
         /// <param name="count">返回的记录条数，默认为10</param>
         /// <returns></returns>
-        public string Apps(string q, int count = 10)
-        {
+        public string Apps(string q, int count = 10) {
             return (Client.GetCommand("search/suggestions/apps",
                                       new WeiboParameter("q", q),
                                       new WeiboParameter("count", count)));
@@ -82,8 +76,7 @@
         /// <param name="type">联想类型，0：关注、1：粉丝。</param>
         /// <param name="range">联想范围，0：只联想关注人、1：只联想关注人的备注、2：全部，默认为2。</param>
         /// <returns></returns>
-        public string AtUsers(string q, int count = 10, int type = 0, int range = 2)
-        {
+        public string AtUsers(string q, int count = 10, int type = 0, int range = 2) {
             return (Client.GetCommand("search/suggestions/at_users",
                                       new WeiboParameter("q", q),
                                       new WeiboParameter("count", count),
@@ -98,8 +91,7 @@
         /// <param name="count">单页返回的记录条数，默认为10，最大为50。 </param>
         /// <param name="page">返回结果的页码，默认为1。</param>
         /// <returns></returns>
-        public string Topics(string q, int count = 10, int page = 1)
-        {
+        public string Topics(string q, int count = 10, int page = 1) {
             return (Client.GetCommand("search/topics",
                                       new WeiboParameter("q", q),
                                       new WeiboParameter("count", count),

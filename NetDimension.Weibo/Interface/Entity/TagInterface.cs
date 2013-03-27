@@ -16,8 +16,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="client">操作类</param>
         public TagInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new TagAPI(client);
         }
 
@@ -28,12 +27,10 @@ namespace NetDimension.Weibo.Interface.Entity
         /// <param name="count">单页返回的记录条数，默认为20。</param>
         /// <param name="page">返回结果的页码，默认为1。 </param>
         /// <returns></returns>
-        public IEnumerable<Tag> Tags(string uid, int count = 20, int page = 1)
-        {
+        public IEnumerable<Tag> Tags(string uid, int count = 20, int page = 1) {
             var json = JArray.Parse(api.Tags(uid, count, page));
             var list = new List<Tag>();
-            foreach (JObject obj in json)
-            {
+            foreach (JObject obj in json) {
                 var first = (JProperty) obj.First;
                 var last = (JProperty) obj.Last;
 
@@ -53,16 +50,13 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="uids">要获取标签的用户ID。最大20，逗号分隔。 </param>
         /// <returns></returns>
-        public Dictionary<string, IEnumerable<Tag>> TagsBatch(params string[] uids)
-        {
+        public Dictionary<string, IEnumerable<Tag>> TagsBatch(params string[] uids) {
             var json = JArray.Parse(api.TagsBatch(uids));
             var result = new Dictionary<string, IEnumerable<Tag>>();
-            foreach (var item in json)
-            {
+            foreach (var item in json) {
                 var entry = item["id"].ToString();
                 var list = new List<Tag>();
-                foreach (JObject obj in item["tags"])
-                {
+                foreach (JObject obj in item["tags"]) {
                     var first = (JProperty) obj.First;
                     var last = (JProperty) obj.Last;
 
@@ -85,12 +79,10 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        public Dictionary<string, string> Suggestions(int count = 10)
-        {
+        public Dictionary<string, string> Suggestions(int count = 10) {
             var result = new Dictionary<string, string>();
             var json = JArray.Parse(api.Suggestions(count));
-            foreach (JObject x in json)
-            {
+            foreach (JObject x in json) {
                 result.Add(x["id"].ToString(), x["value"].ToString());
             }
             return result;
@@ -101,12 +93,10 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="tags">要创建的一组标签，每个标签的长度不可超过7个汉字，14个半角字符。 </param>
         /// <returns></returns>
-        public IEnumerable<string> Create(params string[] tags)
-        {
+        public IEnumerable<string> Create(params string[] tags) {
             var json = JArray.Parse(api.Create(tags));
             var ids = new List<string>();
-            foreach (JObject x in json)
-            {
+            foreach (JObject x in json) {
                 ids.Add(x["tagid"].ToString());
             }
             return ids;
@@ -117,8 +107,7 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public string Destroy(string id)
-        {
+        public string Destroy(string id) {
             return JObject.Parse(api.Destroy(id))["result"].ToString();
         }
 
@@ -127,12 +116,10 @@ namespace NetDimension.Weibo.Interface.Entity
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IEnumerable<string> DestroyBatch(params string[] ids)
-        {
+        public IEnumerable<string> DestroyBatch(params string[] ids) {
             var json = JArray.Parse(api.DestroyBatch(ids));
             var result = new List<string>();
-            foreach (JObject x in json)
-            {
+            foreach (JObject x in json) {
                 result.Add(x["tagid"].ToString());
             }
             return result;

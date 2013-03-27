@@ -48,8 +48,7 @@ namespace NetDimension.Weibo
         ///     实例化微博操作类
         /// </summary>
         /// <param name="oauth">OAuth实例</param>
-        public Client(OAuth oauth)
-        {
+        public Client(OAuth oauth) {
             OAuth = oauth;
 #if NET40
             API = new InterfaceSelector(this);
@@ -64,11 +63,9 @@ namespace NetDimension.Weibo
         /// <param name="command">微博命令。命令例如：statuses/public_timeline。详见官方API文档。</param>
         /// <param name="parameters">参数表</param>
         /// <returns></returns>
-        public string PostCommand(string command, IEnumerable<KeyValuePair<string, object>> parameters)
-        {
+        public string PostCommand(string command, IEnumerable<KeyValuePair<string, object>> parameters) {
             var list = new List<WeiboParameter>();
-            foreach (var item in parameters)
-            {
+            foreach (var item in parameters) {
                 list.Add(new WeiboParameter(item.Key, item.Value));
             }
             return PostCommand(command, list.ToArray());
@@ -80,8 +77,7 @@ namespace NetDimension.Weibo
         /// <param name="command">微博命令。命令例如：statuses/public_timeline。详见官方API文档。</param>
         /// <param name="parameters">参数表</param>
         /// <returns></returns>
-        public string PostCommand(string command, params WeiboParameter[] parameters)
-        {
+        public string PostCommand(string command, params WeiboParameter[] parameters) {
             return Http(command, RequestMethod.Post, parameters);
         }
 
@@ -91,8 +87,7 @@ namespace NetDimension.Weibo
         /// <param name="command">微博命令。命令例如：statuses/public_timeline。详见官方API文档。</param>
         /// <param name="parameters">参数表</param>
         /// <returns></returns>
-        public string GetCommand(string command, params WeiboParameter[] parameters)
-        {
+        public string GetCommand(string command, params WeiboParameter[] parameters) {
             return Http(command, RequestMethod.Get, parameters);
         }
 
@@ -102,26 +97,20 @@ namespace NetDimension.Weibo
         /// <param name="command">微博命令。命令例如：statuses/public_timeline。详见官方API文档。</param>
         /// <param name="parameters">参数表</param>
         /// <returns></returns>
-        public string GetCommand(string command, IEnumerable<KeyValuePair<string, object>> parameters)
-        {
+        public string GetCommand(string command, IEnumerable<KeyValuePair<string, object>> parameters) {
             var list = new List<WeiboParameter>();
-            foreach (var item in parameters)
-            {
+            foreach (var item in parameters) {
                 list.Add(new WeiboParameter(item.Key, item.Value));
             }
             return Http(command, RequestMethod.Get, list.ToArray());
         }
 
-        private string Http(string command, RequestMethod method, params WeiboParameter[] parameters)
-        {
+        private string Http(string command, RequestMethod method, params WeiboParameter[] parameters) {
             var url = string.Empty;
 
-            if (command.StartsWith("http://") || command.StartsWith("https://"))
-            {
+            if (command.StartsWith("http://") || command.StartsWith("https://")) {
                 url = command;
-            }
-            else
-            {
+            } else {
                 url = string.Format("{0}{1}.json", BASE_URL, command);
             }
             return OAuth.Request(url, method, parameters);
@@ -133,19 +122,15 @@ namespace NetDimension.Weibo
         /// <typeparam name="T">返回类型</typeparam>
         /// <param name="invoker">调用代理</param>
         /// <param name="callback">回调代理</param>
-        public void AsyncInvoke<T>(AsyncInvokeDelegate<T> invoker, AsyncCallbackDelegate<T> callback)
-        {
+        public void AsyncInvoke<T>(AsyncInvokeDelegate<T> invoker, AsyncCallbackDelegate<T> callback) {
             ThreadPool.QueueUserWorkItem(delegate
                 {
                     AsyncCallback<T> result;
-                    try
-                    {
+                    try {
                         var invoke = invoker();
                         result = new AsyncCallback<T>(invoke);
                         callback(result);
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
                         result = new AsyncCallback<T>(ex, false);
                         callback(result);
                     }

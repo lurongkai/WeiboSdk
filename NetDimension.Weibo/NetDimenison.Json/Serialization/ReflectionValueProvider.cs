@@ -43,8 +43,7 @@ namespace NetDimension.Json.Serialization
         ///     Initializes a new instance of the <see cref="ReflectionValueProvider" /> class.
         /// </summary>
         /// <param name="memberInfo">The member info.</param>
-        public ReflectionValueProvider(MemberInfo memberInfo)
-        {
+        public ReflectionValueProvider(MemberInfo memberInfo) {
             ValidationUtils.ArgumentNotNull(memberInfo, "memberInfo");
             _memberInfo = memberInfo;
         }
@@ -54,14 +53,10 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="target">The target to set the value on.</param>
         /// <param name="value">The value to set on the target.</param>
-        public void SetValue(object target, object value)
-        {
-            try
-            {
+        public void SetValue(object target, object value) {
+            try {
                 ReflectionUtils.SetMemberValue(_memberInfo, target, value);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 throw new JsonSerializationException(
                     "Error setting value to '{0}' on '{1}'.".FormatWith(CultureInfo.InvariantCulture, _memberInfo.Name,
                                                                         target.GetType()), ex);
@@ -73,14 +68,10 @@ namespace NetDimension.Json.Serialization
         /// </summary>
         /// <param name="target">The target to get the value from.</param>
         /// <returns>The value.</returns>
-        public object GetValue(object target)
-        {
-            try
-            {
+        public object GetValue(object target) {
+            try {
                 return ReflectionUtils.GetMemberValue(_memberInfo, target);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 throw new JsonSerializationException(
                     "Error getting value from '{0}' on '{1}'.".FormatWith(CultureInfo.InvariantCulture, _memberInfo.Name,
                                                                           target.GetType()), ex);

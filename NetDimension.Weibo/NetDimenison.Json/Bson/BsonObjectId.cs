@@ -39,11 +39,11 @@ namespace NetDimension.Json.Bson
         ///     Initializes a new instance of the <see cref="BsonObjectId" /> class.
         /// </summary>
         /// <param name="value">The Oid value.</param>
-        public BsonObjectId(byte[] value)
-        {
+        public BsonObjectId(byte[] value) {
             ValidationUtils.ArgumentNotNull(value, "value");
-            if (value.Length != 12)
+            if (value.Length != 12) {
                 throw new ArgumentException("An ObjectId must be 12 bytes", "value");
+            }
 
             Value = value;
         }

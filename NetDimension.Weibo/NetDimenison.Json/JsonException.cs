@@ -43,8 +43,7 @@ namespace NetDimension.Json
         /// <summary>
         ///     Initializes a new instance of the <see cref="JsonException" /> class.
         /// </summary>
-        public JsonException()
-        {
+        public JsonException() {
         }
 
         /// <summary>
@@ -53,8 +52,7 @@ namespace NetDimension.Json
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         public JsonException(string message)
-            : base(message)
-        {
+            : base(message) {
         }
 
         /// <summary>
@@ -64,8 +62,7 @@ namespace NetDimension.Json
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
         public JsonException(string message, Exception innerException)
-            : base(message, innerException)
-        {
+            : base(message, innerException) {
         }
 
 #if !(WINDOWS_PHONE || SILVERLIGHT || NETFX_CORE || PORTABLE)
@@ -85,29 +82,28 @@ namespace NetDimension.Json
         ///     The class name is null or <see cref="P:System.Exception.HResult" /> is zero (0).
         /// </exception>
         public JsonException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
+            : base(info, context) {
         }
 #endif
 
-        internal static string FormatExceptionMessage(IJsonLineInfo lineInfo, string path, string message)
-        {
+        internal static string FormatExceptionMessage(IJsonLineInfo lineInfo, string path, string message) {
             // don't add a fullstop and space when message ends with a new line
-            if (!message.EndsWith(Environment.NewLine))
-            {
+            if (!message.EndsWith(Environment.NewLine)) {
                 message = message.Trim();
 
-                if (!message.EndsWith("."))
+                if (!message.EndsWith(".")) {
                     message += ".";
+                }
 
                 message += " ";
             }
 
             message += "Path '{0}'".FormatWith(CultureInfo.InvariantCulture, path);
 
-            if (lineInfo != null && lineInfo.HasLineInfo())
+            if (lineInfo != null && lineInfo.HasLineInfo()) {
                 message += ", line {0}, position {1}".FormatWith(CultureInfo.InvariantCulture, lineInfo.LineNumber,
                                                                  lineInfo.LinePosition);
+            }
 
             message += ".";
 

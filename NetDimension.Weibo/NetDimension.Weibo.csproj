@@ -268,7 +268,6 @@
     <Compile Include="NetDimenison.Json\Serialization\ObjectConstructor.cs" />
     <Compile Include="NetDimenison.Json\Serialization\OnErrorAttribute.cs" />
     <Compile Include="NetDimenison.Json\Serialization\ReflectionValueProvider.cs" />
-    <Compile Include="NetDimenison.Json\StreamingContext.cs" />
     <Compile Include="NetDimenison.Json\TypeNameHandling.cs" />
     <Compile Include="NetDimenison.Json\Utilities\Base64Encoder.cs" />
     <Compile Include="NetDimenison.Json\Utilities\BidirectionalDictionary.cs" />
@@ -288,7 +287,6 @@
     <Compile Include="NetDimenison.Json\Utilities\ILGeneratorExtensions.cs" />
     <Compile Include="NetDimenison.Json\Utilities\JavaScriptUtils.cs" />
     <Compile Include="NetDimenison.Json\Utilities\LateBoundReflectionDelegateFactory.cs" />
-    <Compile Include="NetDimenison.Json\Utilities\LinqBridge.cs" />
     <Compile Include="NetDimenison.Json\Utilities\ListWrapper.cs" />
     <Compile Include="NetDimenison.Json\Utilities\MathUtils.cs" />
     <Compile Include="NetDimenison.Json\Utilities\MethodCall.cs" />

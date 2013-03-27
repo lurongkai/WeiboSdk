@@ -39,29 +39,15 @@ namespace NetDimension.Json.Bson
     {
         private readonly BsonBinaryWriter _writer;
 
-        private BsonToken _root;
         private BsonToken _parent;
         private string _propertyName;
-
-        /// <summary>
-        ///     Gets or sets the <see cref="DateTimeKind" /> used when writing <see cref="DateTime" /> values to BSON.
-        ///     When set to <see cref="DateTimeKind.Unspecified" /> no conversion will occur.
-        /// </summary>
-        /// <value>
-        ///     The <see cref="DateTimeKind" /> used when writing <see cref="DateTime" /> values to BSON.
-        /// </value>
-        public DateTimeKind DateTimeKindHandling
-        {
-            get { return _writer.DateTimeKindHandling; }
-            set { _writer.DateTimeKindHandling = value; }
-        }
+        private BsonToken _root;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BsonWriter" /> class.
         /// </summary>
         /// <param name="stream">The stream.</param>
-        public BsonWriter(Stream stream)
-        {
+        public BsonWriter(Stream stream) {
             ValidationUtils.ArgumentNotNull(stream, "stream");
             _writer = new BsonBinaryWriter(new BinaryWriter(stream));
         }
@@ -70,17 +56,27 @@ namespace NetDimension.Json.Bson
         ///     Initializes a new instance of the <see cref="BsonWriter" /> class.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        public BsonWriter(BinaryWriter writer)
-        {
+        public BsonWriter(BinaryWriter writer) {
             ValidationUtils.ArgumentNotNull(writer, "writer");
             _writer = new BsonBinaryWriter(writer);
         }
 
         /// <summary>
+        ///     Gets or sets the <see cref="DateTimeKind" /> used when writing <see cref="DateTime" /> values to BSON.
+        ///     When set to <see cref="DateTimeKind.Unspecified" /> no conversion will occur.
+        /// </summary>
+        /// <value>
+        ///     The <see cref="DateTimeKind" /> used when writing <see cref="DateTime" /> values to BSON.
+        /// </value>
+        public DateTimeKind DateTimeKindHandling {
+            get { return _writer.DateTimeKindHandling; }
+            set { _writer.DateTimeKindHandling = value; }
+        }
+
+        /// <summary>
         ///     Flushes whatever is in the buffer to the underlying streams and also flushes the underlying stream.
         /// </summary>
-        public override void Flush()
-        {
+        public override void Flush() {
             _writer.Flush();
         }
 
@@ -88,13 +84,11 @@ namespace NetDimension.Json.Bson
         ///     Writes the end.
         /// </summary>
         /// <param name="token">The token.</param>
-        protected override void WriteEnd(JsonToken token)
-        {
+        protected override void WriteEnd(JsonToken token) {
             base.WriteEnd(token);
             RemoveParent();
 
-            if (Top == 0)
-            {
+            if (Top == 0) {
                 _writer.WriteToken(_root);
             }
         }
@@ -103,8 +97,7 @@ namespace NetDimension.Json.Bson
         ///     Writes out a comment <code>/*...*/</code> containing the specified text.
         /// </summary>
         /// <param name="text">Text to place inside the comment.</param>
-        public override void WriteComment(string text)
-        {
+        public override void WriteComment(string text) {
             throw JsonWriterException.Create(this, "Cannot write JSON comment as BSON.", null);
         }
 
@@ -112,8 +105,7 @@ namespace NetDimension.Json.Bson
         ///     Writes the start of a constructor with the given name.
         /// </summary>
         /// <param name="name">The name of the constructor.</param>
-        public override void WriteStartConstructor(string name)
-        {
+        public override void WriteStartConstructor(string name) {
             throw JsonWriterException.Create(this, "Cannot write JSON constructor as BSON.", null);
         }
 
@@ -121,8 +113,7 @@ namespace NetDimension.Json.Bson
         ///     Writes raw JSON.
         /// </summary>
         /// <param name="json">The raw JSON to write.</param>
-        public override void WriteRaw(string json)
-        {
+        public override void WriteRaw(string json) {
             throw JsonWriterException.Create(this, "Cannot write raw JSON as BSON.", null);
         }
 
@@ -130,16 +121,14 @@ namespace NetDimension.Json.Bson
         ///     Writes raw JSON where a value is expected and updates the writer's state.
         /// </summary>
         /// <param name="json">The raw JSON to write.</param>
-        public override void WriteRawValue(string json)
-        {
+        public override void WriteRawValue(string json) {
             throw JsonWriterException.Create(this, "Cannot write raw JSON as BSON.", null);
         }
 
         /// <summary>
         ///     Writes the beginning of a Json array.
         /// </summary>
-        public override void WriteStartArray()
-        {
+        public override void WriteStartArray() {
             base.WriteStartArray();
 
             AddParent(new BsonArray());
@@ -148,8 +137,7 @@ namespace NetDimension.Json.Bson
         /// <summary>
         ///     Writes the beginning of a Json object.
         /// </summary>
-        public override void WriteStartObject()
-        {
+        public override void WriteStartObject() {
             base.WriteStartObject();
 
             AddParent(new BsonObject());
@@ -159,8 +147,7 @@ namespace NetDimension.Json.Bson
         ///     Writes the property name of a name/value pair on a Json object.
         /// </summary>
         /// <param name="name">The name of the property.</param>
-        public override void WritePropertyName(string name)
-        {
+        public override void WritePropertyName(string name) {
             base.WritePropertyName(name);
 
             _propertyName = name;
@@ -169,54 +156,74 @@ namespace NetDimension.Json.Bson
         /// <summary>
         ///     Closes this stream and the underlying stream.
         /// </summary>
-        public override void Close()
-        {
+        public override void Close() {
             base.Close();
 
-            if (CloseOutput && _writer != null)
+            if (CloseOutput && _writer != null) {
                 _writer.Close();
+            }
         }
 
-        private void AddParent(BsonToken container)
-        {
+        private void AddParent(BsonToken container) {
             AddToken(container);
             _parent = container;
         }
 
-        private void RemoveParent()
-        {
+        private void RemoveParent() {
             _parent = _parent.Parent;
         }
 
-        private void AddValue(object value, BsonType type)
-        {
+        private void AddValue(object value, BsonType type) {
             AddToken(new BsonValue(value, type));
         }
 
-        internal void AddToken(BsonToken token)
-        {
-            if (_parent != null)
-            {
-                if (_parent is BsonObject)
-                {
+        internal void AddToken(BsonToken token) {
+            if (_parent != null) {
+                if (_parent is BsonObject) {
                     ((BsonObject) _parent).Add(_propertyName, token);
                     _propertyName = null;
-                }
-                else
-                {
+                } else {
                     ((BsonArray) _parent).Add(token);
                 }
-            }
-            else
-            {
-                if (token.Type != BsonType.Object && token.Type != BsonType.Array)
+            } else {
+                if (token.Type != BsonType.Object && token.Type != BsonType.Array) {
                     throw JsonWriterException.Create(this,
                                                      "Error writing {0} value. BSON must start with an Object or Array."
                                                          .FormatWith(CultureInfo.InvariantCulture, token.Type), null);
+                }
 
                 _parent = token;
                 _root = token;
             }
+        }
+
+        /// <summary>
+        ///     Writes a <see cref="T:Byte[]" /> value that represents a BSON object id.
+        /// </summary>
+        /// <param name="value"></param>
+        public void WriteObjectId(byte[] value) {
+            ValidationUtils.ArgumentNotNull(value, "value");
+
+            if (value.Length != 12) {
+                throw JsonWriterException.Create(this, "An object id must be 12 bytes", null);
+            }
+
+            // hack to update the writer state
+            AutoComplete(JsonToken.Undefined);
+            AddValue(value, BsonType.Oid);
+        }
+
+        /// <summary>
+        ///     Writes a BSON regex.
+        /// </summary>
+        /// <param name="pattern">The regex pattern.</param>
+        /// <param name="options">The regex options.</param>
+        public void WriteRegex(string pattern, string options) {
+            ValidationUtils.ArgumentNotNull(pattern, "pattern");
+
+            // hack to update the writer state
+            AutoComplete(JsonToken.Undefined);
+            AddToken(new BsonRegex(pattern, options));
         }
 
         #region WriteValue methods
@@ -224,8 +231,7 @@ namespace NetDimension.Json.Bson
         /// <summary>
         ///     Writes a null value.
         /// </summary>
-        public override void WriteNull()
-        {
+        public override void WriteNull() {
             base.WriteNull();
             AddValue(null, BsonType.Null);
         }
@@ -233,8 +239,7 @@ namespace NetDimension.Json.Bson
         /// <summary>
         ///     Writes an undefined value.
         /// </summary>
-        public override void WriteUndefined()
-        {
+        public override void WriteUndefined() {
             base.WriteUndefined();
             AddValue(null, BsonType.Undefined);
         }
@@ -245,13 +250,13 @@ namespace NetDimension.Json.Bson
         /// <param name="value">
         ///     The <see cref="String" /> value to write.
         /// </param>
-        public override void WriteValue(string value)
-        {
+        public override void WriteValue(string value) {
             base.WriteValue(value);
-            if (value == null)
+            if (value == null) {
                 AddValue(null, BsonType.Null);
-            else
+            } else {
                 AddToken(new BsonString(value, true));
+            }
         }
 
         /// <summary>
@@ -260,8 +265,7 @@ namespace NetDimension.Json.Bson
         /// <param name="value">
         ///     The <see cref="Int32" /> value to write.
         /// </param>
-        public override void WriteValue(int value)
-        {
+        public override void WriteValue(int value) {
             base.WriteValue(value);
             AddValue(value, BsonType.Integer);
         }
@@ -273,12 +277,12 @@ namespace NetDimension.Json.Bson
         ///     The <see cref="UInt32" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public override void WriteValue(uint value)
-        {
-            if (value > int.MaxValue)
+        public override void WriteValue(uint value) {
+            if (value > int.MaxValue) {
                 throw JsonWriterException.Create(this,
                                                  "Value is too large to fit in a signed 32 bit integer. BSON does not support unsigned values.",
                                                  null);
+            }
 
             base.WriteValue(value);
             AddValue(value, BsonType.Integer);
@@ -290,8 +294,7 @@ namespace NetDimension.Json.Bson
         /// <param name="value">
         ///     The <see cref="Int64" /> value to write.
         /// </param>
-        public override void WriteValue(long value)
-        {
+        public override void WriteValue(long value) {
             base.WriteValue(value);
             AddValue(value, BsonType.Long);
         }
@@ -303,12 +306,12 @@ namespace NetDimension.Json.Bson
         ///     The <see cref="UInt64" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public override void WriteValue(ulong value)
-        {
-            if (value > long.MaxValue)
+        public override void WriteValue(ulong value) {
+            if (value > long.MaxValue) {
                 throw JsonWriterException.Create(this,
                                                  "Value is too large to fit in a signed 64 bit integer. BSON does not support unsigned values.",
                                                  null);
+            }
 
             base.WriteValue(value);
             AddValue(value, BsonType.Long);
@@ -320,8 +323,7 @@ namespace NetDimension.Json.Bson
         /// <param name="value">
         ///     The <see cref="Single" /> value to write.
         /// </param>
-        public override void WriteValue(float value)
-        {
+        public override void WriteValue(float value) {
             base.WriteValue(value);
             AddValue(value, BsonType.Number);
         }
@@ -332,8 +334,7 @@ namespace NetDimension.Json.Bson
         /// <param name="value">
         ///     The <see cref="Double" /> value to write.
         /// </param>
-        public override void WriteValue(double value)
-        {
+        public override void WriteValue(double value) {
             base.WriteValue(value);
             AddValue(value, BsonType.Number);
         }
@@ -344,8 +345,7 @@ namespace NetDimension.Json.Bson
         /// <param name="value">
         ///     The <see cref="Boolean" /> value to write.
         /// </param>
-        public override void WriteValue(bool value)
-        {
+        public override void WriteValue(bool value) {
             base.WriteValue(value);
             AddValue(value, BsonType.Boolean);
         }
@@ -356,8 +356,7 @@ namespace NetDimension.Json.Bson
         /// <param name="value">
         ///     The <see cref="Int16" /> value to write.
         /// </param>
-        public override void WriteValue(short value)
-        {
+        public override void WriteValue(short value) {
             base.WriteValue(value);
             AddValue(value, BsonType.Integer);
         }
@@ -369,8 +368,7 @@ namespace NetDimension.Json.Bson
         ///     The <see cref="UInt16" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public override void WriteValue(ushort value)
-        {
+        public override void WriteValue(ushort value) {
             base.WriteValue(value);
             AddValue(value, BsonType.Integer);
         }
@@ -381,8 +379,7 @@ namespace NetDimension.Json.Bson
         /// <param name="value">
         ///     The <see cref="Char" /> value to write.
         /// </param>
-        public override void WriteValue(char value)
-        {
+        public override void WriteValue(char value) {
             base.WriteValue(value);
             string s = null;
 #if !(NETFX_CORE || PORTABLE)
@@ -399,8 +396,7 @@ namespace NetDimension.Json.Bson
         /// <param name="value">
         ///     The <see cref="Byte" /> value to write.
         /// </param>
-        public override void WriteValue(byte value)
-        {
+        public override void WriteValue(byte value) {
             base.WriteValue(value);
             AddValue(value, BsonType.Integer);
         }
@@ -412,8 +408,7 @@ namespace NetDimension.Json.Bson
         ///     The <see cref="SByte" /> value to write.
         /// </param>
         [CLSCompliant(false)]
-        public override void WriteValue(sbyte value)
-        {
+        public override void WriteValue(sbyte value) {
             base.WriteValue(value);
             AddValue(value, BsonType.Integer);
         }
@@ -424,8 +419,7 @@ namespace NetDimension.Json.Bson
         /// <param name="value">
         ///     The <see cref="Decimal" /> value to write.
         /// </param>
-        public override void WriteValue(decimal value)
-        {
+        public override void WriteValue(decimal value) {
             base.WriteValue(value);
             AddValue(value, BsonType.Number);
         }
@@ -436,26 +430,22 @@ namespace NetDimension.Json.Bson
         /// <param name="value">
         ///     The <see cref="DateTime" /> value to write.
         /// </param>
-        public override void WriteValue(DateTime value)
-        {
+        public override void WriteValue(DateTime value) {
             base.WriteValue(value);
             value = JsonConvert.EnsureDateTime(value, DateTimeZoneHandling);
             AddValue(value, BsonType.Date);
         }
 
-#if !PocketPC && !NET20
         /// <summary>
         ///     Writes a <see cref="DateTimeOffset" /> value.
         /// </summary>
         /// <param name="value">
         ///     The <see cref="DateTimeOffset" /> value to write.
         /// </param>
-        public override void WriteValue(DateTimeOffset value)
-        {
+        public override void WriteValue(DateTimeOffset value) {
             base.WriteValue(value);
             AddValue(value, BsonType.Date);
         }
-#endif
 
         /// <summary>
         ///     Writes a <see cref="T:Byte[]" /> value.
@@ -463,8 +453,7 @@ namespace NetDimension.Json.Bson
         /// <param name="value">
         ///     The <see cref="T:Byte[]" /> value to write.
         /// </param>
-        public override void WriteValue(byte[] value)
-        {
+        public override void WriteValue(byte[] value) {
             base.WriteValue(value);
             AddValue(value, BsonType.Binary);
         }
@@ -475,8 +464,7 @@ namespace NetDimension.Json.Bson
         /// <param name="value">
         ///     The <see cref="Guid" /> value to write.
         /// </param>
-        public override void WriteValue(Guid value)
-        {
+        public override void WriteValue(Guid value) {
             base.WriteValue(value);
             AddToken(new BsonString(value.ToString(), true));
         }
@@ -487,8 +475,7 @@ namespace NetDimension.Json.Bson
         /// <param name="value">
         ///     The <see cref="TimeSpan" /> value to write.
         /// </param>
-        public override void WriteValue(TimeSpan value)
-        {
+        public override void WriteValue(TimeSpan value) {
             base.WriteValue(value);
             AddToken(new BsonString(value.ToString(), true));
         }
@@ -499,42 +486,11 @@ namespace NetDimension.Json.Bson
         /// <param name="value">
         ///     The <see cref="Uri" /> value to write.
         /// </param>
-        public override void WriteValue(Uri value)
-        {
+        public override void WriteValue(Uri value) {
             base.WriteValue(value);
             AddToken(new BsonString(value.ToString(), true));
         }
 
         #endregion
-
-        /// <summary>
-        ///     Writes a <see cref="T:Byte[]" /> value that represents a BSON object id.
-        /// </summary>
-        /// <param name="value"></param>
-        public void WriteObjectId(byte[] value)
-        {
-            ValidationUtils.ArgumentNotNull(value, "value");
-
-            if (value.Length != 12)
-                throw JsonWriterException.Create(this, "An object id must be 12 bytes", null);
-
-            // hack to update the writer state
-            AutoComplete(JsonToken.Undefined);
-            AddValue(value, BsonType.Oid);
-        }
-
-        /// <summary>
-        ///     Writes a BSON regex.
-        /// </summary>
-        /// <param name="pattern">The regex pattern.</param>
-        /// <param name="options">The regex options.</param>
-        public void WriteRegex(string pattern, string options)
-        {
-            ValidationUtils.ArgumentNotNull(pattern, "pattern");
-
-            // hack to update the writer state
-            AutoComplete(JsonToken.Undefined);
-            AddToken(new BsonRegex(pattern, options));
-        }
     }
 }

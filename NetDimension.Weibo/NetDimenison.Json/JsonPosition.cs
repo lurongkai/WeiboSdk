@@ -44,22 +44,19 @@ namespace NetDimension.Json
         internal string PropertyName;
         internal JsonContainerType Type;
 
-        internal void WriteTo(StringBuilder sb)
-        {
-            switch (Type)
-            {
+        internal void WriteTo(StringBuilder sb) {
+            switch (Type) {
                 case JsonContainerType.Object:
-                    if (PropertyName != null)
-                    {
-                        if (sb.Length > 0)
+                    if (PropertyName != null) {
+                        if (sb.Length > 0) {
                             sb.Append(".");
+                        }
                         sb.Append(PropertyName);
                     }
                     break;
                 case JsonContainerType.Array:
                 case JsonContainerType.Constructor:
-                    if (Position != null)
-                    {
+                    if (Position != null) {
                         sb.Append("[");
                         sb.Append(Position);
                         sb.Append("]");
@@ -68,10 +65,8 @@ namespace NetDimension.Json
             }
         }
 
-        internal bool InsideContainer()
-        {
-            switch (Type)
-            {
+        internal bool InsideContainer() {
+            switch (Type) {
                 case JsonContainerType.Object:
                     return (PropertyName != null);
                 case JsonContainerType.Array:
@@ -82,12 +77,10 @@ namespace NetDimension.Json
             return false;
         }
 
-        internal static string BuildPath(IEnumerable<JsonPosition> positions)
-        {
+        internal static string BuildPath(IEnumerable<JsonPosition> positions) {
             var sb = new StringBuilder();
 
-            foreach (var state in positions)
-            {
+            foreach (var state in positions) {
                 state.WriteTo(sb);
             }
 

@@ -44,8 +44,7 @@ namespace NetDimension.Json.Schema
         /// <summary>
         ///     Initializes a new instance of the <see cref="JsonSchema" /> class.
         /// </summary>
-        public JsonSchema()
-        {
+        public JsonSchema() {
             AllowAdditionalProperties = true;
         }
 
@@ -238,8 +237,7 @@ namespace NetDimension.Json.Schema
         /// <value>The format.</value>
         public string Format { get; set; }
 
-        internal string InternalId
-        {
+        internal string InternalId {
             get { return _internalId; }
         }
 
@@ -252,8 +250,7 @@ namespace NetDimension.Json.Schema
         /// <returns>
         ///     The <see cref="JsonSchema" /> object representing the JSON Schema.
         /// </returns>
-        public static JsonSchema Read(JsonReader reader)
-        {
+        public static JsonSchema Read(JsonReader reader) {
             return Read(reader, new JsonSchemaResolver());
         }
 
@@ -269,8 +266,7 @@ namespace NetDimension.Json.Schema
         /// <returns>
         ///     The <see cref="JsonSchema" /> object representing the JSON Schema.
         /// </returns>
-        public static JsonSchema Read(JsonReader reader, JsonSchemaResolver resolver)
-        {
+        public static JsonSchema Read(JsonReader reader, JsonSchemaResolver resolver) {
             ValidationUtils.ArgumentNotNull(reader, "reader");
             ValidationUtils.ArgumentNotNull(resolver, "resolver");
 
@@ -287,8 +283,7 @@ namespace NetDimension.Json.Schema
         /// <returns>
         ///     A <see cref="JsonSchema" /> populated from the string that contains JSON.
         /// </returns>
-        public static JsonSchema Parse(string json)
-        {
+        public static JsonSchema Parse(string json) {
             return Parse(json, new JsonSchemaResolver());
         }
 
@@ -300,8 +295,7 @@ namespace NetDimension.Json.Schema
         /// <returns>
         ///     A <see cref="JsonSchema" /> populated from the string that contains JSON.
         /// </returns>
-        public static JsonSchema Parse(string json, JsonSchemaResolver resolver)
-        {
+        public static JsonSchema Parse(string json, JsonSchemaResolver resolver) {
             ValidationUtils.ArgumentNotNull(json, "json");
 
             JsonReader reader = new JsonTextReader(new StringReader(json));
@@ -315,8 +309,7 @@ namespace NetDimension.Json.Schema
         /// <param name="writer">
         ///     A <see cref="JsonWriter" /> into which this method will write.
         /// </param>
-        public void WriteTo(JsonWriter writer)
-        {
+        public void WriteTo(JsonWriter writer) {
             WriteTo(writer, new JsonSchemaResolver());
         }
 
@@ -327,8 +320,7 @@ namespace NetDimension.Json.Schema
         ///     A <see cref="JsonWriter" /> into which this method will write.
         /// </param>
         /// <param name="resolver">The resolver used.</param>
-        public void WriteTo(JsonWriter writer, JsonSchemaResolver resolver)
-        {
+        public void WriteTo(JsonWriter writer, JsonSchemaResolver resolver) {
             ValidationUtils.ArgumentNotNull(writer, "writer");
             ValidationUtils.ArgumentNotNull(resolver, "resolver");
 
@@ -342,8 +334,7 @@ namespace NetDimension.Json.Schema
         /// <returns>
         ///     A <see cref="T:System.String" /> that represents the current <see cref="T:System.Object" />.
         /// </returns>
-        public override string ToString()
-        {
+        public override string ToString() {
             var writer = new StringWriter(CultureInfo.InvariantCulture);
             var jsonWriter = new JsonTextWriter(writer);
             jsonWriter.Formatting = Formatting.Indented;

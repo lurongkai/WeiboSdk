@@ -38,69 +38,67 @@ namespace NetDimension.Json.Serialization
         private ErrorContext _currentErrorContext;
         private BidirectionalDictionary<string, object> _mappings;
 
-        protected JsonSerializerInternalBase(JsonSerializer serializer)
-        {
+        protected JsonSerializerInternalBase(JsonSerializer serializer) {
             ValidationUtils.ArgumentNotNull(serializer, "serializer");
 
             Serializer = serializer;
         }
 
-        internal BidirectionalDictionary<string, object> DefaultReferenceMappings
-        {
-            get
-            {
+        internal BidirectionalDictionary<string, object> DefaultReferenceMappings {
+            get {
                 // override equality comparer for object key dictionary
                 // object will be modified as it deserializes and might have mutable hashcode
-                if (_mappings == null)
+                if (_mappings == null) {
                     _mappings = new BidirectionalDictionary<string, object>(
                         EqualityComparer<string>.Default,
                         new ReferenceEqualsEqualityComparer());
+                }
 
                 return _mappings;
             }
         }
 
-        protected ErrorContext GetErrorContext(object currentObject, object member, string path, Exception error)
-        {
-            if (_currentErrorContext == null)
+        protected ErrorContext GetErrorContext(object currentObject, object member, string path, Exception error) {
+            if (_currentErrorContext == null) {
                 _currentErrorContext = new ErrorContext(currentObject, member, path, error);
+            }
 
-            if (_currentErrorContext.Error != error)
+            if (_currentErrorContext.Error != error) {
                 throw new InvalidOperationException("Current error context error is different to requested error.");
+            }
 
             return _currentErrorContext;
         }
 
-        protected void ClearErrorContext()
-        {
-            if (_currentErrorContext == null)
+        protected void ClearErrorContext() {
+            if (_currentErrorContext == null) {
                 throw new InvalidOperationException("Could not clear error context. Error context is already null.");
+            }
 
             _currentErrorContext = null;
         }
 
         protected bool IsErrorHandled(object currentObject, JsonContract contract, object keyValue, string path,
-                                      Exception ex)
-        {
+                                      Exception ex) {
             var errorContext = GetErrorContext(currentObject, keyValue, path, ex);
-            if (contract != null)
+            if (contract != null) {
                 contract.InvokeOnError(currentObject, Serializer.Context, errorContext);
+            }
 
-            if (!errorContext.Handled)
+            if (!errorContext.Handled) {
                 Serializer.OnError(new ErrorEventArgs(currentObject, errorContext));
+            }
 
             return errorContext.Handled;
         }
 
         private class ReferenceEqualsEqualityComparer : IEqualityComparer<object>
         {
-            bool IEqualityComparer<object>.Equals(object x, object y)
-            {
+            bool IEqualityComparer<object>.Equals(object x, object y) {
                 return ReferenceEquals(x, y);
             }
 
-            int IEqualityComparer<object>.GetHashCode(object obj)
-            {
+            int IEqualityComparer<object>.GetHashCode(object obj) {
 #if !(NETFX_CORE || PORTABLE)
                 // put objects in a bucket based on their reference
                 return RuntimeHelpers.GetHashCode(obj);

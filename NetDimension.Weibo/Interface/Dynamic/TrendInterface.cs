@@ -14,8 +14,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="client">操作类</param>
         public TrendInterface(Client client)
-            : base(client)
-        {
+            : base(client) {
             api = new TrendAPI(client);
         }
 
@@ -26,8 +25,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// <param name="count"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public dynamic Trends(string uid, int count = 10, int page = 1)
-        {
+        public dynamic Trends(string uid, int count = 10, int page = 1) {
             return DynamicJson.Parse(api.Trends(uid, count, page));
         }
 
@@ -36,8 +34,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="trendName"></param>
         /// <returns></returns>
-        public dynamic IsFollow(string trendName)
-        {
+        public dynamic IsFollow(string trendName) {
             return DynamicJson.Parse(api.IsFollow(trendName));
         }
 
@@ -46,8 +43,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
         /// <returns></returns>
-        public dynamic Hourly(bool baseApp = false)
-        {
+        public dynamic Hourly(bool baseApp = false) {
             return DynamicJson.Parse(api.Hourly(baseApp));
         }
 
@@ -56,8 +52,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
         /// <returns></returns>
-        public dynamic Daily(bool baseApp = false)
-        {
+        public dynamic Daily(bool baseApp = false) {
             return DynamicJson.Parse(api.Daily(baseApp));
         }
 
@@ -66,8 +61,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="baseApp">是否基于当前应用来获取数据。true表示基于当前应用来获取数据。 </param>
         /// <returns></returns>
-        public dynamic Weekly(bool baseApp = false)
-        {
+        public dynamic Weekly(bool baseApp = false) {
             return DynamicJson.Parse(api.Weekly(baseApp));
         }
 
@@ -76,8 +70,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="trendName"></param>
         /// <returns></returns>
-        public dynamic Follow(string trendName)
-        {
+        public dynamic Follow(string trendName) {
             return DynamicJson.Parse(api.Follow(trendName));
         }
 
@@ -86,8 +79,7 @@ namespace NetDimension.Weibo.Interface.Dynamic
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public dynamic Destroy(string id)
-        {
+        public dynamic Destroy(string id) {
             return DynamicJson.Parse(api.Destroy(id));
         }
     }

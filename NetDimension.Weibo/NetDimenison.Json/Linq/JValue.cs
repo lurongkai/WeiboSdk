@@ -31,7 +31,8 @@ using System.Dynamic;
 using System.Globalization;
 using System.Linq.Expressions;
 using NetDimension.Json.Utilities;
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+
+#if !(WINDOWS_PHONE || PORTABLE)
 
 #endif
 
@@ -45,8 +46,7 @@ namespace NetDimension.Json.Linq
         private JTokenType _valueType;
         private object _value;
 
-        internal JValue(object value, JTokenType type)
-        {
+        internal JValue(object value, JTokenType type) {
             _value = value;
             _valueType = type;
         }
@@ -58,8 +58,7 @@ namespace NetDimension.Json.Linq
         ///     A <see cref="JValue" /> object to copy from.
         /// </param>
         public JValue(JValue other)
-            : this(other.Value, other.Type)
-        {
+            : this(other.Value, other.Type) {
         }
 
         /// <summary>
@@ -67,8 +66,7 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         public JValue(long value)
-            : this(value, JTokenType.Integer)
-        {
+            : this(value, JTokenType.Integer) {
         }
 
         /// <summary>
@@ -77,8 +75,7 @@ namespace NetDimension.Json.Linq
         /// <param name="value">The value.</param>
         [CLSCompliant(false)]
         public JValue(ulong value)
-            : this(value, JTokenType.Integer)
-        {
+            : this(value, JTokenType.Integer) {
         }
 
         /// <summary>
@@ -86,8 +83,7 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         public JValue(double value)
-            : this(value, JTokenType.Float)
-        {
+            : this(value, JTokenType.Float) {
         }
 
         /// <summary>
@@ -95,8 +91,7 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         public JValue(DateTime value)
-            : this(value, JTokenType.Date)
-        {
+            : this(value, JTokenType.Date) {
         }
 
         /// <summary>
@@ -104,8 +99,7 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         public JValue(bool value)
-            : this(value, JTokenType.Boolean)
-        {
+            : this(value, JTokenType.Boolean) {
         }
 
         /// <summary>
@@ -113,8 +107,7 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         public JValue(string value)
-            : this(value, JTokenType.String)
-        {
+            : this(value, JTokenType.String) {
         }
 
         /// <summary>
@@ -122,8 +115,7 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         public JValue(Guid value)
-            : this(value, JTokenType.String)
-        {
+            : this(value, JTokenType.String) {
         }
 
         /// <summary>
@@ -131,8 +123,7 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         public JValue(Uri value)
-            : this(value, JTokenType.String)
-        {
+            : this(value, JTokenType.String) {
         }
 
         /// <summary>
@@ -140,8 +131,7 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         public JValue(TimeSpan value)
-            : this(value, JTokenType.String)
-        {
+            : this(value, JTokenType.String) {
         }
 
         /// <summary>
@@ -149,17 +139,17 @@ namespace NetDimension.Json.Linq
         /// </summary>
         /// <param name="value">The value.</param>
         public JValue(object value)
-            : this(value, GetValueType(null, value))
-        {
+            : this(value, GetValueType(null, value)) {
         }
 
-        internal override bool DeepEquals(JToken node)
-        {
+        internal override bool DeepEquals(JToken node) {
             var other = node as JValue;
-            if (other == null)
+            if (other == null) {
                 return false;
-            if (other == this)
+            }
+            if (other == this) {
                 return true;
+            }
 
             return ValuesEquals(this, other);
         }
@@ -170,33 +160,34 @@ namespace NetDimension.Json.Linq
         /// <value>
         ///     <c>true</c> if this token has child values; otherwise, <c>false</c>.
         /// </value>
-        public override bool HasValues
-        {
+        public override bool HasValues {
             get { return false; }
         }
 
-        private static int Compare(JTokenType valueType, object objA, object objB)
-        {
-            if (objA == null && objB == null)
+        private static int Compare(JTokenType valueType, object objA, object objB) {
+            if (objA == null && objB == null) {
                 return 0;
-            if (objA != null && objB == null)
+            }
+            if (objA != null && objB == null) {
                 return 1;
-            if (objA == null && objB != null)
+            }
+            if (objA == null && objB != null) {
                 return -1;
+            }
 
-            switch (valueType)
-            {
+            switch (valueType) {
                 case JTokenType.Integer:
-                    if (objA is ulong || objB is ulong || objA is decimal || objB is decimal)
+                    if (objA is ulong || objB is ulong || objA is decimal || objB is decimal) {
                         return
                             Convert.ToDecimal(objA, CultureInfo.InvariantCulture)
                                    .CompareTo(Convert.ToDecimal(objB, CultureInfo.InvariantCulture));
-                    else if (objA is float || objB is float || objA is double || objB is double)
+                    } else if (objA is float || objB is float || objA is double || objB is double) {
                         return CompareFloat(objA, objB);
-                    else
+                    } else {
                         return
                             Convert.ToInt64(objA, CultureInfo.InvariantCulture)
                                    .CompareTo(Convert.ToInt64(objB, CultureInfo.InvariantCulture));
+                    }
                 case JTokenType.Float:
                     return CompareFloat(objA, objB);
                 case JTokenType.Comment:
@@ -212,58 +203,58 @@ namespace NetDimension.Json.Linq
 
                     return b1.CompareTo(b2);
                 case JTokenType.Date:
-#if !NET20
-                    if (objA is DateTime)
-                    {
-#endif
+                    if (objA is DateTime) {
                         var date1 = Convert.ToDateTime(objA, CultureInfo.InvariantCulture);
                         var date2 = Convert.ToDateTime(objB, CultureInfo.InvariantCulture);
 
                         return date1.CompareTo(date2);
-#if !NET20
-                    }
-                    else
-                    {
-                        if (!(objB is DateTimeOffset))
+                    } else {
+                        if (!(objB is DateTimeOffset)) {
                             throw new ArgumentException("Object must be of type DateTimeOffset.");
+                        }
 
                         var date1 = (DateTimeOffset) objA;
                         var date2 = (DateTimeOffset) objB;
 
                         return date1.CompareTo(date2);
                     }
-#endif
                 case JTokenType.Bytes:
-                    if (!(objB is byte[]))
+                    if (!(objB is byte[])) {
                         throw new ArgumentException("Object must be of type byte[].");
+                    }
 
                     var bytes1 = objA as byte[];
                     var bytes2 = objB as byte[];
-                    if (bytes1 == null)
+                    if (bytes1 == null) {
                         return -1;
-                    if (bytes2 == null)
+                    }
+                    if (bytes2 == null) {
                         return 1;
+                    }
 
                     return MiscellaneousUtils.ByteArrayCompare(bytes1, bytes2);
                 case JTokenType.Guid:
-                    if (!(objB is Guid))
+                    if (!(objB is Guid)) {
                         throw new ArgumentException("Object must be of type Guid.");
+                    }
 
                     var guid1 = (Guid) objA;
                     var guid2 = (Guid) objB;
 
                     return guid1.CompareTo(guid2);
                 case JTokenType.Uri:
-                    if (!(objB is Uri))
+                    if (!(objB is Uri)) {
                         throw new ArgumentException("Object must be of type Uri.");
+                    }
 
                     var uri1 = (Uri) objA;
                     var uri2 = (Uri) objB;
 
                     return Comparer<string>.Default.Compare(uri1.ToString(), uri2.ToString());
                 case JTokenType.TimeSpan:
-                    if (!(objB is TimeSpan))
+                    if (!(objB is TimeSpan)) {
                         throw new ArgumentException("Object must be of type TimeSpan.");
+                    }
 
                     var ts1 = (TimeSpan) objA;
                     var ts2 = (TimeSpan) objB;
@@ -277,34 +268,29 @@ namespace NetDimension.Json.Linq
             }
         }
 
-        private static int CompareFloat(object objA, object objB)
-        {
+        private static int CompareFloat(object objA, object objB) {
             var d1 = Convert.ToDouble(objA, CultureInfo.InvariantCulture);
             var d2 = Convert.ToDouble(objB, CultureInfo.InvariantCulture);
 
             // take into account possible floating point errors
-            if (MathUtils.ApproxEquals(d1, d2))
+            if (MathUtils.ApproxEquals(d1, d2)) {
                 return 0;
+            }
 
             return d1.CompareTo(d2);
         }
 
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
-        private static bool Operation(ExpressionType operation, object objA, object objB, out object result)
-        {
-            if (objA is string || objB is string)
-            {
-                if (operation == ExpressionType.Add || operation == ExpressionType.AddAssign)
-                {
+#if !(WINDOWS_PHONE || PORTABLE)
+        private static bool Operation(ExpressionType operation, object objA, object objB, out object result) {
+            if (objA is string || objB is string) {
+                if (operation == ExpressionType.Add || operation == ExpressionType.AddAssign) {
                     result = ((objA != null) ? objA.ToString() : null) + ((objB != null) ? objB.ToString() : null);
                     return true;
                 }
             }
 
-            if (objA is ulong || objB is ulong || objA is decimal || objB is decimal)
-            {
-                if (objA == null || objB == null)
-                {
+            if (objA is ulong || objB is ulong || objA is decimal || objB is decimal) {
+                if (objA == null || objB == null) {
                     result = null;
                     return true;
                 }
@@ -312,8 +298,7 @@ namespace NetDimension.Json.Linq
                 var d1 = Convert.ToDecimal(objA, CultureInfo.InvariantCulture);
                 var d2 = Convert.ToDecimal(objB, CultureInfo.InvariantCulture);
 
-                switch (operation)
-                {
+                switch (operation) {
                     case ExpressionType.Add:
                     case ExpressionType.AddAssign:
                         result = d1 + d2;
@@ -331,11 +316,8 @@ namespace NetDimension.Json.Linq
                         result = d1/d2;
                         return true;
                 }
-            }
-            else if (objA is float || objB is float || objA is double || objB is double)
-            {
-                if (objA == null || objB == null)
-                {
+            } else if (objA is float || objB is float || objA is double || objB is double) {
+                if (objA == null || objB == null) {
                     result = null;
                     return true;
                 }
@@ -343,8 +325,7 @@ namespace NetDimension.Json.Linq
                 var d1 = Convert.ToDouble(objA, CultureInfo.InvariantCulture);
                 var d2 = Convert.ToDouble(objB, CultureInfo.InvariantCulture);
 
-                switch (operation)
-                {
+                switch (operation) {
                     case ExpressionType.Add:
                     case ExpressionType.AddAssign:
                         result = d1 + d2;
@@ -362,14 +343,11 @@ namespace NetDimension.Json.Linq
                         result = d1/d2;
                         return true;
                 }
-            }
-            else if (objA is int || objA is uint || objA is long || objA is short || objA is ushort || objA is sbyte ||
-                     objA is byte ||
-                     objB is int || objB is uint || objB is long || objB is short || objB is ushort || objB is sbyte ||
-                     objB is byte)
-            {
-                if (objA == null || objB == null)
-                {
+            } else if (objA is int || objA is uint || objA is long || objA is short || objA is ushort || objA is sbyte ||
+                       objA is byte ||
+                       objB is int || objB is uint || objB is long || objB is short || objB is ushort || objB is sbyte ||
+                       objB is byte) {
+                if (objA == null || objB == null) {
                     result = null;
                     return true;
                 }
@@ -377,8 +355,7 @@ namespace NetDimension.Json.Linq
                 var l1 = Convert.ToInt64(objA, CultureInfo.InvariantCulture);
                 var l2 = Convert.ToInt64(objB, CultureInfo.InvariantCulture);
 
-                switch (operation)
-                {
+                switch (operation) {
                     case ExpressionType.Add:
                     case ExpressionType.AddAssign:
                         result = l1 + l2;
@@ -403,8 +380,7 @@ namespace NetDimension.Json.Linq
         }
 #endif
 
-        internal override JToken CloneToken()
-        {
+        internal override JToken CloneToken() {
             return new JValue(this);
         }
 
@@ -415,8 +391,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JValue" /> comment with the given value.
         /// </returns>
-        public static JValue CreateComment(string value)
-        {
+        public static JValue CreateComment(string value) {
             return new JValue(value, JTokenType.Comment);
         }
 
@@ -427,57 +402,55 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="JValue" /> string with the given value.
         /// </returns>
-        public static JValue CreateString(string value)
-        {
+        public static JValue CreateString(string value) {
             return new JValue(value, JTokenType.String);
         }
 
-        private static JTokenType GetValueType(JTokenType? current, object value)
-        {
-            if (value == null)
+        private static JTokenType GetValueType(JTokenType? current, object value) {
+            if (value == null) {
                 return JTokenType.Null;
+            }
 #if !(NETFX_CORE || PORTABLE)
-            else if (value == DBNull.Value)
+            else if (value == DBNull.Value) {
                 return JTokenType.Null;
+            }
 #endif
-            else if (value is string)
+            else if (value is string) {
                 return GetStringValueType(current);
-            else if (value is long || value is int || value is short || value is sbyte
-                     || value is ulong || value is uint || value is ushort || value is byte)
+            } else if (value is long || value is int || value is short || value is sbyte
+                       || value is ulong || value is uint || value is ushort || value is byte) {
                 return JTokenType.Integer;
-            else if (value is Enum)
+            } else if (value is Enum) {
                 return JTokenType.Integer;
-            else if (value is double || value is float || value is decimal)
+            } else if (value is double || value is float || value is decimal) {
                 return JTokenType.Float;
-            else if (value is DateTime)
+            } else if (value is DateTime) {
                 return JTokenType.Date;
-#if !PocketPC && !NET20
-            else if (value is DateTimeOffset)
+            } else if (value is DateTimeOffset) {
                 return JTokenType.Date;
-#endif
-            else if (value is byte[])
+            } else if (value is byte[]) {
                 return JTokenType.Bytes;
-            else if (value is bool)
+            } else if (value is bool) {
                 return JTokenType.Boolean;
-            else if (value is Guid)
+            } else if (value is Guid) {
                 return JTokenType.Guid;
-            else if (value is Uri)
+            } else if (value is Uri) {
                 return JTokenType.Uri;
-            else if (value is TimeSpan)
+            } else if (value is TimeSpan) {
                 return JTokenType.TimeSpan;
+            }
 
             throw new ArgumentException(
                 "Could not determine JSON object type for type {0}.".FormatWith(CultureInfo.InvariantCulture,
                                                                                 value.GetType()));
         }
 
-        private static JTokenType GetStringValueType(JTokenType? current)
-        {
-            if (current == null)
+        private static JTokenType GetStringValueType(JTokenType? current) {
+            if (current == null) {
                 return JTokenType.String;
+            }
 
-            switch (current.Value)
-            {
+            switch (current.Value) {
                 case JTokenType.Comment:
                 case JTokenType.String:
                 case JTokenType.Raw:
@@ -491,8 +464,7 @@ namespace NetDimension.Json.Linq
         ///     Gets the node type for this <see cref="JToken" />.
         /// </summary>
         /// <value>The type.</value>
-        public override JTokenType Type
-        {
+        public override JTokenType Type {
             get { return _valueType; }
         }
 
@@ -500,16 +472,15 @@ namespace NetDimension.Json.Linq
         ///     Gets or sets the underlying token value.
         /// </summary>
         /// <value>The underlying token value.</value>
-        public object Value
-        {
+        public object Value {
             get { return _value; }
-            set
-            {
+            set {
                 var currentType = (_value != null) ? _value.GetType() : null;
                 var newType = (value != null) ? value.GetType() : null;
 
-                if (currentType != newType)
+                if (currentType != newType) {
                     _valueType = GetValueType(_valueType, value);
+                }
 
                 _value = value;
             }
@@ -524,10 +495,8 @@ namespace NetDimension.Json.Linq
         /// <param name="converters">
         ///     A collection of <see cref="JsonConverter" /> which will be used when writing the token.
         /// </param>
-        public override void WriteTo(JsonWriter writer, params JsonConverter[] converters)
-        {
-            switch (_valueType)
-            {
+        public override void WriteTo(JsonWriter writer, params JsonConverter[] converters) {
+            switch (_valueType) {
                 case JTokenType.Comment:
                     writer.WriteComment(_value.ToString());
                     return;
@@ -544,14 +513,12 @@ namespace NetDimension.Json.Linq
 
             JsonConverter matchingConverter;
             if (_value != null &&
-                ((matchingConverter = JsonSerializer.GetMatchingConverter(converters, _value.GetType())) != null))
-            {
+                ((matchingConverter = JsonSerializer.GetMatchingConverter(converters, _value.GetType())) != null)) {
                 matchingConverter.WriteJson(writer, _value, new JsonSerializer());
                 return;
             }
 
-            switch (_valueType)
-            {
+            switch (_valueType) {
                 case JTokenType.Integer:
                     writer.WriteValue(Convert.ToInt64(_value, CultureInfo.InvariantCulture));
                     return;
@@ -565,12 +532,11 @@ namespace NetDimension.Json.Linq
                     writer.WriteValue(Convert.ToBoolean(_value, CultureInfo.InvariantCulture));
                     return;
                 case JTokenType.Date:
-#if !PocketPC && !NET20
-                    if (_value is DateTimeOffset)
+                    if (_value is DateTimeOffset) {
                         writer.WriteValue((DateTimeOffset) _value);
-                    else
-#endif
+                    } else {
                         writer.WriteValue(Convert.ToDateTime(_value, CultureInfo.InvariantCulture));
+                    }
                     return;
                 case JTokenType.Bytes:
                     writer.WriteValue((byte[]) _value);
@@ -585,15 +551,13 @@ namespace NetDimension.Json.Linq
             throw MiscellaneousUtils.CreateArgumentOutOfRangeException("TokenType", _valueType, "Unexpected token type.");
         }
 
-        internal override int GetDeepHashCode()
-        {
+        internal override int GetDeepHashCode() {
             var valueHashCode = (_value != null) ? _value.GetHashCode() : 0;
 
             return _valueType.GetHashCode() ^ valueHashCode;
         }
 
-        private static bool ValuesEquals(JValue v1, JValue v2)
-        {
+        private static bool ValuesEquals(JValue v1, JValue v2) {
             return (v1 == v2 || (v1._valueType == v2._valueType && Compare(v1._valueType, v1._value, v2._value) == 0));
         }
 
@@ -604,10 +568,10 @@ namespace NetDimension.Json.Linq
         ///     true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.
         /// </returns>
         /// <param name="other">An object to compare with this object.</param>
-        public bool Equals(JValue other)
-        {
-            if (other == null)
+        public bool Equals(JValue other) {
+            if (other == null) {
                 return false;
+            }
 
             return ValuesEquals(this, other);
         }
@@ -624,14 +588,15 @@ namespace NetDimension.Json.Linq
         /// <exception cref="T:System.NullReferenceException">
         ///     The <paramref name="obj" /> parameter is null.
         /// </exception>
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
+        public override bool Equals(object obj) {
+            if (obj == null) {
                 return false;
+            }
 
             var otherValue = obj as JValue;
-            if (otherValue != null)
+            if (otherValue != null) {
                 return Equals(otherValue);
+            }
 
             return base.Equals(obj);
         }
@@ -642,10 +607,10 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A hash code for the current <see cref="T:System.Object" />.
         /// </returns>
-        public override int GetHashCode()
-        {
-            if (_value == null)
+        public override int GetHashCode() {
+            if (_value == null) {
                 return 0;
+            }
 
             return _value.GetHashCode();
         }
@@ -656,10 +621,10 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="System.String" /> that represents this instance.
         /// </returns>
-        public override string ToString()
-        {
-            if (_value == null)
+        public override string ToString() {
+            if (_value == null) {
                 return string.Empty;
+            }
 
             return _value.ToString();
         }
@@ -671,8 +636,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="System.String" /> that represents this instance.
         /// </returns>
-        public string ToString(string format)
-        {
+        public string ToString(string format) {
             return ToString(format, CultureInfo.CurrentCulture);
         }
 
@@ -683,8 +647,7 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="System.String" /> that represents this instance.
         /// </returns>
-        public string ToString(IFormatProvider formatProvider)
-        {
+        public string ToString(IFormatProvider formatProvider) {
             return ToString(null, formatProvider);
         }
 
@@ -696,19 +659,20 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     A <see cref="System.String" /> that represents this instance.
         /// </returns>
-        public string ToString(string format, IFormatProvider formatProvider)
-        {
-            if (_value == null)
+        public string ToString(string format, IFormatProvider formatProvider) {
+            if (_value == null) {
                 return string.Empty;
+            }
 
             var formattable = _value as IFormattable;
-            if (formattable != null)
+            if (formattable != null) {
                 return formattable.ToString(format, formatProvider);
-            else
+            } else {
                 return _value.ToString();
+            }
         }
 
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
         /// <summary>
         ///     Returns the <see cref="T:System.Dynamic.DynamicMetaObject" /> responsible for binding operations performed on this object.
         /// </summary>
@@ -716,25 +680,21 @@ namespace NetDimension.Json.Linq
         /// <returns>
         ///     The <see cref="T:System.Dynamic.DynamicMetaObject" /> to bind this object.
         /// </returns>
-        protected override DynamicMetaObject GetMetaObject(Expression parameter)
-        {
+        protected override DynamicMetaObject GetMetaObject(Expression parameter) {
             return new DynamicProxyMetaObject<JValue>(parameter, this, new JValueDynamicProxy(), true);
         }
 
         private class JValueDynamicProxy : DynamicProxy<JValue>
         {
-            public override bool TryConvert(JValue instance, ConvertBinder binder, out object result)
-            {
-                if (binder.Type == typeof (JValue))
-                {
+            public override bool TryConvert(JValue instance, ConvertBinder binder, out object result) {
+                if (binder.Type == typeof (JValue)) {
                     result = instance;
                     return true;
                 }
 
                 var value = instance.Value;
 
-                if (value == null)
-                {
+                if (value == null) {
                     result = null;
                     return ReflectionUtils.IsNullable(binder.Type);
                 }
@@ -744,12 +704,10 @@ namespace NetDimension.Json.Linq
             }
 
             public override bool TryBinaryOperation(JValue instance, BinaryOperationBinder binder, object arg,
-                                                    out object result)
-            {
+                                                    out object result) {
                 var compareValue = (arg is JValue) ? ((JValue) arg).Value : arg;
 
-                switch (binder.Operation)
-                {
+                switch (binder.Operation) {
                     case ExpressionType.Equal:
                         result = (Compare(instance.Type, instance.Value, compareValue) == 0);
                         return true;
@@ -776,8 +734,7 @@ namespace NetDimension.Json.Linq
                     case ExpressionType.MultiplyAssign:
                     case ExpressionType.Divide:
                     case ExpressionType.DivideAssign:
-                        if (Operation(binder.Operation, instance.Value, compareValue, out result))
-                        {
+                        if (Operation(binder.Operation, instance.Value, compareValue, out result)) {
                             result = new JValue(result);
                             return true;
                         }
@@ -790,10 +747,10 @@ namespace NetDimension.Json.Linq
         }
 #endif
 
-        int IComparable.CompareTo(object obj)
-        {
-            if (obj == null)
+        int IComparable.CompareTo(object obj) {
+            if (obj == null) {
                 return 1;
+            }
 
             var otherValue = (obj is JValue) ? ((JValue) obj).Value : obj;
 
@@ -818,10 +775,10 @@ namespace NetDimension.Json.Linq
         /// <exception cref="T:System.ArgumentException">
         ///     <paramref name="obj" /> is not the same type as this instance.
         /// </exception>
-        public int CompareTo(JValue obj)
-        {
-            if (obj == null)
+        public int CompareTo(JValue obj) {
+            if (obj == null) {
                 return 1;
+            }
 
             return Compare(_valueType, _value, obj._value);
         }

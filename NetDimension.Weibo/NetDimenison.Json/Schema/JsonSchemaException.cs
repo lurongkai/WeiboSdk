@@ -60,8 +60,7 @@ namespace NetDimension.Json.Schema
         /// <summary>
         ///     Initializes a new instance of the <see cref="JsonSchemaException" /> class.
         /// </summary>
-        public JsonSchemaException()
-        {
+        public JsonSchemaException() {
         }
 
         /// <summary>
@@ -70,8 +69,7 @@ namespace NetDimension.Json.Schema
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         public JsonSchemaException(string message)
-            : base(message)
-        {
+            : base(message) {
         }
 
         /// <summary>
@@ -81,8 +79,7 @@ namespace NetDimension.Json.Schema
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
         public JsonSchemaException(string message, Exception innerException)
-            : base(message, innerException)
-        {
+            : base(message, innerException) {
         }
 
 #if !(WINDOWS_PHONE || SILVERLIGHT || NETFX_CORE || PORTABLE)
@@ -102,15 +99,13 @@ namespace NetDimension.Json.Schema
         ///     The class name is null or <see cref="P:System.Exception.HResult" /> is zero (0).
         /// </exception>
         public JsonSchemaException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
+            : base(info, context) {
         }
 #endif
 
         internal JsonSchemaException(string message, Exception innerException, string path, int lineNumber,
                                      int linePosition)
-            : base(message, innerException)
-        {
+            : base(message, innerException) {
             Path = path;
             LineNumber = lineNumber;
             LinePosition = linePosition;

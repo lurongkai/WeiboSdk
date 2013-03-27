@@ -310,8 +310,7 @@ namespace NetDimension.Weibo
     /// </summary>
     public class Coordinate
     {
-        public Coordinate(float lat, float log)
-        {
+        public Coordinate(float lat, float log) {
             Latitude = lat;
             Longtitude = log;
         }
@@ -326,8 +325,7 @@ namespace NetDimension.Weibo
         /// </summary>
         public float Longtitude { get; set; }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return string.Format("{0:#.####},{1:#.####}", Latitude, Longtitude);
         }
     }
@@ -337,8 +335,7 @@ namespace NetDimension.Weibo
     /// </summary>
     internal class WeiboParameterComparer : IComparer<WeiboParameter>
     {
-        public int Compare(WeiboParameter x, WeiboParameter y)
-        {
+        public int Compare(WeiboParameter x, WeiboParameter y) {
             return StringComparer.CurrentCulture.Compare(x.Name, y.Name);
         }
     }
@@ -354,8 +351,7 @@ namespace NetDimension.Weibo
         /// </summary>
         /// <param name="dateString">微博时间字符串</param>
         /// <returns>DateTime</returns>
-        public static DateTime ParseUTCDate(string dateString)
-        {
+        public static DateTime ParseUTCDate(string dateString) {
             var provider = CultureInfo.InvariantCulture;
 
             var dt = DateTime.ParseExact(dateString, "ddd MMM dd HH:mm:ss zzz yyyy", provider);
@@ -363,29 +359,23 @@ namespace NetDimension.Weibo
             return dt;
         }
 
-        internal static Dictionary<string, string> GetDictionaryFromJSON(string json)
-        {
+        internal static Dictionary<string, string> GetDictionaryFromJSON(string json) {
             var result = JsonConvert.DeserializeObject<IEnumerable<JObject>>(json);
 
             var dict = new Dictionary<string, string>();
-            foreach (var loc in result)
-            {
-                foreach (var x in loc.Properties())
-                {
+            foreach (var loc in result) {
+                foreach (var x in loc.Properties()) {
                     dict.Add(x.Name, x.Value.ToString());
                 }
             }
             return dict;
         }
 
-        internal static IEnumerable<string> GetStringListFromJSON(string json)
-        {
+        internal static IEnumerable<string> GetStringListFromJSON(string json) {
             var result = JsonConvert.DeserializeObject<IEnumerable<JObject>>(json);
             var list = new List<string>();
-            foreach (var loc in result)
-            {
-                foreach (var x in loc.Properties())
-                {
+            foreach (var loc in result) {
+                foreach (var x in loc.Properties()) {
                     list.Add(x.Value.ToString());
                 }
             }
@@ -393,13 +383,12 @@ namespace NetDimension.Weibo
         }
 
 
-        internal static string BuildQueryString(Dictionary<string, string> parameters)
-        {
+        internal static string BuildQueryString(Dictionary<string, string> parameters) {
             var pairs = new List<string>();
-            foreach (var item in parameters)
-            {
-                if (string.IsNullOrEmpty(item.Value))
+            foreach (var item in parameters) {
+                if (string.IsNullOrEmpty(item.Value)) {
                     continue;
+                }
 
                 pairs.Add(string.Format("{0}={1}", Uri.EscapeDataString(item.Key), Uri.EscapeDataString(item.Value)));
             }
@@ -407,17 +396,15 @@ namespace NetDimension.Weibo
             return string.Join("&", pairs.ToArray());
         }
 
-        internal static string BuildQueryString(params WeiboParameter[] parameters)
-        {
+        internal static string BuildQueryString(params WeiboParameter[] parameters) {
             var pairs = new List<string>();
-            foreach (var item in parameters)
-            {
-                if (item.IsBinaryData)
+            foreach (var item in parameters) {
+                if (item.IsBinaryData) {
                     continue;
+                }
 
                 var value = string.Format("{0}", item.Value);
-                if (!string.IsNullOrEmpty(value))
-                {
+                if (!string.IsNullOrEmpty(value)) {
                     pairs.Add(string.Format("{0}={1}", Uri.EscapeDataString(item.Name), Uri.EscapeDataString(value)));
                 }
             }
@@ -425,13 +412,11 @@ namespace NetDimension.Weibo
             return string.Join("&", pairs.ToArray());
         }
 
-        internal static string GetBoundary()
-        {
+        internal static string GetBoundary() {
             var pattern = "abcdefghijklmnopqrstuvwxyz0123456789";
             var boundaryBuilder = new StringBuilder();
             var rnd = new Random();
-            for (var i = 0; i < 10; i++)
-            {
+            for (var i = 0; i < 10; i++) {
                 var index = rnd.Next(pattern.Length);
                 boundaryBuilder.Append(pattern[index]);
             }
@@ -444,8 +429,7 @@ namespace NetDimension.Weibo
         /// <param name="boundary"></param>
         /// <param name="parameters">参数</param>
         /// <returns></returns>
-        internal static byte[] BuildPostData(string boundary, params WeiboParameter[] parameters)
-        {
+        internal static byte[] BuildPostData(string boundary, params WeiboParameter[] parameters) {
             var pairs = new List<WeiboParameter>(parameters);
             pairs.Sort(new WeiboParameterComparer());
             var buff = new MemoryStream();
@@ -456,13 +440,10 @@ namespace NetDimension.Weibo
 
             var contentBuilder = new StringBuilder();
 
-            foreach (var p in pairs)
-            {
-                if (!p.IsBinaryData)
-                {
+            foreach (var p in pairs) {
+                if (!p.IsBinaryData) {
                     var value = string.Format("{0}", p.Value);
-                    if (string.IsNullOrEmpty(value))
-                    {
+                    if (string.IsNullOrEmpty(value)) {
                         continue;
                     }
 
@@ -472,9 +453,7 @@ namespace NetDimension.Weibo
                         Encoding.UTF8.GetBytes(string.Format("content-disposition: form-data; name=\"{0}\"\r\n\r\n{1}",
                                                              p.Name, p.Value));
                     buff.Write(dispositonBuff, 0, dispositonBuff.Length);
-                }
-                else
-                {
+                } else {
                     buff.Write(headerBuff, 0, headerBuff.Length);
                     var headerTemplate =
                         "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\nContent-Type: \"image/unknow\"\r\nContent-Transfer-Encoding: binary\r\n\r\n";

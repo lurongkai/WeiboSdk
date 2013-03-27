@@ -27,11 +27,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-
-#endif
 
 namespace NetDimension.Json.Schema
 {
@@ -43,8 +38,7 @@ namespace NetDimension.Json.Schema
         /// <summary>
         ///     Initializes a new instance of the <see cref="JsonSchemaResolver" /> class.
         /// </summary>
-        public JsonSchemaResolver()
-        {
+        public JsonSchemaResolver() {
             LoadedSchemas = new List<JsonSchema>();
         }
 
@@ -61,8 +55,7 @@ namespace NetDimension.Json.Schema
         /// <returns>
         ///     A <see cref="JsonSchema" /> for the specified id.
         /// </returns>
-        public virtual JsonSchema GetSchema(string id)
-        {
+        public virtual JsonSchema GetSchema(string id) {
             var schema = LoadedSchemas.SingleOrDefault(s => s.Id == id);
             return schema;
         }
