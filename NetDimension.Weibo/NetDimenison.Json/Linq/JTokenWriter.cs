@@ -410,7 +410,7 @@ namespace NetDimension.Json.Linq
             AddValue(value, JsonToken.Date);
         }
 
-#if !PocketPC && !NET20
+#if !PocketPC
         /// <summary>
         ///     Writes a <see cref="DateTimeOffset" /> value.
         /// </summary>

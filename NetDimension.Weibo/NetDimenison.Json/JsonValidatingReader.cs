@@ -34,11 +34,7 @@ using System.Text.RegularExpressions;
 using NetDimension.Json.Linq;
 using NetDimension.Json.Schema;
 using NetDimension.Json.Utilities;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
 
-#endif
 
 namespace NetDimension.Json
 {
@@ -444,7 +440,6 @@ namespace NetDimension.Json
             return dateTime;
         }
 
-#if !NET20
         /// <summary>
         ///     Reads the next JSON token from the stream as a <see cref="Nullable{DateTimeOffset}" />.
         /// </summary>
@@ -458,7 +453,6 @@ namespace NetDimension.Json
             ValidateCurrentToken();
             return dateTimeOffset;
         }
-#endif
 
         /// <summary>
         ///     Reads the next JSON token from the stream.

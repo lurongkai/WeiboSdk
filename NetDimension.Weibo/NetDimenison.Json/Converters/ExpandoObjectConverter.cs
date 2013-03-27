@@ -25,7 +25,7 @@
 
 #endregion
 
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(NET35 || WINDOWS_PHONE || PORTABLE)
 
 using System;
 using System.Collections.Generic;

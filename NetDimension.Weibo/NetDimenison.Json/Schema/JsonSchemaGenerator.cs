@@ -36,11 +36,6 @@ using NetDimension.Json.Utilities;
 #if NETFX_CORE
 using IConvertible = NetDimension.Json.Utilities.Convertible;
 #endif
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-
-#endif
 
 namespace NetDimension.Json.Schema
 {
@@ -371,7 +366,7 @@ namespace NetDimension.Json.Schema
                         GenerateISerializableContract(type, (JsonISerializableContract) contract);
                         break;
 #endif
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
                     case JsonContractType.Dynamic:
 #endif
                     case JsonContractType.Linq:

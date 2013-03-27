@@ -37,13 +37,9 @@ using System.Linq.Expressions;
 using NetDimension.Json.Utilities;
 #if !PORTABLE
 #endif
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(NET35 || WINDOWS_PHONE || PORTABLE)
 #endif
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
 
-#endif
 
 namespace NetDimension.Json.Linq
 {
@@ -54,7 +50,7 @@ namespace NetDimension.Json.Linq
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
                            , ICustomTypeDescriptor
 #endif
-#if !(SILVERLIGHT || NET20 || NETFX_CORE || PORTABLE)
+#if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
                            , INotifyPropertyChanging
 #endif
     {
@@ -74,7 +70,7 @@ namespace NetDimension.Json.Linq
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-#if !(SILVERLIGHT || NET20 || NETFX_CORE || PORTABLE)
+#if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
         /// <summary>
         ///     Occurs when a property value is changing.
         /// </summary>
@@ -165,7 +161,7 @@ namespace NetDimension.Json.Linq
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
             OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, IndexOfItem(childProperty)));
 #endif
-#if SILVERLIGHT || !(NET20 || NET35 || PORTABLE)
+#if SILVERLIGHT || !(NET35 || PORTABLE)
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace,
                                                                      childProperty, childProperty,
                                                                      IndexOfItem(childProperty)));
@@ -174,7 +170,7 @@ namespace NetDimension.Json.Linq
 
         internal void InternalPropertyChanging(JProperty childProperty)
         {
-#if !(SILVERLIGHT || NET20 || NETFX_CORE || PORTABLE)
+#if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
             OnPropertyChanging(childProperty.Name);
 #endif
         }
@@ -289,7 +285,7 @@ namespace NetDimension.Json.Linq
                 }
                 else
                 {
-#if !(SILVERLIGHT || NET20 || NETFX_CORE || PORTABLE)
+#if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
                     OnPropertyChanging(propertyName);
 #endif
                     Add(new JProperty(propertyName, value));
@@ -566,7 +562,7 @@ namespace NetDimension.Json.Linq
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-#if !(SILVERLIGHT || NETFX_CORE || PORTABLE || NET20)
+#if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
         /// <summary>
         ///     Raises the <see cref="PropertyChanging" /> event with the provided arguments.
         /// </summary>
@@ -752,7 +748,7 @@ namespace NetDimension.Json.Linq
 
 #endif
 
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
         /// <summary>
         ///     Returns the <see cref="T:System.Dynamic.DynamicMetaObject" /> responsible for binding operations performed on this object.
         /// </summary>

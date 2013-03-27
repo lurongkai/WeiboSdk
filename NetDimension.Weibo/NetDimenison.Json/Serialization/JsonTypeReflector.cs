@@ -32,19 +32,13 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using NetDimension.Json.Utilities;
-#if !(NETFX_CORE || PORTABLE)
-#endif
 #if NETFX_CORE || PORTABLE
 using ICustomAttributeProvider = NetDimension.Json.Utilities.CustomAttributeProvider;
-#endif
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
 #endif
 
 namespace NetDimension.Json.Serialization
 {
-#if !SILVERLIGHT && !PocketPC && !NET20 && !NETFX_CORE
+#if !SILVERLIGHT && !PocketPC && !NETFX_CORE
     internal interface IMetadataTypeAttribute
     {
         Type MetadataClassType { get; }
@@ -65,7 +59,7 @@ namespace NetDimension.Json.Serialization
         private static readonly ThreadSafeStore<ICustomAttributeProvider, Type> JsonConverterTypeCache =
             new ThreadSafeStore<ICustomAttributeProvider, Type>(GetJsonConverterTypeFromAttribute);
 
-#if !(SILVERLIGHT || NET20 || NETFX_CORE || PORTABLE)
+#if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
         private static readonly ThreadSafeStore<Type, Type> AssociatedMetadataTypesCache =
             new ThreadSafeStore<Type, Type>(GetAssociateMetadataTypeFromAttribute);
 
@@ -119,7 +113,7 @@ namespace NetDimension.Json.Serialization
         }
 #endif
 
-#if !PocketPC && !NET20
+#if !PocketPC
         public static DataContractAttribute GetDataContractAttribute(Type type)
         {
             // DataContractAttribute does not have inheritance
@@ -180,7 +174,7 @@ namespace NetDimension.Json.Serialization
             if (objectAttribute != null)
                 return objectAttribute.MemberSerialization;
 
-#if !PocketPC && !NET20
+#if !PocketPC
             var dataContractAttribute = GetDataContractAttribute(objectType);
             if (dataContractAttribute != null)
                 return MemberSerialization.OptIn;
@@ -252,7 +246,7 @@ namespace NetDimension.Json.Serialization
         }
 #endif
 
-#if !(SILVERLIGHT || NET20 || NETFX_CORE || PORTABLE)
+#if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
         private static Type GetAssociatedMetadataType(Type type)
         {
             return AssociatedMetadataTypesCache.Get(type);
@@ -297,7 +291,7 @@ namespace NetDimension.Json.Serialization
         {
             T attribute;
 
-#if !(SILVERLIGHT || NET20 || NETFX_CORE || PORTABLE)
+#if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
             var metadataType = GetAssociatedMetadataType(type);
             if (metadataType != null)
             {
@@ -325,7 +319,7 @@ namespace NetDimension.Json.Serialization
         {
             T attribute;
 
-#if !(SILVERLIGHT || NET20 || NETFX_CORE || PORTABLE)
+#if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
             var metadataType = GetAssociatedMetadataType(memberInfo.DeclaringType);
             if (metadataType != null)
             {
@@ -435,21 +429,11 @@ namespace NetDimension.Json.Serialization
                 {
 #if (NETFX_CORE || SILVERLIGHT || PORTABLE)
           _fullyTrusted = false;
-#elif !(NET20 || NET35)
+#endif
                     var appDomain = AppDomain.CurrentDomain;
 
                     _fullyTrusted = appDomain.IsHomogenous && appDomain.IsFullyTrusted;
-#else
-          try
-          {
-            new SecurityPermission(PermissionState.Unrestricted).Demand();
-            _fullyTrusted = true;
-          }
-          catch (Exception)
-          {
-            _fullyTrusted = false;
-          }
-#endif
+
                 }
 
                 return _fullyTrusted.Value;

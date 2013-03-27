@@ -492,7 +492,7 @@ namespace NetDimension.Json
             }
         }
 
-#if !PocketPC && !NET20
+#if !PocketPC
         /// <summary>
         ///     Writes a <see cref="DateTimeOffset" /> value.
         /// </summary>

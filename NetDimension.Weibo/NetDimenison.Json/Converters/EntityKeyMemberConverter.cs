@@ -25,7 +25,7 @@
 
 #endregion
 
-#if !(SILVERLIGHT || NET20 || NETFX_CORE || PORTABLE)
+#if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
 using System;
 using System.Globalization;
 using NetDimension.Json.Serialization;

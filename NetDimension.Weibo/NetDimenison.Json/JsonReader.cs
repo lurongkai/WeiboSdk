@@ -31,11 +31,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using NetDimension.Json.Utilities;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-
-#endif
 
 namespace NetDimension.Json
 {
@@ -367,7 +362,6 @@ namespace NetDimension.Json
         /// </returns>
         public abstract DateTime? ReadAsDateTime();
 
-#if !NET20
         /// <summary>
         ///     Reads the next JSON token from the stream as a <see cref="Nullable{DateTimeOffset}" />.
         /// </summary>
@@ -375,14 +369,12 @@ namespace NetDimension.Json
         ///     A <see cref="Nullable{DateTimeOffset}" />. This method will return <c>null</c> at the end of an array.
         /// </returns>
         public abstract DateTimeOffset? ReadAsDateTimeOffset();
-#endif
 
         internal virtual bool ReadInternal()
         {
             throw new NotImplementedException();
         }
 
-#if !NET20
         internal DateTimeOffset? ReadAsDateTimeOffsetInternal()
         {
             _readType = ReadType.ReadAsDateTimeOffset;
@@ -430,7 +422,6 @@ namespace NetDimension.Json
                                              "Error reading date. Unexpected token: {0}.".FormatWith(
                                                  CultureInfo.InvariantCulture, TokenType));
         }
-#endif
 
         internal byte[] ReadAsBytesInternal()
         {

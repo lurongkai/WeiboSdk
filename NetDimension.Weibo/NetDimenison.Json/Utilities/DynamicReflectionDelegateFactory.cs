@@ -30,9 +30,6 @@ using System;
 using System.Globalization;
 using System.Reflection;
 using System.Reflection.Emit;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#endif
 
 namespace NetDimension.Json.Utilities
 {

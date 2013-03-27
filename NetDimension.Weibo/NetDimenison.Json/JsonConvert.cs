@@ -34,9 +34,9 @@ using System.Xml;
 using System.Xml.Linq;
 using NetDimension.Json.Converters;
 using NetDimension.Json.Utilities;
-#if !(NET20 || NET35 || SILVERLIGHT || PORTABLE)
+#if !(NET35 || SILVERLIGHT || PORTABLE)
 #endif
-#if !NET20 && (!SILVERLIGHT || WINDOWS_PHONE) && !PORTABLE
+#if (!SILVERLIGHT || WINDOWS_PHONE) && !PORTABLE
 
 #endif
 #if NETFX_CORE
@@ -142,7 +142,7 @@ namespace NetDimension.Json
             return value;
         }
 
-#if !PocketPC && !NET20
+#if !PocketPC
         /// <summary>
         ///     Converts the <see cref="DateTimeOffset" /> to its JSON string representation.
         /// </summary>
@@ -649,7 +649,7 @@ namespace NetDimension.Json
 #endif
                 }
             }
-#if !PocketPC && !NET20
+#if !PocketPC
             else if (value is DateTimeOffset)
             {
                 return ToString((DateTimeOffset) value);
@@ -706,7 +706,7 @@ namespace NetDimension.Json
             if (ReflectionUtils.IsNullableType(type))
                 type = Nullable.GetUnderlyingType(type);
 
-#if !PocketPC && !NET20
+#if !PocketPC
             if (type == typeof (DateTimeOffset))
                 return true;
 #endif
@@ -818,7 +818,7 @@ namespace NetDimension.Json
             return sw.ToString();
         }
 
-#if !(NET20 || NET35 || SILVERLIGHT || PORTABLE)
+#if !(NET35 || SILVERLIGHT || PORTABLE)
         /// <summary>
         ///     Asynchronously serializes the specified object to a JSON string using a collection of <see cref="JsonConverter" />.
         /// </summary>
@@ -998,7 +998,7 @@ namespace NetDimension.Json
             return jsonSerializer.Deserialize(new JsonTextReader(sr), type);
         }
 
-#if !(NET20 || NET35 || SILVERLIGHT || PORTABLE)
+#if !(NET35 || SILVERLIGHT || PORTABLE)
         /// <summary>
         ///     Asynchronously deserializes the JSON to the specified .NET type.
         /// </summary>
@@ -1095,7 +1095,7 @@ namespace NetDimension.Json
             }
         }
 
-#if !(NET20 || NET35 || SILVERLIGHT || PORTABLE)
+#if !(NET35 || SILVERLIGHT || PORTABLE)
         /// <summary>
         ///     Asynchronously populates the object with values from the JSON string.
         /// </summary>
@@ -1194,7 +1194,7 @@ namespace NetDimension.Json
         }
 #endif
 
-#if !NET20 && (!(SILVERLIGHT || PORTABLE) || WINDOWS_PHONE)
+#if (!(SILVERLIGHT || PORTABLE) || WINDOWS_PHONE)
         /// <summary>
         ///     Serializes the <see cref="XNode" /> to a JSON string.
         /// </summary>

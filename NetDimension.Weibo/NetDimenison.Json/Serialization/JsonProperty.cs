@@ -27,10 +27,6 @@
 
 using System;
 
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#endif
-
 namespace NetDimension.Json.Serialization
 {
     /// <summary>

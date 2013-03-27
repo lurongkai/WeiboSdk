@@ -40,10 +40,6 @@ using IConvertible = NetDimension.Json.Utilities.Convertible;
 #if NETFX_CORE || PORTABLE
 using ICustomAttributeProvider = NetDimension.Json.Utilities.CustomAttributeProvider;
 #endif
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-#endif
 
 namespace NetDimension.Json.Utilities
 {
@@ -171,7 +167,6 @@ namespace NetDimension.Json.Utilities
         public static string GetTypeName(Type t, FormatterAssemblyStyle assemblyFormat, SerializationBinder binder)
         {
             string fullyQualifiedTypeName;
-#if !(NET20 || NET35)
             if (binder != null)
             {
                 string assemblyName, typeName;
@@ -182,9 +177,6 @@ namespace NetDimension.Json.Utilities
             {
                 fullyQualifiedTypeName = t.AssemblyQualifiedName;
             }
-#else
-      fullyQualifiedTypeName = t.AssemblyQualifiedName;
-#endif
 
             switch (assemblyFormat)
             {

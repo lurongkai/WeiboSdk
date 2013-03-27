@@ -37,13 +37,6 @@ using System.Runtime.Serialization;
 using System.Security;
 using NetDimension.Json.Linq;
 using NetDimension.Json.Utilities;
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
-#endif
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-
-#endif
 
 namespace NetDimension.Json.Serialization
 {
@@ -148,7 +141,7 @@ namespace NetDimension.Json.Serialization
                     SerializeDictionary(writer, dictionaryContract.CreateWrapper(value), dictionaryContract, member,
                                         containerContract, containerProperty);
                     break;
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
                 case JsonContractType.Dynamic:
                     SerializeDynamic(writer, (IDynamicMetaObjectProvider) value, (JsonDynamicContract) valueContract,
                                      member, containerContract, containerProperty);
@@ -560,11 +553,9 @@ namespace NetDimension.Json.Serialization
         }
 
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
-#if !NET20
         [SuppressMessage("Microsoft.Portability", "CA1903:UseOnlyApiFromTargetedFramework",
             MessageId = "System.Security.SecuritySafeCriticalAttribute")]
         [SecuritySafeCritical]
-#endif
         private void SerializeISerializable(JsonWriter writer, ISerializable value, JsonISerializableContract contract,
                                             JsonProperty member, JsonContainerContract collectionContract,
                                             JsonProperty containerProperty)
@@ -600,7 +591,7 @@ To fix this error either change the environment to be fully trusted, change the 
         }
 #endif
 
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
         private void SerializeDynamic(JsonWriter writer, IDynamicMetaObjectProvider value, JsonDynamicContract contract,
                                       JsonProperty member, JsonContainerContract collectionContract,
                                       JsonProperty containerProperty)

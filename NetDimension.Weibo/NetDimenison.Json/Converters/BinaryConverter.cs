@@ -34,21 +34,17 @@ using NetDimension.Json.Utilities;
 
 namespace NetDimension.Json.Converters
 {
-#if !NET20
     internal interface IBinary
     {
         byte[] ToArray();
     }
-#endif
 
     /// <summary>
     ///     Converts a binary value to and from a base 64 string value.
     /// </summary>
     public class BinaryConverter : JsonConverter
     {
-#if !NET20
         private const string BinaryTypeName = "System.Data.Linq.Binary";
-#endif
 
         /// <summary>
         ///     Writes the JSON representation of the object.
@@ -73,13 +69,12 @@ namespace NetDimension.Json.Converters
 
         private byte[] GetByteArray(object value)
         {
-#if !(NET20)
             if (value.GetType().AssignableToTypeName(BinaryTypeName))
             {
                 var binary = DynamicWrapper.CreateWrapper<IBinary>(value);
                 return binary.ToArray();
             }
-#endif
+
             if (value is SqlBinary)
                 return ((SqlBinary) value).Value;
 
@@ -135,11 +130,8 @@ namespace NetDimension.Json.Converters
                                                             .FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
             }
 
-
-#if !NET20
             if (t.AssignableToTypeName(BinaryTypeName))
                 return Activator.CreateInstance(t, data);
-#endif
 
             if (t == typeof (SqlBinary))
                 return new SqlBinary(data);
@@ -184,10 +176,8 @@ namespace NetDimension.Json.Converters
         /// </returns>
         public override bool CanConvert(Type objectType)
         {
-#if !NET20
             if (objectType.AssignableToTypeName(BinaryTypeName))
                 return true;
-#endif
 
             if (objectType == typeof (SqlBinary) || objectType == typeof (SqlBinary?))
                 return true;

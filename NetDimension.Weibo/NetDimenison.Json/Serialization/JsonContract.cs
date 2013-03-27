@@ -44,7 +44,7 @@ namespace NetDimension.Json.Serialization
         Primitive,
         String,
         Dictionary,
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
         Dynamic,
 #endif
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
@@ -211,12 +211,10 @@ namespace NetDimension.Json.Serialization
             {
                 InternalReadType = ReadType.ReadAsDateTime;
             }
-#if !NET20
             else if (NonNullableUnderlyingType == typeof (DateTimeOffset))
             {
                 InternalReadType = ReadType.ReadAsDateTimeOffset;
             }
-#endif
             else
             {
                 InternalReadType = ReadType.Read;

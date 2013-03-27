@@ -31,7 +31,7 @@ using System.Dynamic;
 using System.Globalization;
 using System.Linq.Expressions;
 using NetDimension.Json.Utilities;
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(NET35 || WINDOWS_PHONE || PORTABLE)
 
 #endif
 
@@ -212,15 +212,12 @@ namespace NetDimension.Json.Linq
 
                     return b1.CompareTo(b2);
                 case JTokenType.Date:
-#if !NET20
                     if (objA is DateTime)
                     {
-#endif
                         var date1 = Convert.ToDateTime(objA, CultureInfo.InvariantCulture);
                         var date2 = Convert.ToDateTime(objB, CultureInfo.InvariantCulture);
 
                         return date1.CompareTo(date2);
-#if !NET20
                     }
                     else
                     {
@@ -232,7 +229,6 @@ namespace NetDimension.Json.Linq
 
                         return date1.CompareTo(date2);
                     }
-#endif
                 case JTokenType.Bytes:
                     if (!(objB is byte[]))
                         throw new ArgumentException("Object must be of type byte[].");
@@ -289,7 +285,7 @@ namespace NetDimension.Json.Linq
             return d1.CompareTo(d2);
         }
 
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
         private static bool Operation(ExpressionType operation, object objA, object objB, out object result)
         {
             if (objA is string || objB is string)
@@ -451,7 +447,7 @@ namespace NetDimension.Json.Linq
                 return JTokenType.Float;
             else if (value is DateTime)
                 return JTokenType.Date;
-#if !PocketPC && !NET20
+#if !PocketPC
             else if (value is DateTimeOffset)
                 return JTokenType.Date;
 #endif
@@ -565,7 +561,7 @@ namespace NetDimension.Json.Linq
                     writer.WriteValue(Convert.ToBoolean(_value, CultureInfo.InvariantCulture));
                     return;
                 case JTokenType.Date:
-#if !PocketPC && !NET20
+#if !PocketPC
                     if (_value is DateTimeOffset)
                         writer.WriteValue((DateTimeOffset) _value);
                     else
@@ -708,7 +704,7 @@ namespace NetDimension.Json.Linq
                 return _value.ToString();
         }
 
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
         /// <summary>
         ///     Returns the <see cref="T:System.Dynamic.DynamicMetaObject" /> responsible for binding operations performed on this object.
         /// </summary>

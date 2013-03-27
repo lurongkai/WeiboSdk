@@ -94,7 +94,7 @@ namespace NetDimension.Json.Converters
 
                 text = dateTime.ToString(_dateTimeFormat ?? DefaultDateTimeFormat, Culture);
             }
-#if !PocketPC && !NET20
+#if !PocketPC
             else if (value is DateTimeOffset)
             {
                 var dateTimeOffset = (DateTimeOffset) value;
@@ -145,7 +145,7 @@ namespace NetDimension.Json.Converters
 
             if (reader.TokenType == JsonToken.Date)
             {
-#if !PocketPC && !NET20
+#if !PocketPC
                 if (t == typeof (DateTimeOffset))
                     return new DateTimeOffset((DateTime) reader.Value);
 #endif
@@ -163,7 +163,7 @@ namespace NetDimension.Json.Converters
             if (string.IsNullOrEmpty(dateText) && nullable)
                 return null;
 
-#if !PocketPC && !NET20
+#if !PocketPC
             if (t == typeof (DateTimeOffset))
             {
                 if (!string.IsNullOrEmpty(_dateTimeFormat))

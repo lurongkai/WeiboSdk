@@ -233,7 +233,6 @@ namespace NetDimension.Json.Bson
             return ReadAsDateTimeInternal();
         }
 
-#if !NET20
         /// <summary>
         ///     Reads the next JSON token from the stream as a <see cref="Nullable{DateTimeOffset}" />.
         /// </summary>
@@ -244,7 +243,6 @@ namespace NetDimension.Json.Bson
         {
             return ReadAsDateTimeOffsetInternal();
         }
-#endif
 
         /// <summary>
         ///     Reads the next JSON token from the stream.

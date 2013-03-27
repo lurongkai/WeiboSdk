@@ -40,19 +40,14 @@ using System.Runtime.Serialization;
 using NetDimension.Json.Converters;
 using NetDimension.Json.Linq;
 using NetDimension.Json.Utilities;
-#if !(NET35 || NET20 || SILVERLIGHT || WINDOWS_PHONE || PORTABLE)
+#if !(SILVERLIGHT || WINDOWS_PHONE || PORTABLE)
 #endif
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
 #endif
 #if !(NETFX_CORE || PORTABLE)
 #endif
 #if NETFX_CORE || PORTABLE
 using ICustomAttributeProvider = NetDimension.Json.Utilities.CustomAttributeProvider;
-#endif
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-
 #endif
 
 namespace NetDimension.Json.Serialization
@@ -101,10 +96,10 @@ namespace NetDimension.Json.Serialization
 
         private static readonly IList<JsonConverter> BuiltInConverters = new List<JsonConverter>
             {
-#if !(SILVERLIGHT || NET20 || NETFX_CORE || PORTABLE)
+#if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
                 new EntityKeyMemberConverter(),
 #endif
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(NET35 || WINDOWS_PHONE || PORTABLE)
                 new ExpandoObjectConverter(),
 #endif
 #if (!(SILVERLIGHT || PORTABLE) || WINDOWS_PHONE)
@@ -279,7 +274,7 @@ namespace NetDimension.Json.Serialization
 
             if (memberSerialization != MemberSerialization.Fields)
             {
-#if !PocketPC && !NET20
+#if !PocketPC
                 var dataContractAttribute = JsonTypeReflector.GetDataContractAttribute(objectType);
 #endif
 
@@ -305,7 +300,7 @@ namespace NetDimension.Json.Serialization
                                 JsonTypeReflector.GetAttribute<JsonPropertyAttribute>(
                                     member.GetCustomAttributeProvider()) != null)
                                 serializableMembers.Add(member);
-#if !PocketPC && !NET20
+#if !PocketPC
                             else if (dataContractAttribute != null &&
                                      JsonTypeReflector.GetAttribute<DataMemberAttribute>(
                                          member.GetCustomAttributeProvider()) != null)
@@ -318,7 +313,7 @@ namespace NetDimension.Json.Serialization
                     }
                 }
 
-#if !PocketPC && !SILVERLIGHT && !NET20
+#if !PocketPC && !SILVERLIGHT
                 Type match;
                 // don't include EntityKey on entities objects... this is a bit hacky
                 if (objectType.AssignableToTypeName("System.Data.Objects.DataClasses.EntityObject", out match))
@@ -338,7 +333,7 @@ namespace NetDimension.Json.Serialization
             return serializableMembers;
         }
 
-#if !PocketPC && !SILVERLIGHT && !NET20
+#if !PocketPC && !SILVERLIGHT
         private bool ShouldSerializeEntityMember(MemberInfo memberInfo)
         {
             var propertyInfo = memberInfo as PropertyInfo;
@@ -529,7 +524,7 @@ namespace NetDimension.Json.Serialization
             return JsonTypeReflector.ReflectionDelegateFactory.CreateDefaultConstructor<object>(createdType);
         }
 
-#if !PocketPC && !NET20
+#if !PocketPC
         [SuppressMessage("Microsoft.Portability", "CA1903:UseOnlyApiFromTargetedFramework",
             MessageId = "System.Runtime.Serialization.DataContractAttribute.#get_IsReference()")]
 #endif
@@ -540,7 +535,7 @@ namespace NetDimension.Json.Serialization
             {
                 contract.IsReference = containerAttribute._isReference;
             }
-#if !PocketPC && !NET20
+#if !PocketPC
             else
             {
                 var dataContractAttribute =
@@ -602,7 +597,7 @@ namespace NetDimension.Json.Serialization
             if (onDeserialized != null)
             {
                 // ConcurrentDictionary throws an error here so don't use its OnDeserialized - http://json.codeplex.com/discussions/257093
-#if !(NET35 || NET20 || SILVERLIGHT || WINDOWS_PHONE || PORTABLE)
+#if !(SILVERLIGHT || WINDOWS_PHONE || PORTABLE)
                 if (!t.IsGenericType() || (t.GetGenericTypeDefinition() != typeof (ConcurrentDictionary<,>)))
                     contract.OnDeserialized = onDeserialized;
 #else
@@ -754,7 +749,7 @@ namespace NetDimension.Json.Serialization
         }
 #endif
 
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
         /// <summary>
         ///     Creates a <see cref="JsonDynamicContract" /> for the given type.
         /// </summary>
@@ -829,7 +824,7 @@ namespace NetDimension.Json.Serialization
                 return CreateISerializableContract(objectType);
 #endif
 
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
             if (typeof (IDynamicMetaObjectProvider).IsAssignableFrom(t))
                 return CreateDynamicContract(objectType);
 #endif
@@ -1021,7 +1016,7 @@ namespace NetDimension.Json.Serialization
         {
             hasExplicitAttribute = false;
 
-#if !PocketPC && !NET20
+#if !PocketPC
             var dataContractAttribute = JsonTypeReflector.GetDataContractAttribute(declaringType);
 
             MemberInfo memberInfo = null;
@@ -1045,7 +1040,7 @@ namespace NetDimension.Json.Serialization
             string mappedName;
             if (propertyAttribute != null && propertyAttribute.PropertyName != null)
                 mappedName = propertyAttribute.PropertyName;
-#if !PocketPC && !NET20
+#if !PocketPC
             else if (dataMemberAttribute != null && dataMemberAttribute.Name != null)
                 mappedName = dataMemberAttribute.Name;
 #endif
@@ -1062,7 +1057,7 @@ namespace NetDimension.Json.Serialization
                 property.Order = propertyAttribute._order;
                 hasMemberAttribute = true;
             }
-#if !PocketPC && !NET20
+#if !PocketPC
             else if (dataMemberAttribute != null)
             {
                 property._required = (dataMemberAttribute.IsRequired) ? Required.AllowNull : Required.Default;
@@ -1082,10 +1077,8 @@ namespace NetDimension.Json.Serialization
             {
                 var hasIgnoreDataMemberAttribute = false;
 
-#if !(NET20 || NET35)
                 hasIgnoreDataMemberAttribute =
                     (JsonTypeReflector.GetAttribute<IgnoreDataMemberAttribute>(attributeProvider) != null);
-#endif
 
                 // ignored if it has JsonIgnore or NonSerialized or IgnoreDataMember attributes
                 property.Ignored = (hasJsonIgnoreAttribute || hasIgnoreDataMemberAttribute);
@@ -1133,7 +1126,7 @@ namespace NetDimension.Json.Serialization
             if (memberSerialization == MemberSerialization.Fields)
                 allowNonPublicAccess = true;
 
-#if !PocketPC && !NET20
+#if !PocketPC
             if (dataMemberAttribute != null)
             {
                 allowNonPublicAccess = true;

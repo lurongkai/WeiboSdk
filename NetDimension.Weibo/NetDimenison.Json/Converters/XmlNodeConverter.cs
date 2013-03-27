@@ -28,9 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
-#if !NET20
 using System.Xml.Linq;
-#endif
 using NetDimension.Json.Utilities;
 using System.Linq;
 
@@ -318,7 +316,7 @@ namespace NetDimension.Json.Converters
   #endregion
 
   #region XNodeWrappers
-#if !NET20
+
   internal class XDeclarationWrapper : XObjectWrapper, IXmlDeclaration
   {
     internal XDeclaration Declaration { get; private set; }
@@ -739,7 +737,7 @@ namespace NetDimension.Json.Converters
       return Element.GetPrefixOfNamespace(namespaceUri);
     }
   }
-#endif
+
   #endregion
 
   /// <summary>
@@ -799,10 +797,9 @@ namespace NetDimension.Json.Converters
 
     private IXmlNode WrapXml(object value)
     {
-#if !NET20
       if (value is XObject)
         return XContainerWrapper.WrapNode((XObject)value);
-#endif
+
 #if !(SILVERLIGHT || NETFX_CORE)
       if (value is XmlNode)
         return new XmlNodeWrapper((XmlNode)value);
@@ -1077,7 +1074,6 @@ namespace NetDimension.Json.Converters
       IXmlDocument document = null;
       IXmlNode rootNode = null;
 
-#if !NET20
       if (typeof(XObject).IsAssignableFrom(objectType))
       {
         if (objectType != typeof (XDocument) && objectType != typeof (XElement))
@@ -1087,7 +1083,6 @@ namespace NetDimension.Json.Converters
         document = new XDocumentWrapper(d);
         rootNode = document;
       }
-#endif
 #if !(SILVERLIGHT || NETFX_CORE)
       if (typeof(XmlNode).IsAssignableFrom(objectType))
       {
@@ -1118,7 +1113,6 @@ namespace NetDimension.Json.Converters
         DeserializeNode(reader, document, manager, rootNode);
       }
 
-#if !NET20
       if (objectType == typeof(XElement))
       {
         XElement element = (XElement)document.DocumentElement.WrappedNode;
@@ -1126,7 +1120,6 @@ namespace NetDimension.Json.Converters
 
         return element;
       }
-#endif
 
       return document.WrappedNode;
     }
@@ -1305,7 +1298,6 @@ namespace NetDimension.Json.Converters
     {
       element.SetAttributeNode(document.CreateAttribute("json:Array", JsonNamespaceUri, "true"));
 
-#if !NET20
       // linq to xml doesn't automatically include prefixes via the namespace manager
       if (element is XElementWrapper)
       {
@@ -1314,7 +1306,6 @@ namespace NetDimension.Json.Converters
           element.SetAttributeNode(document.CreateAttribute("xmlns:json", "http://www.w3.org/2000/xmlns/", JsonNamespaceUri));
         }
       }
-#endif
     }
 
     private Dictionary<string, string> ReadAttributeElements(JsonReader reader, XmlNamespaceManager manager)
@@ -1547,10 +1538,8 @@ namespace NetDimension.Json.Converters
     /// </returns>
     public override bool CanConvert(Type valueType)
     {
-#if !NET20
       if (typeof(XObject).IsAssignableFrom(valueType))
         return true;
-#endif
 #if !(SILVERLIGHT || NETFX_CORE)
       if (typeof(XmlNode).IsAssignableFrom(valueType))
         return true;

@@ -31,10 +31,6 @@ using System.Globalization;
 using System.Linq;
 using NetDimension.Json.Linq;
 using NetDimension.Json.Utilities;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-#endif
 
 namespace NetDimension.Json.Schema
 {

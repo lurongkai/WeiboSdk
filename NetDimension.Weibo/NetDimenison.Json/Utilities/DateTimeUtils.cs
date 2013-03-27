@@ -43,11 +43,7 @@ namespace NetDimension.Json.Utilities
 
         public static TimeSpan GetUtcOffset(this DateTime d)
         {
-#if NET20
-      return TimeZone.CurrentTimeZone.GetUtcOffset(d);
-#else
             return TimeZoneInfo.Local.GetUtcOffset(d);
-#endif
         }
 
 #if !(NETFX_CORE || PORTABLE)

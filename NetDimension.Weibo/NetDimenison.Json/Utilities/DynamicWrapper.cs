@@ -33,11 +33,6 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Resources;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-
-#endif
 
 namespace NetDimension.Json.Utilities
 {

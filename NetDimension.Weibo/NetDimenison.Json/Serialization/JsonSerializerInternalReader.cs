@@ -36,13 +36,6 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using NetDimension.Json.Linq;
 using NetDimension.Json.Utilities;
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
-#endif
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-
-#endif
 
 namespace NetDimension.Json.Serialization
 {
@@ -301,7 +294,7 @@ namespace NetDimension.Json.Serialization
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
                 case JsonContractType.Serializable:
 #endif
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
                 case JsonContractType.Dynamic:
 #endif
                     return @"JSON object (e.g. {string.Emptynamestring.Empty:string.Emptyvaluestring.Empty})";
@@ -411,7 +404,7 @@ namespace NetDimension.Json.Serialization
 
                     return PopulateDictionary(dictionaryContract.CreateWrapper(targetDictionary), reader,
                                               dictionaryContract, member, id);
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
                 case JsonContractType.Dynamic:
                     var dynamicContract = (JsonDynamicContract) contract;
                     return CreateDynamic(reader, dynamicContract, member, id);
@@ -524,7 +517,7 @@ To fix this error either change the JSON to a {1} or change the deserialized typ
                                                                                     qualifiedTypeName));
 
                                 if (objectType != null
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
                                     && objectType != typeof (IDynamicMetaObjectProvider)
 #endif
                                     && !objectType.IsAssignableFrom(specifiedType))
@@ -663,7 +656,7 @@ To fix this error either change the JSON to a {1} or change the deserialized typ
         private bool HasDefinedType(Type type)
         {
             return (type != null && type != typeof (object) && !typeof (JToken).IsSubclassOf(type)
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
                     && type != typeof (IDynamicMetaObjectProvider)
 #endif
                    );
@@ -1114,7 +1107,7 @@ To fix this error either change the environment to be fully trusted, change the 
         }
 #endif
 
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
         private object CreateDynamic(JsonReader reader, JsonDynamicContract contract, JsonProperty member, string id)
         {
             IDynamicMetaObjectProvider newObject;
@@ -1421,11 +1414,9 @@ To fix this error either change the environment to be fully trusted, change the 
                 case ReadType.ReadAsDateTime:
                     reader.ReadAsDateTime();
                     break;
-#if !NET20
                 case ReadType.ReadAsDateTimeOffset:
                     reader.ReadAsDateTimeOffset();
                     break;
-#endif
                 default:
                     throw new ArgumentOutOfRangeException();
             }

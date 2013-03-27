@@ -41,9 +41,7 @@ namespace NetDimension.Json
         ReadAsString,
         ReadAsDecimal,
         ReadAsDateTime,
-#if !NET20
         ReadAsDateTimeOffset
-#endif
     }
 
     /// <summary>
@@ -167,7 +165,6 @@ namespace NetDimension.Json
         {
             const string isoDateFormat = "yyyy-MM-ddTHH:mm:ss.FFFFFFFK";
 
-#if !NET20
             if (_readType == ReadType.ReadAsDateTimeOffset ||
                 (_readType == ReadType.Read && _dateParseHandling == DateParseHandling.DateTimeOffset))
             {
@@ -180,7 +177,6 @@ namespace NetDimension.Json
                 }
             }
             else
-#endif
             {
                 DateTime dateTime;
                 if (DateTime.TryParseExact(text, isoDateFormat, CultureInfo.InvariantCulture,
@@ -219,14 +215,12 @@ namespace NetDimension.Json
 
             var utcDateTime = JsonConvert.ConvertJavaScriptTicksToDateTime(javaScriptTicks);
 
-#if !NET20
             if (_readType == ReadType.ReadAsDateTimeOffset ||
                 (_readType == ReadType.Read && _dateParseHandling == DateParseHandling.DateTimeOffset))
             {
                 SetToken(JsonToken.Date, new DateTimeOffset(utcDateTime.Add(offset).Ticks, offset));
             }
             else
-#endif
             {
                 DateTime dateTime;
 
@@ -464,7 +458,6 @@ namespace NetDimension.Json
             return ReadAsDateTimeInternal();
         }
 
-#if !NET20
         /// <summary>
         ///     Reads the next JSON token from the stream as a <see cref="Nullable{DateTimeOffset}" />.
         /// </summary>
@@ -475,7 +468,6 @@ namespace NetDimension.Json
         {
             return ReadAsDateTimeOffsetInternal();
         }
-#endif
 
         internal override bool ReadInternal()
         {

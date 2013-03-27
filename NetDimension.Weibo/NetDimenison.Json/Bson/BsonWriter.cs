@@ -443,7 +443,7 @@ namespace NetDimension.Json.Bson
             AddValue(value, BsonType.Date);
         }
 
-#if !PocketPC && !NET20
+#if !PocketPC
         /// <summary>
         ///     Writes a <see cref="DateTimeOffset" /> value.
         /// </summary>

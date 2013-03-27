@@ -30,10 +30,6 @@ using System.Collections;
 using System.Collections.Generic;
 using NetDimension.Json.Utilities;
 
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#endif
-
 namespace NetDimension.Json.Serialization
 {
     /// <summary>

@@ -29,11 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
-
-#endif
 
 namespace NetDimension.Json.Utilities
 {

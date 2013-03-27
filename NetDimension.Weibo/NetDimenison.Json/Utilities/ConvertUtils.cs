@@ -30,9 +30,6 @@ using System.ComponentModel;
 using System.Data.SqlTypes;
 using System.Globalization;
 using NetDimension.Json.Serialization;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#endif
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
 
 #endif
@@ -324,7 +321,7 @@ namespace NetDimension.Json.Utilities
                     "Target type {0} is not a value type or a non-abstract class.".FormatWith(
                         CultureInfo.InvariantCulture, targetType), "targetType");
 
-#if !PocketPC && !NET20
+#if !PocketPC
             if (initialValue is DateTime && targetType == typeof (DateTimeOffset))
                 return new DateTimeOffset((DateTime) initialValue);
 #endif
@@ -336,7 +333,7 @@ namespace NetDimension.Json.Utilities
                 if (targetType == typeof (Uri))
                     return new Uri((string) initialValue, UriKind.RelativeOrAbsolute);
                 if (targetType == typeof (TimeSpan))
-#if !(NET35 || NET20 || SILVERLIGHT || PORTABLE)
+#if !(SILVERLIGHT || PORTABLE)
                     return TimeSpan.Parse((string) initialValue, CultureInfo.InvariantCulture);
 #else
           return TimeSpan.Parse((string)initialValue);

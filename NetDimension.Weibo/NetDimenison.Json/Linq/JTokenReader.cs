@@ -105,8 +105,7 @@ namespace NetDimension.Json.Linq
         {
             return ReadAsDateTimeInternal();
         }
-
-#if !NET20
+        
         /// <summary>
         ///     Reads the next JSON token from the stream as a <see cref="Nullable{DateTimeOffset}" />.
         /// </summary>
@@ -117,7 +116,6 @@ namespace NetDimension.Json.Linq
         {
             return ReadAsDateTimeOffsetInternal();
         }
-#endif
 
         internal override bool ReadInternal()
         {

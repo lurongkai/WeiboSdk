@@ -35,13 +35,9 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using NetDimension.Json.Utilities;
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(NET35 || WINDOWS_PHONE || PORTABLE)
 #endif
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
 
-#endif
 
 namespace NetDimension.Json.Linq
 {
@@ -52,7 +48,7 @@ namespace NetDimension.Json.Linq
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
                                    , ICloneable
 #endif
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(NET35 || WINDOWS_PHONE || PORTABLE)
                                    , IDynamicMetaObjectProvider
 #endif
     {
@@ -470,7 +466,7 @@ namespace NetDimension.Json.Linq
             return Convert.ToBoolean(v.Value, CultureInfo.InvariantCulture);
         }
 
-#if !PocketPC && !NET20
+#if !PocketPC
         /// <summary>
         ///     Performs an explicit conversion from <see cref="NetDimension.Json.Linq.JToken" /> to
         ///     <see
@@ -541,7 +537,7 @@ namespace NetDimension.Json.Linq
             return (v.Value != null) ? (DateTime?) Convert.ToDateTime(v.Value, CultureInfo.InvariantCulture) : null;
         }
 
-#if !PocketPC && !NET20
+#if !PocketPC
         /// <summary>
         ///     Performs an explicit conversion from <see cref="NetDimension.Json.Linq.JToken" /> to
         ///     <see
@@ -918,7 +914,7 @@ namespace NetDimension.Json.Linq
             return new JValue(value);
         }
 
-#if !PocketPC && !NET20
+#if !PocketPC
         /// <summary>
         ///     Performs an implicit conversion from <see cref="DateTimeOffset" /> to <see cref="JToken" />.
         /// </summary>
@@ -976,7 +972,7 @@ namespace NetDimension.Json.Linq
             return new JValue(value);
         }
 
-#if !PocketPC && !NET20
+#if !PocketPC
         /// <summary>
         ///     Performs an implicit conversion from <see cref="Nullable{DateTimeOffset}" /> to <see cref="JToken" />.
         /// </summary>
@@ -1526,7 +1522,7 @@ namespace NetDimension.Json.Linq
             return p.Evaluate(this, errorWhenNoMatch);
         }
 
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(NET35 || WINDOWS_PHONE || PORTABLE)
         /// <summary>
         ///     Returns the <see cref="T:System.Dynamic.DynamicMetaObject" /> responsible for binding operations performed on this object.
         /// </summary>

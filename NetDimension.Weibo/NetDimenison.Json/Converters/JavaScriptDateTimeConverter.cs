@@ -54,7 +54,7 @@ namespace NetDimension.Json.Converters
                 var utcDateTime = dateTime.ToUniversalTime();
                 ticks = JsonConvert.ConvertDateTimeToJavaScriptTicks(utcDateTime);
             }
-#if !PocketPC && !NET20
+#if !PocketPC
             else if (value is DateTimeOffset)
             {
                 var dateTimeOffset = (DateTimeOffset) value;
@@ -124,7 +124,7 @@ namespace NetDimension.Json.Converters
                                                         "Unexpected token parsing date. Expected EndConstructor, got {0}."
                                                             .FormatWith(CultureInfo.InvariantCulture, reader.TokenType));
 
-#if !PocketPC && !NET20
+#if !PocketPC
             if (t == typeof (DateTimeOffset))
                 return new DateTimeOffset(d);
 #endif

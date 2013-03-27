@@ -150,7 +150,7 @@ namespace NetDimension.Json.Bson
 
                             ticks = JsonConvert.ConvertDateTimeToJavaScriptTicks(dateTime, false);
                         }
-#if !PocketPC && !NET20
+#if !PocketPC
                         else
                         {
                             var dateTimeOffset = (DateTimeOffset) value.Value;

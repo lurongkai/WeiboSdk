@@ -25,7 +25,7 @@
 
 #endregion
 
-#if !(NET35 || NET20 || WINDOWS_PHONE || PORTABLE)
+#if !(WINDOWS_PHONE || PORTABLE)
 using System;
 
 namespace NetDimension.Json.Serialization

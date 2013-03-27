@@ -28,10 +28,6 @@
 using System;
 using System.Reflection;
 
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#endif
-
 namespace NetDimension.Json.Utilities
 {
     internal class LateBoundReflectionDelegateFactory : ReflectionDelegateFactory

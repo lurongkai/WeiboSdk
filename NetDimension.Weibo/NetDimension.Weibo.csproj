@@ -288,7 +288,6 @@
     <Compile Include="NetDimenison.Json\Utilities\ILGeneratorExtensions.cs" />
     <Compile Include="NetDimenison.Json\Utilities\JavaScriptUtils.cs" />
     <Compile Include="NetDimenison.Json\Utilities\LateBoundReflectionDelegateFactory.cs" />
-    <Compile Include="NetDimenison.Json\Utilities\LinqBridge.cs" />
     <Compile Include="NetDimenison.Json\Utilities\ListWrapper.cs" />
     <Compile Include="NetDimenison.Json\Utilities\MathUtils.cs" />
     <Compile Include="NetDimenison.Json\Utilities\MethodCall.cs" />
