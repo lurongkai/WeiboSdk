@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,17 +22,18 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 using System;
 
 namespace NetDimension.Json.Serialization
 {
-  /// <summary>
-  /// When applied to a method, specifies that the method is called when an error occurs serializing an object.
-  /// </summary>
-  [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-  public sealed class OnErrorAttribute : Attribute
-  {
-  }
+    /// <summary>
+    ///     When applied to a method, specifies that the method is called when an error occurs serializing an object.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, Inherited = false)]
+    public sealed class OnErrorAttribute : Attribute
+    {
+    }
 }

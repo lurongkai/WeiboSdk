@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,39 +22,41 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 using System;
-using System.Runtime.Serialization;
-using System.Reflection;
 using System.Globalization;
+using System.Reflection;
+using System.Runtime.Serialization;
 using NetDimension.Json.Utilities;
 
 namespace NetDimension.Json.Serialization
 {
-  /// <summary>
-  /// The default serialization binder used when resolving and loading classes from type names.
-  /// </summary>
-  public class DefaultSerializationBinder : SerializationBinder
-  {
-    internal static readonly DefaultSerializationBinder Instance = new DefaultSerializationBinder();
-
-    private readonly ThreadSafeStore<TypeNameKey, Type> _typeCache = new ThreadSafeStore<TypeNameKey, Type>(GetTypeFromTypeNameKey);
-
-    private static Type GetTypeFromTypeNameKey(TypeNameKey typeNameKey)
+    /// <summary>
+    ///     The default serialization binder used when resolving and loading classes from type names.
+    /// </summary>
+    public class DefaultSerializationBinder : SerializationBinder
     {
-      string assemblyName = typeNameKey.AssemblyName;
-      string typeName = typeNameKey.TypeName;
+        internal static readonly DefaultSerializationBinder Instance = new DefaultSerializationBinder();
 
-      if (assemblyName != null)
-      {
-        Assembly assembly;
+        private readonly ThreadSafeStore<TypeNameKey, Type> _typeCache =
+            new ThreadSafeStore<TypeNameKey, Type>(GetTypeFromTypeNameKey);
+
+        private static Type GetTypeFromTypeNameKey(TypeNameKey typeNameKey)
+        {
+            var assemblyName = typeNameKey.AssemblyName;
+            var typeName = typeNameKey.TypeName;
+
+            if (assemblyName != null)
+            {
+                Assembly assembly;
 
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
-        // look, I don't like using obsolete methods as much as you do but this is the only way
-        // Assembly.Load won't check the GAC for a partial name
+                // look, I don't like using obsolete methods as much as you do but this is the only way
+                // Assembly.Load won't check the GAC for a partial name
 #pragma warning disable 618,612
-        assembly = Assembly.LoadWithPartialName(assemblyName);
+                assembly = Assembly.LoadWithPartialName(assemblyName);
 #pragma warning restore 618,612
 #elif NETFX_CORE
         assembly = Assembly.Load(new AssemblyName(assemblyName));
@@ -61,84 +64,96 @@ namespace NetDimension.Json.Serialization
         assembly = Assembly.Load(assemblyName);
 #endif
 
-        if (assembly == null)
-          throw new JsonSerializationException("Could not load assembly '{0}'.".FormatWith(CultureInfo.InvariantCulture, assemblyName));
+                if (assembly == null)
+                    throw new JsonSerializationException(
+                        "Could not load assembly '{0}'.".FormatWith(CultureInfo.InvariantCulture, assemblyName));
 
-        Type type = assembly.GetType(typeName);
-        if (type == null)
-          throw new JsonSerializationException("Could not find type '{0}' in assembly '{1}'.".FormatWith(CultureInfo.InvariantCulture, typeName, assembly.FullName));
+                var type = assembly.GetType(typeName);
+                if (type == null)
+                    throw new JsonSerializationException(
+                        "Could not find type '{0}' in assembly '{1}'.".FormatWith(CultureInfo.InvariantCulture, typeName,
+                                                                                  assembly.FullName));
 
-        return type;
-      }
-      else
-      {
-        return Type.GetType(typeName);
-      }
-    }
+                return type;
+            }
+            else
+            {
+                return Type.GetType(typeName);
+            }
+        }
 
-    internal struct TypeNameKey : IEquatable<TypeNameKey>
-    {
-      internal readonly string AssemblyName;
-      internal readonly string TypeName;
+        internal struct TypeNameKey : IEquatable<TypeNameKey>
+        {
+            internal readonly string AssemblyName;
+            internal readonly string TypeName;
 
-      public TypeNameKey(string assemblyName, string typeName)
-      {
-        AssemblyName = assemblyName;
-        TypeName = typeName;
-      }
+            public TypeNameKey(string assemblyName, string typeName)
+            {
+                AssemblyName = assemblyName;
+                TypeName = typeName;
+            }
 
-      public override int GetHashCode()
-      {
-        return ((AssemblyName != null) ? AssemblyName.GetHashCode() : 0) ^ ((TypeName != null) ? TypeName.GetHashCode() : 0);
-      }
+            public bool Equals(TypeNameKey other)
+            {
+                return (AssemblyName == other.AssemblyName && TypeName == other.TypeName);
+            }
 
-      public override bool Equals(object obj)
-      {
-        if (!(obj is TypeNameKey))
-          return false;
+            public override int GetHashCode()
+            {
+                return ((AssemblyName != null) ? AssemblyName.GetHashCode() : 0) ^
+                       ((TypeName != null) ? TypeName.GetHashCode() : 0);
+            }
 
-        return Equals((TypeNameKey)obj);
-      }
+            public override bool Equals(object obj)
+            {
+                if (!(obj is TypeNameKey))
+                    return false;
 
-      public bool Equals(TypeNameKey other)
-      {
-        return (AssemblyName == other.AssemblyName && TypeName == other.TypeName);
-      }
-    }
+                return Equals((TypeNameKey) obj);
+            }
+        }
 
-    /// <summary>
-    /// When overridden in a derived class, controls the binding of a serialized object to a type.
-    /// </summary>
-    /// <param name="assemblyName">Specifies the <see cref="T:System.Reflection.Assembly"/> name of the serialized object.</param>
-    /// <param name="typeName">Specifies the <see cref="T:System.Type"/> name of the serialized object.</param>
-    /// <returns>
-    /// The type of the object the formatter creates a new instance of.
-    /// </returns>
-    public override Type BindToType(string assemblyName, string typeName)
-    {
-      return _typeCache.Get(new TypeNameKey(assemblyName, typeName));
-    }
+        /// <summary>
+        ///     When overridden in a derived class, controls the binding of a serialized object to a type.
+        /// </summary>
+        /// <param name="assemblyName">
+        ///     Specifies the <see cref="T:System.Reflection.Assembly" /> name of the serialized object.
+        /// </param>
+        /// <param name="typeName">
+        ///     Specifies the <see cref="T:System.Type" /> name of the serialized object.
+        /// </param>
+        /// <returns>
+        ///     The type of the object the formatter creates a new instance of.
+        /// </returns>
+        public override Type BindToType(string assemblyName, string typeName)
+        {
+            return _typeCache.Get(new TypeNameKey(assemblyName, typeName));
+        }
 
 #if !(NET35 || NET20)
-    /// <summary>
-    /// When overridden in a derived class, controls the binding of a serialized object to a type.
-    /// </summary>
-    /// <param name="serializedType">The type of the object the formatter creates a new instance of.</param>
-    /// <param name="assemblyName">Specifies the <see cref="T:System.Reflection.Assembly"/> name of the serialized object. </param>
-    /// <param name="typeName">Specifies the <see cref="T:System.Type"/> name of the serialized object. </param>
-    public override void BindToName(Type serializedType, out string assemblyName, out string typeName)
-    {
+        /// <summary>
+        ///     When overridden in a derived class, controls the binding of a serialized object to a type.
+        /// </summary>
+        /// <param name="serializedType">The type of the object the formatter creates a new instance of.</param>
+        /// <param name="assemblyName">
+        ///     Specifies the <see cref="T:System.Reflection.Assembly" /> name of the serialized object.
+        /// </param>
+        /// <param name="typeName">
+        ///     Specifies the <see cref="T:System.Type" /> name of the serialized object.
+        /// </param>
+        public override void BindToName(Type serializedType, out string assemblyName, out string typeName)
+        {
 #if NETFX_CORE
       assemblyName = serializedType.GetTypeInfo().Assembly.FullName;
       typeName = serializedType.FullName;
 #elif !SILVERLIGHT
-      assemblyName = serializedType.Assembly.FullName;
-      typeName = serializedType.FullName;
+            assemblyName = serializedType.Assembly.FullName;
+            typeName = serializedType.FullName;
 #else
       assemblyName = null;
       typeName = serializedType.AssemblyQualifiedName;
 #endif
-    }
+        }
 #endif
-  }
+    }
 }

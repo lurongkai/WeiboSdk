@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using NetDimension.Json;
 
 namespace NetDimension.Weibo.Entities.favorite
 {
-	public class IDEntity : EntityBase
-	{
-		[JsonProperty("status")]
-		public string Status { get; internal set; }
+    public class IDEntity : EntityBase
+    {
+        [JsonProperty("status")]
+        public string Status { get; internal set; }
 
-		[JsonProperty("tags")]
-		public IEnumerable<TagEntity> Tags { get; internal set; }
+        [JsonProperty("tags")]
+        public IEnumerable<TagEntity> Tags { get; internal set; }
 
-		[JsonProperty("favorited_time")]
-		public string FavoritedTime { get; internal set; }
-
-	}
+        [JsonProperty("favorited_time")]
+        public string FavoritedTime { get; internal set; }
+    }
 }

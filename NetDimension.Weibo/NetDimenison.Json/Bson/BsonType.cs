@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,31 +22,32 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 namespace NetDimension.Json.Bson
 {
-  internal enum BsonType : sbyte 
-  {
-    Number = 1,
-    String = 2,
-    Object = 3,
-    Array = 4,
-    Binary = 5,
-    Undefined = 6,
-    Oid = 7,
-    Boolean = 8,
-    Date = 9,
-    Null = 10,
-    Regex = 11,
-    Reference = 12,
-    Code = 13,
-    Symbol = 14,
-    CodeWScope = 15,
-    Integer = 16,
-    TimeStamp = 17,
-    Long = 18,
-    MinKey = -1,
-    MaxKey = 127
-  }
+    internal enum BsonType : sbyte
+    {
+        Number = 1,
+        String = 2,
+        Object = 3,
+        Array = 4,
+        Binary = 5,
+        Undefined = 6,
+        Oid = 7,
+        Boolean = 8,
+        Date = 9,
+        Null = 10,
+        Regex = 11,
+        Reference = 12,
+        Code = 13,
+        Symbol = 14,
+        CodeWScope = 15,
+        Integer = 16,
+        TimeStamp = 17,
+        Long = 18,
+        MinKey = -1,
+        MaxKey = 127
+    }
 }

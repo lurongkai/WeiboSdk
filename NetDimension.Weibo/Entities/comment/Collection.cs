@@ -1,31 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using NetDimension.Json;
 
 namespace NetDimension.Weibo.Entities.comment
 {
-	public class Collection : EntityBase
-	{
-		/// <summary>
-		/// 评论集合
-		/// </summary>
-		[JsonProperty(PropertyName = "comments")]
-		public IEnumerable<Entity> Comments { get; internal set; }
-		/// <summary>
-		/// 
-		/// </summary>
-		[JsonProperty(PropertyName = "previous_cursor")]
-		public string ProviousCursor { get; internal set; }
-		[JsonProperty(PropertyName = "next_cursor")]
-		public string NextCursor { get; internal set; }
-		[JsonProperty(PropertyName = "total_number")]
-		public int TotalNumber { get; internal set; }
+    public class Collection : EntityBase
+    {
+        /// <summary>
+        ///     评论集合
+        /// </summary>
+        [JsonProperty(PropertyName = "comments")]
+        public IEnumerable<Entity> Comments { get; internal set; }
 
-		[JsonProperty(PropertyName = "hasvisible")]
-		public bool HasVisible { get; internal set; }
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "previous_cursor")]
+        public string ProviousCursor { get; internal set; }
 
+        [JsonProperty(PropertyName = "next_cursor")]
+        public string NextCursor { get; internal set; }
 
+        [JsonProperty(PropertyName = "total_number")]
+        public int TotalNumber { get; internal set; }
 
-	}
+        [JsonProperty(PropertyName = "hasvisible")]
+        public bool HasVisible { get; internal set; }
+    }
 }

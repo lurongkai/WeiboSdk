@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,17 +22,18 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 using System.Collections.ObjectModel;
 
 namespace NetDimension.Json.Utilities
 {
-  internal class EnumValues<T> : KeyedCollection<string, EnumValue<T>> where T : struct
-  {
-    protected override string GetKeyForItem(EnumValue<T> item)
+    internal class EnumValues<T> : KeyedCollection<string, EnumValue<T>> where T : struct
     {
-      return item.Name;
+        protected override string GetKeyForItem(EnumValue<T> item)
+        {
+            return item.Name;
+        }
     }
-  }
 }

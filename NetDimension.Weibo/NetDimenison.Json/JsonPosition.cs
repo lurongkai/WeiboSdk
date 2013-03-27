@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,6 +22,7 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 using System.Collections.Generic;
@@ -28,68 +30,68 @@ using System.Text;
 
 namespace NetDimension.Json
 {
-  internal enum JsonContainerType
-  {
-    None,
-    Object,
-    Array,
-    Constructor
-  }
-
-  internal struct JsonPosition
-  {
-    internal JsonContainerType Type;
-    internal int? Position;
-    internal string PropertyName;
-
-    internal void WriteTo(StringBuilder sb)
+    internal enum JsonContainerType
     {
-      switch (Type)
-      {
-        case JsonContainerType.Object:
-          if (PropertyName != null)
-          {
-            if (sb.Length > 0)
-              sb.Append(".");
-            sb.Append(PropertyName);
-          }
-          break;
-        case JsonContainerType.Array:
-        case JsonContainerType.Constructor:
-          if (Position != null)
-          {
-            sb.Append("[");
-            sb.Append(Position);
-            sb.Append("]");
-          }
-          break;
-      }
+        None,
+        Object,
+        Array,
+        Constructor
     }
 
-    internal bool InsideContainer()
+    internal struct JsonPosition
     {
-      switch (Type)
-      {
-        case JsonContainerType.Object:
-          return (PropertyName != null);
-        case JsonContainerType.Array:
-        case JsonContainerType.Constructor:
-          return (Position != null);
-      }
+        internal int? Position;
+        internal string PropertyName;
+        internal JsonContainerType Type;
 
-      return false;
+        internal void WriteTo(StringBuilder sb)
+        {
+            switch (Type)
+            {
+                case JsonContainerType.Object:
+                    if (PropertyName != null)
+                    {
+                        if (sb.Length > 0)
+                            sb.Append(".");
+                        sb.Append(PropertyName);
+                    }
+                    break;
+                case JsonContainerType.Array:
+                case JsonContainerType.Constructor:
+                    if (Position != null)
+                    {
+                        sb.Append("[");
+                        sb.Append(Position);
+                        sb.Append("]");
+                    }
+                    break;
+            }
+        }
+
+        internal bool InsideContainer()
+        {
+            switch (Type)
+            {
+                case JsonContainerType.Object:
+                    return (PropertyName != null);
+                case JsonContainerType.Array:
+                case JsonContainerType.Constructor:
+                    return (Position != null);
+            }
+
+            return false;
+        }
+
+        internal static string BuildPath(IEnumerable<JsonPosition> positions)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var state in positions)
+            {
+                state.WriteTo(sb);
+            }
+
+            return sb.ToString();
+        }
     }
-
-    internal static string BuildPath(IEnumerable<JsonPosition> positions)
-    {
-      StringBuilder sb = new StringBuilder();
-
-      foreach (JsonPosition state in positions)
-      {
-        state.WriteTo(sb);
-      }
-
-      return sb.ToString();
-    }
-  }
 }

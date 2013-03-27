@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,22 +22,24 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 namespace NetDimension.Json
 {
-  /// <summary>
-  /// Specifies null value handling options for the <see cref="JsonSerializer"/>.
-  /// </summary>
-  public enum NullValueHandling
-  {
     /// <summary>
-    /// Include null values when serializing and deserializing objects.
+    ///     Specifies null value handling options for the <see cref="JsonSerializer" />.
     /// </summary>
-    Include = 0,
-    /// <summary>
-    /// Ignore null values when serializing and deserializing objects.
-    /// </summary>
-    Ignore = 1
-  }
+    public enum NullValueHandling
+    {
+        /// <summary>
+        ///     Include null values when serializing and deserializing objects.
+        /// </summary>
+        Include = 0,
+
+        /// <summary>
+        ///     Ignore null values when serializing and deserializing objects.
+        /// </summary>
+        Ignore = 1
+    }
 }

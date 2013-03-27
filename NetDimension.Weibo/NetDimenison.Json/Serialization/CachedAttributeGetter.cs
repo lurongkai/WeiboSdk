@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,24 +22,27 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 using System;
 using System.Reflection;
 using NetDimension.Json.Utilities;
+
 #if NETFX_CORE || PORTABLE
 using ICustomAttributeProvider = NetDimension.Json.Utilities.CustomAttributeProvider;
 #endif
 
 namespace NetDimension.Json.Serialization
 {
-  internal static class CachedAttributeGetter<T> where T : Attribute
-  {
-    private static readonly ThreadSafeStore<ICustomAttributeProvider, T> TypeAttributeCache = new ThreadSafeStore<ICustomAttributeProvider, T>(JsonTypeReflector.GetAttribute<T>);
-
-    public static T GetAttribute(ICustomAttributeProvider type)
+    internal static class CachedAttributeGetter<T> where T : Attribute
     {
-      return TypeAttributeCache.Get(type);
+        private static readonly ThreadSafeStore<ICustomAttributeProvider, T> TypeAttributeCache =
+            new ThreadSafeStore<ICustomAttributeProvider, T>(JsonTypeReflector.GetAttribute<T>);
+
+        public static T GetAttribute(ICustomAttributeProvider type)
+        {
+            return TypeAttributeCache.Get(type);
+        }
     }
-  }
 }

@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,6 +22,7 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 #if !(SILVERLIGHT || NETFX_CORE || PORTABLE)
@@ -28,26 +30,27 @@ using System;
 
 namespace NetDimension.Json.Serialization
 {
-  /// <summary>
-  /// Contract details for a <see cref="Type"/> used by the <see cref="JsonSerializer"/>.
-  /// </summary>
-  public class JsonISerializableContract : JsonContract
-  {
     /// <summary>
-    /// Gets or sets the ISerializable object constructor.
+    ///     Contract details for a <see cref="Type" /> used by the <see cref="JsonSerializer" />.
     /// </summary>
-    /// <value>The ISerializable object constructor.</value>
-    public ObjectConstructor<object> ISerializableCreator { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="JsonISerializableContract"/> class.
-    /// </summary>
-    /// <param name="underlyingType">The underlying type for the contract.</param>
-    public JsonISerializableContract(Type underlyingType)
-      : base(underlyingType)
+    public class JsonISerializableContract : JsonContract
     {
-      ContractType = JsonContractType.Serializable;
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="JsonISerializableContract" /> class.
+        /// </summary>
+        /// <param name="underlyingType">The underlying type for the contract.</param>
+        public JsonISerializableContract(Type underlyingType)
+            : base(underlyingType)
+        {
+            ContractType = JsonContractType.Serializable;
+        }
+
+        /// <summary>
+        ///     Gets or sets the ISerializable object constructor.
+        /// </summary>
+        /// <value>The ISerializable object constructor.</value>
+        public ObjectConstructor<object> ISerializableCreator { get; set; }
     }
-  }
 }
+
 #endif
