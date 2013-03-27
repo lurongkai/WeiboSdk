@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,6 +22,7 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 using System;
@@ -28,28 +30,28 @@ using NetDimension.Json.Utilities;
 
 namespace NetDimension.Json.Bson
 {
-  /// <summary>
-  /// Represents a BSON Oid (object id).
-  /// </summary>
-  public class BsonObjectId
-  {
     /// <summary>
-    /// Gets or sets the value of the Oid.
+    ///     Represents a BSON Oid (object id).
     /// </summary>
-    /// <value>The value of the Oid.</value>
-    public byte[] Value { get; private set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BsonObjectId"/> class.
-    /// </summary>
-    /// <param name="value">The Oid value.</param>
-    public BsonObjectId(byte[] value)
+    public class BsonObjectId
     {
-      ValidationUtils.ArgumentNotNull(value, "value");
-      if (value.Length != 12)
-        throw new ArgumentException("An ObjectId must be 12 bytes", "value");
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="BsonObjectId" /> class.
+        /// </summary>
+        /// <param name="value">The Oid value.</param>
+        public BsonObjectId(byte[] value)
+        {
+            ValidationUtils.ArgumentNotNull(value, "value");
+            if (value.Length != 12)
+                throw new ArgumentException("An ObjectId must be 12 bytes", "value");
 
-      Value = value;
+            Value = value;
+        }
+
+        /// <summary>
+        ///     Gets or sets the value of the Oid.
+        /// </summary>
+        /// <value>The value of the Oid.</value>
+        public byte[] Value { get; private set; }
     }
-  }
 }

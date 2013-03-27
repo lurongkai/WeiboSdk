@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,59 +22,62 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.Globalization;
 
 namespace NetDimension.Json.Utilities
 {
-  internal static class ValidationUtils
-  {
-    public static void ArgumentNotNullOrEmpty(string value, string parameterName)
+    internal static class ValidationUtils
     {
-      if (value == null)
-        throw new ArgumentNullException(parameterName);
+        public static void ArgumentNotNullOrEmpty(string value, string parameterName)
+        {
+            if (value == null)
+                throw new ArgumentNullException(parameterName);
 
-      if (value.Length == 0)
-        throw new ArgumentException("'{0}' cannot be empty.".FormatWith(CultureInfo.InvariantCulture, parameterName), parameterName);
+            if (value.Length == 0)
+                throw new ArgumentException(
+                    "'{0}' cannot be empty.".FormatWith(CultureInfo.InvariantCulture, parameterName), parameterName);
+        }
+
+        public static void ArgumentTypeIsEnum(Type enumType, string parameterName)
+        {
+            ArgumentNotNull(enumType, "enumType");
+
+            if (!enumType.IsEnum())
+                throw new ArgumentException(
+                    "Type {0} is not an Enum.".FormatWith(CultureInfo.InvariantCulture, enumType), parameterName);
+        }
+
+        public static void ArgumentNotNullOrEmpty<T>(ICollection<T> collection, string parameterName)
+        {
+            ArgumentNotNullOrEmpty(collection, parameterName,
+                                   "Collection '{0}' cannot be empty.".FormatWith(CultureInfo.InvariantCulture,
+                                                                                  parameterName));
+        }
+
+        public static void ArgumentNotNullOrEmpty<T>(ICollection<T> collection, string parameterName, string message)
+        {
+            if (collection == null)
+                throw new ArgumentNullException(parameterName);
+
+            if (collection.Count == 0)
+                throw new ArgumentException(message, parameterName);
+        }
+
+        public static void ArgumentNotNull(object value, string parameterName)
+        {
+            if (value == null)
+                throw new ArgumentNullException(parameterName);
+        }
+
+        public static void ArgumentConditionTrue(bool condition, string parameterName, string message)
+        {
+            if (!condition)
+                throw new ArgumentException(message, parameterName);
+        }
     }
-
-    public static void ArgumentTypeIsEnum(Type enumType, string parameterName)
-    {
-      ArgumentNotNull(enumType, "enumType");
-
-      if (!enumType.IsEnum())
-        throw new ArgumentException("Type {0} is not an Enum.".FormatWith(CultureInfo.InvariantCulture, enumType), parameterName);
-    }
-
-    public static void ArgumentNotNullOrEmpty<T>(ICollection<T> collection, string parameterName)
-    {
-      ArgumentNotNullOrEmpty<T>(collection, parameterName, "Collection '{0}' cannot be empty.".FormatWith(CultureInfo.InvariantCulture, parameterName));
-    }
-
-    public static void ArgumentNotNullOrEmpty<T>(ICollection<T> collection, string parameterName, string message)
-    {
-      if (collection == null)
-        throw new ArgumentNullException(parameterName);
-
-      if (collection.Count == 0)
-        throw new ArgumentException(message, parameterName);
-    }
-
-    public static void ArgumentNotNull(object value, string parameterName)
-    {
-      if (value == null)
-        throw new ArgumentNullException(parameterName);
-    }
-
-    public static void ArgumentConditionTrue(bool condition, string parameterName, string message)
-    {
-      if (!condition)
-        throw new ArgumentException(message, parameterName);
-    }
-  }
 }

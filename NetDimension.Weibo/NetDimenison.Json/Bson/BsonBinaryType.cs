@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,20 +22,20 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 using System;
 
 namespace NetDimension.Json.Bson
 {
-  internal enum BsonBinaryType : byte
-  {
-    Binary = 0x00,
-    Function = 0x01,
-    [Obsolete("This type has been deprecated in the BSON specification. Use Binary instead.")]
-    Data = 0x02,
-    Uuid = 0x03,
-    Md5 = 0x05,
-    UserDefined = 0x80
-  }
+    internal enum BsonBinaryType : byte
+    {
+        Binary = 0x00,
+        Function = 0x01,
+        [Obsolete("This type has been deprecated in the BSON specification. Use Binary instead.")] Data = 0x02,
+        Uuid = 0x03,
+        Md5 = 0x05,
+        UserDefined = 0x80
+    }
 }

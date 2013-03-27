@@ -32,11 +32,7 @@ using System.Xml;
 using System.Xml.Linq;
 #endif
 using NetDimension.Json.Utilities;
-#if NET20
-using NetDimension.Json.Utilities.LinqBridge;
-#else
 using System.Linq;
-#endif
 
 namespace NetDimension.Json.Converters
 {

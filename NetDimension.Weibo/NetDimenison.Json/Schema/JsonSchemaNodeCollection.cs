@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,17 +22,18 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 using System.Collections.ObjectModel;
 
 namespace NetDimension.Json.Schema
 {
-  internal class JsonSchemaNodeCollection : KeyedCollection<string, JsonSchemaNode>
-  {
-    protected override string GetKeyForItem(JsonSchemaNode item)
+    internal class JsonSchemaNodeCollection : KeyedCollection<string, JsonSchemaNode>
     {
-      return item.Id;
+        protected override string GetKeyForItem(JsonSchemaNode item)
+        {
+            return item.Id;
+        }
     }
-  }
 }

@@ -1,6 +1,6 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 11
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetDimension.Weibo40", "NetDimension.Weibo\NetDimension.Weibo40.csproj", "{7B795714-40D6-4B2E-A277-CBE13C33E1ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetDimension.Weibo", "NetDimension.Weibo\NetDimension.Weibo.csproj", "{7B795714-40D6-4B2E-A277-CBE13C33E1ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

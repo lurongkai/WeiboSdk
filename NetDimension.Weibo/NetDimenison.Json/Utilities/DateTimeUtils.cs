@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,47 +22,50 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 using System;
-using System.Xml;
 using System.Globalization;
+using System.Xml;
 
 namespace NetDimension.Json.Utilities
 {
-  internal static class DateTimeUtils
-  {
-    public static string GetUtcOffsetText(this DateTime d)
+    internal static class DateTimeUtils
     {
-      TimeSpan utcOffset = d.GetUtcOffset();
+        public static string GetUtcOffsetText(this DateTime d)
+        {
+            var utcOffset = d.GetUtcOffset();
 
-      return utcOffset.Hours.ToString("+00;-00", CultureInfo.InvariantCulture) + ":" + utcOffset.Minutes.ToString("00;00", CultureInfo.InvariantCulture);
-    }
+            return utcOffset.Hours.ToString("+00;-00", CultureInfo.InvariantCulture) + ":" +
+                   utcOffset.Minutes.ToString("00;00", CultureInfo.InvariantCulture);
+        }
 
-    public static TimeSpan GetUtcOffset(this DateTime d)
-    {
+        public static TimeSpan GetUtcOffset(this DateTime d)
+        {
 #if NET20
       return TimeZone.CurrentTimeZone.GetUtcOffset(d);
 #else
-      return TimeZoneInfo.Local.GetUtcOffset(d);
+            return TimeZoneInfo.Local.GetUtcOffset(d);
 #endif
-    }
+        }
 
 #if !(NETFX_CORE || PORTABLE)
-    public static XmlDateTimeSerializationMode ToSerializationMode(DateTimeKind kind)
-    {
-      switch (kind)
-      {
-        case DateTimeKind.Local:
-          return XmlDateTimeSerializationMode.Local;
-        case DateTimeKind.Unspecified:
-          return XmlDateTimeSerializationMode.Unspecified;
-        case DateTimeKind.Utc:
-          return XmlDateTimeSerializationMode.Utc;
-        default:
-          throw MiscellaneousUtils.CreateArgumentOutOfRangeException("kind", kind, "Unexpected DateTimeKind value.");
-      }
-    }
+        public static XmlDateTimeSerializationMode ToSerializationMode(DateTimeKind kind)
+        {
+            switch (kind)
+            {
+                case DateTimeKind.Local:
+                    return XmlDateTimeSerializationMode.Local;
+                case DateTimeKind.Unspecified:
+                    return XmlDateTimeSerializationMode.Unspecified;
+                case DateTimeKind.Utc:
+                    return XmlDateTimeSerializationMode.Utc;
+                default:
+                    throw MiscellaneousUtils.CreateArgumentOutOfRangeException("kind", kind,
+                                                                               "Unexpected DateTimeKind value.");
+            }
+        }
 #endif
-  }
+    }
 }

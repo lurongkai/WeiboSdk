@@ -1,4 +1,5 @@
-﻿#if PocketPC
+﻿
+#if PocketPC
 #pragma warning disable 1591
 
 // This class is... borrowed from .NET and Microsoft for a short time.

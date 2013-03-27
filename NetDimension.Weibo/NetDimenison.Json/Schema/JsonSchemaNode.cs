@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,57 +22,60 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 #if NET20
 using NetDimension.Json.Utilities.LinqBridge;
 #else
-using System.Linq;
+
 #endif
 
 namespace NetDimension.Json.Schema
 {
-  internal class JsonSchemaNode
-  {
-    public string Id { get; private set; }
-    public ReadOnlyCollection<JsonSchema> Schemas { get; private set; }
-    public Dictionary<string, JsonSchemaNode> Properties { get; private set; }
-    public Dictionary<string, JsonSchemaNode> PatternProperties { get; private set; }
-    public List<JsonSchemaNode> Items { get; private set; }
-    public JsonSchemaNode AdditionalProperties { get; set; }
-
-    public JsonSchemaNode(JsonSchema schema)
+    internal class JsonSchemaNode
     {
-      Schemas = new ReadOnlyCollection<JsonSchema>(new []{ schema });
-      Properties = new Dictionary<string, JsonSchemaNode>();
-      PatternProperties = new Dictionary<string, JsonSchemaNode>();
-      Items = new List<JsonSchemaNode>();
+        public JsonSchemaNode(JsonSchema schema)
+        {
+            Schemas = new ReadOnlyCollection<JsonSchema>(new[] {schema});
+            Properties = new Dictionary<string, JsonSchemaNode>();
+            PatternProperties = new Dictionary<string, JsonSchemaNode>();
+            Items = new List<JsonSchemaNode>();
 
-      Id = GetId(Schemas);
+            Id = GetId(Schemas);
+        }
+
+        private JsonSchemaNode(JsonSchemaNode source, JsonSchema schema)
+        {
+            Schemas = new ReadOnlyCollection<JsonSchema>(source.Schemas.Union(new[] {schema}).ToList());
+            Properties = new Dictionary<string, JsonSchemaNode>(source.Properties);
+            PatternProperties = new Dictionary<string, JsonSchemaNode>(source.PatternProperties);
+            Items = new List<JsonSchemaNode>(source.Items);
+            AdditionalProperties = source.AdditionalProperties;
+
+            Id = GetId(Schemas);
+        }
+
+        public string Id { get; private set; }
+        public ReadOnlyCollection<JsonSchema> Schemas { get; private set; }
+        public Dictionary<string, JsonSchemaNode> Properties { get; private set; }
+        public Dictionary<string, JsonSchemaNode> PatternProperties { get; private set; }
+        public List<JsonSchemaNode> Items { get; private set; }
+        public JsonSchemaNode AdditionalProperties { get; set; }
+
+        public JsonSchemaNode Combine(JsonSchema schema)
+        {
+            return new JsonSchemaNode(this, schema);
+        }
+
+        public static string GetId(IEnumerable<JsonSchema> schemata)
+        {
+            return string.Join("-",
+                               schemata.Select(s => s.InternalId).OrderBy(id => id, StringComparer.Ordinal).ToArray());
+        }
     }
-
-    private JsonSchemaNode(JsonSchemaNode source, JsonSchema schema)
-    {
-      Schemas = new ReadOnlyCollection<JsonSchema>(source.Schemas.Union(new[] { schema }).ToList());
-      Properties = new Dictionary<string, JsonSchemaNode>(source.Properties);
-      PatternProperties = new Dictionary<string, JsonSchemaNode>(source.PatternProperties);
-      Items = new List<JsonSchemaNode>(source.Items);
-      AdditionalProperties = source.AdditionalProperties;
-
-      Id = GetId(Schemas);
-    }
-
-    public JsonSchemaNode Combine(JsonSchema schema)
-    {
-      return new JsonSchemaNode(this, schema);
-    }
-
-    public static string GetId(IEnumerable<JsonSchema> schemata)
-    {
-      return string.Join("-", schemata.Select(s => s.InternalId).OrderBy(id => id, StringComparer.Ordinal).ToArray());
-    }
-  }
 }

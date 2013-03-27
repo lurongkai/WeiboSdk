@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,41 +22,42 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 namespace NetDimension.Json.Utilities
 {
-  internal struct StringReference
-  {
-    private readonly char[] _chars;
-    private readonly int _startIndex;
-    private readonly int _length;
-
-    public char[] Chars
+    internal struct StringReference
     {
-      get { return _chars; }
-    }
+        private readonly char[] _chars;
+        private readonly int _length;
+        private readonly int _startIndex;
 
-    public int StartIndex
-    {
-      get { return _startIndex; }
-    }
+        public StringReference(char[] chars, int startIndex, int length)
+        {
+            _chars = chars;
+            _startIndex = startIndex;
+            _length = length;
+        }
 
-    public int Length
-    {
-      get { return _length; }
-    }
+        public char[] Chars
+        {
+            get { return _chars; }
+        }
 
-    public StringReference(char[] chars, int startIndex, int length)
-    {
-      _chars = chars;
-      _startIndex = startIndex;
-      _length = length;
-    }
+        public int StartIndex
+        {
+            get { return _startIndex; }
+        }
 
-    public override string ToString()
-    {
-      return new string(_chars, _startIndex, _length);
+        public int Length
+        {
+            get { return _length; }
+        }
+
+        public override string ToString()
+        {
+            return new string(_chars, _startIndex, _length);
+        }
     }
-  }
 }

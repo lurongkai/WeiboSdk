@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,35 +22,37 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NetDimension.Json
 {
-  /// <summary>
-  /// Specifies reference handling options for the <see cref="JsonSerializer"/>.
-  /// </summary>
-  [Flags]
-  public enum PreserveReferencesHandling
-  {
     /// <summary>
-    /// Do not preserve references when serializing types.
+    ///     Specifies reference handling options for the <see cref="JsonSerializer" />.
     /// </summary>
-    None = 0,
-    /// <summary>
-    /// Preserve references when serializing into a JSON object structure.
-    /// </summary>
-    Objects = 1,
-    /// <summary>
-    /// Preserve references when serializing into a JSON array structure.
-    /// </summary>
-    Arrays = 2,
-    /// <summary>
-    /// Preserve references when serializing.
-    /// </summary>
-    All = Objects | Arrays
-  }
+    [Flags]
+    public enum PreserveReferencesHandling
+    {
+        /// <summary>
+        ///     Do not preserve references when serializing types.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        ///     Preserve references when serializing into a JSON object structure.
+        /// </summary>
+        Objects = 1,
+
+        /// <summary>
+        ///     Preserve references when serializing into a JSON array structure.
+        /// </summary>
+        Arrays = 2,
+
+        /// <summary>
+        ///     Preserve references when serializing.
+        /// </summary>
+        All = Objects | Arrays
+    }
 }

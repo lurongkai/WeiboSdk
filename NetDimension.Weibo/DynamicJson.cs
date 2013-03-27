@@ -7,6 +7,7 @@
 * http://neue.cc/
 * http://dynamicjson.codeplex.com/
 *--------------------------------------------------------------------------*/
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,17 +23,44 @@ using System.Xml.Linq;
 
 namespace Codeplex.Data
 {
-	/// <summary>
-	/// DynamicJson
-	/// </summary>
+    /// <summary>
+    ///     DynamicJson
+    /// </summary>
     public class DynamicJson : DynamicObject
     {
-        private enum JsonType
+        // public static methods
+
+        private readonly JsonType jsonType;
+        private readonly XElement xml;
+
+        /// <summary>create blank JSObject</summary>
+        public DynamicJson()
         {
-            @string, number, boolean, @object, array, @null
+            xml = new XElement("root", CreateTypeAttr(JsonType.@object));
+            jsonType = JsonType.@object;
         }
 
-        // public static methods
+        private DynamicJson(XElement element, JsonType type)
+        {
+            Debug.Assert(type == JsonType.array || type == JsonType.@object);
+
+            xml = element;
+            jsonType = type;
+        }
+
+        /// <summary>
+        /// </summary>
+        public bool IsObject
+        {
+            get { return jsonType == JsonType.@object; }
+        }
+
+        /// <summary>
+        /// </summary>
+        public bool IsArray
+        {
+            get { return jsonType == JsonType.array; }
+        }
 
         /// <summary>from JsonSring to DynamicJson</summary>
         public static dynamic Parse(string json)
@@ -43,7 +71,9 @@ namespace Codeplex.Data
         /// <summary>from JsonSring to DynamicJson</summary>
         public static dynamic Parse(string json, Encoding encoding)
         {
-            using (var reader = JsonReaderWriterFactory.CreateJsonReader(encoding.GetBytes(json), XmlDictionaryReaderQuotas.Max))
+            using (
+                var reader = JsonReaderWriterFactory.CreateJsonReader(encoding.GetBytes(json),
+                                                                      XmlDictionaryReaderQuotas.Max))
             {
                 return ToValue(XElement.Load(reader));
             }
@@ -61,7 +91,9 @@ namespace Codeplex.Data
         /// <summary>from JsonSringStream to DynamicJson</summary>
         public static dynamic Parse(Stream stream, Encoding encoding)
         {
-            using (var reader = JsonReaderWriterFactory.CreateJsonReader(stream, encoding, XmlDictionaryReaderQuotas.Max, _ => { }))
+            using (
+                var reader = JsonReaderWriterFactory.CreateJsonReader(stream, encoding, XmlDictionaryReaderQuotas.Max,
+                                                                      _ => { }))
             {
                 return ToValue(XElement.Load(reader));
             }
@@ -77,19 +109,19 @@ namespace Codeplex.Data
 
         private static dynamic ToValue(XElement element)
         {
-            var type = (JsonType)Enum.Parse(typeof(JsonType), element.Attribute("type").Value);
+            var type = (JsonType) Enum.Parse(typeof (JsonType), element.Attribute("type").Value);
             switch (type)
             {
                 case JsonType.boolean:
-                    return (bool)element;
+                    return (bool) element;
                 case JsonType.number:
-					var pattern = string.Format("{0}", element);
-					if (pattern.IndexOf(".") > 0)
-						return (double)element;
-					else
-						return (string)element;
+                    var pattern = string.Format("{0}", element);
+                    if (pattern.IndexOf(".") > 0)
+                        return (double) element;
+                    else
+                        return (string) element;
                 case JsonType.@string:
-                    return (string)element;
+                    return (string) element;
                 case JsonType.@object:
                 case JsonType.array:
                     return new DynamicJson(element, type);
@@ -160,15 +192,17 @@ namespace Codeplex.Data
         private static IEnumerable<XStreamingElement> CreateXArray<T>(T obj) where T : IEnumerable
         {
             return obj.Cast<object>()
-                .Select(o => new XStreamingElement("item", CreateTypeAttr(GetJsonType(o)), CreateJsonNode(o)));
+                      .Select(o => new XStreamingElement("item", CreateTypeAttr(GetJsonType(o)), CreateJsonNode(o)));
         }
 
         private static IEnumerable<XStreamingElement> CreateXObject(object obj)
         {
             return obj.GetType()
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Select(pi => new { Name = pi.Name, Value = pi.GetValue(obj, null) })
-                .Select(a => new XStreamingElement(a.Name, CreateTypeAttr(GetJsonType(a.Value)), CreateJsonNode(a.Value)));
+                      .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                      .Select(pi => new {pi.Name, Value = pi.GetValue(obj, null)})
+                      .Select(
+                          a =>
+                          new XStreamingElement(a.Name, CreateTypeAttr(GetJsonType(a.Value)), CreateJsonNode(a.Value)));
         }
 
         private static string CreateJsonString(XStreamingElement element)
@@ -183,32 +217,6 @@ namespace Codeplex.Data
         }
 
         // dynamic structure represents JavaScript Object/Array
-
-        readonly XElement xml;
-        readonly JsonType jsonType;
-
-        /// <summary>create blank JSObject</summary>
-        public DynamicJson()
-        {
-            xml = new XElement("root", CreateTypeAttr(JsonType.@object));
-            jsonType = JsonType.@object;
-        }
-
-        private DynamicJson(XElement element, JsonType type)
-        {
-            Debug.Assert(type == JsonType.array || type == JsonType.@object);
-
-            xml = element;
-            jsonType = type;
-        }
-		/// <summary>
-		/// 
-		/// </summary>
-        public bool IsObject { get { return jsonType == JsonType.@object; } }
-		/// <summary>
-		/// 
-		/// </summary>
-        public bool IsArray { get { return jsonType == JsonType.array; } }
 
         /// <summary>has property or not</summary>
         public bool IsDefined(string name)
@@ -249,7 +257,7 @@ namespace Codeplex.Data
         /// <summary>mapping to Array or Class by Public PropertyName</summary>
         public T Deserialize<T>()
         {
-            return (T)Deserialize(typeof(T));
+            return (T) Deserialize(typeof (T));
         }
 
         private object Deserialize(Type type)
@@ -262,7 +270,7 @@ namespace Codeplex.Data
             var value = ToValue(element);
             if (value is DynamicJson)
             {
-                value = ((DynamicJson)value).Deserialize(elementType);
+                value = ((DynamicJson) value).Deserialize(elementType);
             }
             return Convert.ChangeType(value, elementType);
         }
@@ -271,8 +279,8 @@ namespace Codeplex.Data
         {
             var result = Activator.CreateInstance(targetType);
             var dict = targetType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.CanWrite)
-                .ToDictionary(pi => pi.Name, pi => pi);
+                                 .Where(p => p.CanWrite)
+                                 .ToDictionary(pi => pi.Name, pi => pi);
             foreach (var item in xml.Elements())
             {
                 PropertyInfo propertyInfo;
@@ -309,29 +317,27 @@ namespace Codeplex.Data
         }
 
         // Delete
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="binder"></param>
-		/// <param name="args"></param>
-		/// <param name="result"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// </summary>
+        /// <param name="binder"></param>
+        /// <param name="args"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
         public override bool TryInvoke(InvokeBinder binder, object[] args, out object result)
         {
             result = (IsArray)
-                ? Delete((int)args[0])
-                : Delete((string)args[0]);
+                         ? Delete((int) args[0])
+                         : Delete((string) args[0]);
             return true;
         }
 
         // IsDefined, if has args then TryGetMember
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="binder"></param>
-		/// <param name="args"></param>
-		/// <param name="result"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// </summary>
+        /// <param name="binder"></param>
+        /// <param name="args"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
             if (args.Length > 0)
@@ -345,20 +351,20 @@ namespace Codeplex.Data
         }
 
         // Deserialize or foreach(IEnumerable)
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="binder"></param>
-		/// <param name="result"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// </summary>
+        /// <param name="binder"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
         public override bool TryConvert(ConvertBinder binder, out object result)
         {
-            if (binder.Type == typeof(IEnumerable) || binder.Type == typeof(object[]))
+            if (binder.Type == typeof (IEnumerable) || binder.Type == typeof (object[]))
             {
                 var ie = (IsArray)
-                    ? xml.Elements().Select(x => ToValue(x))
-                    : xml.Elements().Select(x => (dynamic)new KeyValuePair<string, object>(x.Name.LocalName, ToValue(x)));
-                result = (binder.Type == typeof(object[])) ? ie.ToArray() : ie;
+                             ? xml.Elements().Select(x => ToValue(x))
+                             : xml.Elements()
+                                  .Select(x => (dynamic) new KeyValuePair<string, object>(x.Name.LocalName, ToValue(x)));
+                result = (binder.Type == typeof (object[])) ? ie.ToArray() : ie;
             }
             else
             {
@@ -378,30 +384,30 @@ namespace Codeplex.Data
             result = ToValue(element);
             return true;
         }
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="binder"></param>
-		/// <param name="indexes"></param>
-		/// <param name="result"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// </summary>
+        /// <param name="binder"></param>
+        /// <param name="indexes"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
         public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
         {
             return (IsArray)
-                ? TryGet(xml.Elements().ElementAtOrDefault((int)indexes[0]), out result)
-                : TryGet(xml.Element((string)indexes[0]), out result);
+                       ? TryGet(xml.Elements().ElementAtOrDefault((int) indexes[0]), out result)
+                       : TryGet(xml.Element((string) indexes[0]), out result);
         }
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="binder"></param>
-		/// <param name="result"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// </summary>
+        /// <param name="binder"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             return (IsArray)
-                ? TryGet(xml.Elements().ElementAtOrDefault(int.Parse(binder.Name)), out result)
-                : TryGet(xml.Element(binder.Name), out result);
+                       ? TryGet(xml.Elements().ElementAtOrDefault(int.Parse(binder.Name)), out result)
+                       : TryGet(xml.Element(binder.Name), out result);
         }
 
         private bool TrySet(string name, object value)
@@ -437,40 +443,40 @@ namespace Codeplex.Data
 
             return true;
         }
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="binder"></param>
-		/// <param name="indexes"></param>
-		/// <param name="value"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// </summary>
+        /// <param name="binder"></param>
+        /// <param name="indexes"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
         {
             return (IsArray)
-                ? TrySet((int)indexes[0], value)
-                : TrySet((string)indexes[0], value);
+                       ? TrySet((int) indexes[0], value)
+                       : TrySet((string) indexes[0], value);
         }
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="binder"></param>
-		/// <param name="value"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// </summary>
+        /// <param name="binder"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
             return (IsArray)
-                ? TrySet(int.Parse(binder.Name), value)
-                : TrySet(binder.Name, value);
+                       ? TrySet(int.Parse(binder.Name), value)
+                       : TrySet(binder.Name, value);
         }
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
         public override IEnumerable<string> GetDynamicMemberNames()
         {
             return (IsArray)
-                ? xml.Elements().Select((x, i) => i.ToString())
-                : xml.Elements().Select(x => x.Name.LocalName);
+                       ? xml.Elements().Select((x, i) => i.ToString())
+                       : xml.Elements().Select(x => x.Name.LocalName);
         }
 
         /// <summary>Serialize to JsonString</summary>
@@ -482,6 +488,16 @@ namespace Codeplex.Data
                 elem.RemoveNodes();
             }
             return CreateJsonString(new XStreamingElement("root", CreateTypeAttr(jsonType), xml.Elements()));
+        }
+
+        private enum JsonType
+        {
+            @string,
+            number,
+            boolean,
+            @object,
+            array,
+            @null
         }
     }
 }

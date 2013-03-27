@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,54 +22,56 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
 #endregion
 
 #if !(SILVERLIGHT || PORTABLE || NETFX_CORE)
 using System;
-using System.Reflection.Emit;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace NetDimension.Json.Utilities
 {
-  internal static class ILGeneratorExtensions
-  {
-    public static void PushInstance(this ILGenerator generator, Type type)
+    internal static class ILGeneratorExtensions
     {
-      generator.Emit(OpCodes.Ldarg_0);
-      if (type.IsValueType())
-        generator.Emit(OpCodes.Unbox, type);
-      else
-        generator.Emit(OpCodes.Castclass, type);
-    }
+        public static void PushInstance(this ILGenerator generator, Type type)
+        {
+            generator.Emit(OpCodes.Ldarg_0);
+            if (type.IsValueType())
+                generator.Emit(OpCodes.Unbox, type);
+            else
+                generator.Emit(OpCodes.Castclass, type);
+        }
 
-    public static void BoxIfNeeded(this ILGenerator generator, Type type)
-    {
-      if (type.IsValueType())
-        generator.Emit(OpCodes.Box, type);
-      else
-        generator.Emit(OpCodes.Castclass, type);
-    }
+        public static void BoxIfNeeded(this ILGenerator generator, Type type)
+        {
+            if (type.IsValueType())
+                generator.Emit(OpCodes.Box, type);
+            else
+                generator.Emit(OpCodes.Castclass, type);
+        }
 
-    public static void UnboxIfNeeded(this ILGenerator generator, Type type)
-    {
-      if (type.IsValueType())
-        generator.Emit(OpCodes.Unbox_Any, type);
-      else
-        generator.Emit(OpCodes.Castclass, type);
-    }
+        public static void UnboxIfNeeded(this ILGenerator generator, Type type)
+        {
+            if (type.IsValueType())
+                generator.Emit(OpCodes.Unbox_Any, type);
+            else
+                generator.Emit(OpCodes.Castclass, type);
+        }
 
-    public static void CallMethod(this ILGenerator generator, MethodInfo methodInfo)
-    {
-      if (methodInfo.IsFinal || !methodInfo.IsVirtual)
-        generator.Emit(OpCodes.Call, methodInfo);
-      else
-        generator.Emit(OpCodes.Callvirt, methodInfo);
-    }
+        public static void CallMethod(this ILGenerator generator, MethodInfo methodInfo)
+        {
+            if (methodInfo.IsFinal || !methodInfo.IsVirtual)
+                generator.Emit(OpCodes.Call, methodInfo);
+            else
+                generator.Emit(OpCodes.Callvirt, methodInfo);
+        }
 
-    public static void Return(this ILGenerator generator)
-    {
-      generator.Emit(OpCodes.Ret);
+        public static void Return(this ILGenerator generator)
+        {
+            generator.Emit(OpCodes.Ret);
+        }
     }
-  }
 }
+
 #endif
