@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // 与程序集关联的信息。
 
 [assembly: AssemblyTitle("NetDimension.Weibo")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("NetDimension.Weibo")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("NetDimension Together Studio")]
 [assembly: AssemblyProduct("NetDimension.Weibo")]
@@ -36,6 +36,6 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 #if NET40
 
-[assembly: AssemblyVersion("1.40.0.0")]
+[assembly: AssemblyVersion("1.40.0.*")]
 [assembly: AssemblyFileVersion("1.40.0.0")]
 #endif
