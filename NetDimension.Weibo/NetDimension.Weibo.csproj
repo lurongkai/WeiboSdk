@@ -151,6 +151,7 @@
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NetDimension.Weibo.nuspec" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
